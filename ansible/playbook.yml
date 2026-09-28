@@ -80,6 +80,7 @@
         key_file: /home/debian/.ssh/ovh_deploy_key
         accept_hostkey: true
         version: master
+        force: true
 
     - name: Deploy .env.local with secrets
       become: false
@@ -165,3 +166,26 @@
         project_src: /home/debian/app
         build: always
         state: present
+
+    - name: Deploy the backup script
+      become: false
+      ansible.builtin.template:
+        src: templates/backup-db.sh.j2
+        dest: /home/debian/backup-db.sh
+        owner: debian
+        group: debian
+        mode: "0700"
+
+    - name: Install cron
+      ansible.builtin.apt:
+        name: cron
+        state: present
+
+    - name: Schedule daily Postgres backup via cron
+      become: false
+      ansible.builtin.cron:
+        name: "job_optimizer postgres backup"
+        user: debian
+        minute: "0"
+        hour: "3"
+        job: "/home/debian/backup-db.sh >> /home/debian/backup-db.log 2>&1"
