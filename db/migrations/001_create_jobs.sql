@@ -1,4 +1,4 @@
-CREATE TABLE jobs (
+CREATE TABLE IF NOT EXISTS jobs (
   id            TEXT PRIMARY KEY,
   company       TEXT NOT NULL,
   title         TEXT NOT NULL,
@@ -14,4 +14,4 @@ CREATE TABLE jobs (
   questions     JSONB NOT NULL DEFAULT '[]'
 );
 
-CREATE INDEX idx_jobs_status ON jobs (status);
+CREATE INDEX IF NOT EXISTS idx_jobs_status ON jobs (status);

@@ -1,4 +1,4 @@
-CREATE TABLE exercises (
+CREATE TABLE IF NOT EXISTS exercises (
   id                     TEXT PRIMARY KEY,
   title                  TEXT NOT NULL,
   difficulty             TEXT NOT NULL,
