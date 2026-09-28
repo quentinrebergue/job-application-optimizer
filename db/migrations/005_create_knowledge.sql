@@ -1,4 +1,4 @@
-CREATE TABLE knowledge (
+CREATE TABLE IF NOT EXISTS knowledge (
   id          TEXT PRIMARY KEY,
   name        TEXT NOT NULL,
   category    TEXT NOT NULL,

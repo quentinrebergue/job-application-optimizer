@@ -89,6 +89,76 @@
         owner: debian
         group: debian
         mode: "0600"
+
+    - name: Deploy .env for Docker Compose interpolation
+      become: false
+      ansible.builtin.template:
+        src: templates/env.j2
+        dest: /home/debian/app/.env
+        owner: debian
+        group: debian
+        mode: "0600"
+
+    - name: Install Node.js and npm (for one-off DB migration scripts)
+      ansible.builtin.apt:
+        name:
+          - nodejs
+          - npm
+        state: present
+
+    - name: Install npm dependencies on the host (needed to run db/migrate-*.mjs)
+      become: false
+      ansible.builtin.command:
+        cmd: npm install
+        chdir: /home/debian/app
+
+    - name: Start the Postgres container
+      become: false
+      community.docker.docker_compose_v2:
+        project_src: /home/debian/app
+        services: [db]
+        state: present
+
+    - name: Wait for Postgres to accept connections
+      become: false
+      ansible.builtin.command:
+        cmd: docker compose exec -T db pg_isready -U app -d job_optimizer
+        chdir: /home/debian/app
+      register: pg_ready
+      until: pg_ready.rc == 0
+      retries: 10
+      delay: 2
+      changed_when: false
+
+    - name: Apply SQL migrations
+      become: false
+      ansible.builtin.shell:
+        cmd: docker compose exec -T db psql -U app -d job_optimizer < {{ item }}
+        chdir: /home/debian/app
+      loop:
+        - db/migrations/001_create_jobs.sql
+        - db/migrations/002_create_entities.sql
+        - db/migrations/003_create_taxonomy.sql
+        - db/migrations/004_create_general_questions.sql
+        - db/migrations/005_create_knowledge.sql
+        - db/migrations/006_create_exercises.sql
+        - db/migrations/007_create_cover_letter.sql
+      changed_when: true
+
+    - name: Run one-off data migration scripts
+      become: false
+      ansible.builtin.command:
+        cmd: node --env-file=.env.local {{ item }}
+        chdir: /home/debian/app
+      loop:
+        - db/migrate-jobs.mjs
+        - db/migrate-entities.mjs
+        - db/migrate-taxonomy.mjs
+        - db/migrate-questions.mjs
+        - db/migrate-knowledge-exercises.mjs
+        - db/migrate-cover-letter.mjs
+      changed_when: true
+
     - name: Start the app with Docker Compose
       become: false
       community.docker.docker_compose_v2:

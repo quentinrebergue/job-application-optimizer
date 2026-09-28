@@ -1,4 +1,4 @@
-CREATE TABLE entities (
+CREATE TABLE IF NOT EXISTS entities (
   id            TEXT PRIMARY KEY,
   type          TEXT NOT NULL CHECK (type IN ('experiences','projects','skills','education')),
   tags          TEXT[] NOT NULL DEFAULT '{}',
@@ -7,4 +7,4 @@ CREATE TABLE entities (
   questions     JSONB NOT NULL DEFAULT '[]'
 );
 
-CREATE INDEX idx_entities_type ON entities (type);
+CREATE INDEX IF NOT EXISTS idx_entities_type ON entities (type);
