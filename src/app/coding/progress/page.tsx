@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, Download, Upload, Trash2, Plus } from 'lucide-react'
-import { getAllExercises } from '@/lib/data'
 import type { ExerciseMeta } from '@/types'
 
 export default function ProgressPage() {
@@ -16,10 +15,12 @@ export default function ProgressPage() {
     (async () => {
       try {
         const [exercisesRes, progressRes] = await Promise.all([
-          getAllExercises(),
+          fetch('/api/exercises'),
           fetch('/api/coding/progress'),
         ])
-        setAllExercises(exercisesRes)
+        if (exercisesRes.ok) {
+          setAllExercises((await exercisesRes.json()) as ExerciseMeta[])
+        }
 
         if (progressRes.ok) {
           const ids = (await progressRes.json()) as string[]

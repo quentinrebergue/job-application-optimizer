@@ -6,6 +6,8 @@ import type { EntityType } from '@/types'
 
 type Props = { params: Promise<{ type: string; id: string }> }
 
+export const dynamic = 'force-dynamic'
+
 export default async function EntityDetailPage({ params }: Props) {
   const { type, id } = await params
   if (!ENTITY_TYPE_IDS.includes(type as EntityType)) notFound()

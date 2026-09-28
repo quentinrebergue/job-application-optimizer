@@ -15,6 +15,8 @@ import type { EntityType } from '@/types'
 
 const VALID_TYPES = new Set<EntityType>(['experiences', 'projects', 'skills', 'education'])
 
+export const dynamic = 'force-dynamic'
+
 interface Props {
   params: Promise<{ type: string }>
 }

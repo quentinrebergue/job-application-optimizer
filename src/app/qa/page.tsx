@@ -3,6 +3,8 @@ import { PageHeader } from '@/components/ui/PageHeader'
 import { SessionConfig } from '@/components/qa/SessionConfig'
 import { GeneralQAManager } from '@/components/qa/GeneralQAManager'
 
+export const dynamic = 'force-dynamic'
+
 export default async function QAPage() {
   const jobs = await listJobs()
 
