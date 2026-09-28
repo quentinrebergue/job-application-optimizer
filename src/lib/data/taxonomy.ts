@@ -1,22 +1,21 @@
-import fs from 'fs/promises'
+import { pool } from '@/lib/db'
 import path from 'path'
 import { randomUUID } from 'crypto'
 import type { Taxonomy, TaxonomyNode } from '@/types'
 import { purgeTagAliases } from './tag-cleanup'
 
-const DATA_DIR = path.join(process.cwd(), 'data')
-const TREE_PATH = path.join(DATA_DIR, 'taxonomy', 'tree.json')
-
 export async function getTaxonomy(): Promise<Taxonomy> {
-  const raw = await fs.readFile(TREE_PATH, 'utf-8')
-  return JSON.parse(raw) as Taxonomy
+  const { rows } = await pool.query('SELECT data FROM taxonomy WHERE id = 1')
+  return rows[0]?.data ?? { version: 1, nodes: [] }
 }
 
 export async function saveTaxonomy(taxonomy: Taxonomy): Promise<void> {
-  await fs.mkdir(path.dirname(TREE_PATH), { recursive: true })
-  await fs.writeFile(TREE_PATH, JSON.stringify(taxonomy, null, 2))
+  await pool.query(
+    `INSERT INTO taxonomy (id, data) VALUES (1, $1)
+     ON CONFLICT (id) DO UPDATE SET data = $1`,
+    [JSON.stringify(taxonomy)]
+  )
 }
-
 // ── Tree traversal utilities ──────────────────────────────────────────────────
 
 /** Returns all ancestor node ids (parent, grandparent, …) for a given node id */

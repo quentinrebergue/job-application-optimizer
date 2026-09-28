@@ -1,72 +1,49 @@
-import path from 'path'
-import fs from 'fs/promises'
 import { v4 as uuidv4 } from 'uuid'
 import type { KnowledgeItem, KnowledgeMeta } from '@/types'
-import { KnowledgeMetaSchema } from '@/schemas'
-import { readJsonSafe, readFileSafe } from './_utils'
+import { pool } from '@/lib/db'
 
-const DATA_DIR = path.join(process.cwd(), 'data')
-
-function knowledgeDir(id: string): string {
-  return path.join(DATA_DIR, 'coding', 'knowledge', id)
+function rowToMeta(row: any): KnowledgeMeta {
+  return { id: row.id, name: row.name, category: row.category, tags: row.tags }
 }
 
 export async function listKnowledge(): Promise<KnowledgeMeta[]> {
-  const dir = path.join(DATA_DIR, 'coding', 'knowledge')
-  try {
-    const entries = await fs.readdir(dir)
-    const results = await Promise.all(
-      entries
-        .filter((e) => !e.startsWith('.'))
-        .map((id) => readJsonSafe<KnowledgeMeta>(path.join(dir, id, 'meta.json'), KnowledgeMetaSchema))
-    )
-    return results.filter((r): r is KnowledgeMeta => r !== null)
-  } catch {
-    return []
-  }
+  const { rows } = await pool.query('SELECT * FROM knowledge ORDER BY id')
+  return rows.map(rowToMeta)
 }
 
 export async function getKnowledge(id: string): Promise<KnowledgeItem | null> {
-  const meta = await readJsonSafe<KnowledgeMeta>(path.join(knowledgeDir(id), 'meta.json'), KnowledgeMetaSchema)
-  if (!meta) return null
-  const explanation = (await readFileSafe(path.join(knowledgeDir(id), 'explanation.md'))) ?? ''
-  return { ...meta, explanation } as KnowledgeItem
+  const { rows } = await pool.query('SELECT * FROM knowledge WHERE id = $1', [id])
+  if (rows.length === 0) return null
+  return { ...rowToMeta(rows[0]), explanation: rows[0].explanation ?? '' } as KnowledgeItem
 }
 
 export async function createKnowledge(
   data: Omit<KnowledgeMeta, 'id'> & { explanation: string }
 ): Promise<KnowledgeMeta> {
   const id = `k-${uuidv4().slice(0, 8)}`
-  const meta: KnowledgeMeta = { id, name: data.name, category: data.category, tags: data.tags ?? [] }
-  const dir = knowledgeDir(id)
-  await fs.mkdir(dir, { recursive: true })
-  await fs.writeFile(path.join(dir, 'meta.json'), JSON.stringify(meta, null, 2))
-  await fs.writeFile(path.join(dir, 'explanation.md'), data.explanation)
-  return meta
+  const { rows } = await pool.query(
+    `INSERT INTO knowledge (id, name, category, tags, explanation)
+     VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+    [id, data.name, data.category, data.tags ?? [], data.explanation]
+  )
+  return rowToMeta(rows[0])
 }
 
 export async function updateKnowledge(
   id: string,
   data: Partial<Omit<KnowledgeMeta, 'id'> & { explanation: string }>
 ): Promise<KnowledgeMeta | null> {
-  const existing = await readJsonSafe<KnowledgeMeta>(
-    path.join(knowledgeDir(id), 'meta.json'),
-    KnowledgeMetaSchema
+  const existing = await pool.query('SELECT * FROM knowledge WHERE id = $1', [id])
+  if (existing.rows.length === 0) return null
+  const merged = { ...existing.rows[0], ...data }
+  const { rows } = await pool.query(
+    `UPDATE knowledge SET name=$2, category=$3, tags=$4, explanation=$5 WHERE id=$1 RETURNING *`,
+    [id, merged.name, merged.category, merged.tags ?? [], merged.explanation ?? '']
   )
-  if (!existing) return null
-  const { explanation, ...metaUpdate } = data
-  const updated = { ...existing, ...metaUpdate } as KnowledgeMeta
-  await fs.writeFile(path.join(knowledgeDir(id), 'meta.json'), JSON.stringify(updated, null, 2))
-  if (explanation !== undefined)
-    await fs.writeFile(path.join(knowledgeDir(id), 'explanation.md'), explanation)
-  return updated
+  return rowToMeta(rows[0])
 }
 
 export async function deleteKnowledge(id: string): Promise<boolean> {
-  try {
-    await fs.rm(knowledgeDir(id), { recursive: true, force: true })
-    return true
-  } catch {
-    return false
-  }
+  const { rowCount } = await pool.query('DELETE FROM knowledge WHERE id = $1', [id])
+  return (rowCount ?? 0) > 0
 }

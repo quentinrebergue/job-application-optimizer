@@ -1,0 +1,4 @@
+CREATE TABLE taxonomy (
+  id   INTEGER PRIMARY KEY DEFAULT 1,
+  data JSONB NOT NULL
+);
