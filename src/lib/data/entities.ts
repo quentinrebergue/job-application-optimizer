@@ -1,50 +1,31 @@
-import path from 'path'
-import fs from 'fs/promises'
 import { v4 as uuidv4 } from 'uuid'
-import { z } from 'zod'
 import type { EntityType, EntityMeta, Entity, EntityQuestion } from '@/types'
-import { EntityMetaSchema, EntityQuestionSchema } from '@/schemas'
-import { readJsonSafe } from './_utils'
+import { pool } from '@/lib/db'
 
-const DATA_DIR = path.join(process.cwd(), 'data')
-
-function entityDir(type: EntityType, id: string): string {
-  return path.join(DATA_DIR, 'entities', type, id)
-}
-
-function entityTypeDir(type: EntityType): string {
-  return path.join(DATA_DIR, 'entities', type)
+function rowToEntityMeta(row: any): EntityMeta {
+  return {
+    id: row.id,
+    type: row.type,
+    tags: row.tags,
+    latex_snippet: row.latex_snippet,
+    ...row.data,
+  } as EntityMeta
 }
 
 export async function listEntities(type: EntityType): Promise<EntityMeta[]> {
-  const dir = entityTypeDir(type)
-  try {
-    const entries = await fs.readdir(dir)
-    const results = await Promise.all(
-      entries
-        .filter((e) => !e.startsWith('.'))
-        .map((id) => readJsonSafe<EntityMeta>(path.join(dir, id, 'meta.json'), EntityMetaSchema))
-    )
-    return results.filter((r): r is EntityMeta => r !== null)
-  } catch {
-    return []
-  }
+  const { rows } = await pool.query('SELECT * FROM entities WHERE type = $1 ORDER BY id', [type])
+  return rows.map(rowToEntityMeta)
 }
 
-export async function getEntityQuestions(
-  type: EntityType,
-  id: string
-): Promise<EntityQuestion[]> {
-  const filePath = path.join(entityDir(type, id), 'questions.json')
-  const schema = z.array(EntityQuestionSchema)
-  return (await readJsonSafe<EntityQuestion[]>(filePath, schema)) ?? []
+export async function getEntityQuestions(type: EntityType, id: string): Promise<EntityQuestion[]> {
+  const { rows } = await pool.query('SELECT questions FROM entities WHERE type = $1 AND id = $2', [type, id])
+  return rows[0]?.questions ?? []
 }
 
 export async function getEntity(type: EntityType, id: string): Promise<Entity | null> {
-  const meta = await readJsonSafe<EntityMeta>(path.join(entityDir(type, id), 'meta.json'), EntityMetaSchema)
-  if (!meta) return null
-  const questions = await getEntityQuestions(type, id)
-  return { ...meta, questions } as Entity
+  const { rows } = await pool.query('SELECT * FROM entities WHERE type = $1 AND id = $2', [type, id])
+  if (rows.length === 0) return null
+  return { ...rowToEntityMeta(rows[0]), questions: rows[0].questions ?? [] } as Entity
 }
 
 export async function createEntity(
@@ -52,12 +33,13 @@ export async function createEntity(
   data: Omit<EntityMeta, 'id' | 'type'>
 ): Promise<EntityMeta> {
   const id = `${type.slice(0, 4)}-${uuidv4().slice(0, 8)}`
-  const meta = { id, type, ...data } as EntityMeta
-  const dir = entityDir(type, id)
-  await fs.mkdir(dir, { recursive: true })
-  await fs.writeFile(path.join(dir, 'meta.json'), JSON.stringify(meta, null, 2))
-  await fs.writeFile(path.join(dir, 'questions.json'), JSON.stringify([], null, 2))
-  return meta
+  const { tags, latex_snippet, ...rest } = data as any
+  const { rows } = await pool.query(
+    `INSERT INTO entities (id, type, tags, latex_snippet, data, questions)
+     VALUES ($1,$2,$3,$4,$5,'[]') RETURNING *`,
+    [id, type, tags ?? [], latex_snippet ?? '', JSON.stringify(rest)]
+  )
+  return rowToEntityMeta(rows[0])
 }
 
 export async function updateEntity(
@@ -65,29 +47,22 @@ export async function updateEntity(
   id: string,
   data: Partial<Omit<EntityMeta, 'id' | 'type'>>
 ): Promise<EntityMeta | null> {
-  const existing = await readJsonSafe<EntityMeta>(path.join(entityDir(type, id), 'meta.json'), EntityMetaSchema)
-  if (!existing) return null
-  const updated = { ...existing, ...data } as EntityMeta
-  await fs.writeFile(path.join(entityDir(type, id), 'meta.json'), JSON.stringify(updated, null, 2))
-  return updated
+  const existing = await pool.query('SELECT * FROM entities WHERE type=$1 AND id=$2', [type, id])
+  if (existing.rows.length === 0) return null
+  const merged = { ...rowToEntityMeta(existing.rows[0]), ...data } as any
+  const { tags, latex_snippet, id: _id, type: _type, ...rest } = merged
+  const { rows } = await pool.query(
+    `UPDATE entities SET tags=$3, latex_snippet=$4, data=$5 WHERE type=$1 AND id=$2 RETURNING *`,
+    [type, id, tags ?? [], latex_snippet ?? '', JSON.stringify(rest)]
+  )
+  return rowToEntityMeta(rows[0])
 }
 
-export async function saveEntityQuestions(
-  type: EntityType,
-  id: string,
-  questions: EntityQuestion[]
-): Promise<void> {
-  await fs.writeFile(
-    path.join(entityDir(type, id), 'questions.json'),
-    JSON.stringify(questions, null, 2)
-  )
+export async function saveEntityQuestions(type: EntityType, id: string, questions: EntityQuestion[]): Promise<void> {
+  await pool.query('UPDATE entities SET questions=$3 WHERE type=$1 AND id=$2', [type, id, JSON.stringify(questions)])
 }
 
 export async function deleteEntity(type: EntityType, id: string): Promise<boolean> {
-  try {
-    await fs.rm(entityDir(type, id), { recursive: true, force: true })
-    return true
-  } catch {
-    return false
-  }
+  const { rowCount } = await pool.query('DELETE FROM entities WHERE type=$1 AND id=$2', [type, id])
+  return (rowCount ?? 0) > 0
 }

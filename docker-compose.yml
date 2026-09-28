@@ -5,6 +5,25 @@ services:
       - "3000:3000"
     env_file:
       - .env.local
+    environment:
+      DATABASE_URL: postgres://app:${POSTGRES_PASSWORD}@db:5432/job_optimizer
     volumes:
       - ./data:/app/data
+    depends_on:
+      - db
     restart: unless-stopped
+
+  db:
+    image: postgres:17-alpine
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: job_optimizer
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  pgdata:
