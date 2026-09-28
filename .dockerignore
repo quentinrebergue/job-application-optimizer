@@ -1,0 +1,15 @@
+node_modules
+.next
+.git
+.vscode
+.claude
+*.tsbuildinfo
+npm-debug.log*
+.DS_Store
+.env*
+!.env.example
+README.md
+AI_RANK_FEATURE.md
+coverage
+data
+mcp
