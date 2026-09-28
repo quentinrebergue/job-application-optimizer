@@ -36,6 +36,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# raw project sources used for AI analysis only (kept local, not versioned)
+/data/projects/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
