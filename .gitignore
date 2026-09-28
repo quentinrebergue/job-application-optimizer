@@ -43,3 +43,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# terraform
+terraform/terraform.tfvars
+terraform/.terraform/
+terraform/*.tfstate*
+
+# ansible
+ansible/inventory.ini
