@@ -8,6 +8,8 @@ import { ENTITY_TYPE_IDS, ENTITY_SECTION_TYPES, ENTITY_TEMPLATE_FIELDS, type Ent
 import { GeneratePdfButton } from '@/components/resume/GeneratePdfButton'
 import { SectionTemplateEditor } from '@/components/resume/SectionTemplateEditor'
 import { ResumeDefaultsEditor } from '@/components/resume/ResumeDefaultsEditor'
+
+export const dynamic = 'force-dynamic'
 import { SentenceBankManager } from '@/components/cover-letter/SentenceBankManager'
 
 export default async function ResumePage() {

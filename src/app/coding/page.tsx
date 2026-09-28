@@ -7,6 +7,8 @@ import { CodingSessionConfig } from '@/components/coding/CodingSessionConfig'
 import { RoadmapView } from '@/components/coding/RoadmapView'
 import type { KnowledgeMeta } from '@/types'
 
+export const dynamic = 'force-dynamic'
+
 export default async function CodingPage() {
   const [exercises, knowledgeMetas] = await Promise.all([listExercises(), listKnowledge()])
 

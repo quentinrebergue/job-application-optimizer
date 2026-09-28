@@ -4,6 +4,8 @@ import { ExerciseDetail } from '@/components/coding/ExerciseDetail'
 
 type Props = { params: Promise<{ id: string }> }
 
+export const dynamic = 'force-dynamic'
+
 export default async function ExerciseDetailPage({ params }: Props) {
   const { id } = await params
   const exercise = await getExercise(id)
