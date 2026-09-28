@@ -1,0 +1,14 @@
+{
+  "id": "ex-032",
+  "title": "Minimum Path Sum",
+  "difficulty": "medium",
+  "category": "Dynamic Programming",
+  "knowledge_ids": [
+    "k-dynamic-programming"
+  ],
+  "tags": [
+    "dp",
+    "grid",
+    "matrix"
+  ]
+}

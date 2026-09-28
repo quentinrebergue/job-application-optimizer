@@ -1,0 +1,14 @@
+{
+  "id": "ex-025",
+  "title": "Split Array Largest Sum",
+  "difficulty": "hard",
+  "category": "Binary Search",
+  "knowledge_ids": [
+    "k-binary-search"
+  ],
+  "tags": [
+    "binary-search",
+    "dp",
+    "greedy"
+  ]
+}

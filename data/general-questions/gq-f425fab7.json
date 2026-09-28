@@ -1,0 +1,10 @@
+{
+  "id": "gq-f425fab7",
+  "question": "What is the purpose of tiling?\n",
+  "answer": "Load a chunk of data from slow global memory into fast shared memory once, then reuse it many times — reducing global memory traffic by a factor of TILE_SIZE.\n",
+  "tags": [
+    "cuda",
+    "optimization",
+    "tiling"
+  ]
+}

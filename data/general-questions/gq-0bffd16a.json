@@ -1,0 +1,10 @@
+{
+  "id": "gq-0bffd16a",
+  "question": "What is the approximate latency of global memory vs registers?\n",
+  "answer": "Registers ~1 cycle. Global memory ~500 cycles.\n",
+  "tags": [
+    "cuda",
+    "memory",
+    "latency"
+  ]
+}

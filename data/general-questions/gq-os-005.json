@@ -1,0 +1,6 @@
+{
+  "id": "gq-os-005",
+  "question": "What are mutexes vs semaphores?",
+  "answer": "A mutex (mutual exclusion lock) is owned by a thread — only the thread that locked it can unlock it. Used to protect a critical section. It's binary (locked/unlocked).\n\nA semaphore is a counter-based signalling mechanism. `sem_wait` decrements (blocks if 0), `sem_post` increments. It has no ownership — one thread can post, another can wait. A binary semaphore (0/1) can be used like a mutex but isn't the same semantically. Counting semaphores are used to limit access to N resources (e.g. a thread pool of size N).",
+  "tags": ["os", "concurrency"]
+}

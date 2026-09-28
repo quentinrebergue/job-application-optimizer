@@ -1,0 +1,10 @@
+{
+  "id": "gq-f14c6836",
+  "question": "What is semantic analysis?\n",
+  "answer": "Checks if the AST is meaningful — type checking, scope resolution, variable declarations, function signatures. Ensures the program makes sense semantically, not just grammatically.\n",
+  "tags": [
+    "compilation",
+    "semantics",
+    "type-checking"
+  ]
+}

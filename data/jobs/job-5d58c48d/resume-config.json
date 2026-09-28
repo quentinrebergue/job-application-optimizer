@@ -1,0 +1,68 @@
+{
+  "selected_entity_ids": [
+    "edu-4b5b8a37",
+    "edu-c735b9b1",
+    "exp-df8d4cde",
+    "exp-0e31880e",
+    "proj-40cdf000",
+    "proj-4f43d05f",
+    "skil-a856cc8e",
+    "skil-0247ad5c",
+    "skil-52bcbd31",
+    "exp-b0ccfdd9",
+    "proj-953ddf40",
+    "proj-4c4f5731"
+  ],
+  "ai_rankings": [],
+  "profile_text": "Looking for a full-time position in software engineering with a focus on: Linux, low-level systems, platform engineering, networking. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded. Fluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running, cooking.",
+  "resume_title": "Quentin Rebergue - Graduate Software Engineer",
+  "ai_context": "Im searching a first graduate job in system, low-level, hardware interface, linux",
+  "skill_tag_overrides": {
+    "skil-0247ad5c": [
+      "C",
+      "ASM",
+      "Shell",
+      "Rust",
+      "C++",
+      "Bash",
+      "Python",
+      "algorithms",
+      "data structures"
+    ],
+    "skil-52bcbd31": [
+      "GDB",
+      "Git",
+      "Kubernetes",
+      "monitoring",
+      "optimisation",
+      "strace",
+      "system analysis",
+      "valgrind",
+      "perf"
+    ],
+    "skil-a856cc8e": [
+      "ASIC interfacing",
+      "Drivers",
+      "Kernel",
+      "Linux",
+      "Multithreading",
+      "Virtualization",
+      "low-latency",
+      "networking",
+      "operating systems",
+      "profiling",
+      "real-time",
+      "virtual memory"
+    ]
+  },
+  "entity_description_overrides": {
+    "exp-df8d4cde": "Designed and implemented non-zero reset value management pipeline for ASIC registers across the chip-agnostic Strata middleware between software agents and ASIC hardware in python and C++. Won 1st place at Arista’s internal hackathon by building an AI agent context optimization tool in 24h with 70% token reduction on internal codebases, validated with 400+ tests and custom benchmark.\nApproved for production development by Director of Engineering.",
+    "exp-b0ccfdd9": "Built and managed full-stack information systems for 10+ clients. Led B2B survey platform as first technical lead. Architected PIM + CRM + ERP ecosystem."
+  },
+  "project_order": [
+    "proj-40cdf000",
+    "proj-4f43d05f",
+    "proj-953ddf40",
+    "proj-4c4f5731"
+  ]
+}

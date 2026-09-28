@@ -1,0 +1,16 @@
+{
+  "id": "ex-040",
+  "title": "Permutation in String",
+  "difficulty": "medium",
+  "category": "Sliding Window",
+  "knowledge_ids": [
+    "k-sliding-window",
+    "k-hash-map"
+  ],
+  "tags": [
+    "sliding-window",
+    "strings",
+    "fixed-window",
+    "anagram"
+  ]
+}

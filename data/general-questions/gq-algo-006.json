@@ -1,0 +1,6 @@
+{
+  "id": "gq-algo-006",
+  "question": "Design a rate limiter algorithm.",
+  "answer": "Two common approaches:\n\n**Token bucket**: bucket holds up to `capacity` tokens, refilled at `rate` tokens/second. Each request consumes one token. If empty, reject.\n\n```cpp\nclass RateLimiter {\n    double tokens, capacity, rate;\n    chrono::time_point<chrono::steady_clock> last;\npublic:\n    RateLimiter(double cap, double r)\n        : tokens(cap), capacity(cap), rate(r), last(chrono::steady_clock::now()) {}\n\n    bool allow() {\n        auto now = chrono::steady_clock::now();\n        double elapsed = chrono::duration<double>(now - last).count();\n        tokens = min(capacity, tokens + elapsed * rate);\n        last = now;\n        if (tokens >= 1.0) { tokens--; return true; }\n        return false;\n    }\n};\n```\n\n**Sliding window log**: store timestamps of recent requests, reject if count in last window exceeds limit. More accurate but uses more memory.",
+  "tags": ["algorithms", "system-design"]
+}

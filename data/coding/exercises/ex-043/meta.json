@@ -1,0 +1,15 @@
+{
+  "id": "ex-043",
+  "title": "Count Number of Nice Subarrays",
+  "difficulty": "medium",
+  "category": "Prefix Sum",
+  "knowledge_ids": [
+    "k-sliding-window",
+    "k-prefix-sum"
+  ],
+  "tags": [
+    "sliding-window",
+    "prefix-sum",
+    "arrays"
+  ]
+}

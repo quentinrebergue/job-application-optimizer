@@ -1,0 +1,6 @@
+{
+  "id": "gq-cpp-005",
+  "question": "How does `std::move` work?",
+  "answer": "`std::move` casts its argument to an rvalue reference (`T&&`), signalling that the object's resources can be \"stolen\" rather than copied. A move constructor/assignment transfers the internal state (e.g. a pointer) and leaves the source in a valid but empty state. For example, moving a `std::vector` transfers the internal buffer pointer in O(1) rather than copying all elements in O(n). It doesn't actually move anything — it just enables the move constructor to be called instead of the copy constructor.",
+  "tags": ["cpp"]
+}

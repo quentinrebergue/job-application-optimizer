@@ -1,0 +1,13 @@
+{
+  "id": "ex-123",
+  "title": "Same Tree",
+  "difficulty": "easy",
+  "category": "Binary Tree",
+  "knowledge_ids": [
+    "k-trees-graphs"
+  ],
+  "tags": [
+    "binary-tree"
+  ],
+  "leetcode": 100
+}

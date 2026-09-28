@@ -1,0 +1,10 @@
+{
+  "id": "gq-2c64f4f5",
+  "question": "What three things limit occupancy?\n",
+  "answer": "Registers per thread, shared memory per block, and block size.\n",
+  "tags": [
+    "cuda",
+    "occupancy",
+    "limits"
+  ]
+}

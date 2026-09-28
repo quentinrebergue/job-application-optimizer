@@ -1,0 +1,14 @@
+{
+  "id": "ex-090",
+  "title": "Contains Duplicate",
+  "difficulty": "easy",
+  "category": "Hash Map",
+  "knowledge_ids": [
+    "k-hash-map"
+  ],
+  "tags": [
+    "hash-map",
+    "arrays"
+  ],
+  "leetcode": 217
+}

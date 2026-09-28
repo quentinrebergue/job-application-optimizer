@@ -1,0 +1,17 @@
+{
+  "id": "exp-df8d4cde",
+  "type": "experiences",
+  "title": "Software Engineer - Platform team",
+  "company": "ARISTA",
+  "location": "Dublin",
+  "period": "02/2026 – Now",
+  "description": "Implemented non-zero reset value management for ASIC Physical Table registers across the chip-agnostic Strata infrastructure (SDK parsing, code generation, DMA) in python and C++.\nWon 1st place at Arista's Hackathon by building an AI agent optimization tool (70% token reduction on internal codebases). Approved for production development.",
+  "tags": [
+    "EOS",
+    "AI",
+    "C++",
+    "Python",
+    "ASIC"
+  ],
+  "latex_snippet": ""
+}

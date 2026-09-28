@@ -1,0 +1,6 @@
+{
+  "id": "gq-gpu-002",
+  "question": "What is CUDA? How does the CPU/GPU memory model work?",
+  "answer": "CUDA is NVIDIA's parallel computing platform and programming model for GPUs. The CPU (host) and GPU (device) have separate memory spaces. Data must be explicitly transferred between them using `cudaMemcpy`. The workflow is: allocate GPU memory (`cudaMalloc`), copy data CPU→GPU, launch a kernel, copy results GPU→CPU, free memory. This explicit memory management is a common source of bugs and performance bottlenecks.",
+  "tags": ["gpu", "cuda"]
+}

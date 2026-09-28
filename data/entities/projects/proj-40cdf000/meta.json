@@ -1,0 +1,17 @@
+{
+  "id": "proj-40cdf000",
+  "type": "projects",
+  "title": "RFID Driver",
+  "tech": [
+    "C",
+    "Linux Kernel",
+    "SPI",
+    "QEMU"
+  ],
+  "description": "Developed a Linux kernel character device driver for the MFRC522 RFID reader with file_operations callbacks, SPI regmap communication, and a FIFO command interface. Tested via QEMU emulation.",
+  "tags": [
+    "Kernel",
+    "C",
+    "Drivers"
+  ]
+}

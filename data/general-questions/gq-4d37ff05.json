@@ -1,0 +1,10 @@
+{
+  "id": "gq-4d37ff05",
+  "question": "What is an embedding?\n",
+  "answer": "A learned representation: a vector in dense space (e.g., 768-dim) that captures semantic meaning. Word embeddings map tokens to vectors; proximity in embedding space implies semantic similarity. Fundamental to NLP and LLMs.\n",
+  "tags": [
+    "ai",
+    "nlp",
+    "embeddings"
+  ]
+}

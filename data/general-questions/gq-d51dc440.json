@@ -1,0 +1,10 @@
+{
+  "id": "gq-d51dc440",
+  "question": "What is a compiler directive?\n",
+  "answer": "Instructions to the compiler that aren't part of the language itself. Examples: #pragma (C++), @override (Java), type hints (Python). Can control optimization, alignment, warnings, code generation.\n",
+  "tags": [
+    "compilation",
+    "directives",
+    "compiler"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "ex-085",
+  "title": "Coin Change",
+  "category": "Dynamic Programming",
+  "difficulty": "medium",
+  "tags": [
+    "dp",
+    "bfs",
+    "unbounded-knapsack"
+  ],
+  "leetcode": 322,
+  "knowledge_ids": [
+    "k-0-1-knapsack",
+    "k-dynamic-programming"
+  ]
+}

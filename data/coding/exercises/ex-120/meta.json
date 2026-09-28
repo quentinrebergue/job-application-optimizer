@@ -1,0 +1,14 @@
+{
+  "id": "ex-120",
+  "title": "Palindromic Substrings",
+  "difficulty": "medium",
+  "category": "Two Pointers",
+  "knowledge_ids": [
+    "k-two-pointers"
+  ],
+  "tags": [
+    "two-pointers",
+    "string"
+  ],
+  "leetcode": 647
+}

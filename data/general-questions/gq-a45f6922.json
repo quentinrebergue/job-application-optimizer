@@ -1,0 +1,10 @@
+{
+  "id": "gq-a45f6922",
+  "question": "What is next-token prediction?\n",
+  "answer": "The fundamental training objective of LLMs. Given tokens t_1, t_2, ..., t_n, predict t_{n+1}. The model outputs a probability distribution over the vocabulary. During training, compare to ground truth with cross-entropy loss. During inference, sample from or pick argmax.\n",
+  "tags": [
+    "ai",
+    "llm",
+    "training"
+  ]
+}

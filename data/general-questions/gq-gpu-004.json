@@ -1,0 +1,6 @@
+{
+  "id": "gq-gpu-004",
+  "question": "What is GPU memory bandwidth and why does it matter more than compute in many cases?",
+  "answer": "Memory bandwidth is the rate at which data can be read from/written to GPU memory (VRAM). Most real-world kernels are memory-bound — the GPU finishes computation faster than it can fetch new data. Modern GPUs have 500-2000 GB/s of memory bandwidth but the compute units can process data even faster. So the bottleneck is feeding the cores with data, not the computation itself. This is why memory coalescing and data layout are critical for performance.",
+  "tags": ["gpu", "cuda", "performance"]
+}

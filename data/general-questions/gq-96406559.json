@@ -1,0 +1,10 @@
+{
+  "id": "gq-96406559",
+  "question": "What is variance in generics?\n",
+  "answer": "Covariance: List<Dog> is a subtype of List<Animal> (OK for read-only). Contravariance: Writer<Animal> is a subtype of Writer<Dog> (OK for write-only). Invariance: List<Dog> is NOT a subtype of List<Animal>. Affects type safety.\n",
+  "tags": [
+    "typology",
+    "generics",
+    "variance"
+  ]
+}

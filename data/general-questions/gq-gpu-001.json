@@ -1,0 +1,6 @@
+{
+  "id": "gq-gpu-001",
+  "question": "What is the difference between a CPU and a GPU architecturally?",
+  "answer": "A CPU has a few powerful cores (4-64) optimized for low-latency sequential tasks, with large caches, out-of-order execution, and branch prediction. A GPU has thousands of smaller, simpler cores optimized for high-throughput parallel tasks. GPUs have high memory bandwidth but higher latency per operation. CPUs excel at control-heavy, branchy, sequential code. GPUs excel at data-parallel workloads where the same operation runs on thousands of data points simultaneously.",
+  "tags": ["gpu", "cuda", "systems"]
+}

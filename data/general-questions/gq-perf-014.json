@@ -1,0 +1,6 @@
+{
+  "id": "gq-perf-014",
+  "question": "What is the difference between `perf stat` and `perf record`?",
+  "answer": "`perf stat` runs your program and prints a summary of hardware counters at the end: total instructions, cycles, IPC (instructions per cycle), cache misses, branch mispredictions. Good for a quick health check.\n\n`perf record` samples the call stack throughout execution and saves it to `perf.data`. You then run `perf report` to see which functions consumed the most CPU, or generate a flame graph. Good for finding exactly where time is spent.",
+  "tags": ["profiling", "linux"]
+}

@@ -1,0 +1,12 @@
+{
+  "id": "ex-097",
+  "title": "Missing Number",
+  "difficulty": "easy",
+  "category": "Other",
+  "knowledge_ids": [],
+  "tags": [
+    "bit-manipulation",
+    "arrays"
+  ],
+  "leetcode": 268
+}

@@ -1,0 +1,13 @@
+{
+  "id": "ex-019",
+  "title": "Permutations",
+  "difficulty": "medium",
+  "category": "Backtracking",
+  "knowledge_ids": [
+    "k-backtracking"
+  ],
+  "tags": [
+    "backtracking",
+    "recursion"
+  ]
+}

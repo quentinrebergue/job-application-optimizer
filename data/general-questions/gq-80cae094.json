@@ -1,0 +1,10 @@
+{
+  "id": "gq-80cae094",
+  "question": "Why should block sizes always be a multiple of 32?\n",
+  "answer": "Because the SM executes threads in warps of 32. If your block size is not a multiple of 32 (e.g. 100 threads), the last warp is only partially filled (4 active threads, 28 idle). Those idle thread slots waste SM resources.\n",
+  "tags": [
+    "cuda",
+    "threads",
+    "optimization"
+  ]
+}

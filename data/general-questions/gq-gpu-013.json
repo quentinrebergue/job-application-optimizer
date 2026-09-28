@@ -1,0 +1,6 @@
+{
+  "id": "gq-gpu-013",
+  "question": "What tools do you use to profile GPU code?",
+  "answer": "- **Nsight Systems** (`nsys`): system-wide timeline showing CPU, GPU, PCIe transfers, CUDA API calls — good for finding pipeline bottlenecks\n- **Nsight Compute** (`ncu`): deep per-kernel analysis — memory throughput, compute utilization, warp efficiency, roofline model\n- **nvprof** (legacy): command-line profiler, still used for quick analysis\n- `cudaEvent` API: fine-grained timing of specific kernel launches in code",
+  "tags": ["gpu", "cuda", "profiling"]
+}

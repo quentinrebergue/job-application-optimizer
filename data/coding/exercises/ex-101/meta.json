@@ -1,0 +1,13 @@
+{
+  "id": "ex-101",
+  "title": "House Robber",
+  "difficulty": "medium",
+  "category": "Dynamic Programming",
+  "knowledge_ids": [
+    "k-dynamic-programming"
+  ],
+  "tags": [
+    "dynamic-programming"
+  ],
+  "leetcode": 198
+}

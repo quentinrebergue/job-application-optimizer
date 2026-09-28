@@ -1,0 +1,10 @@
+{
+  "id": "gq-b3e0c4ab",
+  "question": "What are the main stages of the compilation process?\n",
+  "answer": "Lexical analysis (tokenizing) → Syntax analysis (parsing) → Semantic analysis (type checking) → Intermediate code generation → Code optimization → Code generation → Linking. Not all compilers follow this exactly, but these are the conceptual stages.\n",
+  "tags": [
+    "compilation",
+    "compiler",
+    "process"
+  ]
+}

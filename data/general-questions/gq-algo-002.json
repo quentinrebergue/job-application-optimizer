@@ -1,0 +1,6 @@
+{
+  "id": "gq-algo-002",
+  "question": "Given a stream of data, find the median at each step.",
+  "answer": "Use two heaps: a max-heap for the lower half and a min-heap for the upper half. Keep them balanced (sizes differ by at most 1).\n\n```cpp\npriority_queue<int> lower;                            // max-heap\npriority_queue<int, vector<int>, greater<int>> upper; // min-heap\n\nvoid addNum(int num) {\n    lower.push(num);\n    upper.push(lower.top()); lower.pop();  // balance\n    if (upper.size() > lower.size()) {\n        lower.push(upper.top()); upper.pop();\n    }\n}\n\ndouble findMedian() {\n    if (lower.size() > upper.size()) return lower.top();\n    return (lower.top() + upper.top()) / 2.0;\n}\n```",
+  "tags": ["algorithms", "data-structures"]
+}

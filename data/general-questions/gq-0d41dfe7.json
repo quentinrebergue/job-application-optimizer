@@ -1,0 +1,10 @@
+{
+  "id": "gq-0d41dfe7",
+  "question": "What is cross-attention?\n",
+  "answer": "Attention where Query comes from one sequence and Key/Value come from another. Used in encoder-decoder models: decoder queries about encoder outputs. Allows the model to reference the input while generating output. Critical for machine translation, summarization.\n",
+  "tags": [
+    "ai",
+    "transformer",
+    "attention"
+  ]
+}

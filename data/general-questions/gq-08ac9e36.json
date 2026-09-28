@@ -1,0 +1,10 @@
+{
+  "id": "gq-08ac9e36",
+  "question": "How does the SM hide memory latency using warps?\n",
+  "answer": "When a warp stalls waiting on a memory load, the warp scheduler instantly switches to another ready warp at zero cost. As long as there are enough warps in flight, the SM is always doing useful work — the latency is hidden behind other warps' execution.\n",
+  "tags": [
+    "cuda",
+    "memory",
+    "latency"
+  ]
+}

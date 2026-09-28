@@ -1,0 +1,15 @@
+{
+  "id": "ex-042",
+  "title": "Fruit Into Baskets",
+  "difficulty": "medium",
+  "category": "Sliding Window",
+  "knowledge_ids": [
+    "k-sliding-window",
+    "k-hash-map"
+  ],
+  "tags": [
+    "sliding-window",
+    "variable-window",
+    "at-most-k-distinct"
+  ]
+}

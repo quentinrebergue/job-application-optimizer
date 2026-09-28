@@ -1,0 +1,17 @@
+{
+  "id": "proj-b1f3b77a",
+  "type": "projects",
+  "title": "myMalloc",
+  "tech": [
+    "C",
+    "Memory Management",
+    "Systems Programming"
+  ],
+  "description": "Custom malloc implementation in C focusing on efficient memory reuse and fragmentation minimization with bucket-based allocation and free block tracking. Uses mmap for page management. Supports malloc/free/realloc/calloc.",
+  "tags": [
+    "systems-programming",
+    "c",
+    "memory-management"
+  ],
+  "latex_snippet": ""
+}

@@ -1,0 +1,10 @@
+{
+  "id": "gq-40e29fb9",
+  "question": "What does SIMT stand for?\n",
+  "answer": "Single Instruction, Multiple Threads — 32 threads (a warp) execute the same instruction simultaneously, each on different data.\n",
+  "tags": [
+    "cuda",
+    "simt",
+    "warp"
+  ]
+}

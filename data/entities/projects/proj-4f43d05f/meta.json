@@ -1,0 +1,20 @@
+{
+  "id": "proj-4f43d05f",
+  "type": "projects",
+  "title": "My Docker",
+  "tech": [
+    "C",
+    "Linux",
+    "Namespaces",
+    "cgroups",
+    "seccomp"
+  ],
+  "description": "Built a lightweight container runtime in C, using Linux namespaces, pivot_root, capabilities dropping, seccomp syscall filtering, and cgroups. Pulls and mounts a root filesystem from a container registry.",
+  "tags": [
+    "C",
+    "Linux",
+    "Containers",
+    "Security",
+    "Systems"
+  ]
+}

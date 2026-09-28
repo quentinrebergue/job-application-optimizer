@@ -1,0 +1,23 @@
+{
+  "id": "proj-ad638299",
+  "type": "projects",
+  "title": "Synchronous Real-Time Systems",
+  "tech": [
+    "Heptagon",
+    "C",
+    "Embedded Systems",
+    "Raspberry Pi"
+  ],
+  "description": "Built a Rate Monotonic scheduler in Heptagon, a dataflow language that compiles nodes to deterministic C step functions with no heap allocation, and deployed it to Raspberry Pi 3 via UART bootloader.",
+  "tags": [
+    "Heptagon",
+    "Synchronous Programming",
+    "Real-Time Systems",
+    "Embedded",
+    "Dataflow",
+    "C",
+    "Raspberry Pi",
+    "Compiler"
+  ],
+  "latex_snippet": ""
+}

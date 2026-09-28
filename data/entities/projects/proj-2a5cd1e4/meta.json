@@ -1,0 +1,26 @@
+{
+  "id": "proj-2a5cd1e4",
+  "type": "projects",
+  "title": "ARM project",
+  "tech": [
+    "C",
+    "STM32 HAL",
+    "ARM Cortex-M4",
+    "I2C",
+    "UART",
+    "Protobuf",
+    "Docker",
+    "Sphinx"
+  ],
+  "description": "Built an STM32F429ZI embedded system acting as a UART command server using libgapcom (Protobuf over UART). Implemented a 4-level log subsystem and an MPU6050 gyroscope driver over I2C with FIFO reads.Team of 2.",
+  "tags": [
+    "Embedded",
+    "ARM",
+    "STM32",
+    "C",
+    "I2C",
+    "UART",
+    "Driver",
+    "Real-Time"
+  ]
+}

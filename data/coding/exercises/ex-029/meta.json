@@ -1,0 +1,13 @@
+{
+  "id": "ex-029",
+  "title": "Spiral Matrix",
+  "difficulty": "medium",
+  "category": "Matrix Traversal",
+  "knowledge_ids": [
+    "k-matrix"
+  ],
+  "tags": [
+    "matrix",
+    "simulation"
+  ]
+}

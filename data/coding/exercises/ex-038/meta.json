@@ -1,0 +1,15 @@
+{
+  "id": "ex-038",
+  "title": "Longest Repeating Character Replacement",
+  "difficulty": "medium",
+  "category": "Sliding Window",
+  "knowledge_ids": [
+    "k-sliding-window",
+    "k-hash-map"
+  ],
+  "tags": [
+    "sliding-window",
+    "strings",
+    "variable-window"
+  ]
+}

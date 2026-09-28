@@ -1,0 +1,15 @@
+{
+  "id": "ex-037",
+  "title": "Arithmetic Slices",
+  "difficulty": "medium",
+  "category": "Dynamic Programming",
+  "knowledge_ids": [
+    "k-sliding-window",
+    "k-dynamic-programming"
+  ],
+  "tags": [
+    "sliding-window",
+    "dp",
+    "arrays"
+  ]
+}

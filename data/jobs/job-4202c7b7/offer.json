@@ -1,0 +1,330 @@
+{
+  "id": "job-4202c7b7",
+  "company": "Arago",
+  "title": "Performance Software Engineer",
+  "description": "Meet Arago and the Aragonians\nArago is an AI and computer hardware company whose mission is to drive the course of history forward. We do so by accelerating breakthroughs at the intersection of AI and semiconductors.\nFounded in 2024 by AI researchers and physicists with deep expertise in photonics, electronics, software, mathematics, and machine learning, Arago brings together a lean team of engineers and scientists from the world's top companies and research labs.\nComposed of nine nationalities and operating from hubs in France, North America, and Israel, we believe in great science and fast achievements. Our work is guided by these core principles:\n- Do great things: we deliver work we're proud to sign our name to.\n- High velocity: speed matters. We move quickly, one step at a time.\n- One unit: we're all in this together, with relationships grounded in trust, respect, and camaraderie.\n\nArago is backed by executives from Apple, Arm, Nvidia, Microsoft, and Hugging Face, as well as prominent US and European deeptech venture firms and exited founders.\n\nWHAT YOU'LL DO:\nAs a Performance Software Engineer, you will be instrumental in building the core computation software that runs on Arago's custom AI accelerators. Your work will bridge the gap between host systems and proprietary hardware, encompassing everything from custom on-board kernels to sophisticated tooling required for real-time debugging. You will be a key player in chip bring-up and long-term development of high-performance computation primitives and kernels, ensuring architecture operates with maximum efficiency and deterministic performance.\n\nREQUIRED SKILLS AND EXPERIENCE:\n- Bachelor's, Master's, or PhD in Computer Science, Computer Engineering, or related field\n- Strong experience in low-level systems programming using C/C++ and assembly\n- Deep familiarity with bare-metal development: startup code, linker scripts, memory layout, MMIO, interrupts/exceptions, timers, synchronization, and direct peripheral access\n- Strong understanding of computer architecture: pipelines, caches, memory hierarchies, virtual/physical addressing, atomics, DMA, and performance implications\n- Hands-on experience with RISC-V and/or ARM architectures, instruction sets, calling conventions, ABI concepts, and architecture-specific intrinsics\n- Experience debugging hardware/software interactions using GDB, JTAG, trace/debug interfaces, simulators, emulators, or FPGA platforms\n- Ability to read hardware specifications, register descriptions, and RTL-level documentation\n- Strong performance-analysis and optimization skills: profiling, disassembly inspection, compiler optimization, hand-tuned assembly\n- English at proficient level; French is a plus\n\nRESPONSIBILITIES:\n- Develop and optimize low-level software primitives in C/C++, assembly, and architecture-specific intrinsics for RISC-V and ARM platforms\n- Implement performance-critical kernels, runtime components, hardware abstraction layers, drivers, and firmware in bare-metal or constrained environments\n- Work with hardware architects and RTL/design teams on hardware-software interfaces, memory maps, register interfaces, interrupts, synchronization, and boot flows\n- Analyze and optimize software for latency, throughput, memory footprint, instruction count, and efficient processor/accelerator feature use\n- Bring up and debug software on simulation, emulation, FPGA, and silicon platforms\n- Develop validation tests, benchmarks, and diagnostic tools for processor, DSP, accelerator, and SoC functionality\n- Contribute to architecture decisions around ISA extensions, compiler intrinsics, memory hierarchy, DMA, cache/coherency, and software-visible hardware features\n\nPAY AND BENEFITS:\n- Competitive cash compensation based on location, experience, and team parity\n- Meaningful stock option plan at earliest company stage\n- Relocation bonus and moving expense coverage (within 20 min of company location)\n- Healthcare coverage, pension contributions, professional development, 25 days PTO plus public holidays\n- Ownership of key technical domain with vertical and horizontal growth opportunities\n- 50% reimbursement of public transport subscription\n- High-paced, multicultural, engineering-led environment\n\nHIRING PROCESS:\n1. Screening Call\n2. Technical meeting\n3. CEO Interview\n4. Reference Calls\n5. Technical Assessment\n6. Final Interview",
+  "location": "France, North America, and Israel",
+  "status": "rejected",
+  "date_added": "2026-08-27T09:59:29.505Z",
+  "tags": [
+    "C++",
+    "Assembly",
+    "RISC-V",
+    "ARM",
+    "bare-metal",
+    "performance optimization",
+    "hardware-software integration",
+    "AI accelerators",
+    "systems programming",
+    "kernel development"
+  ],
+  "ats_tags": [
+    "C",
+    "C++",
+    "Assembly",
+    "Embedded",
+    "Bare-Metal",
+    "ARM",
+    "FPGA",
+    "Kernel-Drivers",
+    "Performance-Optimization",
+    "Computer-Architecture",
+    "CUDA",
+    "GDB"
+  ],
+  "ai_analysis": {
+    "job_id": "job-4202c7b7",
+    "analyzed_at": "2026-08-27T10:02:09.796Z",
+    "ats_tags": [
+      "C",
+      "C++",
+      "Assembly",
+      "Embedded",
+      "Bare-Metal",
+      "ARM",
+      "FPGA",
+      "Kernel-Drivers",
+      "Performance-Optimization",
+      "Computer-Architecture",
+      "CUDA",
+      "GDB"
+    ],
+    "entities_by_type": {
+      "experiences": [
+        {
+          "id": "exp-0e31880e",
+          "type": "experience",
+          "name": "Head of Teaching Assistants - YAKA / ACU Program at EPITA",
+          "score": 65,
+          "reason": "Demonstrates strong C/C++ and low-level systems programming knowledge through project supervision, though not direct professional performance engineering."
+        },
+        {
+          "id": "exp-df8d4cde",
+          "type": "experience",
+          "name": "Software Engineer Intern - Platform team at ARISTA",
+          "score": 88,
+          "reason": "Directly relevant experience with ASIC registers, DMA, C++, and hardware infrastructure for platform development, aligning perfectly with job requirements."
+        }
+      ],
+      "projects": [
+        {
+          "id": "proj-0bceb7b7",
+          "type": "project",
+          "name": "MyFind [C, Unix Utilities]",
+          "score": 60,
+          "reason": "Strong C and Unix systems programming foundational experience, relevant for core low-level skills."
+        },
+        {
+          "id": "proj-1b63d04a",
+          "type": "project",
+          "name": "42sh [C, Autotools, Unix, Parser, AST]",
+          "score": 60,
+          "reason": "Strong C and systems programming experience through a shell interpreter, relevant for foundational low-level skills."
+        },
+        {
+          "id": "proj-2a5cd1e4",
+          "type": "project",
+          "name": "ARM project [C, STM32 HAL, ARM Cortex-M4, I2C, UART, Protobuf, Docker, Sphinx]",
+          "score": 87,
+          "reason": "Direct match for ARM architecture, embedded systems, I2C/UART drivers, and bare-metal concepts."
+        },
+        {
+          "id": "proj-40cdf000",
+          "type": "project",
+          "name": "RFID Driver [C, Linux Kernel, SPI, QEMU]",
+          "score": 85,
+          "reason": "Directly demonstrates experience with Linux kernel drivers, hardware communication (SPI), and debugging/emulation (QEMU)."
+        },
+        {
+          "id": "proj-4c4f5731",
+          "type": "project",
+          "name": "Linux System Tracing & Storage [Bash, Linux, strace, LVM, RAID, LUKS, losetup]",
+          "score": 68,
+          "reason": "Good understanding of Linux systems and tracing tools like `strace`, which is useful for performance analysis and debugging."
+        },
+        {
+          "id": "proj-4f43d05f",
+          "type": "project",
+          "name": "My Docker [C, Linux, Namespaces, cgroups, seccomp]",
+          "score": 65,
+          "reason": "Strong low-level Linux and C programming skills, demonstrating understanding of system resources and isolation."
+        },
+        {
+          "id": "proj-953ddf40",
+          "type": "project",
+          "name": "MyHTTPd [C, Network Programming, epoll, I/O Multiplexing]",
+          "score": 60,
+          "reason": "Strong C and network programming, showcasing systems-level understanding and efficient concurrent handling."
+        },
+        {
+          "id": "proj-ad638299",
+          "type": "project",
+          "name": "Synchronous Real-Time Systems [Heptagon, C, Embedded Systems, Raspberry Pi]",
+          "score": 82,
+          "reason": "Directly aligns with deterministic performance, real-time systems, and embedded development requirements for constrained environments."
+        },
+        {
+          "id": "proj-b1f3b77a",
+          "type": "project",
+          "name": "myMalloc [C, Memory Management, Systems Programming]",
+          "score": 80,
+          "reason": "Demonstrates deep understanding of memory management, systems programming, and low-level performance optimization."
+        },
+        {
+          "id": "proj-e5cdf5a5",
+          "type": "project",
+          "name": "Unicycle CPU [VHDL, FPGA, Intel Quartus]",
+          "score": 89,
+          "reason": "Excellent match for computer architecture understanding, VHDL, and hands-on FPGA experience, crucial for custom hardware."
+        },
+        {
+          "id": "proj-irgpu",
+          "type": "project",
+          "name": "GPU-Accelerated Video Analysis System (IRGPU) [C++, CUDA, GStreamer, CMake]",
+          "score": 90,
+          "reason": "Directly relevant to AI accelerators, performance optimization, and CUDA programming for high-performance computation."
+        },
+        {
+          "id": "proj-tiger",
+          "type": "project",
+          "name": "Tiger Compiler [C++, Flex, Bison, LLVM, Visitor Pattern]",
+          "score": 75,
+          "reason": "Compiler experience in C++ and LLVM IR is valuable for understanding toolchains and contributing to architecture decisions around compiler intrinsics."
+        }
+      ],
+      "skills": [
+        {
+          "id": "skil-0247ad5c",
+          "type": "skill",
+          "name": "Programming & Languages",
+          "score": 95,
+          "reason": "Expert proficiency in C, Assembly, VHDL, CUDA, and C++ directly covers the primary required languages for the role."
+        },
+        {
+          "id": "skil-2799aa77",
+          "type": "skill",
+          "name": "Embedded & Hardware",
+          "score": 92,
+          "reason": "Expertise in ASIC interfacing, FPGA, I2C, STM32, UART, and SPI directly matches many required hardware interaction and embedded concepts."
+        },
+        {
+          "id": "skil-52bcbd31",
+          "type": "skill",
+          "name": "Other / DevOps",
+          "score": 85,
+          "reason": "Strong skills in GDB, strace, system analysis, and perf are highly relevant for debugging, profiling, and performance optimization."
+        },
+        {
+          "id": "skil-a856cc8e",
+          "type": "skill",
+          "name": "Systems",
+          "score": 96,
+          "reason": "Expertise across ASIC interfacing, Bootloader, DMA, Drivers, FPGA, GPU, Kernel, low-latency, profiling, and real-time directly aligns with core job requirements for low-level systems and hardware."
+        }
+      ],
+      "education": [
+        {
+          "id": "edu-45c721ed",
+          "type": "education",
+          "name": "Scientific Baccalaureate (Engineering & Computer Science) — Honors from Lycée Chaptal",
+          "score": 60,
+          "reason": "Foundational education, contributing to the overall academic background, though not specific to the job's core requirements."
+        },
+        {
+          "id": "edu-4b5b8a37",
+          "type": "education",
+          "name": "MSc Computer Engineering, Low-level & Systems (GISTRE) from EPITA",
+          "score": 90,
+          "reason": "Directly matches the required educational background and specialized focus in low-level systems and computer engineering."
+        },
+        {
+          "id": "edu-c735b9b1",
+          "type": "education",
+          "name": "Preparatory Class (PTSI) in Engineering Science from Lycée Jules Ferry Versailles",
+          "score": 60,
+          "reason": "Foundational engineering education, contributing to the academic prerequisite, but not specific to job technologies."
+        }
+      ]
+    },
+    "confidence_score": 0.78,
+    "summary": "This candidate presents a very strong technical foundation for a first graduate role, especially in low-level systems, embedded development, and computer architecture. Their extensive project portfolio and relevant internship directly address many core requirements, though the lack of professional production-level experience for a \"key player\" role slightly tempers the fit.",
+    "resume_tips": [
+      "Quantify performance improvements (e.g., latency, throughput, instruction count) in relevant projects like IRGPU or myMalloc.",
+      "Explicitly list 'Bare-metal development' as a skill, detailing specific aspects like startup code, linker scripts, MMIO, and interrupts.",
+      "Add 'RISC-V architecture' to relevant project or skill descriptions, even if conceptual, to directly address this key requirement.",
+      "Highlight any experience with reading 'RTL-level documentation' within project or experience descriptions to match job expectations."
+    ],
+    "recommended_title": "Performance Software Engineer — Embedded Systems, Accelerators",
+    "recommended_profile": "Looking for a full-time position in software engineering with a focus on low-level, embedded systems, performance, and computer architecture. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded. Fluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running, cooking.",
+    "recommended_experience_ids": [
+      "exp-df8d4cde",
+      "exp-0e31880e"
+    ],
+    "recommended_project_ids": [
+      "proj-irgpu",
+      "proj-e5cdf5a5",
+      "proj-2a5cd1e4",
+      "proj-40cdf000",
+      "proj-ad638299"
+    ],
+    "recommended_skill_ids": [
+      "skil-0247ad5c",
+      "skil-2799aa77",
+      "skil-a856cc8e"
+    ],
+    "recommended_skill_tags": {
+      "skil-0247ad5c": [
+        "C",
+        "ASM",
+        "VHDL",
+        "CUDA",
+        "C++",
+        "Bash"
+      ],
+      "skil-2799aa77": [
+        "ASIC interfacing",
+        "FPGA",
+        "I2C",
+        "Raspberry Pi",
+        "STM32",
+        "UART",
+        "SPI"
+      ],
+      "skil-a856cc8e": [
+        "ASIC interfacing",
+        "Bootloader",
+        "DMA",
+        "Drivers",
+        "FPGA",
+        "GPU",
+        "Kernel",
+        "Linux",
+        "Multithreading",
+        "low-latency",
+        "operating systems",
+        "profiling",
+        "real-time",
+        "virtual memory"
+      ]
+    },
+    "suggested_new_skills": [
+      {
+        "name": "RISC-V Architecture",
+        "category": "Architectures",
+        "level": "intermediate",
+        "tags": [
+          "ISA",
+          "computer architecture"
+        ],
+        "reason": "Explicitly required by the job description for hands-on experience."
+      },
+      {
+        "name": "Bare-Metal Development",
+        "category": "Systems",
+        "level": "expert",
+        "tags": [
+          "firmware",
+          "embedded",
+          "low-level"
+        ],
+        "reason": "Core required skill with deep familiarity needed, implied by projects but not listed explicitly."
+      }
+    ],
+    "suggested_new_skill_tags": [
+      {
+        "skill_id": "skil-2799aa77",
+        "tag": "bare-metal development",
+        "reason": "Core concept required for deep familiarity, directly mentioned in job description."
+      },
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "RISC-V",
+        "reason": "Specific architecture experience required by the job description."
+      },
+      {
+        "skill_id": "skil-52bcbd31",
+        "tag": "JTAG",
+        "reason": "Specific debugging tool mentioned in the job description."
+      },
+      {
+        "skill_id": "skil-52bcbd31",
+        "tag": "trace interfaces",
+        "reason": "Specific debugging interface mentioned in the job description."
+      },
+      {
+        "skill_id": "skil-52bcbd31",
+        "tag": "debug interfaces",
+        "reason": "Specific debugging interface mentioned in the job description."
+      }
+    ],
+    "recommended_entity_descriptions": {
+      "exp-0e31880e": "Led a team of 67 TAs, supervising intensive coding bootcamps and large-scale systems projects (compiler, HTTP server, malloc, POSIX shell) in C/C++. Implemented 1-on-1 code review mentorship, demonstrating deep low-level programming expertise.",
+      "exp-df8d4cde": "Implemented non-zero reset value management for ASIC Physical Table registers, leveraging C++ and Python within a chip-agnostic infrastructure, including SDK parsing, code generation, and DMA. This directly aligns with hardware-software interfacing on custom AI accelerators.",
+      "proj-irgpu": "Developed a real-time GPU-accelerated motion detection pipeline in C++/CUDA, achieving a 20x CPU speedup through iterative CUDA optimization. This showcases strong performance analysis and optimization skills for accelerator platforms.",
+      "proj-e5cdf5a5": "Designed a 32-bit single-cycle ARM-like processor in VHDL, including ALU, register file, instruction decoder, and control unit. Synthesized on FPGA and validated with testbenches, demonstrating deep understanding of computer architecture and hardware bring-up.",
+      "proj-2a5cd1e4": "Built an STM32F429ZI embedded system, functioning as a UART command server and MPU6050 gyroscope driver over I2C. This project involved bare-metal development, ARM Cortex-M4 architecture, and direct peripheral access, essential for custom hardware.",
+      "proj-40cdf000": "Developed a Linux kernel character device driver for an MFRC522 RFID reader, implementing SPI regmap communication and a FIFO command interface. Tested via QEMU emulation, demonstrating expertise in low-level drivers and hardware-software debugging.",
+      "proj-ad638299": "Developed a Rate Monotonic scheduler in Heptagon, compiling to deterministic C step functions without heap allocation, deployed to a Raspberry Pi 3. This highlights experience in real-time embedded systems and achieving deterministic performance."
+    }
+  }
+}

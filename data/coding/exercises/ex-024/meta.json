@@ -1,0 +1,13 @@
+{
+  "id": "ex-024",
+  "title": "Climbing Stairs",
+  "difficulty": "easy",
+  "category": "Dynamic Programming",
+  "knowledge_ids": [
+    "k-dynamic-programming"
+  ],
+  "tags": [
+    "dp",
+    "fibonacci"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "ex-034",
+  "title": "Repeated DNA Sequences",
+  "difficulty": "medium",
+  "category": "Sliding Window",
+  "knowledge_ids": [
+    "k-sliding-window",
+    "k-hash-map"
+  ],
+  "tags": [
+    "sliding-window",
+    "hash-set",
+    "strings",
+    "fixed-window"
+  ]
+}

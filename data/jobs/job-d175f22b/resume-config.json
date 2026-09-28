@@ -1,0 +1,69 @@
+{
+  "selected_entity_ids": [
+    "edu-4b5b8a37",
+    "edu-c735b9b1",
+    "exp-df8d4cde",
+    "exp-0e31880e",
+    "proj-irgpu",
+    "proj-4f43d05f",
+    "proj-tiger",
+    "skil-0247ad5c",
+    "skil-a856cc8e",
+    "skil-52bcbd31",
+    "proj-40cdf000"
+  ],
+  "ai_rankings": [],
+  "profile_text": "Looking for a full-time position in software engineering with a focus on: low-latency systems, C++, algorithms, Linux. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded. Fluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running, cooking.",
+  "resume_title": "Graduate Software Engineer — Systems & Low-Latency",
+  "ai_context": "Graduate Software Engineer position in trading technology, C++/Java/Python, algorithms, data structures",
+  "skill_tag_overrides": {
+    "skil-0247ad5c": [
+      "C",
+      "C++",
+      "C++20",
+      "CUDA",
+      "Java",
+      "OOP",
+      "Python",
+      "Shell",
+      "algorithms",
+      "data structures"
+    ],
+    "skil-a856cc8e": [
+      "DMA",
+      "Drivers",
+      "GPU",
+      "Kernel",
+      "Multithreading",
+      "Virtualization",
+      "low-latency",
+      "networking",
+      "real-time"
+    ],
+    "skil-2799aa77": [
+      "ASIC interfacing",
+      "FPGA",
+      "I2C",
+      "SPI",
+      "STM32"
+    ],
+    "skil-52bcbd31": [
+      "GDB",
+      "monitoring",
+      "optimisation",
+      "system analysis",
+      "testing",
+      "valgrind"
+    ]
+  },
+  "entity_description_overrides": {
+    "exp-df8d4cde": "Designed and implemented full non-zero reset value pipeline for ASIC registers across the chip-agnostic & performance-critical Strata middleware between software agents and ASIC hardware, covering SDK parsing and code generation in Python to C++ compile-time optimization and DMA management, achieving zero runtime overhead.\\\\\nWon 1st place at Arista's ASTERIX Hackathon by building an AI agent context optimization tool in 24h (AST-based, PageRank, MCP server) with 70% token reduction on internal codebases, validated with 400+ tests and custom benchmark. Approved for production development by Director of Engineering.",
+    "exp-0e31880e": "Led the national team of 67 TAs and supervised 5 intensive coding bootcamps (Java, C++, JS, C/Bash, SQL) and 7 large-scale projects (compiler, HTTP server in C, myMalloc, POSIX shell) for 700+ 3rd-year students across 5 campuses. Maintained high technical standards through systematic 1-1 code reviews, and improved TA-to-student ratio from 1:30 to 1:20."
+  },
+  "project_order": [
+    "proj-irgpu",
+    "proj-4f43d05f",
+    "proj-tiger",
+    "proj-40cdf000"
+  ]
+}

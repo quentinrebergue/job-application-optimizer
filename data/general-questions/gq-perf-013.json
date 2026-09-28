@@ -1,0 +1,6 @@
+{
+  "id": "gq-perf-013",
+  "question": "How do you benchmark code correctly?",
+  "answer": "- **Avoid compiler optimization removing your code** — use `volatile`, `DoNotOptimize()` (Google Benchmark), or `__asm__` barriers\n- **Warm up** — run the benchmark several times before measuring to fill caches and stabilize branch predictors\n- **Measure multiple runs** — take the median, not the mean (outliers from OS interrupts skew averages)\n- **Isolate** — disable CPU frequency scaling (`cpupower frequency-set`), avoid background load\n- **Use a proper framework** — Google Benchmark handles all of this automatically\n- **Profile at the right scale** — microbenchmarks can be misleading; validate with real workloads",
+  "tags": ["profiling", "performance"]
+}

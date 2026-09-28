@@ -1,0 +1,10 @@
+{
+  "id": "gq-d0ff55dc",
+  "question": "What is register allocation?\n",
+  "answer": "The compiler assigns frequently-used variables to CPU registers (fastest storage) instead of main memory. A key optimization for performance since register access is much faster than memory access.\n",
+  "tags": [
+    "compilation",
+    "optimization",
+    "registers"
+  ]
+}

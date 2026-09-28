@@ -1,0 +1,228 @@
+{
+  "id": "job-17a38dad",
+  "company": "LUSIS",
+  "title": "Ingénieur Développement Logiciel C++/Linux - Systèmes de Paiement",
+  "description": "À propos de l'offre d'emploi\n\nAvez-vous envie de développer des solutions techniques exigeantes dans un environnement C++ exigeant et structuré ?\n\nChez LUSIS, vous contribuez à des projets logiciels qui soutiennent des systèmes critiques dans le domaine des paiements et des transactions électroniques. Vous intervenez au cœur d'équipes d'ingénieurs expérimentés, où rigueur et précision guident chaque décision.\n\nVous participez à la conception et au développement de composants logiciels C++ sous Linux, en lien direct avec la maîtrise d'ouvrage. Votre quotidien alterne entre phases de conception, de codage, d'intégration et d'échanges techniques.\n\nVotre mission principale consiste à transformer les besoins fonctionnels en solutions logicielles fiables et performantes. Vous travaillez dans un cadre collaboratif, où l'analyse et la qualité du code priment sur la rapidité d'exécution.\n\nLES PRINCIPALES MISSIONS\n- Concevoir et développer des modules logiciels en C++ sous Linux\n- Participer à la rédaction des dossiers de conception technique\n- Collaborer avec la maîtrise d'ouvrage pour affiner les besoins fonctionnels\n- Assurer l'intégration et la validation des développements\n- Identifier et corriger les anomalies détectées lors des tests\n- Documenter les solutions mises en œuvre et leurs évolutions\n- Contribuer à l'amélioration continue des outils et processus internes\n\nCe poste s'adresse à une personne curieuse du fonctionnement des systèmes complexes et motivée par la précision technique. Vous travaillerez dans un environnement structuré où la qualité logicielle est au centre de chaque projet.\n\nVous aimez comprendre en profondeur le fonctionnement des systèmes et concevoir des solutions fiables. Vous savez combiner rigueur et sens de la collaboration pour avancer efficacement.\n\nPROFIL RECHERCHÉ\n- Bac +5 en informatique ou équivalent\n- Maîtrise du langage C++ et de l'environnement Linux\n- Connaissance du format XML et des outils associés\n- Capacité à rédiger des documents techniques clairs et structurés\n- Rigueur dans l'analyse et le suivi des développements\n- Autonomie dans la gestion de vos tâches et priorités\n- Bon relationnel pour échanger avec les équipes techniques et fonctionnelles\n\nUne expérience en développement applicatif ou en intégration logicielle serait appréciée, mais la précision du raisonnement et la méthode de travail sont les qualités les plus recherchées.\n\nPROCESSUS DE RECRUTEMENT\n1. E-mail de confirmation de réception de candidature\n2. Si CV sélectionné, réception d'un appel téléphonique\n3. Entretien physique ou visio avec la RH\n4. Entretien technique avec un responsable technique",
+  "status": "applied",
+  "date_added": "2026-09-24T10:00:08.196Z",
+  "tags": [
+    "C++",
+    "Linux",
+    "XML",
+    "Payments",
+    "Fintech",
+    "Software Design"
+  ],
+  "ats_tags": [
+    "C++",
+    "Linux",
+    "XML",
+    "payment systems",
+    "systems programming",
+    "C",
+    "software engineering",
+    "Bac+5",
+    "on-site",
+    "entry-level"
+  ],
+  "ai_analysis": {
+    "job_id": "job-17a38dad",
+    "analyzed_at": "2026-09-24T10:34:59.868Z",
+    "ats_tags": [
+      "C++",
+      "Linux",
+      "XML",
+      "payment systems",
+      "systems programming",
+      "C",
+      "software engineering",
+      "Bac+5",
+      "on-site",
+      "entry-level"
+    ],
+    "entities_by_type": {
+      "experiences": [
+        {
+          "id": "exp-df8d4cde",
+          "type": "experience",
+          "name": "Software Engineer - Platform team at ARISTA",
+          "score": 68,
+          "reason": "Real C++/Linux production experience but domain is ASIC/hardware infrastructure, not payment systems or XML."
+        },
+        {
+          "id": "exp-0e31880e",
+          "type": "experience",
+          "name": "Head of Teaching Assistants - YAKA / ACU Program at EPITA",
+          "score": 60,
+          "reason": "Supervised C++/systems bootcamps and code review, showing structured technical rigor, but not hands-on production C++ development."
+        }
+      ],
+      "projects": [
+        {
+          "id": "proj-irgpu",
+          "type": "project",
+          "name": "GPU-Accelerated Video Analysis System (IRGPU)",
+          "score": 72,
+          "reason": "Strong C++ systems/performance project but domain (CUDA/GPU) unrelated to payment systems."
+        },
+        {
+          "id": "proj-tiger",
+          "type": "project",
+          "name": "Tiger Compiler",
+          "score": 68,
+          "reason": "Advanced C++ design and structured architecture, good language match but no Linux/payment relevance."
+        },
+        {
+          "id": "proj-4f43d05f",
+          "type": "project",
+          "name": "My Docker",
+          "score": 66,
+          "reason": "Deep Linux systems programming, but written in C not C++, and no payment domain relevance."
+        },
+        {
+          "id": "proj-953ddf40",
+          "type": "project",
+          "name": "MyHTTPd",
+          "score": 64,
+          "reason": "Solid Linux network programming in C, relevant systems skill but language mismatch (C vs required C++)."
+        },
+        {
+          "id": "proj-40cdf000",
+          "type": "project",
+          "name": "RFID Driver",
+          "score": 62,
+          "reason": "Strong Linux kernel/driver experience demonstrating rigor, but C language and hardware focus reduce direct relevance."
+        }
+      ],
+      "skills": [
+        {
+          "id": "skil-0247ad5c",
+          "type": "skill",
+          "name": "Programming & Languages",
+          "score": 88,
+          "reason": "Expert-level C++ matches core requirement directly, though XML knowledge is missing."
+        },
+        {
+          "id": "skil-a856cc8e",
+          "type": "skill",
+          "name": "Systems",
+          "score": 82,
+          "reason": "Strong Linux/kernel/systems expertise aligns with 'environnement Linux' requirement."
+        },
+        {
+          "id": "skil-52bcbd31",
+          "type": "skill",
+          "name": "Other / DevOps",
+          "score": 65,
+          "reason": "Debugging/testing tools (GDB, valgrind) relevant to integration and validation tasks in the job."
+        }
+      ],
+      "education": [
+        {
+          "id": "edu-4b5b8a37",
+          "type": "education",
+          "name": "MSc Computer Engineering, Low-level & Systems (GISTRE)",
+          "score": 80,
+          "reason": "Matches Bac+5 informatique requirement, though specialization is more embedded/systems than enterprise application development."
+        }
+      ]
+    },
+    "confidence_score": 0.48,
+    "summary": "Moderate fit: the candidate has genuine C++ and Linux systems depth (kernel drivers, containers, compilers, network servers) that covers the core technical requirement, but has zero exposure to XML, payment/financial domain, or business-facing technical documentation — all explicitly required. The candidate's stated goal (embedded/hardware/low-level) also diverges from this role, which is application-level C++ development tied to functional/business requirements rather than hardware interfacing.",
+    "resume_tips": [
+      "Add 'XML' explicitly to your skills or projects if you have any exposure — it's a named requirement and currently absent from your resume.",
+      "Reframe C++ projects (Tiger Compiler, IRGPU) to emphasize design/conception and code review rather than purely performance/hardware focus, matching the 'dossiers de conception technique' language.",
+      "Quantify the ARISTA experience (e.g. scope of Strata infrastructure, number of registers/tables impacted) to show production-grade C++ contribution.",
+      "Highlight any technical writing or documentation work explicitly — the job stresses clear technical documents, which is not currently visible in your resume.",
+      "De-emphasize embedded/hardware-only projects (STM32, FPGA, VHDL) for this application since the role is Linux application-level C++, not embedded hardware interfacing.",
+      "Mention collaboration with non-technical/business stakeholders if you have any, since the job explicitly requires liaising with 'maîtrise d'ouvrage'."
+    ],
+    "recommended_title": "Software Engineer — C++ / Linux Systems",
+    "recommended_profile": "Looking for a full-time position in software engineering with a focus on C++ development, Linux systems, and software integration. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded. Fluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running, cooking.",
+    "recommended_experience_ids": [
+      "exp-df8d4cde",
+      "exp-0e31880e"
+    ],
+    "recommended_project_ids": [
+      "proj-irgpu",
+      "proj-tiger",
+      "proj-4f43d05f",
+      "proj-953ddf40",
+      "proj-40cdf000"
+    ],
+    "recommended_skill_ids": [
+      "skil-0247ad5c",
+      "skil-a856cc8e",
+      "skil-52bcbd31"
+    ],
+    "recommended_skill_tags": {
+      "skil-0247ad5c": [
+        "C",
+        "C++",
+        "C++20",
+        "OOP",
+        "algorithms",
+        "data structures"
+      ],
+      "skil-a856cc8e": [
+        "Linux",
+        "kernel",
+        "drivers",
+        "multithreading",
+        "operating systems",
+        "virtual memory"
+      ],
+      "skil-52bcbd31": [
+        "GDB",
+        "Git",
+        "testing",
+        "valgrind",
+        "system analysis"
+      ]
+    },
+    "suggested_new_skills": [
+      {
+        "name": "XML",
+        "category": "Data Formats",
+        "level": "beginner",
+        "tags": [
+          "parsing",
+          "XSD",
+          "data interchange"
+        ],
+        "reason": "Explicitly required by the job for configuration/data formats"
+      },
+      {
+        "name": "Technical Documentation",
+        "category": "Soft Skills / Process",
+        "level": "intermediate",
+        "tags": [
+          "design specs",
+          "clear writing"
+        ],
+        "reason": "Job requires writing clear technical design documents"
+      }
+    ],
+    "suggested_new_skill_tags": [
+      {
+        "skill_id": "skil-0247ad5c",
+        "tag": "XML",
+        "reason": "Job requires knowledge of XML format and associated tools"
+      },
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "software integration",
+        "reason": "Job emphasizes integration and validation of developments"
+      }
+    ],
+    "recommended_entity_descriptions": {
+      "exp-df8d4cde": "Developed C++ and Python components for ASIC Physical Table register management within a chip-agnostic Linux-based infrastructure (Strata), covering SDK parsing, code generation, and DMA handling. Contributed to a production-approved AI optimization tool, demonstrating rigor in system-level C++ design and iterative development. Strong hands-on C++/Linux engineering experience in a structured, precision-driven environment.",
+      "exp-0e31880e": "Supervised 67 teaching assistants delivering C++, C, and systems-focused coding bootcamps (compiler, HTTP server, malloc, POSIX shell) to 700+ students, emphasizing rigorous code review and technical mentorship. Improved review ratio through structured 1-on-1 methodology, reflecting strong communication and quality-driven engineering practices applicable to collaborative C++/Linux development.",
+      "proj-irgpu": "Built a real-time motion detection pipeline in C++ with CUDA optimization (reservoir sampling, morphological operations, hysteresis thresholding), achieving 20x CPU speedup, demonstrating strong C++ performance engineering and structured design under Linux.",
+      "proj-tiger": "Designed and implemented a compiler frontend in C++ (lexing, parsing, type checking, LLVM IR generation) as part of a 4-person team, showcasing rigorous C++ design, modular architecture, and structured technical documentation of language semantics.",
+      "proj-4f43d05f": "Built a lightweight container runtime in C using Linux namespaces, pivot_root, seccomp, and cgroups, demonstrating deep understanding of Linux internals and system-level software integration relevant to critical infrastructure development.",
+      "proj-953ddf40": "Developed a concurrent HTTP server in C using epoll and a per-client state machine, handling efficient I/O multiplexing and request parsing — direct experience in Linux systems programming and reliable software component design.",
+      "proj-40cdf000": "Developed a Linux kernel character device driver in C for an RFID reader with SPI communication and FIFO command interface, tested via QEMU — demonstrates strong low-level Linux development and validation skills applicable to critical software components."
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "id": "gq-4677f6ed",
+  "question": "What is a trait (or interface)?\n",
+  "answer": "A set of method signatures that a type must implement. Defines a contract — 'if you implement this trait, you must have these methods.' Enables polymorphism without inheritance. Rust traits, Java interfaces, Go interfaces.\n",
+  "tags": [
+    "typology",
+    "traits",
+    "interfaces"
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "id": "gq-gpu-011",
+  "question": "What is unified memory in CUDA?",
+  "answer": "Unified Memory (`cudaMallocManaged`) provides a single pointer accessible from both CPU and GPU. The CUDA runtime automatically migrates data between CPU and GPU on demand using page faults. It simplifies code but can be slower than explicit transfers if not managed carefully — unexpected page faults cause stalls. On newer hardware (Pascal+), it works better with prefetching hints (`cudaMemPrefetchAsync`).",
+  "tags": ["gpu", "cuda"]
+}

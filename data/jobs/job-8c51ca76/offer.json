@@ -1,0 +1,317 @@
+{
+  "id": "job-8c51ca76",
+  "company": "Canonical",
+  "title": "Graduate Software Engineer, Open Source and Linux",
+  "description": "This role offers an exceptional entry point into large-scale open source engineering, where you will contribute to systems that power cloud, AI, IoT, and enterprise infrastructure worldwide. You will work on deeply technical challenges spanning operating systems, developer tools, and distributed software used by millions of users. The environment is highly collaborative, remote-first, and globally distributed, with strong mentorship and regular in-person sprints. Engineers are encouraged to take ownership early, write production-grade code, and engage directly with users and open source communities. You will gain exposure across the full software stack, from low-level Linux components to modern cloud-native technologies.\n\nAccountabilities:\n- Write clean, efficient, and high-quality code in Python, Golang, Rust, C/C++, JavaScript, or Java\n- Work across the full stack of systems, including Ubuntu environments and broader Linux components\n- Participate in design discussions, global engineering sprints, and roadmap planning\n- Collaborate with users, contributors, and internal teams through code reviews and community engagement\n- Support debugging, issue resolution, and customer-facing problem solving\n- Develop strong awareness of software security, system design principles, and scalable architecture patterns\n\nRequirements:\n- Bachelor's degree in Computer Science, Mathematics, Engineering, or related STEM field\n- Proficiency in at least one of: Python, Rust, C/C++, Golang, JavaScript, Java\n- Familiarity with Linux-based environments and systems-level software development\n- Strong analytical thinking, problem-solving ability, and attention to detail\n- Excellent written and spoken English\n- Willingness to travel internationally twice per year\n\nBenefits:\n- Fully remote global-first work environment\n- Annual learning and development budget\n- Competitive compensation with performance-based bonuses\n- International engineering sprints",
+  "location": "Switzerland (Remote)",
+  "url": "https://www.linkedin.com/jobs/view/4423908435/",
+  "status": "applied",
+  "date_added": "2026-06-02T21:16:06.871Z",
+  "tags": [
+    "Python",
+    "Golang",
+    "Rust",
+    "C++",
+    "Linux",
+    "Ubuntu",
+    "Open Source",
+    "Cloud",
+    "IoT",
+    "JavaScript",
+    "Java"
+  ],
+  "ats_tags": [
+    "Linux",
+    "Systems-Software",
+    "C/C++",
+    "Python",
+    "Rust",
+    "Kernel",
+    "Embedded",
+    "Open-Source",
+    "Graduate",
+    "Remote"
+  ],
+  "ai_analysis": {
+    "job_id": "job-8c51ca76",
+    "analyzed_at": "2026-06-02T21:18:53.634Z",
+    "ats_tags": [
+      "Linux",
+      "Systems-Software",
+      "C/C++",
+      "Python",
+      "Rust",
+      "Kernel",
+      "Embedded",
+      "Open-Source",
+      "Graduate",
+      "Remote"
+    ],
+    "entities_by_type": {
+      "experiences": [
+        {
+          "id": "exp-0e31880e",
+          "type": "experience",
+          "name": "Head of Teaching Assistants - YAKA / ACU Program at EPITA",
+          "score": 80,
+          "reason": "Demonstrates leadership, mentorship with code reviews, and direct involvement with deeply technical systems projects (compiler, shell, malloc) using core job languages."
+        },
+        {
+          "id": "exp-df8d4cde",
+          "type": "experience",
+          "name": "Software Engineer Intern - Platform team at ARISTA",
+          "score": 95,
+          "reason": "This future internship is an outstanding match, involving low-level ASIC interfacing, SDK parsing, code generation, and DMA in Python and C++, aligning with deeply technical Linux components."
+        }
+      ],
+      "projects": [
+        {
+          "id": "proj-0bceb7b7",
+          "type": "project",
+          "name": "MyFind",
+          "score": 75,
+          "reason": "Strong demonstration of C proficiency and familiarity with Unix utilities, relevant for Linux-based environments and systems-level software."
+        },
+        {
+          "id": "proj-1b63d04a",
+          "type": "project",
+          "name": "42sh",
+          "score": 85,
+          "reason": "Implementing a shell interpreter in C with full parsing and AST demonstrates deep understanding of Linux-based environments and systems-level software development."
+        },
+        {
+          "id": "proj-2a5cd1e4",
+          "type": "project",
+          "name": "ARM project",
+          "score": 80,
+          "reason": "Embedded systems development on ARM Cortex, I2C/UART drivers, and C proficiency aligns well with IoT, low-level Linux components, and hardware interfacing."
+        },
+        {
+          "id": "proj-40cdf000",
+          "type": "project",
+          "name": "RFID Driver",
+          "score": 95,
+          "reason": "Directly relevant Linux kernel character device driver development with SPI communication and QEMU testing is an exceptional match for low-level Linux components and operating systems."
+        },
+        {
+          "id": "proj-4c4f5731",
+          "type": "project",
+          "name": "Linux System Tracing & Storage",
+          "score": 85,
+          "reason": "Deep exploration of Linux storage stacks, fault injection, and system tracing demonstrates strong familiarity with Ubuntu environments and broader Linux components."
+        },
+        {
+          "id": "proj-4f43d05f",
+          "type": "project",
+          "name": "My Docker",
+          "score": 95,
+          "reason": "Building a container runtime in C using Linux namespaces and cgroups is a phenomenal demonstration of expertise in distributed software, cloud-native technologies, and low-level Linux systems programming."
+        },
+        {
+          "id": "proj-953ddf40",
+          "type": "project",
+          "name": "MyHTTPd",
+          "score": 70,
+          "reason": "HTTP server in C with epoll shows C proficiency and network programming skills, relevant for distributed software and systems communication."
+        },
+        {
+          "id": "proj-ad638299",
+          "type": "project",
+          "name": "Synchronous Real-Time Systems",
+          "score": 75,
+          "reason": "Real-time scheduler development on Raspberry Pi demonstrates embedded systems knowledge and C proficiency, relevant for IoT and systems with timing constraints."
+        },
+        {
+          "id": "proj-b1f3b77a",
+          "type": "project",
+          "name": "myMalloc",
+          "score": 90,
+          "reason": "Custom memory allocator in C demonstrates a deep understanding of low-level memory management, a critical skill for operating systems and systems-level software development."
+        },
+        {
+          "id": "proj-e5cdf5a5",
+          "type": "project",
+          "name": "Unicycle CPU",
+          "score": 80,
+          "reason": "Designing an ARM-like processor in VHDL and synthesizing on FPGA showcases fundamental hardware understanding and low-level architecture, valuable for ASIC interfacing and platform work."
+        },
+        {
+          "id": "proj-ero2",
+          "type": "project",
+          "name": "Queuing System Analysis",
+          "score": 65,
+          "reason": "Demonstrates analytical thinking and Python proficiency, relevant for problem-solving, though less direct on core systems engineering."
+        },
+        {
+          "id": "proj-irgpu",
+          "type": "project",
+          "name": "GPU-Accelerated Video Analysis System (IRGPU)",
+          "score": 75,
+          "reason": "GPU acceleration using C++ and CUDA is relevant for AI and high-performance computing aspects mentioned in the job description."
+        },
+        {
+          "id": "proj-tiger",
+          "type": "project",
+          "name": "Tiger Compiler",
+          "score": 80,
+          "reason": "Building a compiler frontend with LLVM IR demonstrates deep understanding of developer tools and software architecture, relevant for operating systems and compiler components."
+        }
+      ],
+      "skills": [
+        {
+          "id": "skil-0247ad5c",
+          "type": "skill",
+          "name": "Programming & Languages",
+          "score": 95,
+          "reason": "Candidate demonstrates expert proficiency in multiple required languages (C, C++, Python, Rust) and low-level languages (ASM, VHDL), directly addressing a core job requirement for writing high-quality code."
+        },
+        {
+          "id": "skil-2799aa77",
+          "type": "skill",
+          "name": "Embedded & Hardware",
+          "score": 95,
+          "reason": "Advanced skills in ASIC interfacing, FPGA, and various embedded protocols (I2C, UART, SPI) are highly relevant for low-level Linux components, IoT, and hardware interactions."
+        },
+        {
+          "id": "skil-52bcbd31",
+          "type": "skill",
+          "name": "Other / DevOps",
+          "score": 80,
+          "reason": "Advanced skills in Git, Kubernetes, security, monitoring, and debugging tools (GDB, Valgrind) are critical for collaborative, production-grade engineering and understanding scalable architecture patterns."
+        },
+        {
+          "id": "skil-a856cc8e",
+          "type": "skill",
+          "name": "Systems",
+          "score": 98,
+          "reason": "Expert proficiency in Linux, Kernel, Drivers, Virtualization, real-time, and DMA perfectly aligns with the job's focus on operating systems, deeply technical challenges, and low-level Linux components."
+        }
+      ],
+      "education": [
+        {
+          "id": "edu-4b5b8a37",
+          "type": "education",
+          "name": "MSc Computer Engineering, Low-level & Systems (GISTRE) from EPITA",
+          "score": 95,
+          "reason": "Directly matches the Bachelor's degree requirement from a related STEM field and strongly aligns with the 'low-level & systems' focus of the role, providing an exceptional academic background."
+        },
+        {
+          "id": "edu-45c721ed",
+          "type": "education",
+          "name": "Scientific Baccalaureate (Engineering & Computer Science) — Honors from Lycée Chaptal",
+          "score": 60,
+          "reason": "Provides a strong foundational STEM education that complements the candidate's advanced studies and technical focus."
+        },
+        {
+          "id": "edu-c735b9b1",
+          "type": "education",
+          "name": "Preparatory Class (PTSI) in Engineering Science from Lycée Jules Ferry Versailles",
+          "score": 60,
+          "reason": "Serves as a solid foundational academic step in engineering science, contributing to the candidate's overall technical profile."
+        }
+      ]
+    },
+    "confidence_score": 0.89,
+    "summary": "This candidate is an exceptional match for the Graduate Software Engineer role, demonstrating deep systems-level expertise with Linux, C/C++, and embedded development. Their extensive project portfolio and relevant internship experience (future) align perfectly with the job's focus on low-level Linux components and operating systems, far exceeding typical graduate profiles. The only minor detractor is a less relevant web development experience, easily outweighed by core strengths.",
+    "resume_tips": [
+      "Explicitly state your proficiency level in spoken and written English and confirm willingness to travel internationally.",
+      "Quantify the impact of your leadership in the Head of Teaching Assistants role, e.g., 'improved student project quality by X%' or 'reduced average debugging time by Y%'.",
+      "De-emphasize or reframe the 'Web Developer' experience to highlight any transferable skills in architecture or problem-solving relevant to systems, if applicable, or remove to make resume more concise."
+    ],
+    "recommended_title": "Graduate Software Engineer — Linux Systems & Open Source",
+    "recommended_profile": "Looking for a full-time position in software engineering with a focus on: Linux Systems, Low-Level, Embedded, Open Source. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded. Fluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running, cooking.",
+    "recommended_experience_ids": [
+      "exp-0e31880e",
+      "exp-df8d4cde"
+    ],
+    "recommended_project_ids": [
+      "proj-40cdf000",
+      "proj-4f43d05f",
+      "proj-b1f3b77a",
+      "proj-1b63d04a",
+      "proj-4c4f5731"
+    ],
+    "recommended_skill_ids": [
+      "skil-0247ad5c",
+      "skil-2799aa77",
+      "skil-a856cc8e"
+    ],
+    "recommended_skill_tags": {
+      "skil-0247ad5c": [
+        "C",
+        "ASM",
+        "Shell",
+        "CUDA",
+        "Rust",
+        "C++",
+        "Bash",
+        "Python"
+      ],
+      "skil-2799aa77": [
+        "ASIC interfacing",
+        "FPGA",
+        "I2C",
+        "Raspberry Pi",
+        "STM32",
+        "UART",
+        "SPI"
+      ],
+      "skil-a856cc8e": [
+        "Linux",
+        "Kernel",
+        "Drivers",
+        "Virtualization",
+        "Multithreading",
+        "GPU",
+        "real-time",
+        "DMA",
+        "low-latency"
+      ]
+    },
+    "suggested_new_skills": [
+      {
+        "name": "Golang",
+        "category": "Programming & Languages",
+        "level": "familiar",
+        "tags": [
+          "systems",
+          "cloud-native"
+        ],
+        "reason": "Explicitly listed as a desired programming language in the job requirements."
+      }
+    ],
+    "suggested_new_skill_tags": [
+      {
+        "skill_id": "skil-52bcbd31",
+        "tag": "cloud-native",
+        "reason": "Kubernetes is mentioned, and the job description includes cloud-native technologies."
+      },
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "operating systems",
+        "reason": "Explicitly mentioned in the job description's technical challenges and directly aligns with Systems expertise."
+      },
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "distributed software",
+        "reason": "Explicitly mentioned in the job description's technical challenges and aligns with concepts like Virtualization and Multithreading within Systems."
+      }
+    ],
+    "recommended_entity_descriptions": {
+      "exp-0e31880e": "Led a national team of 67 TAs, supervising 12 intensive coding bootcamps and large-scale projects including a compiler, HTTP server in C, malloc, and a POSIX shell, directly contributing to systems-level software development education. Implemented a 1-on-1 code review mentorship model, significantly improving TA-to-student engagement and code quality for 700+ students.",
+      "exp-df8d4cde": "Implemented non-zero reset value management for ASIC Physical Table registers within a chip-agnostic infrastructure, involving SDK parsing, code generation, and DMA in Python and C++. This directly addresses low-level Linux components and deeply technical challenges. Won Arista's Hackathon, optimizing an AI agent with 70% token reduction for internal codebases.",
+      "proj-0bceb7b7": "Developed a file search utility in C, mirroring the Unix `find` command, featuring operator and expression evaluation for flexible file discovery and filtering across Linux directory trees.",
+      "proj-1b63d04a": "Implemented a complete shell interpreter in C with a lexer, parser, and abstract syntax tree (AST), demonstrating deep understanding of Linux-based environments and systems-level software development for Unix-like shells.",
+      "proj-2a5cd1e4": "Engineered an STM32F429ZI embedded system as a UART command server, implementing a 4-level log subsystem and an MPU6050 gyroscope driver over I2C, relevant for IoT and low-level Linux components.",
+      "proj-40cdf000": "Developed a Linux kernel character device driver in C for an MFRC522 RFID reader, featuring SPI regmap communication and a FIFO command interface. Tested via QEMU emulation, this project directly showcases expertise in low-level Linux components and operating systems.",
+      "proj-4c4f5731": "Utilized strace fault injection and syscall filtering for binary reverse-engineering, alongside a Bash script automating Linux storage stacks including loop devices, LUKS2, LVM, and RAID, demonstrating deep familiarity with Ubuntu environments and broader Linux components.",
+      "proj-4f43d05f": "Engineered a lightweight container runtime in C, leveraging Linux namespaces, pivot_root, capabilities dropping, seccomp syscall filtering, and cgroups, directly aligning with distributed software and cloud-native technologies.",
+      "proj-953ddf40": "Implemented an HTTP server in C with epoll-based I/O multiplexing for efficient concurrent connection handling, showcasing strong network programming skills critical for distributed software.",
+      "proj-ad638299": "Developed a Rate Monotonic scheduler in Heptagon, compiling deterministic C step functions without heap allocation, and deployed it to a Raspberry Pi 3 via UART bootloader, demonstrating real-time embedded systems capabilities.",
+      "proj-b1f3b77a": "Created a custom memory allocator in C, incorporating advanced techniques like memory alignment, block recycling, and page management, highlighting deep understanding of low-level memory management and systems programming.",
+      "proj-e5cdf5a5": "Designed a 32-bit single-cycle ARM-like processor in VHDL, including ALU, register file, and control unit, synthesized on an FPGA, showcasing fundamental understanding of hardware and low-level architecture relevant to ASIC interfacing.",
+      "proj-irgpu": "Built a real-time motion detection pipeline in C++/CUDA, achieving a 20x CPU speedup through iterative CUDA optimization, relevant for AI and high-performance computing aspects of enterprise infrastructure.",
+      "proj-tiger": "Constructed a compiler frontend in C++ (lexing, parsing, binding, type checking, LLVM IR generation), demonstrating expertise in developer tools and deep understanding of software execution for operating systems components."
+    }
+  }
+}

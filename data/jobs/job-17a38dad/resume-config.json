@@ -1,0 +1,54 @@
+{
+  "selected_entity_ids": [
+    "edu-4b5b8a37",
+    "edu-c735b9b1",
+    "exp-df8d4cde",
+    "exp-0e31880e",
+    "proj-irgpu",
+    "proj-tiger",
+    "proj-4f43d05f",
+    "proj-40cdf000",
+    "skil-0247ad5c",
+    "skil-a856cc8e",
+    "skil-52bcbd31",
+    "exp-b0ccfdd9"
+  ],
+  "ai_rankings": [],
+  "profile_text": "Looking for a full-time position in software engineering with a focus on C++ development, Linux systems, and software integration. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded. Fluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running, cooking.",
+  "resume_title": "Quentin Rebergue - Software Engineer",
+  "ai_context": "Im searching a first graduate job in system, low-level, hardware interface, linux",
+  "skill_tag_overrides": {
+    "skil-0247ad5c": [
+      "Bash",
+      "C",
+      "C++",
+      "C++20",
+      "OOP",
+      "Python",
+      "XML"
+    ],
+    "skil-a856cc8e": [
+      "Linux",
+      "drivers",
+      "kernel",
+      "multithreading",
+      "operating systems",
+      "real-time",
+      "virtual memory",
+      "virtualization"
+    ],
+    "skil-52bcbd31": [
+      "GDB",
+      "Git",
+      "testing",
+      "valgrind",
+      "system analysis"
+    ]
+  },
+  "project_order": [
+    "proj-irgpu",
+    "proj-tiger",
+    "proj-4f43d05f",
+    "proj-40cdf000"
+  ]
+}

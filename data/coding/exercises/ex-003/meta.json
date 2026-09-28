@@ -1,0 +1,14 @@
+{
+  "id": "ex-003",
+  "title": "Longest Substring Without Repeating Characters",
+  "difficulty": "medium",
+  "category": "Sliding Window",
+  "knowledge_ids": [
+    "k-sliding-window",
+    "k-hash-map"
+  ],
+  "tags": [
+    "strings",
+    "sliding-window"
+  ]
+}

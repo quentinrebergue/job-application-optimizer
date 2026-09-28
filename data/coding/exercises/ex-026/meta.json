@@ -1,0 +1,14 @@
+{
+  "id": "ex-026",
+  "title": "Task Scheduler",
+  "difficulty": "medium",
+  "category": "Greedy",
+  "knowledge_ids": [
+    "k-greedy"
+  ],
+  "tags": [
+    "greedy",
+    "math",
+    "heap"
+  ]
+}

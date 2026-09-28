@@ -1,0 +1,14 @@
+{
+  "id": "ex-033",
+  "title": "Remove Duplicates from Sorted Array",
+  "difficulty": "easy",
+  "category": "Two Pointers",
+  "knowledge_ids": [
+    "k-two-pointers"
+  ],
+  "tags": [
+    "arrays",
+    "two-pointers",
+    "in-place"
+  ]
+}

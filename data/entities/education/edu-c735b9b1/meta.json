@@ -1,0 +1,13 @@
+{
+  "id": "edu-c735b9b1",
+  "type": "education",
+  "degree": "Preparatory Class (PTSI) in Engineering Science",
+  "institution": "Lycée Jules Ferry Versailles",
+  "period": "2019 – 2020",
+  "tags": [
+    "PTSI",
+    "Engineering",
+    "Prépa"
+  ],
+  "latex_snippet": "\\item \\textbf{Preparatory Class (PTSI) in Engineering Science}, Lycee Jules Ferry, Versailles \\hfill {\\small{2019--2020}}"
+}

@@ -1,0 +1,6 @@
+{
+  "id": "gq-net-003",
+  "question": "What is the difference between HTTP/1.1, HTTP/2, and HTTP/3?",
+  "answer": "**HTTP/1.1**: one request per TCP connection at a time (head-of-line blocking), keep-alive allows reuse but is still sequential.\n\n**HTTP/2**: multiplexing — multiple requests in parallel over one TCP connection, header compression (HPACK), server push. Still has head-of-line blocking at the TCP layer.\n\n**HTTP/3**: uses QUIC (UDP-based) instead of TCP — eliminates TCP head-of-line blocking, faster connection setup (0-RTT), better performance on lossy networks. Each stream is independent so packet loss only affects that stream.",
+  "tags": ["networking"]
+}

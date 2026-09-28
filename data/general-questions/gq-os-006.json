@@ -1,0 +1,6 @@
+{
+  "id": "gq-os-006",
+  "question": "How does `malloc` work under the hood?",
+  "answer": "`malloc` is a user-space memory allocator (e.g. glibc's ptmalloc). It manages a heap: a region of memory obtained from the OS via `brk()` or `mmap()`. Small allocations are carved from free lists of size classes; large allocations (`mmap` directly). When you `free`, the block is returned to the free list and coalesced with adjacent free blocks if possible. `malloc` itself never returns memory to the OS unless the freed block is at the top of the heap (via `brk` shrink) or was `mmap`-ed. Modern allocators (jemalloc, tcmalloc) use per-thread caches to reduce lock contention.",
+  "tags": ["os", "cpp"]
+}

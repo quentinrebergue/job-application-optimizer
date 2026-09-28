@@ -1,0 +1,10 @@
+{
+  "id": "gq-f89ff6f0",
+  "question": "What is prompt engineering?\n",
+  "answer": "The art of crafting input prompts to get desired behavior from an LLM. Techniques: few-shot examples, chain-of-thought, role-playing, specifying output format. No retraining needed. Effectiveness depends on model capability and prompt clarity.\n",
+  "tags": [
+    "ai",
+    "llm",
+    "prompting"
+  ]
+}

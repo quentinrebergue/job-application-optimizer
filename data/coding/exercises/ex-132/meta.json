@@ -1,0 +1,15 @@
+{
+  "id": "ex-132",
+  "title": "Word Search II",
+  "difficulty": "hard",
+  "category": "Backtracking",
+  "knowledge_ids": [
+    "k-backtracking"
+  ],
+  "tags": [
+    "backtracking",
+    "trie",
+    "matrix"
+  ],
+  "leetcode": 212
+}

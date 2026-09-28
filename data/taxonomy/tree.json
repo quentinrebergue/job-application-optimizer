@@ -1,0 +1,282 @@
+{
+  "version": 1,
+  "nodes": [
+    {
+      "id": "systems",
+      "label": "Systems Programming",
+      "parent": null,
+      "aliases": [
+        "Systems",
+        "systems programming",
+        "low-level",
+        "systems programming"
+      ]
+    },
+    {
+      "id": "linux",
+      "label": "Linux",
+      "parent": "systems",
+      "aliases": [
+        "Linux"
+      ]
+    },
+    {
+      "id": "kernel",
+      "label": "Kernel Development",
+      "parent": "linux",
+      "aliases": [
+        "kernel",
+        "Kernel Development",
+        "Linux Kernel"
+      ]
+    },
+    {
+      "id": "drivers",
+      "label": "Device Drivers",
+      "parent": "kernel",
+      "aliases": [
+        "drivers",
+        "Device Drivers",
+        "character device"
+      ]
+    },
+    {
+      "id": "virtualization",
+      "label": "Virtualization",
+      "parent": "systems",
+      "aliases": [
+        "Virtualization",
+        "virtualization",
+        "pivot_root"
+      ]
+    },
+    {
+      "id": "multithreading",
+      "label": "Multithreading",
+      "parent": "systems",
+      "aliases": [
+        "Multithreading",
+        "multithreading",
+        "concurrency"
+      ]
+    },
+    {
+      "id": "distributed",
+      "label": "Distributed Systems",
+      "parent": "systems",
+      "aliases": [
+        "Distributed Systems",
+        "distributed"
+      ]
+    },
+    {
+      "id": "languages",
+      "label": "Programming Languages",
+      "parent": null,
+      "aliases": [
+        "Programming",
+        "Languages",
+        "OOP",
+        "TAC"
+      ]
+    },
+    {
+      "id": "c-cpp",
+      "label": "C / C++",
+      "parent": "languages",
+      "aliases": [
+        "C",
+        "C++",
+        "C/C++"
+      ]
+    },
+    {
+      "id": "asm",
+      "label": "Assembly",
+      "parent": "languages",
+      "aliases": [
+        "ASM",
+        "Assembly",
+        "asm"
+      ]
+    },
+    {
+      "id": "python",
+      "label": "Python",
+      "parent": "languages",
+      "aliases": [
+        "Python"
+      ]
+    },
+    {
+      "id": "hdl",
+      "label": "Hardware Description Languages",
+      "parent": "languages",
+      "aliases": [
+        "VHDL",
+        "SystemVerilog",
+        "HDL",
+        "Ada",
+        "ADA"
+      ]
+    },
+    {
+      "id": "rust",
+      "label": "Rust",
+      "parent": "languages",
+      "aliases": [
+        "Rust"
+      ]
+    },
+    {
+      "id": "gpu",
+      "label": "GPU Programming",
+      "parent": "languages",
+      "aliases": [
+        "CUDA",
+        "GPU Programming",
+        "GPU"
+      ]
+    },
+    {
+      "id": "shell",
+      "label": "Shell Scripting",
+      "parent": "languages",
+      "aliases": [
+        "Shell",
+        "Bash",
+        "C/Bash"
+      ]
+    },
+    {
+      "id": "software-eng",
+      "label": "Software Engineering",
+      "parent": null,
+      "aliases": [
+        "Software Engineering"
+      ]
+    },
+    {
+      "id": "compilers",
+      "label": "Compilers & Parsing",
+      "parent": "software-eng",
+      "aliases": [
+        "Compiler",
+        "Compilers",
+        "LLVM",
+        "Flex",
+        "Bison",
+        "Parser",
+        "lexing",
+        "parsing"
+      ]
+    },
+    {
+      "id": "security",
+      "label": "Security",
+      "parent": "software-eng",
+      "aliases": [
+        "Security",
+        "security",
+        "security best practices",
+        "seccomp",
+        "Cryptography",
+        "capabilities dropping"
+      ]
+    },
+    {
+      "id": "networking",
+      "label": "Networking",
+      "parent": "software-eng",
+      "aliases": [
+        "TCP/IP",
+        "Networking",
+        "HTTP",
+        "HTTP server"
+      ]
+    },
+    {
+      "id": "devops",
+      "label": "DevOps & Tools",
+      "parent": null,
+      "aliases": [
+        "DevOps",
+        "CI/CD",
+        "GitLab CI"
+      ]
+    },
+    {
+      "id": "vcs",
+      "label": "Version Control",
+      "parent": "devops",
+      "aliases": [
+        "Git",
+        "Perforce"
+      ]
+    },
+    {
+      "id": "containers-devops",
+      "label": "Containers & Orchestration",
+      "parent": "devops",
+      "aliases": [
+        "Docker",
+        "Kubernetes",
+        "cgroups",
+        "Namespaces",
+        "Containers"
+      ]
+    },
+    {
+      "id": "ai-ml",
+      "label": "AI / Machine Learning",
+      "parent": null,
+      "aliases": [
+        "AI",
+        "Machine Learning",
+        "ML",
+        "LLM",
+        "AI agent"
+      ]
+    },
+    {
+      "id": "teaching",
+      "label": "Teaching & Mentoring",
+      "parent": null,
+      "aliases": [
+        "Education",
+        "Teaching",
+        "Team Lead",
+        "bootcamp",
+        "pedagogy"
+      ]
+    },
+    {
+      "id": "web",
+      "label": "Web Development",
+      "parent": null,
+      "aliases": [
+        "Web",
+        "JavaScript",
+        "React",
+        "Freelance",
+        "Frontend",
+        "Backend",
+        "JS",
+        "frontend-dev",
+        "web"
+      ]
+    },
+    {
+      "id": "test-node-b4fa",
+      "label": "Test Node",
+      "parent": null,
+      "aliases": []
+    },
+    {
+      "id": "test-node-98ea",
+      "label": "Test Node",
+      "parent": null,
+      "aliases": []
+    }
+  ]
+}

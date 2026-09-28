@@ -1,0 +1,10 @@
+{
+  "id": "gq-fc528279",
+  "question": "What is the learning rate?\n",
+  "answer": "Hyperparameter controlling step size in gradient descent. Too small: very slow convergence. Too large: overshoot minima, diverge. Often decayed over time (schedule). Critical for training success. Typical: 1e-3 to 1e-5 for LLMs.\n",
+  "tags": [
+    "ai",
+    "training",
+    "hyperparameters"
+  ]
+}

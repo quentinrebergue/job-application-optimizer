@@ -1,0 +1,10 @@
+{
+  "id": "gq-3514f32d",
+  "question": "What are generics?\n",
+  "answer": "Type-safe way to write code that works with multiple types. A generic function/class is parameterized by type. Example: List<T> in Java, Vec<T> in Rust. Avoids code duplication and type casts.\n",
+  "tags": [
+    "typology",
+    "generics",
+    "templates"
+  ]
+}

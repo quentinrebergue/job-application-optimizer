@@ -1,0 +1,6 @@
+{
+  "id": "gq-gpu-012",
+  "question": "How do you overlap computation and data transfer on a GPU using CUDA streams?",
+  "answer": "CUDA streams allow asynchronous operations. By using multiple streams, you can overlap a kernel on one chunk of data while transferring the next chunk:\n\n```cpp\nfor (int i = 0; i < N; i += chunk) {\n    cudaMemcpyAsync(d_in + i, h_in + i, chunk_size, cudaMemcpyHostToDevice, stream[i]);\n    kernel<<<grid, block, 0, stream[i]>>>(d_in + i, d_out + i);\n    cudaMemcpyAsync(h_out + i, d_out + i, chunk_size, cudaMemcpyDeviceToHost, stream[i]);\n}\n```\n\nThis creates a pipeline where transfer and compute overlap, hiding PCIe latency.",
+  "tags": ["gpu", "cuda", "performance"]
+}

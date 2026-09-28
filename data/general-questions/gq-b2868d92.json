@@ -1,0 +1,10 @@
+{
+  "id": "gq-b2868d92",
+  "question": "What is causal masking?\n",
+  "answer": "In autoregressive models, tokens can only attend to tokens that come before them (not future tokens). Implemented by setting attention scores to -inf for future positions before softmax. Ensures the model predicts the next token without peeking.\n",
+  "tags": [
+    "ai",
+    "transformer",
+    "autoregressive"
+  ]
+}

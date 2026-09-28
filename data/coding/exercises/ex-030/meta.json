@@ -1,0 +1,14 @@
+{
+  "id": "ex-030",
+  "title": "Kth Smallest Element in Sorted Matrix",
+  "difficulty": "medium",
+  "category": "Binary Search",
+  "knowledge_ids": [
+    "k-binary-search"
+  ],
+  "tags": [
+    "binary-search",
+    "matrix",
+    "heap"
+  ]
+}

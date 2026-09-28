@@ -1,0 +1,10 @@
+{
+  "id": "gq-41634191",
+  "question": "Why is pinned memory required for async transfers?\n",
+  "answer": "The DMA engine needs a stable physical address. Regular heap memory can be moved by the OS, breaking the transfer.\n",
+  "tags": [
+    "cuda",
+    "memory",
+    "pinned"
+  ]
+}

@@ -1,0 +1,22 @@
+[
+  {
+    "id": "q-tiger-1",
+    "question": "Why did you use the visitor pattern for all AST passes instead of putting logic in the AST nodes?",
+    "answer": "The Tiger AST has ~30 node types, and each compilation phase needs to traverse it differently. Putting logic in the nodes (the 'interpret' approach) would require modifying every node class every time you add a phase, and it couples unrelated concerns. The visitor pattern keeps the AST structure stable: we define a DefaultVisitor base that no-ops on every node, and each phase (binder, type-checker, escape analyzer, LLVM translator) overrides only the nodes it cares about. This made it straightforward to add the OOP extension phases without touching existing code -- we just added ObjectVisitor alongside DefaultVisitor."
+  },
+  {
+    "id": "q-tiger-2",
+    "question": "How does your 3-namespace binder work, and why separate namespaces for types, variables, and functions?",
+    "answer": "Each namespace is an independent scoped symbol table (a stack of hash maps). Entering a let-block pushes new frames onto all three stacks; leaving pops them. At a use-site we look up the identifier in the appropriate stack. Appel's original Tiger uses two namespaces (types vs values), but EPITA adds a third to allow a function and a variable to share the same name without collision. The binder also handles recursive declarations: function and type chunks are processed in two passes (first collecting all declarations into the current scope, then visiting bodies) so mutually recursive definitions resolve correctly."
+  },
+  {
+    "id": "q-tiger-3",
+    "question": "Why is escape analysis needed before LLVM IR generation, and how does it work?",
+    "answer": "A variable 'escapes' when an inner nested function references it after the declaring function's stack frame might be gone. Without escape analysis, we would naively stack-allocate everything, which breaks for closures. The escape visitor traverses the AST and sets a flag on each VarDec and Field indicating whether a deeper nested function ever reads or writes it. In LLVM translation, escaped variables are heap-allocated (or stored in a static link record passed to inner functions) while non-escaped ones stay on the stack as normal alloca instructions. Running this pass before type checking keeps the later passes simple: they can query the escape flag directly."
+  },
+  {
+    "id": "q-tiger-4",
+    "question": "Why target LLVM IR rather than direct assembly or a simpler bytecode?",
+    "answer": "Direct assembly (e.g., x86) would tie the compiler to one architecture and require manual register allocation, which is a project in itself. A custom bytecode interpreter would be slow and unoptimized. LLVM IR is architecture-independent: once we emit correct IR, LLVM's optimizer and backend handle instruction selection, register allocation, and optimizations like inlining and dead-code elimination for free. The mapping from Tiger to IR is clean: integers become i32, arrays and records become heap-allocated structs (malloc'd in the Tiger runtime), and function calls become standard LLVM call instructions. The trade-off is a heavier dependency and a steeper IR learning curve, but the output quality is production-grade."
+  }
+]

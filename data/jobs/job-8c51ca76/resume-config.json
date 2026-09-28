@@ -1,0 +1,64 @@
+{
+  "selected_entity_ids": [
+    "edu-4b5b8a37",
+    "edu-c735b9b1",
+    "exp-0e31880e",
+    "exp-df8d4cde",
+    "proj-40cdf000",
+    "proj-4f43d05f",
+    "proj-1b63d04a",
+    "skil-0247ad5c",
+    "skil-2799aa77",
+    "skil-a856cc8e",
+    "proj-tiger",
+    "skil-52bcbd31",
+    "proj-2a5cd1e4"
+  ],
+  "ai_rankings": [],
+  "profile_text": "Looking for a full-time position in software engineering with a focus on: Linux Systems, Low-Level, Embedded, Open Source. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded. Fluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running, cooking.",
+  "resume_title": "Quentin Rebergue - Graduate Software Engineer - Linux Systems",
+  "ai_context": "Im searching a first graduate job in system, low-level, hardware interface, linux",
+  "skill_tag_overrides": {
+    "skil-0247ad5c": [
+      "ASM",
+      "Bash",
+      "C",
+      "C++",
+      "CUDA",
+      "Java",
+      "Javascript",
+      "Python",
+      "Rust",
+      "Shell"
+    ],
+    "skil-2799aa77": [
+      "ASIC interfacing",
+      "FPGA",
+      "I2C",
+      "Raspberry Pi",
+      "STM32",
+      "UART",
+      "SPI"
+    ],
+    "skil-a856cc8e": [
+      "Bootloader",
+      "DMA",
+      "Drivers",
+      "GPU",
+      "Kernel",
+      "Linux",
+      "Multithreading",
+      "Virtualization",
+      "low-latency",
+      "real-time",
+      "operating systems"
+    ]
+  },
+  "project_order": [
+    "proj-40cdf000",
+    "proj-4f43d05f",
+    "proj-1b63d04a",
+    "proj-tiger",
+    "proj-2a5cd1e4"
+  ]
+}

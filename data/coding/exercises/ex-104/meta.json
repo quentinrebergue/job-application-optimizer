@@ -1,0 +1,14 @@
+{
+  "id": "ex-104",
+  "title": "Pacific Atlantic Water Flow",
+  "difficulty": "medium",
+  "category": "Matrix Traversal",
+  "knowledge_ids": [
+    "k-matrix"
+  ],
+  "tags": [
+    "matrix",
+    "dfs"
+  ],
+  "leetcode": 417
+}

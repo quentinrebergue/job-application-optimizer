@@ -1,0 +1,10 @@
+{
+  "id": "gq-4f7831d0",
+  "question": "If you launch a block of 256 threads, how many warps does it contain?\n",
+  "answer": "8 warps. 256 / 32 = 8. Each warp handles threads 0–31, 32–63, 64–95... up to 224–255.\n",
+  "tags": [
+    "cuda",
+    "warp",
+    "math"
+  ]
+}

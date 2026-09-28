@@ -1,0 +1,22 @@
+{
+  "id": "proj-ero2",
+  "type": "projects",
+  "title": "Queuing System Analysis",
+  "tech": [
+    "Python",
+    "Jupyter",
+    "Queuing Theory",
+    "Simulation",
+    "Statistics"
+  ],
+  "description": "Modeled EPITA grading infrastructure as M/M/K/ks queuing system and optimized server allocation. Co-designed Channels & Dams throttling to reduce wait-time inequality by 33%. Team of 6",
+  "tags": [
+    "Operations Research",
+    "Queuing Theory",
+    "System Design",
+    "Simulation",
+    "Optimization",
+    "Performance Analysis"
+  ],
+  "latex_snippet": ""
+}

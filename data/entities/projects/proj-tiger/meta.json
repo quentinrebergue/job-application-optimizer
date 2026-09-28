@@ -1,0 +1,23 @@
+{
+  "id": "proj-tiger",
+  "type": "projects",
+  "title": "Tiger Compiler",
+  "tech": [
+    "C++",
+    "Flex",
+    "Bison",
+    "LLVM",
+    "Visitor Pattern"
+  ],
+  "description": "Built compiler frontend in C++: lexing, parsing, binding, type checking, desugaring and LLVM IR. Team of 4.",
+  "tags": [
+    "Compilers",
+    "C++",
+    "LLVM",
+    "Type Systems",
+    "OOP",
+    "AST",
+    "Visitor Pattern",
+    "Flex/Bison"
+  ]
+}

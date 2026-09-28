@@ -1,0 +1,6 @@
+{
+  "id": "gq-cpp-002",
+  "question": "What is the difference between `unique_ptr` and `shared_ptr`?",
+  "answer": "`unique_ptr` represents exclusive ownership — only one `unique_ptr` can point to an object at a time. It cannot be copied, only moved. Zero overhead vs a raw pointer. Use by default.\n\n`shared_ptr` represents shared ownership — multiple `shared_ptr`s can point to the same object. It uses reference counting; the object is destroyed when the count reaches zero. Has overhead: atomic reference count operations on every copy/destroy. Use only when multiple owners genuinely need to share lifetime.\n\n`weak_ptr` is a non-owning observer of a `shared_ptr` — use to break circular references.",
+  "tags": ["cpp"]
+}

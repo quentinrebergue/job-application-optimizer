@@ -1,0 +1,6 @@
+{
+  "id": "gq-perf-010",
+  "question": "You have a program that's slower than expected — walk me through how you'd diagnose it step by step.",
+  "answer": "1. **Measure first** — use `time` to get wall vs CPU time. Is it CPU-bound or I/O-bound?\n2. **If CPU-bound** — run `perf record ./myprogram && perf report` to find hot functions\n3. **Look at the flame graph** — find wide towers at the top indicating hot code\n4. **Check CPU counters** — `perf stat` to look for cache misses, branch mispredictions\n5. **If I/O-bound** — use `strace` to see which syscalls are slow, check disk/network with `iostat`, `netstat`\n6. **Check memory** — valgrind or ASan for leaks, look for excessive allocation/deallocation\n7. **Check concurrency** — are threads waiting on locks? Use TSan or `perf lock`\n8. **Hypothesis → fix → measure again** — never optimize without measuring before and after",
+  "tags": ["profiling", "performance", "linux"]
+}

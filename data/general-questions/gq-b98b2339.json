@@ -1,0 +1,10 @@
+{
+  "id": "gq-b98b2339",
+  "question": "What is KV-cache?\n",
+  "answer": "Cache the Key and Value matrices from previous tokens to avoid recomputing them during autoregressive generation. Trade memory for speed: O(1) attention per new token instead of O(n). Crucial for efficient LLM inference.\n",
+  "tags": [
+    "ai",
+    "inference",
+    "optimization"
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "id": "gq-perf-008",
+  "question": "How do you find a memory leak in C++ using `valgrind` and `AddressSanitizer`?",
+  "answer": "With `valgrind`: run `valgrind --leak-check=full ./myprogram`. It reports leaked memory blocks, their size, and the allocation stack trace at the end of execution.\n\nWith `AddressSanitizer`: compile with `-fsanitize=address -g` (GCC/Clang) and run normally. It reports leaks at program exit, as well as heap-use-after-free, stack buffer overflows, and more — and it's much faster than valgrind (~2x slowdown vs 20x).",
+  "tags": ["cpp", "profiling", "debugging"]
+}

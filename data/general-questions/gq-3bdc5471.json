@@ -1,0 +1,10 @@
+{
+  "id": "gq-3bdc5471",
+  "question": "What is an intermediate representation (IR)?\n",
+  "answer": "A language-independent representation between the AST and final machine code. Examples: LLVM IR, bytecode. Allows optimizations to be independent of source language and target architecture.\n",
+  "tags": [
+    "compilation",
+    "ir",
+    "optimization"
+  ]
+}

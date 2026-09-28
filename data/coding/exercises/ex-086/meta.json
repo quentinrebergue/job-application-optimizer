@@ -1,0 +1,16 @@
+{
+  "id": "ex-086",
+  "title": "Partition Equal Subset Sum",
+  "category": "Dynamic Programming",
+  "difficulty": "medium",
+  "tags": [
+    "dp",
+    "0-1-knapsack",
+    "bit-set"
+  ],
+  "leetcode": 416,
+  "knowledge_ids": [
+    "k-0-1-knapsack",
+    "k-dynamic-programming"
+  ]
+}

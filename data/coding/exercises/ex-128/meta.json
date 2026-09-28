@@ -1,0 +1,14 @@
+{
+  "id": "ex-128",
+  "title": "Validate Binary Search Tree",
+  "difficulty": "medium",
+  "category": "Binary Tree",
+  "knowledge_ids": [
+    "k-trees-graphs"
+  ],
+  "tags": [
+    "binary-tree",
+    "bst"
+  ],
+  "leetcode": 98
+}

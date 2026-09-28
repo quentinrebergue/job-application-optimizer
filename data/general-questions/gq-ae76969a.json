@@ -1,0 +1,10 @@
+{
+  "id": "gq-ae76969a",
+  "question": "What is a neural network?\n",
+  "answer": "A function approximator inspired by neurobiology. Layers of neurons (nodes) connected by weights. Forward pass computes output; backward pass (backprop) computes gradients; optimizer updates weights. Universal approximator given enough capacity.\n",
+  "tags": [
+    "ai",
+    "neural-network",
+    "architecture"
+  ]
+}

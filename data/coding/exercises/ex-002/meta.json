@@ -1,0 +1,10 @@
+{
+  "id": "ex-002",
+  "title": "Maximum Average Subarray",
+  "difficulty": "easy",
+  "category": "Sliding Window",
+  "knowledge_ids": [
+    "k-sliding-window"
+  ],
+  "tags": []
+}

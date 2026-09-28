@@ -1,0 +1,6 @@
+{
+  "id": "gq-linux-001",
+  "question": "How do you monitor CPU and memory usage on Linux?",
+  "answer": "- `top` / `htop`: real-time per-process CPU and memory usage\n- `vmstat`: system-level memory, swap, CPU stats\n- `free -h`: memory and swap summary\n- `mpstat -P ALL 1`: per-CPU utilization\n- `sar`: historical system stats (requires `sysstat`)\n- `cat /proc/meminfo`: detailed memory breakdown\n- `ps aux --sort=-%cpu`: sorted process list",
+  "tags": ["linux", "systems"]
+}

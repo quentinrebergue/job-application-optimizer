@@ -1,0 +1,14 @@
+{
+  "id": "ex-015",
+  "title": "Integer to Roman",
+  "difficulty": "medium",
+  "category": "Greedy",
+  "knowledge_ids": [
+    "k-greedy"
+  ],
+  "tags": [
+    "math",
+    "string",
+    "greedy"
+  ]
+}

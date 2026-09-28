@@ -1,0 +1,10 @@
+{
+  "id": "gq-69cccfbd",
+  "question": "What is layer normalization?\n",
+  "answer": "Normalizes activations across the embedding dimension for each token independently: x_norm = (x - mean) / sqrt(var + eps). Applied in Transformers before and after attention/FFN. Stabilizes training and allows higher learning rates. Different from batch norm (which normalizes across batch).\n",
+  "tags": [
+    "ai",
+    "transformer",
+    "normalization"
+  ]
+}

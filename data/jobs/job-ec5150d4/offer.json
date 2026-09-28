@@ -1,0 +1,261 @@
+{
+  "id": "job-ec5150d4",
+  "company": "Parrot",
+  "title": "Ingénieur Développement Logiciel Embarqué - Firmware Drones",
+  "description": "À propos de l'offre d'emploi\n\nRejoignez l'aventure Parrot !\n\nEn 2026, Parrot est à la recherche de talents passionné.es pour relever des défis technologiques de pointe.\n\nEnsemble, nous créerons des projets innovants, ambitieux, et à la hauteur des enjeux de demain.\n\nFondée en 1994 par Henri Seydoux, Parrot est aujourd'hui le leader européen des drones professionnels. Située au cœur de Paris, notre R&D réunit une équipe multiculturelle d'ingénieur.es, où chaque voix compte pour réinventer l'avenir des drones.\n\nVous serez intégré.e à l'équipe de développement logiciel en charge de la conception du firmware embarqué sur les manettes de nos drones.\n\nVOS MISSIONS\n\nVos missions consisteront à :\n- Concevoir, implémenter et tester des fonctions embarquées sur nos accessoires en fonction de la spécification du produit et de ses contraintes (temps réel, conso CPU, RAM, FLASH) ;\n- Intégrer des composants et briques technologiques en étroite collaboration avec les autres équipes R&D ;\n- Participer activement au processus d'intégration continue du logiciel embarqué ;\n- Suivre les bugs et indices de qualité du logiciel.\n\nVOTRE PROFIL\n\n- Issu.e d'une formation d'ingénieur Bac +5 en ingénierie logiciel, vous avez une expérience dans le domaine du développement logiciel embarqué ;\n- Vous avez une excellente maitrise en C/C++ ;\n- Vous avez de bonnes connaissances sur l'environnement de développement Linux embarqué (dont modules kernel) ;\n- Vous êtes à l'aise en matière de techniques de debug linux (gdb/valgrind/ltt) ;\n- Vous avez une bonne capacité d'analyse et un bon sens du relationnel ;\n- Vous avez une aptitude au travail collaboratif, savez gérer des priorités et veiller au respect de délais ;\n- Vous êtes extrêmement rigoureux.se et organisé.e avec un esprit agile face aux changements ;\n- La maîtrise de l'anglais est souhaitable pour le poste (échanges réguliers en anglais à l'écrit et l'oral) ;\n- Des compétences basiques en électronique sont appréciées (lecture de schéma, outils de mesure).\n\nCE QUE NOUS PROPOSONS\n\n- Une intégration au cœur d'une équipe de passionné.es.\n- Des projets techniques à la hauteur de vos ambitions.\n- Des responsabilités pour chacun.e, l'opportunité pour toutes et tous d'avoir un impact dans votre travail, jeunes diplômés ou profils expérimentés.\n- Une ambiance technophile et multiculturelle.\n- Une culture d'entreprise sincèrement guidée par les principes d'inclusion, d'équité et de diversité.\n- Un cadre de travail unique au cœur de Paris.\n- Un cadre social performant et adapté (télétravail hybride notamment).",
+  "location": "Paris, France (Télétravail hybride)",
+  "status": "applied",
+  "date_added": "2026-09-24T09:58:39.946Z",
+  "tags": [
+    "C",
+    "C++",
+    "Embedded",
+    "Linux",
+    "Kernel Modules",
+    "Firmware",
+    "GDB",
+    "Valgrind",
+    "Real-Time",
+    "Drones"
+  ],
+  "ats_tags": [
+    "C/C++",
+    "embedded Linux",
+    "kernel modules",
+    "GDB",
+    "Valgrind",
+    "firmware",
+    "real-time systems",
+    "STM32",
+    "I2C/SPI",
+    "drones"
+  ],
+  "ai_analysis": {
+    "job_id": "job-ec5150d4",
+    "analyzed_at": "2026-09-24T12:51:04.459Z",
+    "ats_tags": [
+      "C/C++",
+      "embedded Linux",
+      "kernel modules",
+      "GDB",
+      "Valgrind",
+      "firmware",
+      "real-time systems",
+      "STM32",
+      "I2C/SPI",
+      "drones"
+    ],
+    "entities_by_type": {
+      "experiences": [
+        {
+          "id": "exp-df8d4cde",
+          "type": "experience",
+          "name": "Software Engineer - Platform team at ARISTA",
+          "score": 76,
+          "reason": "Strong low-level C++/systems engineering on ASIC infra but lacks direct firmware/product embedded experience."
+        },
+        {
+          "id": "exp-0e31880e",
+          "type": "experience",
+          "name": "Head of Teaching Assistants - YAKA/ACU Program",
+          "score": 62,
+          "reason": "Demonstrates strong C/C++ fundamentals and mentorship/collaboration skills valued by the job, but not embedded-specific."
+        }
+      ],
+      "projects": [
+        {
+          "id": "proj-40cdf000",
+          "type": "project",
+          "name": "RFID Driver",
+          "score": 92,
+          "reason": "Direct match: Linux kernel character device driver with SPI, exactly the kernel module skill required."
+        },
+        {
+          "id": "proj-2a5cd1e4",
+          "type": "project",
+          "name": "ARM project",
+          "score": 88,
+          "reason": "STM32/UART/I2C firmware development closely mirrors the drone accessory firmware role."
+        },
+        {
+          "id": "proj-ad638299",
+          "type": "project",
+          "name": "Synchronous Real-Time Systems",
+          "score": 80,
+          "reason": "Real-time deterministic embedded scheduling matches the job's real-time constraint focus."
+        },
+        {
+          "id": "proj-4c4f5731",
+          "type": "project",
+          "name": "Linux System Tracing & Storage",
+          "score": 68,
+          "reason": "Strong Linux debugging (strace) relevant to required debug techniques, though not firmware-specific."
+        },
+        {
+          "id": "proj-4f43d05f",
+          "type": "project",
+          "name": "My Docker",
+          "score": 65,
+          "reason": "Deep Linux kernel/OS programming skills, but container tooling is not directly firmware-related."
+        }
+      ],
+      "skills": [
+        {
+          "id": "skil-a856cc8e",
+          "type": "skill",
+          "name": "Systems",
+          "score": 90,
+          "reason": "Covers Linux, kernel, drivers, real-time — core requirements of the role."
+        },
+        {
+          "id": "skil-2799aa77",
+          "type": "skill",
+          "name": "Embedded & Hardware",
+          "score": 87,
+          "reason": "STM32, I2C, UART, SPI directly match embedded firmware and electronics requirements."
+        },
+        {
+          "id": "skil-0247ad5c",
+          "type": "skill",
+          "name": "Programming & Languages",
+          "score": 85,
+          "reason": "Expert C/C++ matches the job's core language requirement precisely."
+        },
+        {
+          "id": "skil-52bcbd31",
+          "type": "skill",
+          "name": "Other / DevOps",
+          "score": 78,
+          "reason": "GDB/valgrind/strace align with required Linux debug techniques, though ltt not explicitly covered."
+        }
+      ],
+      "education": [
+        {
+          "id": "edu-4b5b8a37",
+          "type": "education",
+          "name": "MSc Computer Engineering, Low-level & Systems (GISTRE)",
+          "score": 88,
+          "reason": "Directly aligned specialization in embedded/systems engineering matching Bac+5 software engineering requirement."
+        }
+      ]
+    },
+    "confidence_score": 0.76,
+    "summary": "Strong technical fit: the candidate's Linux kernel driver project (SPI, character device) and STM32/UART/I2C embedded work map almost directly onto the job's core requirements, and C/C++ + GDB/valgrind proficiency is well documented. The biggest gap is lack of direct product-firmware or drone/accessory experience and limited real-world industrial embedded deployment beyond academic projects; overall fit is around 75%.",
+    "resume_tips": [
+      "Move the RFID Linux kernel driver project to the top — it directly matches the 'Linux kernel modules' requirement.",
+      "Explicitly mention 'firmware' and 'embedded accessory/product' vocabulary since the job targets drone controller firmware, not generic systems work.",
+      "Add LTTng or tracing-tool experience if any — the job explicitly cites gdb/valgrind/ltt as debug stack; currently only strace/gdb/valgrind appear.",
+      "Quantify RAM/FLASH/CPU-constraint work in the STM32 and RFID driver projects to mirror the job's emphasis on resource-constrained embedded design.",
+      "De-emphasize freelance full-stack/web experience — irrelevant to this embedded firmware role and dilutes focus.",
+      "Highlight basic electronics skills (I2C/UART wiring, schematic reading) more prominently since the job appreciates them."
+    ],
+    "recommended_title": "Embedded Software Engineer — Linux & C/C++",
+    "recommended_profile": "Looking for a full-time position in software engineering with a focus on embedded Linux firmware development in C/C++. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded. Fluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running, cooking.",
+    "recommended_experience_ids": [
+      "exp-df8d4cde",
+      "exp-0e31880e"
+    ],
+    "recommended_project_ids": [
+      "proj-40cdf000",
+      "proj-2a5cd1e4",
+      "proj-ad638299",
+      "proj-4c4f5731",
+      "proj-4f43d05f"
+    ],
+    "recommended_skill_ids": [
+      "skil-a856cc8e",
+      "skil-2799aa77",
+      "skil-0247ad5c",
+      "skil-52bcbd31"
+    ],
+    "recommended_skill_tags": {
+      "skil-a856cc8e": [
+        "Linux",
+        "kernel",
+        "drivers",
+        "real-time",
+        "DMA",
+        "bootloader"
+      ],
+      "skil-2799aa77": [
+        "I2C",
+        "UART",
+        "SPI",
+        "STM32",
+        "PCB design"
+      ],
+      "skil-0247ad5c": [
+        "C",
+        "C++",
+        "ASM",
+        "Bash"
+      ],
+      "skil-52bcbd31": [
+        "GDB",
+        "valgrind",
+        "strace",
+        "CI/CD",
+        "testing",
+        "profiling"
+      ]
+    },
+    "suggested_new_skills": [
+      {
+        "name": "LTTng",
+        "category": "DevOps/Debug",
+        "level": "beginner",
+        "tags": [
+          "tracing",
+          "Linux debug"
+        ],
+        "reason": "Job explicitly requires gdb/valgrind/ltt debug techniques"
+      },
+      {
+        "name": "RTOS",
+        "category": "Embedded",
+        "level": "intermediate",
+        "tags": [
+          "real-time",
+          "scheduling"
+        ],
+        "reason": "Firmware role implies real-time constraints handling, close to RTOS knowledge"
+      },
+      {
+        "name": "Electronics measurement",
+        "category": "Hardware",
+        "level": "beginner",
+        "tags": [
+          "schematic reading",
+          "oscilloscope"
+        ],
+        "reason": "Job appreciates basic electronics skills (schematic reading, measurement tools)"
+      }
+    ],
+    "suggested_new_skill_tags": [
+      {
+        "skill_id": "skil-52bcbd31",
+        "tag": "LTTng",
+        "reason": "Explicitly named debug tool in job description"
+      },
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "embedded firmware",
+        "reason": "Core focus of the job is firmware for drone accessories"
+      },
+      {
+        "skill_id": "skil-2799aa77",
+        "tag": "electronics schematics",
+        "reason": "Job values basic electronics reading skills"
+      }
+    ],
+    "recommended_entity_descriptions": {
+      "exp-df8d4cde": "Developed low-level C++/Python software for chip-agnostic ASIC infrastructure (SDK parsing, code generation, DMA), managing register state across firmware layers. Demonstrates strong systems-level and embedded-adjacent engineering rigor applicable to real-time firmware constraints.",
+      "exp-0e31880e": "Led technical mentorship for 700+ students across C/C++ embedded-style coding bootcamps and systems projects (compiler, HTTP server, malloc), reinforcing strong fundamentals in low-level C/C++ development and collaborative, deadline-driven work.",
+      "proj-40cdf000": "Developed a Linux kernel character device driver in C for the MFRC522 RFID reader, using SPI regmap communication, file_operations callbacks, and a FIFO command interface, validated via QEMU — directly matches embedded Linux kernel module development.",
+      "proj-2a5cd1e4": "Built an STM32F429ZI (ARM Cortex-M4) embedded firmware system implementing a UART command server with Protobuf communication, a 4-level logging subsystem, and an I2C gyroscope driver with FIFO reads — closely mirrors firmware development for embedded accessories.",
+      "proj-ad638299": "Designed a Rate Monotonic real-time scheduler in Heptagon compiling to deterministic, heap-free C step functions, deployed on Raspberry Pi via UART bootloader — demonstrates real-time embedded firmware design under strict resource constraints.",
+      "proj-4c4f5781": "Used strace-based fault injection and syscall filtering for Linux debugging, and automated complex Linux storage stacks (LVM, LUKS, RAID) via Bash — shows strong Linux embedded debugging and system-level troubleshooting skills.",
+      "proj-4f43d05f": "Built a lightweight container runtime in C using Linux namespaces, pivot_root, capability dropping, seccomp filtering, and cgroups — reflects deep Linux kernel/OS-level programming relevant to embedded Linux environments."
+    }
+  }
+}

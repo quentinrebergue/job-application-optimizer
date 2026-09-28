@@ -1,0 +1,10 @@
+{
+  "id": "gq-4d9402b2",
+  "question": "What is the difference between static and dynamic scope?\n",
+  "answer": "Static scope: variable lookup uses the structure of the code (where the variable is declared in the source). Dynamic scope: variable lookup follows the call stack (what function called what). Most modern languages use static scope (Python, C++, Java).\n",
+  "tags": [
+    "compilation",
+    "scope",
+    "semantics"
+  ]
+}

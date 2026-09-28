@@ -1,0 +1,6 @@
+{
+  "id": "gq-cpp-007",
+  "question": "How would you profile a C++ program to find bottlenecks?",
+  "answer": "1. Compile with debug symbols: `-g -O2`\n2. Run `perf record ./myprogram && perf report` to find hot functions\n3. Generate a flame graph with `flamegraph.pl` for a visual overview\n4. Use `valgrind --tool=callgrind` for detailed call graphs\n5. Check `perf stat` for cache misses and IPC (if IPC < 1, you have stalls)\n6. For memory: run with `valgrind --tool=massif` to track heap usage over time\n7. Benchmark specific functions with Google Benchmark",
+  "tags": ["cpp", "profiling", "performance"]
+}

@@ -1,0 +1,241 @@
+{
+  "id": "job-b75d0ea1",
+  "company": "Withings",
+  "title": "Ingénieur Logiciel Embarqué",
+  "description": "À propos de l'offre d'emploi\n\nChez Withings, nous souhaitons redonner aux individus le contrôle de leur santé.\n\nNous avons l'obsession de créer des produits beaux et intuitifs, afin que chacun puisse les utiliser facilement au quotidien ; nos balances connectées, montres hybrides, tensiomètres, moniteurs de sommeil et tous les dispositifs de notre gamme sont aujourd'hui utilisés par des millions d'utilisateurs.\n\nNotre objectif : permettre la prévention, le dépistage et l'accompagnement d'un certain nombre de maladies chroniques via des produits et des services innovants, afin de révolutionner la manière dont on prend soin de notre santé.\n\nIntégré à l'équipe Logiciel Embarqué, vos principales missions seront les suivantes :\n- Concevoir, valider et maintenir l'ensemble du logiciel nécessaire au fonctionnement de nos produits ;\n- Intervenir sur des aspects de très bas niveau (interaction avec les capteurs électroniques, réduction de la consommation électrique...) mais aussi sur des aspects applicatifs, comme les interfaces de communication avec nos serveurs ou nos applications mobiles ;\n- Implémenter des algorithmes de traitement de signal intégrés.\n\nREQUIREMENTS\n- Vous êtes issu d'une formation Bac+5 de type Ecole d'Ingénieurs ou équivalent ;\n- Vous disposez de bonnes connaissances du langage C et des thématiques liées aux systèmes embarqués ;\n- Vous faites preuve d'un très bon esprit d'analyse et d'une grande curiosité qui vous pousse à comprendre et résoudre de nombreuses problématiques issues d'un environnement complexe ;\n- Vous aimez travailler dans une ambiance start-up, avec des ingénieurs passionnés et compétents ;\n- Vous êtes exigeant dans votre travail et ne laissez rien passer.\n\nBENEFITS\n\nRejoindre l'aventure Withings, c'est :\n- Intégrer un des pionniers et leaders mondiaux de la santé connectée, plusieurs fois primé au Consumer Electronic Show.\n- Contribuer à des projets innovants et ambitieux pour la santé de demain dans un environnement agile et en constante évolution.\n- Intégrer une entreprise internationale, membre de la FrenchTech 120, dont les équipes sont basées à Issy-les-Moulineaux, Boston, Hong-Kong et Shenzhen.\n- Participer à l'amélioration continue de nos produits et services en les bêta-testant avant leur sortie, notamment lors de nos nombreuses sessions sportives entre collègues.\n- Bénéficier de nombreux avantages : Stock Options, smartphone et ordinateur de votre choix, réductions pour des activités culturelles et sportives, restaurant d'entreprise, et bien plus encore.\n- Participer à la Withings Med Academy en assistant à des conférences de professionnels de santé afin de renforcer ses connaissances dans le domaine médical.\n- Collaborer avec des collègues passionnés et célébrer ensemble chacune de nos réussites !\n\nToutes les candidatures reçues sont étudiées indépendamment de l'origine ethnique, des croyances, de la religion, du genre, de l'orientation sexuelle ou de la santé des candidats. Withings aspire à offrir et garantir l'égalité des chances aux candidats et seules les personnes habilitées (RH et Management) auront accès aux informations concernant votre candidature.",
+  "location": "Issy-les-Moulineaux, France",
+  "status": "applied",
+  "date_added": "2026-09-24T10:01:42.139Z",
+  "tags": [
+    "C",
+    "Embedded",
+    "Signal Processing",
+    "Low Power",
+    "Sensors",
+    "IoT",
+    "Health Tech"
+  ],
+  "ats_tags": [
+    "C",
+    "embedded systems",
+    "Linux kernel",
+    "low-level",
+    "hardware interface",
+    "I2C/SPI/UART",
+    "device drivers",
+    "STM32",
+    "signal processing",
+    "graduate"
+  ],
+  "ai_analysis": {
+    "job_id": "job-b75d0ea1",
+    "analyzed_at": "2026-09-24T12:27:13.152Z",
+    "ats_tags": [
+      "C",
+      "embedded systems",
+      "Linux kernel",
+      "low-level",
+      "hardware interface",
+      "I2C/SPI/UART",
+      "device drivers",
+      "STM32",
+      "signal processing",
+      "graduate"
+    ],
+    "entities_by_type": {
+      "experiences": [
+        {
+          "id": "exp-df8d4cde",
+          "type": "experience",
+          "name": "Software Engineer - Platform team at ARISTA",
+          "score": 68,
+          "reason": "Strong low-level/hardware register work in C++/Python but ASIC networking context differs from consumer embedded product development."
+        },
+        {
+          "id": "exp-0e31880e",
+          "type": "experience",
+          "name": "Head of Teaching Assistants - YAKA / ACU Program",
+          "score": 60,
+          "reason": "Deep C and systems teaching reinforces language fundamentals but is not hands-on embedded product work."
+        }
+      ],
+      "projects": [
+        {
+          "id": "proj-2a5cd1e4",
+          "type": "project",
+          "name": "ARM project",
+          "score": 90,
+          "reason": "Near-perfect match: STM32, I2C sensor driver, UART, exactly the low-level hardware work described in the job."
+        },
+        {
+          "id": "proj-40cdf000",
+          "type": "project",
+          "name": "RFID Driver",
+          "score": 80,
+          "reason": "Linux kernel driver over SPI shows strong low-level Linux/hardware interfacing skills relevant to embedded work."
+        },
+        {
+          "id": "proj-ad638299",
+          "type": "project",
+          "name": "Synchronous Real-Time Systems",
+          "score": 75,
+          "reason": "Real-time embedded scheduling on Raspberry Pi matches embedded systems focus, though academic scale."
+        },
+        {
+          "id": "proj-953ddf40",
+          "type": "project",
+          "name": "MyHTTPd",
+          "score": 68,
+          "reason": "C network server skills relate to 'communication interfaces with servers' but not embedded-specific."
+        },
+        {
+          "id": "proj-b1f3b77a",
+          "type": "project",
+          "name": "myMalloc",
+          "score": 65,
+          "reason": "Low-level C memory management is relevant systems programming but not embedded-hardware specific."
+        },
+        {
+          "id": "proj-4c4f5731",
+          "type": "project",
+          "name": "Linux System Tracing & Storage",
+          "score": 60,
+          "reason": "Demonstrates deep Linux systems knowledge but focused on storage/administration rather than embedded firmware."
+        }
+      ],
+      "skills": [
+        {
+          "id": "skil-2799aa77",
+          "type": "skill",
+          "name": "Embedded & Hardware",
+          "score": 92,
+          "reason": "Direct match on I2C, UART, SPI, STM32 — core to the job's low-level hardware requirements."
+        },
+        {
+          "id": "skil-0247ad5c",
+          "type": "skill",
+          "name": "Programming & Languages",
+          "score": 85,
+          "reason": "Expert-level C matches the job's core language requirement."
+        },
+        {
+          "id": "skil-a856cc8e",
+          "type": "skill",
+          "name": "Systems",
+          "score": 80,
+          "reason": "Kernel, drivers, real-time and memory architecture expertise strongly align with embedded systems demands."
+        },
+        {
+          "id": "skil-52bcbd31",
+          "type": "skill",
+          "name": "Other / DevOps",
+          "score": 62,
+          "reason": "Debugging/profiling tools (GDB, valgrind) are useful for embedded work but only tangentially requested."
+        }
+      ],
+      "education": [
+        {
+          "id": "edu-4b5b8a37",
+          "type": "education",
+          "name": "MSc Computer Engineering, Low-level & Systems (GISTRE)",
+          "score": 90,
+          "reason": "Bac+5 engineering degree specialized in low-level/systems directly matches the stated education requirement."
+        }
+      ]
+    },
+    "confidence_score": 0.72,
+    "summary": "Solid technical fit: strong C and embedded-systems fundamentals (STM32 sensor drivers, Linux kernel SPI driver, real-time scheduling) align well with Withings' low-level firmware work. The main gap is professional experience — the candidate's paid roles (Arista ASIC platform, freelance full-stack, teaching) are not directly embedded-product work, so evidence of production-grade embedded software or signal processing is mostly project-based rather than professional.",
+    "resume_tips": [
+      "Lead with the ARM/STM32 sensor driver project and the RFID Linux kernel driver — these map directly to Withings' 'sensor interaction' and 'driver' requirements.",
+      "Add explicit mention of 'power consumption optimization' or 'low-power design' if any project touched this, since it's an explicit job requirement currently absent from the resume.",
+      "Quantify the Arista ASIC work in terms transferable to embedded (e.g. register-level programming, hardware/software interface) to show low-level chip experience.",
+      "Reframe the freelance and TA leadership experience briefly or lower in priority — they add little signal for this embedded-focused role.",
+      "Mention signal processing exposure (if any, e.g. IRGPU motion detection algorithms) explicitly, since the job calls out 'algorithmes de traitement de signal intégrés'.",
+      "Add a dedicated 'Embedded' skills section highlighting I2C, SPI, UART, STM32 prominently near the top of the resume."
+    ],
+    "recommended_title": "Embedded Software Engineer — C & Linux",
+    "recommended_profile": "Looking for a full-time position in software engineering with a focus on embedded systems, low-level C, hardware interfacing. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded. Fluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running, cooking.",
+    "recommended_experience_ids": [
+      "exp-df8d4cde",
+      "exp-0e31880e"
+    ],
+    "recommended_project_ids": [
+      "proj-2a5cd1e4",
+      "proj-40cdf000",
+      "proj-ad638299",
+      "proj-953ddf40",
+      "proj-b1f3b77a"
+    ],
+    "recommended_skill_ids": [
+      "skil-2799aa77",
+      "skil-0247ad5c",
+      "skil-a856cc8e"
+    ],
+    "recommended_skill_tags": {
+      "skil-2799aa77": [
+        "I2C",
+        "UART",
+        "SPI",
+        "STM32",
+        "FPGA"
+      ],
+      "skil-0247ad5c": [
+        "C",
+        "C++",
+        "ASM",
+        "Bash"
+      ],
+      "skil-a856cc8e": [
+        "drivers",
+        "kernel",
+        "Linux",
+        "real-time",
+        "memory architecture",
+        "OS"
+      ]
+    },
+    "suggested_new_skills": [
+      {
+        "name": "Low-power design",
+        "category": "Embedded & Hardware",
+        "level": "beginner",
+        "tags": [
+          "power optimization",
+          "battery-constrained systems"
+        ],
+        "reason": "Explicitly required by Withings for embedded consumer devices"
+      },
+      {
+        "name": "Signal processing",
+        "category": "Algorithms",
+        "level": "intermediate",
+        "tags": [
+          "filtering",
+          "sensor data"
+        ],
+        "reason": "Job requires embedded signal processing algorithms"
+      }
+    ],
+    "suggested_new_skill_tags": [
+      {
+        "skill_id": "skil-2799aa77",
+        "tag": "sensor drivers",
+        "reason": "Job emphasizes interaction with electronic sensors"
+      },
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "power management",
+        "reason": "Job mentions reducing power consumption"
+      }
+    ],
+    "recommended_entity_descriptions": {
+      "exp-df8d4cde": "Software Engineer on Arista's Platform team, implementing low-level register management for ASIC hardware across a chip-agnostic SDK in C++ and Python. Worked on SDK parsing, code generation, and DMA — direct experience with hardware/software interfacing at the register level. Built and shipped an internal AI optimization tool, demonstrating strong engineering rigor and delivery.",
+      "exp-0e31880e": "Led a national team of 67 teaching assistants delivering low-level C, embedded systems concepts, and Unix systems programming (compiler, HTTP server, malloc, POSIX shell) to 700+ students, reinforcing deep expertise in C and systems fundamentals.",
+      "proj-2a5cd1e4": "Built an STM32F429ZI embedded system (ARM Cortex-M4) acting as a UART command server with Protobuf communication, implementing a gyroscope sensor driver over I2C with FIFO reads and a multi-level logging subsystem — directly mirrors low-level sensor interfacing required for connected health devices.",
+      "proj-40cdf000": "Developed a Linux kernel character device driver in C for an RFID sensor over SPI, implementing file_operations callbacks and a FIFO command interface, validated via QEMU — hands-on Linux driver and hardware communication experience.",
+      "proj-ad638299": "Designed a Rate Monotonic real-time scheduler in a dataflow language compiling to deterministic, heap-free C step functions, deployed to a Raspberry Pi via UART bootloader — demonstrates embedded real-time system design skills.",
+      "proj-953ddf40": "Built an HTTP server in C using epoll edge-triggered I/O multiplexing with a per-client state machine, relevant to implementing communication interfaces between embedded devices and servers.",
+      "proj-b1f3b77a": "Implemented a custom malloc in C with bucket-based allocation, fragmentation minimization, and mmap-based page management, demonstrating low-level memory management skills applicable to constrained embedded environments."
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "id": "gq-algo-001",
+  "question": "Implement a LRU Cache.",
+  "answer": "Use a hashmap + doubly linked list. The list maintains order (most recently used at front), the hashmap gives O(1) access.\n\n```cpp\nclass LRUCache {\n    int capacity;\n    list<pair<int,int>> lru;  // {key, value}\n    unordered_map<int, list<pair<int,int>>::iterator> map;\npublic:\n    LRUCache(int cap) : capacity(cap) {}\n\n    int get(int key) {\n        if (!map.count(key)) return -1;\n        lru.splice(lru.begin(), lru, map[key]);  // move to front\n        return map[key]->second;\n    }\n\n    void put(int key, int value) {\n        if (map.count(key)) lru.erase(map[key]);\n        lru.push_front({key, value});\n        map[key] = lru.begin();\n        if (lru.size() > capacity) {\n            map.erase(lru.back().first);\n            lru.pop_back();\n        }\n    }\n};\n```",
+  "tags": ["algorithms", "data-structures", "cpp"]
+}

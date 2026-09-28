@@ -1,0 +1,10 @@
+{
+  "id": "gq-acbabbf2",
+  "question": "What is a type variable (or type parameter)?\n",
+  "answer": "A placeholder for a type in a generic function or class. Example: in , T is a type variable that can be any type. Allows writing generic code without sacrificing type safety.\n",
+  "tags": [
+    "typology",
+    "generics",
+    "type-variable"
+  ]
+}

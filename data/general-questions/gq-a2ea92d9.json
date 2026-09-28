@@ -1,0 +1,10 @@
+{
+  "id": "gq-a2ea92d9",
+  "question": "What is dropout?\n",
+  "answer": "Regularization technique. Randomly zero out activations with probability p during training. Prevents co-adaptation of neurons, reduces overfitting. Disabled at inference. Acts like training an ensemble of thinned networks.\n",
+  "tags": [
+    "ai",
+    "training",
+    "regularization"
+  ]
+}

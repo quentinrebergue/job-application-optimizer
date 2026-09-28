@@ -1,0 +1,15 @@
+{
+  "id": "ex-106",
+  "title": "Alien Dictionary",
+  "difficulty": "hard",
+  "category": "DFS",
+  "knowledge_ids": [
+    "k-topological-sort"
+  ],
+  "tags": [
+    "dfs",
+    "topological-sort",
+    "graphs"
+  ],
+  "leetcode": 269
+}

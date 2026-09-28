@@ -1,0 +1,282 @@
+{
+  "id": "job-2023368e",
+  "company": "Mistral AI",
+  "title": "Backend Software Engineer",
+  "description": "Mistral AI is hiring a Backend Software Engineer through referral.\n\n**The Role:**\nBackend Software Engineer at Mistral AI. The role can take different directions depending on your interests and the team's needs:\n\n**Option 1: Backend/Platform Team**\nDevelop features and workflows for Mistral AI's platform and services. Focus on building reliable, scalable backend systems.\n\n**Option 2: Inference Team** (low-level systems focus)\nWork on low-level systems and optimization for AI model inference. This track focuses on performance, optimization, and systems programming.\n\n**About Mistral AI:**\nMistral AI is building advanced language models and AI infrastructure. The company combines cutting-edge research with practical deployment at scale.\n\n**Referral Contact:**\nJulien Tauran - can provide referral support and additional context about team opportunities.\n\n**Next Steps:**\nDiscuss with HR during recruitment process to clarify which team direction aligns best with your interests and background. The role offers flexibility to explore either backend platform work or low-level inference systems depending on your specialization preferences.",
+  "location": "Paris, France",
+  "status": "rejected",
+  "date_added": "2026-06-02T15:32:18.648Z",
+  "tags": [
+    "Backend",
+    "Software Engineering",
+    "Systems Programming",
+    "Inference",
+    "AI Infrastructure",
+    "Python",
+    "C++",
+    "Distributed Systems",
+    "Low-level Optimization",
+    "Referral"
+  ],
+  "ats_tags": [
+    "C++",
+    "C",
+    "Linux-kernel",
+    "Systems-programming",
+    "Low-level",
+    "Embedded",
+    "GPU-programming",
+    "CUDA",
+    "Performance-optimization",
+    "AI-inference"
+  ],
+  "ai_analysis": {
+    "job_id": "job-2023368e",
+    "analyzed_at": "2026-06-02T15:34:07.742Z",
+    "ats_tags": [
+      "C++",
+      "C",
+      "Linux-kernel",
+      "Systems-programming",
+      "Low-level",
+      "Embedded",
+      "GPU-programming",
+      "CUDA",
+      "Performance-optimization",
+      "AI-inference"
+    ],
+    "entities_by_type": {
+      "experiences": [
+        {
+          "id": "exp-0e31880e",
+          "type": "experience",
+          "name": "Head of Teaching Assistants - YAKA / ACU Program at EPITA",
+          "score": 75,
+          "reason": "Led teams and supervised intensive bootcamps and large-scale systems projects (compiler, HTTP server in C, malloc, POSIX shell), demonstrating deep technical understanding relevant to backend systems and low-level programming."
+        },
+        {
+          "id": "exp-df8d4cde",
+          "type": "experience",
+          "name": "Software Engineer Intern - Platform team at ARISTA",
+          "score": 95,
+          "reason": "Implemented low-level ASIC register management in C++ and Python, with a significant achievement in AI agent optimization, directly aligning with low-level systems and AI inference optimization."
+        }
+      ],
+      "projects": [
+        {
+          "id": "proj-0bceb7b7",
+          "type": "project",
+          "name": "MyFind",
+          "score": 65,
+          "reason": "Implementation of a Unix utility in C demonstrates foundational systems programming skills, though less complex than other projects."
+        },
+        {
+          "id": "proj-1b63d04a",
+          "type": "project",
+          "name": "42sh",
+          "score": 68,
+          "reason": "Developed a shell interpreter in C with parsing and AST, showcasing solid C and Unix systems programming skills."
+        },
+        {
+          "id": "proj-2a5cd1e4",
+          "type": "project",
+          "name": "ARM project",
+          "score": 85,
+          "reason": "Built an STM32 embedded system with UART, I2C, and a gyroscope driver, directly demonstrating embedded systems and hardware interface proficiency."
+        },
+        {
+          "id": "proj-40cdf000",
+          "type": "project",
+          "name": "RFID Driver",
+          "score": 95,
+          "reason": "Developed a Linux kernel character device driver in C with SPI communication, showcasing strong expertise in low-level Linux kernel and hardware driver development."
+        },
+        {
+          "id": "proj-4c4f5731",
+          "type": "project",
+          "name": "Linux System Tracing & Storage",
+          "score": 70,
+          "reason": "Used strace for syscall filtering and automated Linux storage stacks, demonstrating good understanding of Linux systems and low-level storage management."
+        },
+        {
+          "id": "proj-4f43d05f",
+          "type": "project",
+          "name": "My Docker",
+          "score": 92,
+          "reason": "Built a lightweight container runtime in C using Linux namespaces and cgroups, highlighting deep understanding of Linux low-level systems and virtualization."
+        },
+        {
+          "id": "proj-953ddf40",
+          "type": "project",
+          "name": "MyHTTPd",
+          "score": 75,
+          "reason": "Implemented an HTTP server in C with epoll for concurrent connection handling, showing strong skills in network programming and efficient I/O multiplexing for backend systems."
+        },
+        {
+          "id": "proj-ad638299",
+          "type": "project",
+          "name": "Synchronous Real-Time Systems",
+          "score": 80,
+          "reason": "Built and deployed a Rate Monotonic scheduler in Heptagon (compiling to C) on Raspberry Pi, demonstrating real-time and embedded systems expertise."
+        },
+        {
+          "id": "proj-b1f3b77a",
+          "type": "project",
+          "name": "myMalloc",
+          "score": 90,
+          "reason": "Implemented a custom memory allocator in C with advanced techniques, showing expert knowledge in low-level memory management crucial for systems programming and performance optimization."
+        },
+        {
+          "id": "proj-e5cdf5a5",
+          "type": "project",
+          "name": "Unicycle CPU",
+          "score": 88,
+          "reason": "Designed and synthesized a 32-bit ARM-like processor in VHDL on an FPGA, showcasing fundamental hardware interface and low-level architecture design skills."
+        },
+        {
+          "id": "proj-irgpu",
+          "type": "project",
+          "name": "GPU-Accelerated Video Analysis System (IRGPU)",
+          "score": 98,
+          "reason": "Built a real-time C++/CUDA motion detection pipeline with significant GPU speedup and optimization, directly matching the AI model inference and performance focus of the role."
+        },
+        {
+          "id": "proj-tiger",
+          "type": "project",
+          "name": "Tiger Compiler",
+          "score": 78,
+          "reason": "Built a compiler frontend in C++ with LLVM IR generation, demonstrating strong understanding of compilers and low-level code generation principles."
+        }
+      ],
+      "skills": [
+        {
+          "id": "skil-0247ad5c",
+          "type": "skill",
+          "name": "Programming & Languages",
+          "score": 95,
+          "reason": "Expertise in C, C++, ASM, CUDA, and VHDL is highly relevant for low-level systems, performance optimization, and hardware interfacing required by Mistral AI."
+        },
+        {
+          "id": "skil-2799aa77",
+          "type": "skill",
+          "name": "Embedded & Hardware",
+          "score": 90,
+          "reason": "Advanced skills in ASIC interfacing, FPGA, STM32, I2C, and SPI directly align with the low-level systems and hardware interface focus of the role."
+        },
+        {
+          "id": "skil-52bcbd31",
+          "type": "skill",
+          "name": "Other / DevOps",
+          "score": 75,
+          "reason": "Skills in optimization, testing, GDB, and Valgrind are crucial for debugging and performance tuning in low-level and high-performance environments."
+        },
+        {
+          "id": "skil-a856cc8e",
+          "type": "skill",
+          "name": "Systems",
+          "score": 98,
+          "reason": "Expertise in Linux, Kernel, Drivers, GPU, real-time, DMA, and low-latency systems is a near-perfect match for the Inference Team's focus on low-level systems and performance."
+        }
+      ],
+      "education": [
+        {
+          "id": "edu-4b5b8a37",
+          "type": "education",
+          "name": "MSc Computer Engineering, Low-level & Systems (GISTRE) from EPITA",
+          "score": 95,
+          "reason": "This specialized Master's program directly aligns with the technical requirements and candidate's stated interest in low-level systems, providing a strong academic foundation."
+        }
+      ]
+    },
+    "confidence_score": 0.9,
+    "summary": "This candidate is an exceptional match, particularly for the Inference Team option, demonstrating deep expertise in low-level systems, C/C++, and performance optimization. Their strong academic background and relevant project work significantly compensate for the lack of extensive prior industry experience, making them highly suitable for a first graduate role. Their stated interest perfectly aligns with the specialized track within the role.",
+    "resume_tips": [
+      "Explicitly state interest in the 'Inference Team' or 'low-level systems' track in a cover letter or introductory statement.",
+      "Quantify the impact of the Arista Hackathon project (e.g., 'achieved X efficiency gains' or 'potential for Y cost reduction').",
+      "Add 'AI model inference' as a keyword to relevant projects, especially 'IRGPU'.",
+      "Specify the level of proficiency for Rust (e.g., 'intermediate' or 'proficient') as it is increasingly used in high-performance systems.",
+      "Highlight 'low-latency' and 'high-throughput' keywords more prominently within project descriptions."
+    ],
+    "recommended_title": "Backend Software Engineer — Low-Level Systems & Inference",
+    "recommended_profile": "Looking for a full-time position in software engineering with a focus on: low-level systems, performance optimization, and AI inference. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded. Fluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running, cooking.",
+    "recommended_experience_ids": [
+      "exp-df8d4cde",
+      "exp-0e31880e"
+    ],
+    "recommended_project_ids": [
+      "proj-irgpu",
+      "proj-40cdf000",
+      "proj-4f43d05f",
+      "proj-b1f3b77a",
+      "proj-e5cdf5a5"
+    ],
+    "recommended_skill_ids": [
+      "skil-a856cc8e",
+      "skil-0247ad5c",
+      "skil-2799aa77",
+      "skil-52bcbd31"
+    ],
+    "recommended_skill_tags": {
+      "skil-a856cc8e": [
+        "Linux",
+        "Kernel",
+        "Drivers",
+        "Virtualization",
+        "Multithreading",
+        "GPU",
+        "real-time",
+        "DMA",
+        "low-latency"
+      ],
+      "skil-0247ad5c": [
+        "C",
+        "ASM",
+        "VHDL",
+        "CUDA",
+        "Rust",
+        "C++",
+        "C++20"
+      ],
+      "skil-2799aa77": [
+        "ASIC interfacing",
+        "FPGA",
+        "I2C",
+        "Rasberry Pi",
+        "STM32",
+        "UART",
+        "SPI"
+      ],
+      "skil-52bcbd31": [
+        "Git",
+        "Security",
+        "monitoring",
+        "optimisation",
+        "testing",
+        "GDB",
+        "valgrind"
+      ]
+    },
+    "suggested_new_skills": [],
+    "suggested_new_skill_tags": [
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "AI-inference optimization",
+        "reason": "Directly mentioned in the job description for the Inference Team focus."
+      },
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "high-throughput",
+        "reason": "Crucial for optimizing AI model inference and scalable backend systems."
+      }
+    ],
+    "recommended_entity_descriptions": {
+      "exp-0e31880e": "Led a national team of 67 TAs and supervised 7 large-scale projects, including a C compiler, HTTP server in C, malloc, and POSIX shell, exposing 700+ students to complex systems programming. Implemented a 1-on-1 code review mentorship model, fostering deep technical understanding in backend systems.",
+      "exp-df8d4cde": "Implemented non-zero reset value management for ASIC Physical Table registers across the chip-agnostic Strata infrastructure (SDK parsing, code generation, DMA) in Python and C++. Developed an AI agent optimization tool, achieving 70% token reduction and approved for production development, demonstrating strong capability in performance optimization relevant to AI model inference.",
+      "proj-irgpu": "Built a real-time GPU-Accelerated video analysis pipeline in C++/CUDA, achieving 20x CPU speedup through iterative CUDA optimization profiled with Nsight Compute. This demonstrates strong experience in performance optimization for AI model inference and low-level systems.",
+      "proj-40cdf000": "Developed a robust Linux kernel character device driver in C for an MFRC522 RFID reader, integrating file_operations callbacks and SPI regmap communication. Tested via QEMU emulation, this showcases expertise in low-level Linux kernel development and hardware interfacing.",
+      "proj-4f43d05f": "Engineered a lightweight container runtime in C, leveraging Linux namespaces, pivot_root, capabilities dropping, seccomp syscall filtering, and cgroups. This project highlights deep understanding of Linux low-level systems and virtualization for scalable backend systems.",
+      "proj-b1f3b77a": "Implemented a custom memory allocator in C using advanced techniques like memory alignment, block recycling, and page management. This demonstrates expert knowledge in low-level memory management crucial for performance optimization in systems programming.",
+      "proj-e5cdf5a5": "Designed a 32-bit single-cycle ARM-like processor in VHDL, including ALU, register file, instruction decoder, and control unit, and synthesized it on a real FPGA. This showcases fundamental hardware interface and low-level architecture design skills."
+    }
+  }
+}

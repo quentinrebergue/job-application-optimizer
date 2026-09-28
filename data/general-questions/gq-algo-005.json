@@ -1,0 +1,6 @@
+{
+  "id": "gq-algo-005",
+  "question": "Merge k sorted lists efficiently.",
+  "answer": "Use a min-heap to always extract the smallest element across all lists:\n\n```cpp\nvector<int> mergeKSorted(vector<vector<int>>& lists) {\n    // {value, list_index, element_index}\n    priority_queue<tuple<int,int,int>, vector<tuple<int,int,int>>, greater<>> pq;\n\n    for (int i = 0; i < (int)lists.size(); i++)\n        if (!lists[i].empty())\n            pq.push({lists[i][0], i, 0});\n\n    vector<int> result;\n    while (!pq.empty()) {\n        auto [val, i, j] = pq.top(); pq.pop();\n        result.push_back(val);\n        if (j + 1 < (int)lists[i].size())\n            pq.push({lists[i][j+1], i, j+1});\n    }\n    return result;\n}\n```\n\nO(N log k) where N is total elements and k is number of lists.",
+  "tags": ["algorithms", "data-structures"]
+}

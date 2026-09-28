@@ -1,0 +1,19 @@
+{
+  "id": "proj-953ddf40",
+  "type": "projects",
+  "title": "MyHTTPd",
+  "tech": [
+    "C",
+    "Network Programming",
+    "epoll",
+    "I/O Multiplexing"
+  ],
+  "description": "HTTP server in C using epoll with edge-triggered mode and per-client state machine for efficient concurrent connection handling. Includes dynamic buffer management, HTTP request parsing, and response generation.",
+  "tags": [
+    "systems-programming",
+    "c",
+    "networking",
+    "server"
+  ],
+  "latex_snippet": ""
+}

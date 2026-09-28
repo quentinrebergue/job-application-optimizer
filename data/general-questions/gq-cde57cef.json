@@ -1,0 +1,10 @@
+{
+  "id": "gq-cde57cef",
+  "question": "In tiled matmul with TILE_SIZE=16, by what factor are global reads reduced?\n",
+  "answer": "16×. Each element is read N/TILE_SIZE times instead of N times.\n",
+  "tags": [
+    "cuda",
+    "optimization",
+    "matmul"
+  ]
+}

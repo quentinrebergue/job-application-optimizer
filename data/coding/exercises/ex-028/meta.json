@@ -1,0 +1,15 @@
+{
+  "id": "ex-028",
+  "title": "Bag of Tokens",
+  "difficulty": "medium",
+  "category": "Two Pointers",
+  "knowledge_ids": [
+    "k-two-pointers",
+    "k-greedy"
+  ],
+  "tags": [
+    "greedy",
+    "two-pointers",
+    "sorting"
+  ]
+}

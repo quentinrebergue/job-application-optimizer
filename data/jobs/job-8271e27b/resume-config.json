@@ -1,0 +1,79 @@
+{
+  "selected_entity_ids": [
+    "edu-4b5b8a37",
+    "edu-c735b9b1",
+    "exp-df8d4cde",
+    "exp-0e31880e",
+    "proj-4c4f5731",
+    "proj-40cdf000",
+    "proj-4f43d05f",
+    "skil-a856cc8e",
+    "skil-52bcbd31",
+    "skil-0247ad5c",
+    "exp-b0ccfdd9",
+    "proj-58931465"
+  ],
+  "ai_rankings": [],
+  "profile_text": "Looking for a full-time position in software engineering with a focus on Linux internals, storage, and infrastructure systems. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded. Fluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running, cooking.",
+  "skill_tag_overrides": {
+    "skil-a856cc8e": [
+      "ASIC interfacing",
+      "DMA",
+      "Linux",
+      "OS",
+      "TCP/IP",
+      "cache coherence",
+      "drivers",
+      "kernel",
+      "memory architecture",
+      "multithreading",
+      "networking",
+      "profiling",
+      "real-time",
+      "virtualization"
+    ],
+    "skil-52bcbd31": [
+      "CI/CD",
+      "Git",
+      "Grafana/Prometheus",
+      "monitoring",
+      "observability",
+      "optimisation",
+      "profiling",
+      "strace",
+      "system analysis"
+    ],
+    "skil-0247ad5c": [
+      "ADA",
+      "ASM",
+      "Bash",
+      "C",
+      "C++",
+      "Ocaml",
+      "PostgreSQL",
+      "Python",
+      "Rust",
+      "SQL",
+      "VHDL"
+    ],
+    "skil-2799aa77": [
+      "ASIC interfacing",
+      "FPGA",
+      "I2C",
+      "SPI",
+      "STM32",
+      "UART"
+    ]
+  },
+  "project_order": [
+    "proj-4c4f5731",
+    "proj-40cdf000",
+    "proj-4f43d05f",
+    "proj-58931465"
+  ],
+  "experience_order": [
+    "exp-df8d4cde",
+    "exp-0e31880e",
+    "exp-b0ccfdd9"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "ex-119",
+  "title": "Valid Palindrome",
+  "difficulty": "easy",
+  "category": "Two Pointers",
+  "knowledge_ids": [
+    "k-two-pointers"
+  ],
+  "tags": [
+    "two-pointers",
+    "string"
+  ],
+  "leetcode": 125
+}

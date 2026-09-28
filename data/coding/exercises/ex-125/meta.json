@@ -1,0 +1,14 @@
+{
+  "id": "ex-125",
+  "title": "Serialize and Deserialize Binary Tree",
+  "difficulty": "hard",
+  "category": "Binary Tree",
+  "knowledge_ids": [
+    "k-trees-graphs"
+  ],
+  "tags": [
+    "binary-tree",
+    "design"
+  ],
+  "leetcode": 297
+}

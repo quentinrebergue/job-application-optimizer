@@ -1,0 +1,13 @@
+{
+  "id": "edu-4b5b8a37",
+  "type": "education",
+  "degree": "MSc Computer Engineering, Low-level & Systems (GISTRE)",
+  "institution": "EPITA",
+  "period": "2020 – 2026",
+  "tags": [
+    "MSc",
+    "Systems",
+    "GISTRE"
+  ],
+  "latex_snippet": "\\item \\textbf{MSc Computer Engineering, Low-level \\& Systems (GISTRE)}, EPITA, Paris \\hfill {\\small{2020--2026}}"
+}

@@ -1,0 +1,10 @@
+{
+  "id": "gq-319b41d7",
+  "question": "What is code generation?\n",
+  "answer": "Converts the AST (or intermediate representation) into machine code or bytecode. Produces executable instructions that a CPU or VM can run.\n",
+  "tags": [
+    "compilation",
+    "code-generation",
+    "backend"
+  ]
+}

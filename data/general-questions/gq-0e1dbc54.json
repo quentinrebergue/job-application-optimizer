@@ -1,0 +1,10 @@
+{
+  "id": "gq-0e1dbc54",
+  "question": "Why are there two __syncthreads() calls in a tiled matmul?\n",
+  "answer": "First one ensures the tile is fully loaded before any thread computes. Second ensures all threads finish computing before anyone overwrites the tile in the next iteration.\n",
+  "tags": [
+    "cuda",
+    "sync",
+    "tiling"
+  ]
+}

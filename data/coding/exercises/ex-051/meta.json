@@ -1,0 +1,16 @@
+{
+  "id": "ex-051",
+  "title": "Subarray Sum Equals K",
+  "category": "Prefix Sum",
+  "difficulty": "medium",
+  "tags": [
+    "prefix-sum",
+    "hash-map",
+    "array"
+  ],
+  "leetcode": 560,
+  "knowledge_ids": [
+    "k-prefix-sum",
+    "k-hash-map"
+  ]
+}

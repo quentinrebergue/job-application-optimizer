@@ -1,0 +1,14 @@
+{
+  "id": "ex-016",
+  "title": "Remove Nth Node From End of List",
+  "difficulty": "medium",
+  "category": "Fast & Slow Pointers",
+  "knowledge_ids": [
+    "k-linked-list",
+    "k-two-pointers"
+  ],
+  "tags": [
+    "linked-list",
+    "two-pointers"
+  ]
+}

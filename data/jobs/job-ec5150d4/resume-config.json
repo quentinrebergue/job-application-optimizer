@@ -1,0 +1,77 @@
+{
+  "selected_entity_ids": [
+    "edu-4b5b8a37",
+    "edu-c735b9b1",
+    "exp-df8d4cde",
+    "exp-0e31880e",
+    "proj-40cdf000",
+    "proj-2a5cd1e4",
+    "proj-ad638299",
+    "proj-4f43d05f",
+    "skil-a856cc8e",
+    "skil-2799aa77",
+    "skil-0247ad5c",
+    "skil-52bcbd31",
+    "exp-b0ccfdd9"
+  ],
+  "ai_rankings": [],
+  "profile_text": "Looking for a full-time position in software engineering with a focus on embedded Linux firmware development in C/C++. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded. Fluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running, cooking.",
+  "resume_title": "Quentin Rebergue - Embedded Software Engineer",
+  "ai_context": "Im searching a first graduate job in system, low-level, hardware interface, linux",
+  "skill_tag_overrides": {
+    "skil-a856cc8e": [
+      "DMA",
+      "Linux",
+      "OS",
+      "YOCTO",
+      "bootloader",
+      "drivers",
+      "kernel",
+      "multithreading",
+      "real-time",
+      "virtualization"
+    ],
+    "skil-2799aa77": [
+      "ASIC interfacing",
+      "ESP32",
+      "FPGA",
+      "I2C",
+      "PCB design",
+      "Rasberry Pi",
+      "SPI",
+      "STM32",
+      "UART"
+    ],
+    "skil-0247ad5c": [
+      "ADA",
+      "ASM",
+      "Bash",
+      "C",
+      "C++",
+      "Python",
+      "Rust",
+      "Shell",
+      "VHDL"
+    ],
+    "skil-52bcbd31": [
+      "CI/CD",
+      "GDB",
+      "profiling",
+      "strace",
+      "system analysis",
+      "testing",
+      "valgrind"
+    ]
+  },
+  "project_order": [
+    "proj-40cdf000",
+    "proj-2a5cd1e4",
+    "proj-ad638299",
+    "proj-4f43d05f"
+  ],
+  "experience_order": [
+    "exp-df8d4cde",
+    "exp-0e31880e",
+    "exp-b0ccfdd9"
+  ]
+}

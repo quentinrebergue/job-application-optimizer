@@ -1,0 +1,10 @@
+{
+  "id": "gq-8dd4a6da",
+  "question": "What built-in variables does a thread use to know its position?\n",
+  "answer": "threadIdx.x (position within its block), blockIdx.x (which block it belongs to), blockDim.x (how many threads per block). Combine them to get the global index: blockIdx.x * blockDim.x + threadIdx.x.\n",
+  "tags": [
+    "cuda",
+    "threads",
+    "indexing"
+  ]
+}

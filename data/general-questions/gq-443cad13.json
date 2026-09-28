@@ -1,0 +1,10 @@
+{
+  "id": "gq-443cad13",
+  "question": "What is structural typing?\n",
+  "answer": "Type compatibility is determined by structure (shape) of the type — if two types have the same fields and methods, they are considered compatible. Example: Go, TypeScript. vs nominal typing which requires explicit declaration.\n",
+  "tags": [
+    "typology",
+    "structural-typing",
+    "type-system"
+  ]
+}

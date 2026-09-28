@@ -1,0 +1,267 @@
+{
+  "id": "job-b01f1b4e",
+  "company": "Goldman Sachs",
+  "title": "Associate, Systems Engineering (L2)",
+  "description": "Location: Warsaw\n\nWhat We Do\n\nAt Goldman Sachs, our Engineers do not just make things – we make things possible. Change the world by connecting people and capital with ideas. Solve the most challenging and pressing engineering problems for our clients. Join our engineering teams that build massively scalable software and systems, architect low latency infrastructure solutions, proactively guard against cyber threats, and leverage machine learning alongside financial engineering to continuously turn data into action.\n\nWho We Look For\n\nGoldman Sachs Engineers are innovators and problem-solvers, building solutions in risk management, big data, mobile and more. We look for creative collaborators who evolve, adapt to change and thrive in a fast-paced global environment.\n\nAbout Goldman Sachs\n\nFounded in 1869, Goldman Sachs is a leading global investment banking, securities and investment management firm. Headquartered in New York, with offices around the world. Goldman Sachs is an equal opportunity employer.",
+  "url": "https://www.linkedin.com/jobs/view/4413808072/",
+  "status": "rejected",
+  "date_added": "2026-05-31T11:15:41.565Z",
+  "tags": [],
+  "ats_tags": [
+    "Systems Engineering",
+    "Associate Level",
+    "Linux Kernel",
+    "Embedded Systems",
+    "Hardware Interface",
+    "C",
+    "C++",
+    "VHDL",
+    "Low-Latency",
+    "Infrastructure"
+  ],
+  "ai_analysis": {
+    "job_id": "job-b01f1b4e",
+    "analyzed_at": "2026-06-01T18:08:47.221Z",
+    "ats_tags": [
+      "Systems Engineering",
+      "Associate Level",
+      "Linux Kernel",
+      "Embedded Systems",
+      "Hardware Interface",
+      "C",
+      "C++",
+      "VHDL",
+      "Low-Latency",
+      "Infrastructure"
+    ],
+    "entities_by_type": {
+      "experiences": [
+        {
+          "id": "exp-0e31880e",
+          "type": "experience",
+          "name": "Head of Teaching Assistants — YAKA / ACU Program at EPITA",
+          "score": 70,
+          "reason": "Demonstrates leadership and involves mentoring on systems-level projects, aligning with 'building solutions' and collaboration."
+        },
+        {
+          "id": "exp-df8d4cde",
+          "type": "experience",
+          "name": "Software Engineer Intern — Platform team at ARISTA",
+          "score": 90,
+          "reason": "Highly relevant internship with direct experience in ASIC infrastructure and platform engineering, aligning with low-latency and scalable systems."
+        }
+      ],
+      "projects": [
+        {
+          "id": "proj-0bceb7b7",
+          "type": "project",
+          "name": "MyFind",
+          "score": 70,
+          "reason": "A solid C implementation of a Unix utility, demonstrating foundational systems programming and file management."
+        },
+        {
+          "id": "proj-1b63d04a",
+          "type": "project",
+          "name": "42sh",
+          "score": 80,
+          "reason": "A shell interpreter in C with parser and AST, showcasing strong low-level Unix systems programming and command interpretation."
+        },
+        {
+          "id": "proj-26cb2841",
+          "type": "project",
+          "name": "Tiger Compiler",
+          "score": 85,
+          "reason": "A C++ compiler frontend demonstrating deep understanding of low-level code generation, LLVM, and language processing."
+        },
+        {
+          "id": "proj-3275d3f4",
+          "type": "project",
+          "name": "IOT",
+          "score": 65,
+          "reason": "Involves embedded systems (Arduino) and communication protocols (MQTT, HTTP) in C++, relevant for low-level systems and hardware interaction."
+        },
+        {
+          "id": "proj-40cdf000",
+          "type": "project",
+          "name": "RFID Driver",
+          "score": 90,
+          "reason": "Directly relevant Linux kernel character device driver development in C, demonstrating hardware interface and operating system expertise."
+        },
+        {
+          "id": "proj-4c4f5731",
+          "type": "project",
+          "name": "System Analysis 1 - Tracing",
+          "score": 70,
+          "reason": "Focuses on Linux system call tracing and profiling, aligning with understanding program behavior at the kernel interface level."
+        },
+        {
+          "id": "proj-4f43d05f",
+          "type": "project",
+          "name": "My Docker",
+          "score": 90,
+          "reason": "Building a container runtime in C using Linux namespaces and cgroups is highly relevant for scalable systems, virtualization, and security."
+        },
+        {
+          "id": "proj-58be6e94",
+          "type": "project",
+          "name": "System Analysis 2 - Storage Management",
+          "score": 70,
+          "reason": "Linux storage management with LVM and RAID, relevant for building robust and scalable infrastructure solutions."
+        },
+        {
+          "id": "proj-741291ec",
+          "type": "project",
+          "name": "IRGPU - Video Stream Processing",
+          "score": 80,
+          "reason": "GPU-accelerated C++ video processing with CUDA, highly relevant for low-latency and high-performance computing solutions."
+        },
+        {
+          "id": "proj-953ddf40",
+          "type": "project",
+          "name": "MyHTTPd",
+          "score": 80,
+          "reason": "C HTTP server using epoll for I/O multiplexing, demonstrating strong network programming and low-latency concurrent system design."
+        },
+        {
+          "id": "proj-b1f3b77a",
+          "type": "project",
+          "name": "myMalloc",
+          "score": 90,
+          "reason": "Custom C memory allocator, directly showcases expertise in low-level memory management and systems programming crucial for performance."
+        },
+        {
+          "id": "proj-e5cdf5a5",
+          "type": "project",
+          "name": "Unicycle CPU",
+          "score": 95,
+          "reason": "Designing and synthesizing a 32-bit ARM-like CPU in VHDL on an FPGA is an outstanding demonstration of hardware interface and low-level architecture knowledge."
+        },
+        {
+          "id": "proj-fbe80d5c",
+          "type": "project",
+          "name": "ARM Project",
+          "score": 85,
+          "reason": "Embedded systems project on STM32 with ARM, demonstrating hands-on experience in microcontroller programming and hardware interaction."
+        }
+      ],
+      "skills": [
+        {
+          "id": "skil-0247ad5c",
+          "type": "skill",
+          "name": "Programming & Languages",
+          "score": 95,
+          "reason": "Expertise in C, C++, ASM, VHDL, CUDA, low-level, and real-time is directly aligned with the core technical requirements for systems engineering."
+        },
+        {
+          "id": "skil-2799aa77",
+          "type": "skill",
+          "name": "Embedded & Hardware",
+          "score": 90,
+          "reason": "Advanced knowledge in embedded systems and hardware is explicitly sought for a systems engineering role involving low-level and hardware interfaces."
+        },
+        {
+          "id": "skil-52bcbd31",
+          "type": "skill",
+          "name": "Other / DevOps",
+          "score": 70,
+          "reason": "Includes Git/Perforce (standard), Kubernetes (scalable systems), and Security (guarding against cyber threats), which are relevant to modern engineering practices."
+        },
+        {
+          "id": "skil-a856cc8e",
+          "type": "skill",
+          "name": "Systems",
+          "score": 95,
+          "reason": "Expert knowledge in Linux, Kernel, Drivers, Virtualization, and GPU is precisely what a Systems Engineer at Goldman Sachs would require for scalable and low-latency solutions."
+        }
+      ],
+      "education": [
+        {
+          "id": "edu-4b5b8a37",
+          "type": "education",
+          "name": "MSc Computer Engineering, Low-level & Systems (GISTRE) from EPITA",
+          "score": 95,
+          "reason": "The specialization in 'Low-level & Systems' is a perfect academic match for the role's requirements and the candidate's stated interests."
+        }
+      ]
+    },
+    "confidence_score": 0.88,
+    "summary": "This candidate is an exceptional technical match for the Associate, Systems Engineering (L2) role, demonstrating deep expertise in low-level systems, Linux, and hardware through extensive project work and a relevant internship. While it's a first graduate role, the specialization and practical experience significantly mitigate this. The strongest match is the candidate's core systems programming and hardware design capabilities.",
+    "resume_tips": [
+      "Quantify impact and specific contributions in the Arista internship, especially concerning the AI agent optimization tool's (-70% token usage) business value or technical challenge solved.",
+      "Elaborate on the 'Embedded & Hardware' skill (ID: skil-2799aa77) by adding specific technologies, tools, or projects related to advanced embedded systems or hardware design, as its current description is empty.",
+      "Rephrase project descriptions to explicitly include keywords like 'low-latency infrastructure solutions' or 'massively scalable software' where applicable, connecting technical work to business outcomes.",
+      "Consider adding a 'Technical Lead' or 'Mentorship' section to highlight leadership experience from the Head of Teaching Assistants role, aligning with collaboration aspects of the job.",
+      "Ensure the resume clearly states graduation date to clarify its 'first graduate job' status, while emphasizing the depth of experience gained through the MSc and projects."
+    ],
+    "recommended_title": "Associate Systems Engineer — Low-Level Linux & Hardware",
+    "recommended_profile": "A highly capable graduate systems engineer with a Master's specialization in low-level and systems. Possesses strong hands-on experience in Linux kernel development, hardware drivers, embedded systems, and custom CPU design. Proven ability to build scalable software and architect low-latency infrastructure solutions.",
+    "recommended_experience_ids": [
+      "exp-df8d4cde",
+      "exp-0e31880e"
+    ],
+    "recommended_project_ids": [
+      "proj-e5cdf5a5",
+      "proj-40cdf000",
+      "proj-4f43d05f",
+      "proj-b1f3b77a",
+      "proj-26cb2841"
+    ],
+    "recommended_skill_ids": [
+      "skil-0247ad5c",
+      "skil-2799aa77",
+      "skil-a856cc8e"
+    ],
+    "recommended_skill_tags": {
+      "skil-0247ad5c": [
+        "C",
+        "ASM",
+        "VHDL",
+        "CUDA",
+        "C++",
+        "real-time",
+        "low-level"
+      ],
+      "skil-2799aa77": [],
+      "skil-a856cc8e": [
+        "Linux",
+        "Kernel",
+        "Drivers",
+        "Virtualization",
+        "Multithreading",
+        "GPU"
+      ]
+    },
+    "suggested_new_skills": [],
+    "suggested_new_skill_tags": [
+      {
+        "skill_id": "skil-2799aa77",
+        "tag": "Firmware",
+        "reason": "Implied by ARM/FPGA projects, highly relevant for embedded/hardware systems engineering."
+      },
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "Infrastructure",
+        "reason": "Directly mentioned in the job description ('architect low latency infrastructure solutions')."
+      },
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "Performance Tuning",
+        "reason": "Crucial for 'low latency' and 'massively scalable' systems mentioned in the job description."
+      },
+      {
+        "skill_id": "skil-52bcbd31",
+        "tag": "Cybersecurity",
+        "reason": "The job description mentions 'proactively guard against cyber threats,' aligning with the existing 'Security' tag but making it more explicit."
+      }
+    ],
+    "recommended_entity_descriptions": {
+      "exp-0e31880e": "Led a national team of 67 TAs, supervising 5 intensive coding bootcamps and 7 large-scale systems projects, including a compiler, HTTP server in C, malloc, and a POSIX shell, for over 700 students. Demonstrated leadership and deep understanding of foundational systems engineering concepts.",
+      "exp-df8d4cde": "Implemented non-zero reset value management for ASIC Physical Table registers within a chip-agnostic infrastructure, directly contributing to low-latency infrastructure solutions. Gained hands-on experience in platform team engineering, relevant for massively scalable software and systems.",
+      "proj-26cb2841": "Built a compiler frontend in C++ for the Tiger language, covering lexing, parsing, binding, type checking, desugaring, and LLVM IR generation. Demonstrates deep understanding of low-level code generation and systems programming.",
+      "proj-40cdf000": "Developed a Linux kernel character device driver in C for an MFRC522 RFID reader, featuring file_operations callbacks, SPI regmap communication, and a FIFO command interface. Validated functionality using QEMU emulation for hardware interface testing.",
+      "proj-4f43d05f": "Engineered a lightweight container runtime in C, leveraging Linux namespaces, pivot_root, capabilities dropping, seccomp syscall filtering, and cgroups. This project demonstrates proficiency in building massively scalable software and system security fundamentals.",
+      "proj-b1f3b77a": "Implemented a custom memory allocator in C, incorporating advanced techniques such as memory alignment, block recycling, and page management. This showcases expertise in low-level memory management and optimization strategies critical for high-performance systems.",
+      "proj-e5cdf5a5": "Designed and synthesized a 32-bit single-cycle ARM-like processor in VHDL (ALU, register file, instruction decoder, control unit, conditional branching) on a real FPGA using Intel Quartus. Validated via testbenches, demonstrating exceptional hardware interface and low-level architectural design capabilities."
+    }
+  }
+}

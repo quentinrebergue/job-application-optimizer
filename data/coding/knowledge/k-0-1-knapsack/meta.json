@@ -1,0 +1,6 @@
+{
+  "id": "k-0-1-knapsack",
+  "name": "0/1 Knapsack (DP)",
+  "category": "Dynamic Programming",
+  "tags": ["dp", "knapsack", "subset-sum", "optimization"]
+}

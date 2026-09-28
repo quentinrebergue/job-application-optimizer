@@ -1,0 +1,10 @@
+{
+  "id": "gq-04c5a194",
+  "question": "What is self-attention?\n",
+  "answer": "A mechanism where each token attends to all other tokens in the sequence (including itself). Computes relevance scores (Query dot Key) for each token pair, softmax normalizes them, and produces a weighted sum of Values. Allows the model to relate distant tokens directly.\n",
+  "tags": [
+    "ai",
+    "attention",
+    "transformer"
+  ]
+}

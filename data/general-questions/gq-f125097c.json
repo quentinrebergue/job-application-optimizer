@@ -1,0 +1,10 @@
+{
+  "id": "gq-f125097c",
+  "question": "What is register spilling?\n",
+  "answer": "When a thread uses more registers than the SM can provide, the excess is spilled to global memory — causing slow accesses.\n",
+  "tags": [
+    "cuda",
+    "registers",
+    "optimization"
+  ]
+}

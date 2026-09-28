@@ -1,0 +1,284 @@
+{
+  "id": "job-d7a3a53d",
+  "company": "Qualcomm France S.A.R.L.",
+  "title": "Software Engineer - ASICS Interconnect Tools",
+  "description": "Qualcomm Interconnect Technology (QITC) is looking for a Software Engineer to join their team at the boundary of software and hardware engineering. The role involves developing CAD tools for interconnect design and SoC integration.\n\nKey Responsibilities:\n- Gathering feedback and designing new features for interconnect CAD tools\n- IP integration and configuration (cache coherent networks, etc.)\n- Netlist analysis and transformation using graph and path-finding algorithms\n- GUI development for topology and floorplan edition\n- Generating collaterals for physical design flow (Verilog, SystemC models, verification environments)\n- Participating in releases planning and quality monitoring\n\nTechnical Environment: Linux, Git, Qt, Python OOP, C++\n\nQualifications:\n- Master's degree in Science/Engineering (or Bachelor's + 2+ years relevant experience)\n- Object-oriented programming expertise\n- Strong Python skills\n- Software design best practices\n- Interest in hardware technologies (Verilog, VHDL, SystemC)\n\nBenefits: Collaborative environment, competitive salary, stock options, bonuses, insurance, education assistance",
+  "location": "France",
+  "status": "applied",
+  "date_added": "2026-07-05T12:46:27.692Z",
+  "tags": [
+    "C++",
+    "Python",
+    "Linux",
+    "Qt",
+    "CAD Tools",
+    "ASIC Design",
+    "Hardware Engineering",
+    "Interconnect Design",
+    "Software Engineering",
+    "SoC"
+  ],
+  "ats_tags": [
+    "C++",
+    "Python",
+    "Linux",
+    "Embedded",
+    "ASIC",
+    "FPGA",
+    "CAD",
+    "Software-Engineer",
+    "Hardware-Interfacing",
+    "OOP"
+  ],
+  "ai_analysis": {
+    "job_id": "job-d7a3a53d",
+    "analyzed_at": "2026-07-05T12:48:52.681Z",
+    "ats_tags": [
+      "C++",
+      "Python",
+      "Linux",
+      "Embedded",
+      "ASIC",
+      "FPGA",
+      "CAD",
+      "Software-Engineer",
+      "Hardware-Interfacing",
+      "OOP"
+    ],
+    "entities_by_type": {
+      "experiences": [
+        {
+          "id": "exp-df8d4cde",
+          "type": "experience",
+          "name": "Software Engineer Intern - Platform team at ARISTA",
+          "score": 90,
+          "reason": "Directly relevant experience with ASIC physical register management, SDK parsing, code generation, and DMA using Python and C++."
+        }
+      ],
+      "projects": [
+        {
+          "id": "proj-1b63d04a",
+          "type": "project",
+          "name": "42sh",
+          "score": 65,
+          "reason": "Implementation of a shell interpreter with a lexer, parser, and AST demonstrates foundational skills relevant for netlist analysis and transformation."
+        },
+        {
+          "id": "proj-2a5cd1e4",
+          "type": "project",
+          "name": "ARM project",
+          "score": 75,
+          "reason": "Embedded system development with STM32, ARM Cortex-M4, I2C, and UART shows strong hardware interfacing and low-level programming skills applicable to IP integration."
+        },
+        {
+          "id": "proj-40cdf000",
+          "type": "project",
+          "name": "RFID Driver",
+          "score": 80,
+          "reason": "Developed a Linux kernel character device driver with SPI communication, directly relevant to low-level hardware interfacing and driver development."
+        },
+        {
+          "id": "proj-4f43d05f",
+          "type": "project",
+          "name": "My Docker",
+          "score": 60,
+          "reason": "Building a container runtime in C using Linux namespaces and cgroups demonstrates strong C and Linux systems programming expertise."
+        },
+        {
+          "id": "proj-ad638299",
+          "type": "project",
+          "name": "Synchronous Real-Time Systems",
+          "score": 70,
+          "reason": "Experience with real-time systems, embedded C, and deployment to Raspberry Pi is valuable for hardware-adjacent software development."
+        },
+        {
+          "id": "proj-b1f3b77a",
+          "type": "project",
+          "name": "myMalloc",
+          "score": 60,
+          "reason": "Custom malloc implementation in C highlights strong systems programming and memory management skills."
+        },
+        {
+          "id": "proj-e5cdf5a5",
+          "type": "project",
+          "name": "Unicycle CPU",
+          "score": 90,
+          "reason": "Direct experience designing a 32-bit ARM-like processor in VHDL and synthesizing it on an FPGA is highly relevant to hardware technologies and models."
+        },
+        {
+          "id": "proj-ero2",
+          "type": "project",
+          "name": "Queuing System Analysis",
+          "score": 60,
+          "reason": "Python-based simulation and optimization showcases strong Python skills and analytical problem-solving applicable to tool optimization."
+        },
+        {
+          "id": "proj-irgpu",
+          "type": "project",
+          "name": "GPU-Accelerated Video Analysis System (IRGPU)",
+          "score": 75,
+          "reason": "GPU acceleration in C++/CUDA demonstrates advanced C++ skills and performance optimization techniques useful for CAD tool development."
+        },
+        {
+          "id": "proj-tiger",
+          "type": "project",
+          "name": "Tiger Compiler",
+          "score": 85,
+          "reason": "Building a compiler frontend with C++, Flex/Bison, and LLVM IR generation is highly relevant for netlist analysis, transformation, and generating collaterals."
+        }
+      ],
+      "skills": [
+        {
+          "id": "skil-0247ad5c",
+          "type": "skill",
+          "name": "Programming & Languages",
+          "score": 95,
+          "reason": "Expertise in C, C++, Python, VHDL, CUDA, and OOP directly matches the job's technical environment and hardware interest."
+        },
+        {
+          "id": "skil-2799aa77",
+          "type": "skill",
+          "name": "Embedded & Hardware",
+          "score": 95,
+          "reason": "Advanced skills in ASIC interfacing, FPGA, I2C, SPI, STM32, and UART are a near-perfect match for the hardware engineering aspects of the role."
+        },
+        {
+          "id": "skil-52bcbd31",
+          "type": "skill",
+          "name": "Other / DevOps",
+          "score": 70,
+          "reason": "Skills like Git, GDB, strace, system analysis, and testing align well with software design best practices and quality monitoring."
+        },
+        {
+          "id": "skil-a856cc8e",
+          "type": "skill",
+          "name": "Systems",
+          "score": 95,
+          "reason": "Expertise in ASIC interfacing, Drivers, FPGA, Kernel, Linux, low-latency, and operating systems strongly aligns with the core requirements of the role."
+        }
+      ],
+      "education": [
+        {
+          "id": "edu-4b5b8a37",
+          "type": "education",
+          "name": "MSc Computer Engineering, Low-level & Systems (GISTRE) from EPITA",
+          "score": 90,
+          "reason": "A Master's degree in low-level and systems computer engineering is highly relevant and meets the academic qualification."
+        }
+      ]
+    },
+    "confidence_score": 0.82,
+    "summary": "This candidate presents an exceptional profile for the Software Engineer - ASICS Interconnect Tools role, particularly given their stated interest in a first graduate job in system and hardware interface. Their strong background in C/C++/Python, deep Linux systems programming, and direct experience with ASIC interfacing and hardware description languages make them a near-perfect match for the technical requirements. The primary area for minor improvement would be to explicitly highlight GUI development experience (Qt) and SystemC if present.",
+    "resume_tips": [
+      "Explicitly mention any experience with Qt or GUI development frameworks, especially for topology/floorplan edition.",
+      "Highlight 'Software Design Best Practices' as a specific skill or integrate into relevant experience descriptions.",
+      "Emphasize experience generating collaterals or models (e.g., SystemC) for physical design flow more prominently.",
+      "Quantify the impact or scope of the ASIC Physical Table registers project at ARISTA further."
+    ],
+    "recommended_title": "Software Engineer — ASIC Interconnect Tools",
+    "recommended_profile": "Looking for a full-time position in software engineering with a focus on: ASIC, Interconnect, CAD Tools, Hardware. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded. Fluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running, cooking.",
+    "recommended_experience_ids": [
+      "exp-df8d4cde"
+    ],
+    "recommended_project_ids": [
+      "proj-e5cdf5a5",
+      "proj-tiger",
+      "proj-40cdf000",
+      "proj-2a5cd1e4",
+      "proj-irgpu"
+    ],
+    "recommended_skill_ids": [
+      "skil-0247ad5c",
+      "skil-2799aa77",
+      "skil-a856cc8e",
+      "skil-52bcbd31"
+    ],
+    "recommended_skill_tags": {
+      "skil-0247ad5c": [
+        "C",
+        "C++",
+        "Python",
+        "VHDL",
+        "CUDA",
+        "OOP",
+        "algorithms",
+        "data structures"
+      ],
+      "skil-2799aa77": [
+        "ASIC interfacing",
+        "FPGA",
+        "I2C",
+        "STM32",
+        "UART",
+        "SPI"
+      ],
+      "skil-a856cc8e": [
+        "ASIC interfacing",
+        "Drivers",
+        "FPGA",
+        "Kernel",
+        "Linux",
+        "low-latency",
+        "operating systems",
+        "profiling"
+      ],
+      "skil-52bcbd31": [
+        "Git",
+        "GDB",
+        "strace",
+        "system analysis",
+        "testing",
+        "valgrind"
+      ]
+    },
+    "suggested_new_skills": [
+      {
+        "name": "Qt",
+        "category": "GUI Frameworks",
+        "level": "intermediate",
+        "tags": [
+          "C++",
+          "GUI development",
+          "cross-platform"
+        ],
+        "reason": "Explicitly mentioned in technical environment for GUI development tasks."
+      },
+      {
+        "name": "SystemC",
+        "category": "Hardware Description Languages",
+        "level": "beginner",
+        "tags": [
+          "HLS",
+          "system-level modeling",
+          "verification"
+        ],
+        "reason": "Mentioned as a collateral generation requirement for physical design flow."
+      }
+    ],
+    "suggested_new_skill_tags": [
+      {
+        "skill_id": "skil-0247ad5c",
+        "tag": "Software design best practices",
+        "reason": "Required qualification, can be a tag for programming skill."
+      },
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "netlist analysis",
+        "reason": "Key responsibility in the job description."
+      },
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "SoC integration",
+        "reason": "Key responsibility in the job description."
+      }
+    ],
+    "recommended_entity_descriptions": {
+      "exp-df8d4cde": "Implemented non-zero reset value management for ASIC Physical Table registers across chip-agnostic Strata infrastructure in Python and C++. This involved SDK parsing, code generation, and DMA, directly aligning with ASIC interconnect design and CAD tools.",
+      "proj-e5cdf5a5": "Designed and synthesized a 32-bit single-cycle ARM-like processor in VHDL on a real FPGA using Intel Quartus. Developed ALU, register file, instruction decoder, and control unit, demonstrating strong hardware design and VHDL expertise relevant for interconnect design and generating collaterals.",
+      "proj-tiger": "Developed a compiler frontend in C++ including lexing, parsing, binding, type checking, desugaring, and LLVM IR generation. This project showcases strong C++ skills and experience with compiler design principles, directly applicable to netlist analysis, transformation, and code generation for physical design flow.",
+      "proj-40cdf000": "Developed a Linux kernel character device driver for an MFRC522 RFID reader, featuring file_operations callbacks, SPI regmap communication, and a FIFO command interface. Tested via QEMU, highlighting expertise in Linux kernel development and hardware drivers relevant for low-level systems and IP integration.",
+      "proj-2a5cd1e4": "Built an STM32F429ZI embedded system acting as a UART command server, implementing a 4-level log subsystem and an MPU6050 gyroscope driver over I2C. This demonstrates embedded systems programming, hardware interfacing, and low-level communication protocols applicable to IP integration and configuration.",
+      "proj-irgpu": "Built a GPU-accelerated real-time motion detection pipeline in C++/CUDA, achieving a 20x CPU speedup through iterative CUDA optimization profiled with Nsight Compute. This demonstrates strong C++ programming, performance optimization, and experience with parallel computing techniques relevant for developing high-performance CAD tools."
+    }
+  }
+}

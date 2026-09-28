@@ -1,0 +1,27 @@
+{
+  "id": "skil-52bcbd31",
+  "type": "skills",
+  "name": "Other / DevOps",
+  "category": "DevOps",
+  "level": "advanced",
+  "tags": [
+    "GDB",
+    "Git",
+    "Kubernetes",
+    "Perforce",
+    "Security",
+    "monitoring",
+    "optimisation",
+    "strace",
+    "system analysis",
+    "testing",
+    "valgrind",
+    "perf",
+    "profiling",
+    "CI/CD",
+    "observability",
+    "Grafana/Prometheus",
+    "benchmarking"
+  ],
+  "latex_snippet": "\\item \\textbf{Other:} Git, Perforce, Docker, Kubernetes, security best practices"
+}

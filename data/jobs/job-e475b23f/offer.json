@@ -1,0 +1,235 @@
+{
+  "id": "job-e475b23f",
+  "company": "Qube Research & Technologies (QRT)",
+  "title": "Quantitative Developer (C++) - Trading Desk",
+  "description": "À propos de l'offre d'emploi\n\nQube Research & Technologies (QRT) is a global quantitative and systematic investment manager, operating in all liquid asset classes across the world. We are a technology and data driven group implementing a scientific approach to investing. Combining data, research, technology and trading expertise has shaped QRT's collaborative mindset which enables us to solve the most complex challenges. QRT's culture of innovation continuously drives our ambition to deliver high quality returns for our investors.\n\nA trading desk is successful thanks to the mix of the following three internal teams:\n- Quant Traders: who are having strong knowledge about finance and trading\n- Quant Researchers: who are mathematicians\n- Quant Devs: who are strong in tech and computer science\n\nYOUR FUTURE ROLE WITHIN QRT\n\n- You will be working within a trading desk (in opposition to core roles), which means that your contribution will have a direct and immediate impact on the desk's success.\n- Placing you as a key member of a Quant Dev team working closely with Quant Researchers and Quant Traders.\n- A role with the potential to touch many aspects of algorithmic trading, including ultra-low-latency trading engine (tracking nanoseconds), research platform (Terabytes of data per day), and analytics infrastructure (Massive cloud computing).\n- Opportunities to solve hard technical challenges critical to the desk's success.\n\nYOUR PRESENT SKILL SET\n\n- Excellent knowledge and experience using modern C++.\n- Good understanding of what is happening behind the abstractions - be it CPU, memory, OS, network…\n- Ability, and willingness to take full ownership of the work - taking projects all the way from an idea to a delivered solution.\n- Good communication skills in a dynamic environment.\n- Python highly desirable.\n- 2+ years of experience in a quantitative trading environment desirable.\n\nQRT is an equal opportunity employer. We welcome diversity as essential to our success. QRT empowers employees to work openly and respectfully to achieve collective success. In addition to professional achievement, we are offering initiatives and programs to enable employees achieve a healthy work-life balance.",
+  "status": "applied",
+  "date_added": "2026-09-24T09:58:58.820Z",
+  "tags": [
+    "C++",
+    "Python",
+    "Quantitative Trading",
+    "Low Latency",
+    "Algorithmic Trading",
+    "CPU",
+    "Memory",
+    "Networking"
+  ],
+  "ats_tags": [
+    "C++",
+    "Modern C++",
+    "Linux",
+    "low-latency",
+    "systems programming",
+    "Python",
+    "multithreading",
+    "entry-level",
+    "on-site"
+  ],
+  "ai_analysis": {
+    "job_id": "job-e475b23f",
+    "analyzed_at": "2026-09-24T13:14:56.702Z",
+    "ats_tags": [
+      "C++",
+      "Modern C++",
+      "Linux",
+      "low-latency",
+      "systems programming",
+      "Python",
+      "multithreading",
+      "entry-level",
+      "on-site"
+    ],
+    "entities_by_type": {
+      "experiences": [
+        {
+          "id": "exp-df8d4cde",
+          "type": "experience",
+          "name": "Software Engineer - Platform team at ARISTA",
+          "score": 62,
+          "reason": "Strong C++/Python and low-level ASIC infrastructure work matches technical requirements, but no trading/finance domain exposure."
+        },
+        {
+          "id": "exp-0e31880e",
+          "type": "experience",
+          "name": "Head of Teaching Assistants - YAKA/ACU Program",
+          "score": 55,
+          "reason": "Demonstrates leadership and C/C++ mentoring but is teaching-focused, not engineering delivery in a trading context."
+        }
+      ],
+      "projects": [
+        {
+          "id": "proj-irgpu",
+          "type": "project",
+          "name": "GPU-Accelerated Video Analysis System (IRGPU)",
+          "score": 78,
+          "reason": "Strong C++ performance optimization and profiling work directly relevant to low-latency engineering, though not trading-specific."
+        },
+        {
+          "id": "proj-tiger",
+          "type": "project",
+          "name": "Tiger Compiler",
+          "score": 70,
+          "reason": "Solid modern C++ project showing deep language mastery, but purely academic and unrelated to trading."
+        },
+        {
+          "id": "proj-953ddf40",
+          "type": "project",
+          "name": "MyHTTPd",
+          "score": 68,
+          "reason": "Low-latency network programming in C with epoll is technically relevant, but built in C not C++ and lacks trading context."
+        },
+        {
+          "id": "proj-b1f3b77a",
+          "type": "project",
+          "name": "myMalloc",
+          "score": 65,
+          "reason": "Deep memory management understanding matches 'behind the abstractions' requirement, but is a C, not C++, systems exercise."
+        },
+        {
+          "id": "proj-4f43d05f",
+          "type": "project",
+          "name": "My Docker",
+          "score": 62,
+          "reason": "Shows strong Linux/OS internals knowledge but is unrelated to finance or ultra-low-latency trading engines."
+        },
+        {
+          "id": "proj-ero2",
+          "type": "project",
+          "name": "Queuing System Analysis",
+          "score": 60,
+          "reason": "Statistical/queuing modeling has conceptual overlap with quant work but is academic and not C++/trading-related."
+        }
+      ],
+      "skills": [
+        {
+          "id": "skil-0247ad5c",
+          "type": "skill",
+          "name": "Programming & Languages",
+          "score": 85,
+          "reason": "Expert C++20 and Python directly match the job's core language requirements."
+        },
+        {
+          "id": "skil-a856cc8e",
+          "type": "skill",
+          "name": "Systems",
+          "score": 85,
+          "reason": "Expert-level OS, memory, low-latency and multithreading knowledge closely matches 'understanding behind the abstractions' requirement."
+        },
+        {
+          "id": "skil-52bcbd31",
+          "type": "skill",
+          "name": "Other / DevOps",
+          "score": 68,
+          "reason": "Profiling, GDB, valgrind and perf tools support performance-critical C++ development but are supporting, not core, skills."
+        }
+      ],
+      "education": [
+        {
+          "id": "edu-4b5b8a37",
+          "type": "education",
+          "name": "MSc Computer Engineering, Low-level & Systems (GISTRE)",
+          "score": 62,
+          "reason": "Strong systems/low-level academic background but no finance or quantitative specialization."
+        }
+      ]
+    },
+    "confidence_score": 0.45,
+    "summary": "Strong technical alignment on modern C++, Linux internals, memory/OS/network fundamentals and low-latency systems work, but the candidate has zero exposure to quantitative trading, finance, or trading-desk environments, which is a core desirable for this role. This is fundamentally an entry-level systems/low-level engineer profile being stretched into a finance-adjacent desk role — technically capable but domain-mismatched.",
+    "resume_tips": [
+      "Explicitly name modern C++ features used (move semantics, templates, RAII, C++20) in project bullets — the job emphasizes 'excellent knowledge of modern C++' and this is currently implicit.",
+      "Quantify the Arista Platform team work (scale of ASIC registers touched, performance/reliability impact) to demonstrate production-level ownership matching the job's 'full ownership' requirement.",
+      "Surface Python usage more prominently (Arista work, queuing analysis) since Python is 'highly desirable' but currently buried.",
+      "Since 2+ years quant trading experience is missing, reframe low-latency/network projects (MyHTTPd, IRGPU, ARM UART server) using trading-relevant vocabulary: nanosecond-scale performance, throughput, deterministic latency.",
+      "Add a line acknowledging lack of finance-domain exposure is offset by deep systems/hardware fundamentals — recruiters will notice the gap, better to frame it proactively.",
+      "Move systems/low-level skills (memory architecture, cache coherence, multithreading) to the top of the skills section — these map directly to the job's 'behind the abstractions' requirement."
+    ],
+    "recommended_title": "C++ Developer — Low-Latency Trading Systems",
+    "recommended_profile": "Looking for a full-time position in software engineering with a focus on low-latency C++ systems and infrastructure. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded. Fluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running, cooking.",
+    "recommended_experience_ids": [
+      "exp-df8d4cde",
+      "exp-0e31880e"
+    ],
+    "recommended_project_ids": [
+      "proj-irgpu",
+      "proj-tiger",
+      "proj-953ddf40",
+      "proj-b1f3b77a",
+      "proj-4f43d05f"
+    ],
+    "recommended_skill_ids": [
+      "skil-0247ad5c",
+      "skil-a856cc8e",
+      "skil-52bcbd31"
+    ],
+    "recommended_skill_tags": {
+      "skil-0247ad5c": [
+        "C",
+        "C++",
+        "C++20",
+        "Python",
+        "algorithms",
+        "data structures",
+        "OOP"
+      ],
+      "skil-a856cc8e": [
+        "Linux",
+        "OS",
+        "memory architecture",
+        "low-latency",
+        "multithreading",
+        "cache coherence",
+        "virtual memory",
+        "networking",
+        "TCP/IP",
+        "real-time",
+        "kernel",
+        "profiling",
+        "shared memory"
+      ],
+      "skil-52bcbd31": [
+        "GDB",
+        "valgrind",
+        "perf",
+        "profiling",
+        "optimisation",
+        "strace",
+        "system analysis",
+        "testing"
+      ]
+    },
+    "suggested_new_skills": [
+      {
+        "name": "Quantitative Finance Fundamentals",
+        "category": "Domain Knowledge",
+        "level": "beginner",
+        "tags": [
+          "market microstructure",
+          "trading systems"
+        ],
+        "reason": "Job desirable requires quant trading environment exposure, completely absent from candidate's background."
+      }
+    ],
+    "suggested_new_skill_tags": [
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "nanosecond-scale optimization",
+        "reason": "Job explicitly describes an ultra-low-latency trading engine tracking nanoseconds."
+      },
+      {
+        "skill_id": "skil-52bcbd31",
+        "tag": "benchmarking",
+        "reason": "Performance-critical low-latency systems work requires demonstrated benchmarking practice."
+      }
+    ],
+    "recommended_entity_descriptions": {
+      "exp-df8d4cde": "Software Engineer on Arista's Platform team, developing chip-agnostic infrastructure (SDK parsing, code generation, DMA) in modern C++ and Python for ASIC register management. Worked directly with low-level hardware abstractions across the Strata stack, aligning with performance-critical, systems-level engineering. Built and shipped an AI-driven optimization tool achieving 70% token reduction, demonstrating end-to-end ownership from idea to production.",
+      "exp-0e31880e": "Led a national team of 67 teaching assistants across 5 campuses, overseeing C/C++, Java and Bash coding bootcamps and systems projects (compiler, HTTP server, malloc, POSIX shell). Introduced a 1-on-1 code review mentorship model, improving TA-to-student ratio from 1:30 to 1:20, demonstrating strong communication and technical leadership in a dynamic environment.",
+      "proj-irgpu": "Built a real-time motion detection pipeline in C++/CUDA achieving 20x CPU speedup through iterative low-level optimization, profiled with Nsight Compute — direct experience squeezing performance out of hardware, relevant to latency-sensitive trading infrastructure.",
+      "proj-tiger": "Built a compiler frontend in modern C++ (lexing, parsing, type checking, LLVM IR generation) with a team of 4, demonstrating strong command of C++ abstractions and low-level code generation.",
+      "proj-953ddf40": "Built a high-concurrency HTTP server in C using epoll edge-triggered I/O multiplexing and per-client state machines, focused on efficient low-latency handling of concurrent connections — directly transferable to low-latency trading engine design.",
+      "proj-b1f3b77a": "Implemented a custom malloc/free/realloc/calloc allocator in C with bucket-based allocation and mmap-based page management, demonstrating deep understanding of memory internals behind language abstractions.",
+      "proj-4f43d05f": "Built a lightweight container runtime in C using Linux namespaces, pivot_root, capability dropping, seccomp filtering and cgroups, showing strong OS/kernel-level systems programming ability."
+    }
+  }
+}

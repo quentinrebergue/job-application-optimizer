@@ -1,0 +1,22 @@
+[
+  {
+    "id": "q-sysanalysis-1",
+    "question": "How did you use strace fault injection to crack the mystery binary?",
+    "answer": "The mystery binary (straceme) was a black-box ELF that we had to make output 'gg !' without source code. First, we ran strace without filtering to get a full syscall trace and spot the interesting calls. We noticed the binary called kill() on itself and relied on specific file system state. The approach: create a file whose name encodes uname -r and hostname (the binary checked for this file), then run strace with --trace='read,write,openat,kill' to limit noise, and --fault=kill to inject ESRCH errors on kill() calls — this prevented the binary from killing itself when it would otherwise. We then grep the trace output for 'gg !' to confirm success and clean up temp files. The exercise taught us how to use strace as a reverse engineering tool: filter syscalls, inject faults, and observe behavior changes systematically."
+  },
+  {
+    "id": "q-sysanalysis-2",
+    "question": "What does your storage automation script do step-by-step and why use loop devices?",
+    "answer": "The script builds a layered storage stack entirely from regular files, making it reproducible on any Linux machine without physical disks. Step by step: (1) create sparse files with dd (sizing them proportionally based on the stack depth); (2) attach each file to a loop device with losetup -f --show, which exposes it as a block device; (3) optionally set up LUKS2 encryption on the loop device with cryptsetup luksFormat and open; (4) create LVM physical volumes (pvcreate), group them into a volume group (vgcreate), and carve logical volumes (lvcreate); (5) optionally layer dm-linear or dm-delay device-mapper targets on top; (6) optionally assemble a RAID array with mdadm; (7) format and mount the final device. Loop devices are the foundation because they let us simulate arbitrary block device topologies on any host."
+  },
+  {
+    "id": "q-sysanalysis-3",
+    "question": "How does the LUKS + LVM + RAID stacking order work in your script?",
+    "answer": "The stacking order matters because each layer presents a new block device to the layer above. In our script: loop device (raw block) → LUKS2 (encrypted block device at /dev/mapper/crypt_*) → LVM PV on the LUKS device → VG/LV on top of the PV → RAID assembled from multiple LVs or loop devices. This means encryption sits below LVM: LVM sees only plaintext blocks and has no knowledge of the encryption. An alternative would be LUKS on top of LVM (encrypt per-LV), which gives per-volume encryption but requires unlocking each LV separately. We chose encrypt-first because it protects the LVM metadata too. The script handles teardown in reverse order: unmount → stop RAID → deactivate LVM → close LUKS → detach loop devices → delete block files."
+  },
+  {
+    "id": "q-sysanalysis-4",
+    "question": "What is the difference between dm-linear and dm-delay, and why were both covered?",
+    "answer": "Both are Linux device-mapper targets that create virtual block devices, but they serve different purposes. dm-linear concatenates segments from one or more underlying block devices into a single contiguous address space — useful for spanning a logical volume across multiple physical disks without RAID. dm-delay adds configurable read and/or write latency (in milliseconds) to I/O on a device, which is used to simulate slow storage or to test application behavior under high-latency conditions. We covered both because they represent the two fundamental device-mapper use cases: remapping (dm-linear) and I/O control (dm-delay). Understanding these building blocks helps reason about how LVM, RAID, and LUKS are themselves implemented as device-mapper targets under the hood."
+  }
+]

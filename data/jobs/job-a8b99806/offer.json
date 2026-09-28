@@ -1,0 +1,310 @@
+{
+  "id": "job-a8b99806",
+  "company": "Arista Networks",
+  "title": "Software Engineer - Platform Team",
+  "description": "Who You'll Work With\n\nYou will work with the Platform team who work closest to the hardware and programming chips. \n\nWhat You'll Do\n\nArista's engineering team started from a blank sheet of paper to architect an entirely new networking operating system. Arista's unique architecture is based on three guiding principles:\n\nState orientation\nOpen standards-based approach\nSingle software image consistency\n1) State Orientation for publish-subscribe communication\n\nState Orientation uses a unique multi-process state-sharing architecture that separates state information from protocol processing and application logic with a central database shared by diverse applications. Both system state and data are stored in the system database where data is accessed via an automated publish/subscribe model. This distinct design principle provides module independence, self-healing resiliency, and multi-process software stability. It is an elegant distributed systems solution applied holistically right across the network. \n\nThis contrasts with the decades-old legacy approach of many competitors that uses extensive inter-process communications (IPC), a shared memory bus, or a complex message passing framework to communicate across the system components. \n\n2) An Open Approach\n\nArista took to heart the lessons of the open-source world and built EOS on top of an unmodified Linux kernel, maintaining full, secured access to the Linux shell and utilities. It is notable that it is the same Linux OS that Arista's customers run in their data centers and on their servers. This foundational methodology enables EOS to preserve the security, feature development, and tools of the Linux community, unlike legacy approaches where the original OS kernel is either modified or based on older, less maintained versions. By adhering to open source Linux, EOS also natively supports Linux containers and virtual machines, simplifying the deployment of new services and enhancing DevOps practices.\n\n3) A Single Image\n\nArista's third and crucial guiding principle is to provide a single software image that runs across all products in various packaging forms - physical platforms, virtual machines, and containers. The EOS single image uses the same source code, and the same version of the software released across the entire portfolio of switches and routers, thus improving network testing and reliability while reducing the complexity and cost of network operations.\n\nThis approach is a large differentiator to legacy vendors who use multiple operating systems with numerous images to implement a siloed network. Managing these multiple software images with quality control testing or new features testing multiplies operational costs. In contrast, when Arista releases a new software version, customers merely deploy a single image network-wide.\n\nIn addition, having a single image improves automation workflows by allowing DevOps tools, such as Ansible or Terraform, to work across all Arista devices with a single integration. Using these integrations, operators can establish Continuous Integration (CI) pipelines that build, test, and deploy network configurations across the entire data center with increased speed and reliability.\n\nQualifications:\n- Strong engineering and Computer Science fundamentals.\n- Extensive background in algorithms and strong software architecture skills.\n- 5+ years fluency in one of C/C++/Python programming.\n- Hands-on experience with designs and implementations in a strong product-engineering environment.\n\nContract: B2B 12 month rolling contract",
+  "location": "Athens, Greece",
+  "status": "offer",
+  "date_added": "2026-06-30T08:00:03.465Z",
+  "tags": [
+    "C++",
+    "Python",
+    "Linux",
+    "ASIC",
+    "FPGA",
+    "EOS",
+    "embedded systems",
+    "multithreading",
+    "networking",
+    "platform engineering"
+  ],
+  "ats_tags": [
+    "C++",
+    "C",
+    "Python",
+    "Linux Kernel",
+    "Embedded Systems",
+    "Hardware Interfacing",
+    "Networking",
+    "Platform Engineering",
+    "Distributed Systems",
+    "B2B Contract"
+  ],
+  "ai_analysis": {
+    "job_id": "job-a8b99806",
+    "analyzed_at": "2026-06-30T08:02:19.541Z",
+    "ats_tags": [
+      "C++",
+      "C",
+      "Python",
+      "Linux Kernel",
+      "Embedded Systems",
+      "Hardware Interfacing",
+      "Networking",
+      "Platform Engineering",
+      "Distributed Systems",
+      "B2B Contract"
+    ],
+    "entities_by_type": {
+      "experiences": [
+        {
+          "id": "exp-0e31880e",
+          "type": "experience",
+          "name": "Head of Teaching Assistants - YAKA / ACU Program at EPITA",
+          "score": 65,
+          "reason": "Demonstrates strong C/C++ exposure, leadership, and teaching of foundational CS/systems concepts, but is not 'product-engineering' experience."
+        },
+        {
+          "id": "exp-df8d4cde",
+          "type": "experience",
+          "name": "Software Engineer Intern - Platform team at ARISTA",
+          "score": 95,
+          "reason": "Content aligns exceptionally well with the platform team's focus on ASIC and infrastructure development in C++/Python; however, this is a future internship, not current professional experience for the 5+ year requirement."
+        }
+      ],
+      "projects": [
+        {
+          "id": "proj-0bceb7b7",
+          "type": "project",
+          "name": "MyFind",
+          "score": 70,
+          "reason": "Solid C and Unix utilities project demonstrating fundamental system programming knowledge."
+        },
+        {
+          "id": "proj-1b63d04a",
+          "type": "project",
+          "name": "42sh",
+          "score": 85,
+          "reason": "Strong C-based shell interpreter project showcases deep understanding of Linux system fundamentals, parsing, and AST, highly relevant for OS development."
+        },
+        {
+          "id": "proj-2a5cd1e4",
+          "type": "project",
+          "name": "ARM project",
+          "score": 90,
+          "reason": "Excellent embedded systems project with ARM Cortex-M4, I2C, UART, and Protobuf, directly aligning with hardware interfacing and low-level communication."
+        },
+        {
+          "id": "proj-40cdf000",
+          "type": "project",
+          "name": "RFID Driver",
+          "score": 95,
+          "reason": "Exceptional match for a platform team, demonstrating hands-on Linux kernel driver development, SPI communication, and QEMU testing."
+        },
+        {
+          "id": "proj-4c4f5731",
+          "type": "project",
+          "name": "Linux System Tracing & Storage",
+          "score": 75,
+          "reason": "Good demonstration of Linux expertise, system analysis, and advanced storage concepts relevant for platform robustness."
+        },
+        {
+          "id": "proj-4f43d05f",
+          "type": "project",
+          "name": "My Docker",
+          "score": 95,
+          "reason": "Outstanding project showcasing deep understanding of Linux namespaces, cgroups, and container technologies, directly relevant to Arista's open approach."
+        },
+        {
+          "id": "proj-953ddf40",
+          "type": "project",
+          "name": "MyHTTPd",
+          "score": 90,
+          "reason": "Excellent C network programming project utilizing epoll and state machines, demonstrating strong skills in efficient concurrent I/O and distributed systems."
+        },
+        {
+          "id": "proj-ad638299",
+          "type": "project",
+          "name": "Synchronous Real-Time Systems",
+          "score": 80,
+          "reason": "Relevant for embedded systems and real-time considerations, showing competence in specialized system design."
+        },
+        {
+          "id": "proj-b1f3b77a",
+          "type": "project",
+          "name": "myMalloc",
+          "score": 85,
+          "reason": "Strong systems programming project demonstrating expertise in C memory management, crucial for low-level performance and stability."
+        },
+        {
+          "id": "proj-e5cdf5a5",
+          "type": "project",
+          "name": "Unicycle CPU",
+          "score": 90,
+          "reason": "Highly relevant for understanding hardware and programming chips, demonstrating VHDL design and FPGA synthesis expertise."
+        },
+        {
+          "id": "proj-ero2",
+          "type": "project",
+          "name": "Queuing System Analysis",
+          "score": 60,
+          "reason": "Demonstrates algorithms, simulation, and optimization skills, which are foundational for complex system design, though less direct for low-level platform work."
+        },
+        {
+          "id": "proj-irgpu",
+          "type": "project",
+          "name": "GPU-Accelerated Video Analysis System (IRGPU)",
+          "score": 85,
+          "reason": "Strong C++ and CUDA project highlighting performance optimization and low-level hardware acceleration, relevant for high-performance platform components."
+        },
+        {
+          "id": "proj-tiger",
+          "type": "project",
+          "name": "Tiger Compiler",
+          "score": 70,
+          "reason": "Good C++ project for compiler frontend development, indicating strong computer science fundamentals and language design understanding."
+        }
+      ],
+      "skills": [
+        {
+          "id": "skil-0247ad5c",
+          "type": "skill",
+          "name": "Programming & Languages",
+          "score": 95,
+          "reason": "Exceptional breadth and depth in C, C++, Python, ASM, VHDL, and CUDA, directly meeting the job's core language requirements and covering diverse programming paradigms."
+        },
+        {
+          "id": "skil-2799aa77",
+          "type": "skill",
+          "name": "Embedded & Hardware",
+          "score": 95,
+          "reason": "Outstanding match, demonstrating advanced hands-on experience with ASIC interfacing, FPGA, I2C, SPI, UART, and various microcontrollers, directly relevant to the hardware interaction of the platform team."
+        },
+        {
+          "id": "skil-52bcbd31",
+          "type": "skill",
+          "name": "Other / DevOps",
+          "score": 85,
+          "reason": "Strong command of essential development and debugging tools like GDB, Valgrind, Perf, strace, and concepts like system analysis, security, and optimization, crucial for product engineering."
+        },
+        {
+          "id": "skil-a856cc8e",
+          "type": "skill",
+          "name": "Systems",
+          "score": 98,
+          "reason": "Near-perfect match, encompassing expertise in ASIC interfacing, Kernel, Linux, Drivers, Virtualization, Networking, Multithreading, and Real-time systems, directly aligning with almost every aspect of the Platform team's description."
+        }
+      ],
+      "education": [
+        {
+          "id": "edu-4b5b8a37",
+          "type": "education",
+          "name": "MSc Computer Engineering, Low-level & Systems (GISTRE) from EPITA",
+          "score": 90,
+          "reason": "Highly relevant Master's program specialization in low-level and systems engineering, providing an excellent theoretical and practical foundation for a platform team role, though still in progress."
+        }
+      ]
+    },
+    "confidence_score": 0.45,
+    "summary": "This candidate presents an exceptionally strong technical foundation in low-level systems, Linux, and embedded programming, which aligns perfectly with the Platform team's work. However, there's a significant mismatch with the \"5+ years fluency\" requirement and the B2B contract, as this is a first graduate job. While possessing remarkable aptitude, the candidate lacks the required professional tenure for this mid-to-senior level role.",
+    "resume_tips": [
+      "Clarify the status of the Arista internship (exp-df8d4cde) as 'upcoming' or 'future' in the experiences section to manage expectations regarding current professional experience.",
+      "Remove the 'Web Developer' experience (exp-b0ccfdd9) entirely when applying for this type of low-level systems role, as it is irrelevant and dilutes the focus.",
+      "Rephrase project descriptions to explicitly integrate Arista's core architectural principles like 'state orientation', 'open standards-based Linux', 'single software image consistency', and 'containers' where applicable to maximize ATS keyword matching.",
+      "Quantify leadership and technical impact more explicitly in the 'Head of Teaching Assistants' role (exp-0e31880e), focusing on the technical outcomes of supervised projects like compilers and HTTP servers in C."
+    ],
+    "recommended_title": "Software Engineer — Embedded Linux, Systems, C/C++",
+    "recommended_profile": "Looking for a full-time position in software engineering with a focus on: embedded systems, Linux kernel, C/C++. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded. Fluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running, cooking.",
+    "recommended_experience_ids": [
+      "exp-df8d4cde",
+      "exp-0e31880e"
+    ],
+    "recommended_project_ids": [
+      "proj-40cdf000",
+      "proj-4f43d05f",
+      "proj-953ddf40",
+      "proj-2a5cd1e4",
+      "proj-e5cdf5a5"
+    ],
+    "recommended_skill_ids": [
+      "skil-a856cc8e",
+      "skil-0247ad5c",
+      "skil-2799aa77",
+      "skil-52bcbd31"
+    ],
+    "recommended_skill_tags": {
+      "skil-0247ad5c": [
+        "C",
+        "ASM",
+        "Shell",
+        "VHDL",
+        "CUDA",
+        "C++",
+        "Python",
+        "algorithms",
+        "data structures"
+      ],
+      "skil-2799aa77": [
+        "ASIC interfacing",
+        "FPGA",
+        "I2C",
+        "Raspberry Pi",
+        "STM32",
+        "UART",
+        "SPI"
+      ],
+      "skil-52bcbd31": [
+        "GDB",
+        "Git",
+        "Security",
+        "monitoring",
+        "optimisation",
+        "strace",
+        "system analysis",
+        "testing",
+        "valgrind",
+        "perf"
+      ],
+      "skil-a856cc8e": [
+        "ASIC interfacing",
+        "Bootloader",
+        "DMA",
+        "Drivers",
+        "FPGA",
+        "GPU",
+        "Kernel",
+        "Linux",
+        "Multithreading",
+        "Virtualization",
+        "low-latency",
+        "networking",
+        "operating systems",
+        "profiling",
+        "real-time",
+        "virtual memory"
+      ]
+    },
+    "suggested_new_skills": [],
+    "suggested_new_skill_tags": [
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "Distributed Systems",
+        "reason": "Core architectural principle of Arista's EOS for state orientation."
+      },
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "State Orientation",
+        "reason": "Explicitly mentioned as a unique guiding principle of Arista's EOS."
+      },
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "Containers",
+        "reason": "Directly mentioned as supported by Arista's open approach and single image strategy."
+      },
+      {
+        "skill_id": "skil-52bcbd31",
+        "tag": "DevOps",
+        "reason": "Explicitly mentioned in the job description as enhanced by Arista's EOS design."
+      }
+    ],
+    "recommended_entity_descriptions": {
+      "exp-0e31880e": "Led a national team of 67 Teaching Assistants, supervising intensive coding bootcamps and large-scale systems projects including a compiler, HTTP server in C, malloc implementation, and a POSIX shell, for 700+ students. This experience highlights strong engineering and computer science fundamentals, along with leadership in project architecture and code review, foundational for platform team responsibilities.",
+      "exp-df8d4cde": "Implemented non-zero reset value management for ASIC Physical Table registers across Arista's chip-agnostic Strata infrastructure, involving SDK parsing, code generation, and DMA in Python and C++. Won Arista's Hackathon by building an AI agent optimization tool approved for production, demonstrating exceptional problem-solving and software architecture skills relevant to networking operating system development, though this is a future internship.",
+      "proj-40cdf000": "Developed a Linux kernel character device driver for an MFRC522 RFID reader, implementing `file_operations` callbacks, SPI `regmap` communication, and a FIFO command interface. Tested via QEMU emulation, this project demonstrates direct, hands-on experience with low-level Linux operating system programming, kernel drivers, and hardware interfacing crucial for a platform team.",
+      "proj-4f43d05f": "Engineered a lightweight container runtime in C, leveraging Linux namespaces, `pivot_root`, capabilities dropping, `seccomp` syscall filtering, and `cgroups`. This project aligns with Arista's 'Open Approach' by demonstrating deep expertise in Linux containers and virtual machine technologies, vital for simplifying new service deployment and enhancing DevOps practices within a single software image architecture.",
+      "proj-953ddf40": "Built an HTTP server in C using `epoll` with edge-triggered mode and a per-client state machine for efficient concurrent connection handling and network programming. This implementation showcases skills in dynamic buffer management and robust HTTP request parsing, reflecting principles of distributed systems and state orientation for high-performance networking operating systems.",
+      "proj-2a5cd1e4": "Developed an STM32F429ZI embedded system functioning as a UART command server, utilizing `libgapcom` (Protobuf over UART). Implemented a 4-level log subsystem and an MPU6050 gyroscope driver over I2C with FIFO reads, showcasing deep embedded systems knowledge and direct hardware interfacing expertise essential for a platform team working closest to the hardware and programming chips.",
+      "proj-e5cdf5a5": "Designed a 32-bit single-cycle ARM-like processor in VHDL, including ALU, register file, instruction decoder, control unit, and conditional branching. This CPU was synthesized on a real FPGA with Intel Quartus and validated through testbenches, directly demonstrating expertise in programming chips and understanding of hardware architecture critical for a platform team."
+    }
+  }
+}

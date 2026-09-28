@@ -1,0 +1,6 @@
+{
+  "id": "gq-gpu-010",
+  "question": "What is PCIe bandwidth and how does it bottleneck GPU workloads?",
+  "answer": "PCIe (Peripheral Component Interconnect Express) is the bus connecting the CPU and GPU. PCIe 4.0 x16 provides ~32 GB/s bidirectional bandwidth — much less than the GPU's internal memory bandwidth (500-2000 GB/s). Frequent CPU↔GPU transfers can easily become the bottleneck. The solution is to minimize transfers: keep data on the GPU as long as possible, batch transfers, and overlap them with computation using CUDA streams.",
+  "tags": ["gpu", "cuda", "hardware"]
+}

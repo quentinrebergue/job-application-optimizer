@@ -1,0 +1,14 @@
+{
+  "id": "ex-047",
+  "title": "Hand of Straights",
+  "difficulty": "medium",
+  "category": "Greedy",
+  "knowledge_ids": [
+    "k-greedy"
+  ],
+  "tags": [
+    "greedy",
+    "sorting",
+    "hash-map"
+  ]
+}

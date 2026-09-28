@@ -1,0 +1,6 @@
+{
+  "id": "gq-net-007",
+  "question": "What is zero-copy I/O and why does it matter?",
+  "answer": "Normal I/O copies data multiple times: disk → kernel buffer → user buffer → socket buffer → NIC. Zero-copy eliminates the user-space copy, going directly from kernel buffer to NIC. Linux syscalls: `sendfile()` (file to socket), `splice()` (pipe to socket), `mmap` + `write`. This matters for high-throughput servers: at 10 Gbps, memory copies become the bottleneck. Zero-copy can double throughput for large transfers.",
+  "tags": ["networking", "performance", "linux"]
+}

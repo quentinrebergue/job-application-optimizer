@@ -1,0 +1,13 @@
+{
+  "id": "ex-111",
+  "title": "Merge Two Sorted Lists",
+  "difficulty": "easy",
+  "category": "Fast & Slow Pointers",
+  "knowledge_ids": [
+    "k-linked-list"
+  ],
+  "tags": [
+    "linked-list"
+  ],
+  "leetcode": 21
+}

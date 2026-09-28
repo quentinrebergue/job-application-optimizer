@@ -1,0 +1,68 @@
+{
+  "selected_entity_ids": [
+    "edu-4b5b8a37",
+    "edu-c735b9b1",
+    "exp-df8d4cde",
+    "exp-0e31880e",
+    "proj-4f43d05f",
+    "proj-4c4f5731",
+    "proj-40cdf000",
+    "proj-953ddf40",
+    "skil-a856cc8e",
+    "skil-52bcbd31",
+    "skil-0247ad5c",
+    "exp-b0ccfdd9",
+    "proj-tiger"
+  ],
+  "ai_rankings": [],
+  "profile_text": "Looking for a full-time position in software engineering with a focus on Linux systems, containers, and security sandboxing. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded. Fluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running, cooking.",
+  "skill_tag_overrides": {
+    "skil-a856cc8e": [
+      "Linux",
+      "OS",
+      "bootloader",
+      "containers",
+      "drivers",
+      "kernel",
+      "memory architecture",
+      "multithreading",
+      "virtual memory",
+      "virtualization"
+    ],
+    "skil-52bcbd31": [
+      "Git",
+      "Security",
+      "strace",
+      "system analysis",
+      "testing",
+      "valgrind",
+      "perf",
+      "profiling",
+      "optimisation",
+      "monitoring"
+    ],
+    "skil-0247ad5c": [
+      "ADA",
+      "ASM",
+      "Bash",
+      "C",
+      "C++",
+      "Python",
+      "Rust",
+      "Shell"
+    ]
+  },
+  "project_order": [
+    "proj-4f43d05f",
+    "proj-4c4f5731",
+    "proj-40cdf000",
+    "proj-953ddf40",
+    "proj-tiger"
+  ],
+  "experience_order": [
+    "exp-df8d4cde",
+    "exp-0e31880e",
+    "exp-b0ccfdd9"
+  ],
+  "resume_title": "Quentin Rebergue - Linux Systems Engineer"
+}

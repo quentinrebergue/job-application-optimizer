@@ -1,0 +1,119 @@
+\documentclass[9pt,a4paper]{article}
+
+% === Margins ===
+\usepackage[top=0.2cm,bottom=0.2cm,left=1cm,right=1cm]{geometry}
+
+% === Font ===
+\usepackage[scaled]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{tcolorbox}
+\tcbset{mybox/.style={colback=gray!6,boxrule=0pt,arc=4pt,boxsep=0pt,left=0pt,right=4pt,top=8pt,bottom=8pt}}
+\tcbset{mybox2/.style={colback=gray!6,boxrule=0pt,arc=4pt,boxsep=0pt,left=8pt,right=8pt,top=8pt,bottom=8pt}}
+
+\usepackage{enumitem}
+\setlist[itemize]{leftmargin=2em,itemsep=0.5em}
+
+% === Hyperref (ATS keywords) ===
+\usepackage[
+  hidelinks,
+  pdfauthor={Quentin Rebergue},
+  pdftitle={Resume – Quentin Rebergue},
+  pdfsubject={Full-time Software Engineer – Low-level Systems, Firmware, Hardware/Software Interface},
+  pdfkeywords={EPITA, MSc Computer Engineering, Systems Programming, Embedded Systems, Real-Time Systems, Linux, Kernel Development, C, C++, ASM, Rust, Ada, Bash, Python, VHDL, FPGA, PCB Design, FreeRTOS, Device Drivers, Bootloader, Virtualization, Docker, Kubernetes, CI/CD, GitLab CI, Networking, TCP/IP, Bluetooth, LoRaWAN, Wi-Fi, Sigfox, Secure Development, Cryptography, Compiler Design, LLVM, Flex/Bison, GPU Programming, CUDA, Project Management, Team Leadership},
+  pdfcreator={Quentin Rebergue with LaTeX},
+  pdfproducer={Custom PDF build – Quentin Rebergue}
+]{hyperref}
+
+% === Section styling ===
+\usepackage{titlesec}
+\titleformat{\section}{\large\bfseries}{}{0em}{}[\vspace{0mm}]
+
+% === Name font ===
+\newcommand{\namefont}{\fontsize{20}{22}\selectfont}
+\newcommand{\tinyscript}{\fontsize{8}{9}\selectfont}
+
+% === No page numbers ===
+\pagestyle{empty}
+
+\begin{document}
+\renewcommand\normalsize{\fontsize{10.5}{15}\selectfont}
+\normalsize
+
+% === Contact ===
+\begin{center}
+  {\tinyscript\itshape
+  Email: \href{mailto:reberguequentin@gmail.com}{reberguequentin@gmail.com} \,|\,
+  LinkedIn: \href{https://linkedin.com/in/quentin-rebergue}{linkedin.com/in/quentin-rebergue} \,|\,
+  Phone: +33658269014 \,|\,
+  Address: Paris, France}
+\end{center}
+
+% === Header ===
+\begin{center}
+  {\namefont Quentin Rebergue - Graduate Software Engineer}
+\end{center}
+
+% === Profile ===
+\section*{Profile}
+\begin{tcolorbox}[mybox2]
+\textbf{Looking for a full-time position in software engineering with a focus on low-level systems / hardware integration.}\\[0.3em] MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded.\\[0.3em]
+Fluent in French and English (TOEIC 915, C1). \textit{Interests: watchmaking, music, hiking/running, cooking.}
+\end{tcolorbox}
+
+\section*{Work Experience}
+\begin{tcolorbox}[mybox]
+\begin{itemize}
+\item\textbf{Head of Teaching Assistants — YAKA / ACU Program, EPITA} \hfill {\small09/2024 – 02/2026}\\[0.5em]
+\textcolor{gray!40!black}{Led the national team of 67 TAs and supervised 5 intensive coding bootcamps (Java, C++, JS, C/Bash, SQL) and 7 large-scale projects (compiler, HTTP server in C, malloc, POSIX shell) for 700+ 3rd-year students across 5 campuses.}
+
+\item\textbf{Web Developer, Various Clients} \hfill {\small09/2021 – 03/2024}\\[0.5em]
+\textcolor{gray!40!black}{Designed, deployed, managed information system and apps for 10+ client missions.}
+
+\item\textbf{Software Engineer Intern — Platform team, ARISTA} \hfill {\small02/2026 – 08/2026}\\[0.5em]
+\textcolor{gray!40!black}{Implemented non-zero reset value management for ASIC Physical Table registers in the chip-agnostic infrastructure. Won 1st place at Arista's internal hackathon by building an AI agent optimization tool (-70\% token usage).}
+\end{itemize}
+\end{tcolorbox}
+
+
+\section*{School Projects}
+\begin{tcolorbox}[mybox]
+\begin{itemize}
+\item \textbf{Distributed Task Queue} (Python, Redis, Docker, FastAPI) -- Designed and implemented a distributed task queue system with Redis as the broker. Supports retries, dead-letter queues, and priority scheduling. Deployed with Docker Compose.
+
+\item \textbf{Tiger Compiler} (C++, LLVM, Flex, Bison) -- Built compiler frontend in C++: lexing, parsing, binding, type checking, desugaring and LLVM IR.
+
+\item \textbf{RFID Driver} (C, Linux Kernel, SPI, QEMU) -- Developed a Linux kernel character device driver for the MFRC522 RFID reader with file\_operations callbacks, SPI regmap communication, and a FIFO command interface. Tested via QEMU emulation.
+
+\item \textbf{My Docker} (C, Linux, Namespaces, cgroups, seccomp) -- Built a lightweight container runtime in C, using Linux namespaces, pivot\_root, capabilities dropping, seccomp syscall filtering, and cgroups. Pulls and mounts a root filesystem from a container registry.
+
+\item \textbf{Unicycle CPU} (VHDL, FPGA, Intel Quartus) -- Designed a 32-bit single-cycle ARM-like processor in VHDL (ALU, register file, instruction decoder, control unit, conditional branching), synthesized on a real FPGA with Intel Quartus, and validated with testbenches.
+\end{itemize}
+\end{tcolorbox}
+
+
+\section*{Education}
+\begin{tcolorbox}[mybox]
+\begin{itemize}
+% No education selected
+\end{itemize}
+\end{tcolorbox}
+
+
+\section*{Technical Expertise}
+\begin{tcolorbox}[mybox]
+\begin{itemize}
+\item \textbf{Programming \& Languages:} C, ASM, Shell, VHDL, CUDA, ADA, Rust, OOP.
+
+\item \textbf{Embedded \& Hardware:} .
+
+\item \textbf{Other / DevOps:} Git, Perforce, Kubernetes, Security.
+
+\item \textbf{Systems:} Linux, Kernel, Drivers, Bootloader, Virtualization, Multithreading, GPU.
+
+\item \textbf{TypeScript:} TypeScript, JavaScript, Frontend, Backend, Node.js.
+\end{itemize}
+\end{tcolorbox}
+
+
+\end{document}

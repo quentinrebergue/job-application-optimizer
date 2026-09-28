@@ -1,0 +1,10 @@
+{
+  "id": "gq-70657f6a",
+  "question": "What is ReLU?\n",
+  "answer": "Activation function: ReLU(x) = max(0, x). Non-linearity enabling deep networks to learn complex functions. Fast to compute, avoids vanishing gradient problem of sigmoid/tanh. Dead ReLU problem: some units may always output 0.\n",
+  "tags": [
+    "ai",
+    "neural-network",
+    "activation"
+  ]
+}

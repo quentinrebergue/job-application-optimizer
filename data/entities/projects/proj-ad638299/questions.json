@@ -1,0 +1,22 @@
+[
+  {
+    "id": "q-cstr-1",
+    "question": "What is the Heptagon programming model and how does it differ from imperative C?",
+    "answer": "Heptagon is a synchronous dataflow language: a program is a set of nodes where every output is a pure function of current and past inputs. There is no mutable state in the traditional sense — memory is expressed via the 'fby' (followed-by) operator, e.g. 'x fby 0' means 'the previous value of x, initialized to 0'. The compiler transforms this into a C struct holding state and a single step function called once per clock tick. This makes execution time fully deterministic and bounded — there are no dynamic allocations, no unbounded loops — which is exactly what hard real-time systems require. In contrast, C lets you write code whose timing depends on runtime conditions."
+  },
+  {
+    "id": "q-cstr-2",
+    "question": "How does Heptagon handle node composition and what does the generated C look like?",
+    "answer": "Nodes are composed by instantiation: you call a sub-node inside a parent node and the compiler inlines its state struct into the parent's context struct. Each instantiated sub-node becomes a field in the parent's C struct, and its step function is called inside the parent's step. This means the entire dataflow graph is flattened into a tree of statically allocated structs — no heap, no function pointers. The generated C is a header declaring the output struct and context struct, and a _step function taking inputs and a pointer to context. For the external interface (.epi files), you declare C function signatures that Heptagon treats as black-box nodes, letting you integrate sensor reads or actuator writes seamlessly."
+  },
+  {
+    "id": "q-cstr-3",
+    "question": "Explain your Rate Monotonic scheduler implementation in Heptagon.",
+    "answer": "Rate Monotonic (RM) assigns fixed priorities inversely proportional to task periods — the shortest-period task always preempts. I modelled each task as a Heptagon node tracking its status (Waiting, Ready, Running), deadline, and remaining execution time as synchronous state. Each clock tick: first start_inst fires any task whose period boundary has been reached (using the modulo trick (date - first_start) % period = 0 with the 'when' clock operator to gate random capacity sampling); then simulate decrements the running task's counter; then check_deadline flags missed deadlines; finally select_one_task picks the Ready task with the smallest period using a fold over the task array. The whole scheduler is purely functional dataflow — no imperative loops, no shared mutable state — which makes it straightforward to verify timing properties."
+  },
+  {
+    "id": "q-cstr-4",
+    "question": "How did you deploy Heptagon-generated code to a bare-metal Raspberry Pi?",
+    "answer": "The flow was: write the reactive node in Heptagon → heptc compiles it to C → cross-compile the C with the RPi bare-metal runtime → link with a minimal startup stub and a UART bootloader. At runtime, a host tool (boot) sends the binary over serial (/dev/cu.usbserial) using a custom upload protocol (sync handshake, CRC-verified 1KB block transfers) to a fixed load address in RPi RAM, then sends a RUN command to branch to it. The generated step function is called in a tight loop driven by a hardware timer interrupt, ensuring the synchronous semantics are respected: one tick = one interrupt = one call to the step function. This guarantees the dataflow model's assumption of instantaneous computation per tick holds as long as worst-case execution time fits within the period."
+  }
+]

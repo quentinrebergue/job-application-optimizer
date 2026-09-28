@@ -1,0 +1,10 @@
+{
+  "id": "gq-209f8879",
+  "question": "What is ad-hoc polymorphism?\n",
+  "answer": "Function overloading — multiple functions with the same name but different parameter types/counts. The compiler selects which function to call based on the argument types. Example: C++ operator overloading.\n",
+  "tags": [
+    "typology",
+    "polymorphism",
+    "overloading"
+  ]
+}

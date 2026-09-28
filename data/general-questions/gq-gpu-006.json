@@ -1,0 +1,6 @@
+{
+  "id": "gq-gpu-006",
+  "question": "What is a warp? What is warp divergence and why is it bad?",
+  "answer": "A warp is a group of 32 threads that execute in lockstep — the same instruction at the same time (SIMT model). Warp divergence happens when threads within a warp take different branches (e.g. `if (threadIdx.x < 16)`). The GPU must execute both branches serially, with inactive threads masked out — effectively serializing what should be parallel work. It halves throughput in the worst case. Avoid divergence by ensuring all threads in a warp take the same path.",
+  "tags": ["gpu", "cuda"]
+}

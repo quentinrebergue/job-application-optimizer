@@ -1,0 +1,16 @@
+{
+  "id": "proj-e5cdf5a5",
+  "type": "projects",
+  "title": "Unicycle CPU",
+  "tech": [
+    "VHDL",
+    "FPGA",
+    "Intel Quartus"
+  ],
+  "description": "Designed a 32-bit single-cycle ARM-like processor in VHDL (ALU, register file, instruction decoder, control unit, conditional branching), synthesized on a real FPGA with Intel Quartus, and validated with testbenches.",
+  "tags": [
+    "VHDL",
+    "Architecture",
+    "ARM"
+  ]
+}

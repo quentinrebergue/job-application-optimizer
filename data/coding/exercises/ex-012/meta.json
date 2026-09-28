@@ -1,0 +1,17 @@
+{
+  "id": "ex-012",
+  "title": "Design an LLM Inference Service",
+  "difficulty": "hard",
+  "category": "Other",
+  "knowledge_ids": [
+    "k-system-design",
+    "k-transformer",
+    "k-tokenization-bpe"
+  ],
+  "tags": [
+    "system-design",
+    "ml-systems",
+    "llm",
+    "inference"
+  ]
+}

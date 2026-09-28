@@ -1,0 +1,10 @@
+{
+  "id": "gq-fa4504fe",
+  "question": "What is nominal typing?\n",
+  "answer": "Type compatibility is based on explicit name and declaration. Two types with identical structure are NOT compatible unless they have the same name or explicit relationship. Example: Java, C++.\n",
+  "tags": [
+    "typology",
+    "nominal-typing",
+    "type-system"
+  ]
+}

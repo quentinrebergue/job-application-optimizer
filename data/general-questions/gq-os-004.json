@@ -1,0 +1,6 @@
+{
+  "id": "gq-os-004",
+  "question": "What is a context switch and when does it happen?",
+  "answer": "A context switch is when the OS switches the CPU from running one thread/process to another. It saves the current thread's registers, stack pointer, and program counter, then restores another thread's saved state. It happens when: a thread's time slice expires, a thread blocks on I/O or a mutex, a higher-priority thread becomes runnable, or a thread explicitly yields. Context switches are expensive (microseconds) due to cache and TLB invalidation — too many can significantly hurt performance.",
+  "tags": ["os", "linux", "performance"]
+}

@@ -1,0 +1,10 @@
+{
+  "id": "gq-7d40b064",
+  "question": "What is the context window?\n",
+  "answer": "The maximum number of tokens an LLM can process at once. Determines how much prior conversation/document the model can see. Typical: GPT-3.5 had 4k, GPT-4 has 8k/128k, Claude 3 has 200k. Longer context helps with reasoning and referencing prior information.\n",
+  "tags": [
+    "ai",
+    "llm",
+    "context"
+  ]
+}

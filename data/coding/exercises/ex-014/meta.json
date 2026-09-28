@@ -1,0 +1,13 @@
+{
+  "id": "ex-014",
+  "title": "Longest Palindromic Substring",
+  "difficulty": "medium",
+  "category": "Two Pointers",
+  "knowledge_ids": [
+    "k-two-pointers"
+  ],
+  "tags": [
+    "strings",
+    "expand-around-center"
+  ]
+}

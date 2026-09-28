@@ -1,0 +1,10 @@
+{
+  "id": "gq-a398bb2f",
+  "question": "What is parsing?\n",
+  "answer": "Syntax analysis phase. Takes the token stream and checks it against the grammar rules of the language. Produces an Abstract Syntax Tree (AST) representing the structure of the program.\n",
+  "tags": [
+    "compilation",
+    "parser",
+    "ast"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "ex-041",
+  "title": "Find K Closest Elements",
+  "difficulty": "medium",
+  "category": "Binary Search",
+  "knowledge_ids": [
+    "k-binary-search",
+    "k-sliding-window"
+  ],
+  "tags": [
+    "binary-search",
+    "sliding-window",
+    "arrays",
+    "sorted"
+  ]
+}

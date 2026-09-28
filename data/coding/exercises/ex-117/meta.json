@@ -1,0 +1,14 @@
+{
+  "id": "ex-117",
+  "title": "Valid Anagram",
+  "difficulty": "easy",
+  "category": "Hash Map",
+  "knowledge_ids": [
+    "k-hash-map"
+  ],
+  "tags": [
+    "hash-map",
+    "string"
+  ],
+  "leetcode": 242
+}

@@ -1,0 +1,70 @@
+{
+  "selected_entity_ids": [
+    "edu-4b5b8a37",
+    "edu-c735b9b1",
+    "exp-df8d4cde",
+    "proj-2a5cd1e4",
+    "proj-40cdf000",
+    "proj-ad638299",
+    "proj-irgpu",
+    "skil-0247ad5c",
+    "skil-2799aa77",
+    "skil-a856cc8e",
+    "exp-0e31880e",
+    "proj-4f43d05f",
+    "skil-52bcbd31"
+  ],
+  "ai_rankings": [],
+  "profile_text": "Looking for a full-time position in software engineering with a focus on  embedded systems, low-level, hardware interface, Linux. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded.\nFluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running , cooking.",
+  "skill_tag_overrides": {
+    "skil-0247ad5c": [
+      "ADA",
+      "ASM",
+      "Bash",
+      "C",
+      "C++",
+      "C++20",
+      "CUDA",
+      "Python",
+      "Rust",
+      "Shell"
+    ],
+    "skil-2799aa77": [
+      "ASIC interfacing",
+      "FPGA",
+      "I2C",
+      "Raspberry Pi",
+      "STM32",
+      "UART",
+      "SPI"
+    ],
+    "skil-a856cc8e": [
+      "Bootloader",
+      "DMA",
+      "Drivers",
+      "Kernel",
+      "Linux",
+      "Multithreading",
+      "Virtualization",
+      "low-latency",
+      "real-time"
+    ],
+    "skil-52bcbd31": [
+      "GDB",
+      "Git",
+      "Security",
+      "monitoring",
+      "optimisation",
+      "testing",
+      "valgrind"
+    ]
+  },
+  "project_order": [
+    "proj-2a5cd1e4",
+    "proj-40cdf000",
+    "proj-ad638299",
+    "proj-irgpu",
+    "proj-4f43d05f"
+  ],
+  "resume_title": "Quentin Rebergue - Graduate Software Engineer"
+}

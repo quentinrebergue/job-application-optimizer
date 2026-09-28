@@ -1,0 +1,225 @@
+{
+  "id": "job-bd250bae",
+  "company": "Global Technology Company (via EU-Recruit)",
+  "title": "HW/SW Co-Design Research Engineer for Manycores - Gem5 / Computer Architecture",
+  "description": "À propos de l'offre d'emploi\n\nHW/SW Co-Design Research Engineer for Manycores - Gem5 / Computer Architecture\n\nWe're currently on the lookout for newly qualified PhD or Masters graduates or someone with some industry experience, with knowledge in areas such as computing architecture simulations and memory for a global technology giant in France.\n\nA true leader in research, development, and innovation, this global technology powerhouse invests heavily into R&D to make huge technological advancements in various sectors.\n\nIn this position, you will be working on hardware/software co design for many-core chips, working on hardware component modelling and integrating into simulation environments and you will also design device drivers and libraries in C.\n\nThis is a full-time CDD contract until Summer 2027 based on-site in Paris, France. There is a high possibility of it extending.\n\nREQUIREMENTS\nFor this HW/SW CoDesign Engineer position, ideal candidates have the following:\n- Masters or PhD degree with 0-3 years experience.\n- New graduate 2026 is okay.\n- Previous experience with RTL / GEM5 would be ideal.\n- Knowledge about memory architectures and how they are managed by the OS.\n- C or C++ language proficiency.\n\nA referral scheme is available for this role.\n\nKEYWORDS\nConsumer Electronics / CPU / Computing Architecture / Memory / CPU / Computer Architecture / Gem5 / Simulations",
+  "location": "Paris, France (Onsite)",
+  "status": "applied",
+  "date_added": "2026-09-24T09:23:33.153Z",
+  "tags": [
+    "C",
+    "C++",
+    "GEM5",
+    "Computer Architecture",
+    "RTL",
+    "Memory Management",
+    "Operating Systems",
+    "Simulation",
+    "Manycore",
+    "Research"
+  ],
+  "ats_tags": [
+    "RTL",
+    "Gem5",
+    "Computer Architecture",
+    "C/C++",
+    "Memory Management",
+    "ASIC",
+    "Linux Kernel",
+    "Device Drivers",
+    "On-site Paris",
+    "Manycore"
+  ],
+  "ai_analysis": {
+    "job_id": "job-bd250bae",
+    "analyzed_at": "2026-09-24T11:19:58.907Z",
+    "ats_tags": [
+      "RTL",
+      "Gem5",
+      "Computer Architecture",
+      "C/C++",
+      "Memory Management",
+      "ASIC",
+      "Linux Kernel",
+      "Device Drivers",
+      "On-site Paris",
+      "Manycore"
+    ],
+    "entities_by_type": {
+      "experiences": [
+        {
+          "id": "exp-df8d4cde",
+          "type": "experience",
+          "name": "Software Engineer - Platform team at ARISTA",
+          "score": 78,
+          "reason": "Direct ASIC register/chip infrastructure work in C++ matches hardware co-design focus, though not simulation-environment specific."
+        }
+      ],
+      "projects": [
+        {
+          "id": "proj-e5cdf5a5",
+          "type": "project",
+          "name": "Unicycle CPU",
+          "score": 80,
+          "reason": "Genuine RTL design (VHDL) and FPGA synthesis experience directly matches the RTL requirement, though it's a student project not Gem5."
+        },
+        {
+          "id": "proj-40cdf000",
+          "type": "project",
+          "name": "RFID Driver",
+          "score": 78,
+          "reason": "Linux kernel driver in C with SPI and QEMU simulation matches device driver and simulation environment requirements well."
+        },
+        {
+          "id": "proj-b1f3b77a",
+          "type": "project",
+          "name": "myMalloc",
+          "score": 70,
+          "reason": "Custom memory allocator shows solid memory management knowledge but not tied to OS-level memory architecture at scale."
+        },
+        {
+          "id": "proj-2a5cd1e4",
+          "type": "project",
+          "name": "ARM project",
+          "score": 68,
+          "reason": "Embedded driver work in C on ARM Cortex-M4 shows relevant low-level hardware interfacing but no architecture-simulation component."
+        }
+      ],
+      "skills": [
+        {
+          "id": "skil-a856cc8e",
+          "type": "skill",
+          "name": "Systems",
+          "score": 85,
+          "reason": "Covers virtual memory, cache coherence, kernel, drivers — strongly aligned with memory architecture and OS management requirement."
+        },
+        {
+          "id": "skil-2799aa77",
+          "type": "skill",
+          "name": "Embedded & Hardware",
+          "score": 82,
+          "reason": "RTL, ASIC interfacing, FPGA tags directly match the hardware modelling and RTL requirement."
+        },
+        {
+          "id": "skil-0247ad5c",
+          "type": "skill",
+          "name": "Programming & Languages",
+          "score": 80,
+          "reason": "Expert-level C/C++ and VHDL match the language and RTL requirements exactly."
+        }
+      ],
+      "education": [
+        {
+          "id": "edu-4b5b8a37",
+          "type": "education",
+          "name": "MSc Computer Engineering, Low-level & Systems (GISTRE)",
+          "score": 85,
+          "reason": "Systems/low-level specialization aligns closely with the computer architecture and memory focus of the role."
+        }
+      ]
+    },
+    "confidence_score": 0.58,
+    "summary": "Moderate fit: the candidate has real RTL/FPGA design experience, ASIC register work at Arista, and solid Linux kernel/driver and memory-management projects, but has zero exposure to Gem5 or architectural simulation environments, which is the core tool required. Strong C/C++ and systems fundamentals partially offset the lack of research-level computer architecture simulation experience.",
+    "resume_tips": [
+      "Add 'Gem5' and 'computer architecture simulation' explicitly if you have any exposure — currently completely absent from resume, which is a hard requirement keyword for this role.",
+      "Reframe the Unicycle CPU project vocabulary to emphasize 'RTL design' and 'hardware modelling' since that's the closest match to the job's RTL/Gem5 requirement.",
+      "Quantify the Arista ASIC register work (e.g. number of registers, chips impacted, time saved) to strengthen the hardware/chip infrastructure narrative.",
+      "Explicitly mention 'virtual memory' and 'OS memory management' in the RFID Driver and myMalloc project descriptions to match the job's memory architecture requirement.",
+      "Add a 'Simulation environments' or 'Verilog/RTL' skill entry, since the job explicitly lists this and it's currently missing as a standalone tag.",
+      "Move the ARM/STM32 and RFID driver projects higher in the resume — device driver and C library work is directly named in the job description."
+    ],
+    "recommended_title": "HW/SW Co-Design Engineer — RTL & Memory Systems",
+    "recommended_profile": "Looking for a full-time position in software engineering with a focus on hardware/software co-design, RTL, memory architecture simulation. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded. Fluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running, cooking.",
+    "recommended_experience_ids": [
+      "exp-df8d4cde",
+      "exp-0e31880e"
+    ],
+    "recommended_project_ids": [
+      "proj-e5cdf5a5",
+      "proj-40cdf000",
+      "proj-b1f3b77a",
+      "proj-2a5cd1e4"
+    ],
+    "recommended_skill_ids": [
+      "skil-a856cc8e",
+      "skil-2799aa77",
+      "skil-0247ad5c"
+    ],
+    "recommended_skill_tags": {
+      "skil-a856cc8e": [
+        "ASIC interfacing",
+        "DMA",
+        "FPGA",
+        "Linux",
+        "drivers",
+        "kernel",
+        "virtual memory",
+        "cache coherence",
+        "shared memory",
+        "operating systems"
+      ],
+      "skil-2799aa77": [
+        "ASIC interfacing",
+        "FPGA",
+        "RTL",
+        "I2C",
+        "UART",
+        "SPI"
+      ],
+      "skil-0247ad5c": [
+        "C",
+        "ASM",
+        "VHDL",
+        "C++",
+        "C++20",
+        "algorithms",
+        "data structures"
+      ]
+    },
+    "suggested_new_skills": [
+      {
+        "name": "Gem5",
+        "category": "Tools",
+        "level": "beginner",
+        "tags": [
+          "simulation",
+          "computer architecture"
+        ],
+        "reason": "Explicitly required/ideal for this role, absent from candidate's profile."
+      },
+      {
+        "name": "Verilog",
+        "category": "Languages",
+        "level": "intermediate",
+        "tags": [
+          "RTL",
+          "hardware description"
+        ],
+        "reason": "Complements existing VHDL/RTL experience and matches the RTL requirement."
+      }
+    ],
+    "suggested_new_skill_tags": [
+      {
+        "skill_id": "skil-2799aa77",
+        "tag": "Gem5",
+        "reason": "Job explicitly names Gem5 as a key simulation tool."
+      },
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "memory architecture",
+        "reason": "Job requires knowledge of memory architectures and OS management thereof."
+      },
+      {
+        "skill_id": "skil-0247ad5c",
+        "tag": "Verilog",
+        "reason": "RTL-adjacent language relevant to hardware modelling work described in the job."
+      }
+    ],
+    "recommended_entity_descriptions": {
+      "exp-df8d4cde": "Implemented non-zero reset value management for ASIC Physical Table registers across Arista's chip-agnostic Strata infrastructure (SDK parsing, code generation, DMA) in C++ and Python. Hands-on work with hardware register modelling and chip-level infrastructure directly relevant to HW/SW co-design. Won 1st place at Arista's Hackathon building an AI agent optimization tool with 70% token reduction, approved for production development.",
+      "proj-e5cdf5a5": "Designed and synthesized a 32-bit single-cycle ARM-like processor in VHDL (ALU, register file, instruction decoder, control unit, conditional branching), validated with testbenches and deployed on a real FPGA via Intel Quartus. Direct RTL design and hardware modelling experience applicable to computer architecture simulation work.",
+      "proj-40cdf000": "Developed a Linux kernel character device driver in C for the MFRC522 RFID reader, implementing file_operations callbacks and SPI regmap communication with a FIFO command interface, tested via QEMU simulation. Demonstrates device driver and library development skills in C directly aligned with OS/hardware interfacing.",
+      "proj-b1f3b77a": "Implemented a custom malloc/free/realloc/calloc allocator in C with bucket-based allocation, free block tracking, and mmap-based page management to minimize fragmentation. Demonstrates practical memory management and virtual memory handling skills relevant to memory architecture design."
+    }
+  }
+}

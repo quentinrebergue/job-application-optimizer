@@ -1,0 +1,43 @@
+{
+  "selected_entity_ids": [
+    "edu-45c721ed",
+    "edu-4b5b8a37",
+    "edu-c735b9b1",
+    "exp-df8d4cde",
+    "exp-b0ccfdd9",
+    "proj-58931465",
+    "proj-tiger",
+    "proj-irgpu",
+    "skil-0247ad5c",
+    "skil-52bcbd31"
+  ],
+  "ai_rankings": [],
+  "profile_text": "Looking for a full-time position in software engineering with a focus on low-level systems / hardware integration.\nMSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded.\nFluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running , cooking.",
+  "resume_title": "Quentin Rebergue - Software Engineer",
+  "ai_context": "Im searching a first graduate job in system, low-level, hardware interface, linux",
+  "skill_tag_overrides": {
+    "skil-0247ad5c": [
+      "C++",
+      "C++20",
+      "OOP",
+      "algorithms",
+      "data structures"
+    ],
+    "skil-52bcbd31": [
+      "optimisation",
+      "profiling",
+      "CI/CD",
+      "testing",
+      "system analysis"
+    ]
+  },
+  "project_order": [
+    "proj-58931465",
+    "proj-tiger",
+    "proj-irgpu"
+  ],
+  "experience_order": [
+    "exp-df8d4cde",
+    "exp-b0ccfdd9"
+  ]
+}

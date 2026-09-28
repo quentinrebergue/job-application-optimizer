@@ -1,0 +1,10 @@
+{
+  "id": "gq-98285443",
+  "question": "What is the difference between compilation and interpretation?\n",
+  "answer": "Compilation: entire program translated to machine code before execution (Java, C++). Interpretation: code executed line-by-line at runtime by an interpreter (Python, JavaScript). Some languages use both (JIT compilation).\n",
+  "tags": [
+    "compilation",
+    "interpreter",
+    "execution"
+  ]
+}

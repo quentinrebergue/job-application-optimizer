@@ -1,0 +1,22 @@
+[
+  {
+    "id": "proj-irgpu-q1",
+    "question": "How did you achieve the 20x speedup from CPU to GPU?",
+    "answer": "Through a systematic 4-phase optimization approach: (1) Data type restructuring—combining separate image channels into uchar4 packed format to reduce memory bandwidth; (2) Batch processing—grouping hysteresis thresholding operations to minimize Memcpy calls between host and device; (3) Eliminating unnecessary DeviceSynchronize calls that blocked the GPU pipeline; (4) Fine-tuning synchronization strategy using Nsight Compute and nvprof to identify persistent Memcpy and synchronization bottlenecks. Each phase reduced execution time incrementally."
+  },
+  {
+    "id": "proj-irgpu-q2",
+    "question": "What algorithms did you implement for motion detection?",
+    "answer": "Reservoir sampling for adaptive background estimation (memory-efficient single-pass online learning), morphological operations (erosion and dilation) to smooth motion masks and remove noise, and hysteresis thresholding to detect edges robustly. Each component ran on the GPU as a separate CUDA kernel or fused kernel to minimize Memcpy overhead. CPU baseline implementation provided correctness validation."
+  },
+  {
+    "id": "proj-irgpu-q3",
+    "question": "Why did profiling matter in this project?",
+    "answer": "Without profiling, we would have optimized the wrong bottlenecks. Nsight Compute and nvprof revealed that memory transfers (Memcpy) and synchronization points, not kernel compute time, were the limiting factors. This insight drove the uchar4 packing and batch processing decisions. Premature optimization without data would have wasted effort on GPU compute kernels that weren't the constraint."
+  },
+  {
+    "id": "proj-irgpu-q4",
+    "question": "How did you integrate GStreamer and what challenges did that present?",
+    "answer": "GStreamer provided a pipeline for video decoding and frame delivery to our CUDA kernels. The challenge was buffering frames efficiently without creating synchronization bottlenecks between the CPU pipeline thread and GPU kernel execution. We used GStreamer's appsink to pull decoded frames and feed them to the GPU in batches, reducing context-switch overhead and maximizing GPU utilization."
+  }
+]

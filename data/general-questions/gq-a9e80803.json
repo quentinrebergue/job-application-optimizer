@@ -1,0 +1,10 @@
+{
+  "id": "gq-a9e80803",
+  "question": "What is in-context learning?\n",
+  "answer": "LLMs can learn new tasks from examples in the prompt (few-shot) without retraining. Larger models are better at this. Not true learning (weights don't update), but the model uses the context to infer the task and adapt its outputs.\n",
+  "tags": [
+    "ai",
+    "llm",
+    "prompting"
+  ]
+}

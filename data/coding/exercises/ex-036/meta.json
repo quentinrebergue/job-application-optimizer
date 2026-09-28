@@ -1,0 +1,14 @@
+{
+  "id": "ex-036",
+  "title": "Longest Substring with At Least K Repeating Characters",
+  "difficulty": "medium",
+  "category": "Sliding Window",
+  "knowledge_ids": [
+    "k-sliding-window"
+  ],
+  "tags": [
+    "sliding-window",
+    "strings",
+    "divide-and-conquer"
+  ]
+}

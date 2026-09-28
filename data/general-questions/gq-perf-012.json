@@ -1,0 +1,6 @@
+{
+  "id": "gq-perf-012",
+  "question": "What is branch misprediction and how does it hurt performance?",
+  "answer": "Modern CPUs use a branch predictor to guess which way an `if` statement will go, and start executing ahead speculatively. If the prediction is wrong, the CPU must flush the pipeline and restart — costing 10-20 cycles. This matters in tight loops with unpredictable conditionals. Solutions: use branchless code (ternary operators, bit tricks), ensure hot paths are predictable, or use `__builtin_expect` to hint the compiler.",
+  "tags": ["performance", "cpu-architecture"]
+}

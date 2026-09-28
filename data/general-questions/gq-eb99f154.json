@@ -1,0 +1,10 @@
+{
+  "id": "gq-eb99f154",
+  "question": "What is the difference between training and inference?\n",
+  "answer": "Training: compute gradients, update weights, typically uses batch processing. Slow, high memory (gradients, activations). Inference: forward pass only, no gradient computation. Fast, low memory. Inference typically uses smaller batch sizes or streaming for low latency.\n",
+  "tags": [
+    "ai",
+    "inference",
+    "training"
+  ]
+}

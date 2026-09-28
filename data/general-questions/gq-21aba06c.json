@@ -1,0 +1,10 @@
+{
+  "id": "gq-21aba06c",
+  "question": "What is gradient descent?\n",
+  "answer": "Iterative optimization algorithm. Update weights in the direction opposite to the gradient: w_new = w - learning_rate * gradient. Moves toward local minimum of the loss. More steps and smaller learning rate = slower but stable; fewer steps, larger rate = faster but risky.\n",
+  "tags": [
+    "ai",
+    "training",
+    "optimization"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "id": "gq-3353cf77",
+  "question": "What is GPU occupancy?\n",
+  "answer": "Ratio of active warps on an SM to the maximum possible warps. Higher occupancy = more warps to hide latency with.\n",
+  "tags": [
+    "cuda",
+    "occupancy",
+    "performance"
+  ]
+}

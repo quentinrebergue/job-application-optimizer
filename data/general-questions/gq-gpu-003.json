@@ -1,0 +1,6 @@
+{
+  "id": "gq-gpu-003",
+  "question": "What is a CUDA kernel? What are threads, blocks, and grids?",
+  "answer": "A CUDA kernel is a function that runs on the GPU, executed by many threads in parallel. Threads are grouped into blocks, and blocks are grouped into a grid. All threads in a block run on the same Streaming Multiprocessor (SM) and can share fast shared memory. A typical launch looks like `kernel<<<gridDim, blockDim>>>(args)` where `blockDim` is threads per block (typically 128-1024) and `gridDim` is the number of blocks. Each thread has a unique ID computed from `blockIdx` and `threadIdx`.",
+  "tags": ["gpu", "cuda"]
+}

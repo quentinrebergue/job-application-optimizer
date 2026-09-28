@@ -1,0 +1,285 @@
+{
+  "id": "job-f4d1f7d5",
+  "company": "Qualcomm",
+  "title": "Software Engineer",
+  "description": "Qualcomm France-QITC mission is to develop and deploy highly configurable custom-built interconnect hardware IPs, software tools, and exploration and verification methodologies so that SoC integration teams can quickly assemble SoCs with the desired Power Performance Area (PPA) characteristics.\n\nThe team delivers CAD tools which allow the designer to describe interconnects as high-level abstraction features. The tools choose, configure and connect the appropriate unit part of the library of HW IP developed at QITC. The software also allows from a properly configured design to export all sorts of collaterals: Verilog descriptions, SystemC models, excel sheets, pre-configured verification environments, etc.\n\nResponsibilities:\n- Gathering requirements and designing new features to enhance the possibilities of the tools: IP assembly and configuration, collaterals generation, GUI\n- Participating to releases planning and deliveries\n- Monitoring code quality and regression status\n\nWorking environment: Linux, Git, Qt, Python OOP, C++\n\nMinimum Qualifications:\n- Master's degree in Science, Engineering, or related field\n\nPreferred Qualifications:\n- Fluent in software design best practices\n- Good knowledge in object-oriented programming\n- Good Python skills\n- Experience in profiling and code optimization\n- Experience developing a software intensive tool\n- Strong interest in hardware technologies (RTL Verilog, VHDL, SystemC, Arduino or electronics)",
+  "location": "Guyancourt, Île-de-France, France",
+  "url": "https://www.linkedin.com/jobs/view/4387385636/",
+  "status": "applied",
+  "date_added": "2026-06-02T21:41:31.024Z",
+  "tags": [
+    "Python",
+    "C++",
+    "Linux",
+    "Git",
+    "OOP",
+    "Qt",
+    "SystemC",
+    "Verilog"
+  ],
+  "ats_tags": [
+    "Software Engineer",
+    "Embedded Systems",
+    "Hardware IP",
+    "Linux",
+    "C++",
+    "Python",
+    "OOP",
+    "ASIC",
+    "VHDL",
+    "SystemC",
+    "CAD tools",
+    "Entry-level"
+  ],
+  "ai_analysis": {
+    "job_id": "job-f4d1f7d5",
+    "analyzed_at": "2026-06-02T21:42:31.781Z",
+    "ats_tags": [
+      "Software Engineer",
+      "Embedded Systems",
+      "Hardware IP",
+      "Linux",
+      "C++",
+      "Python",
+      "OOP",
+      "ASIC",
+      "VHDL",
+      "SystemC",
+      "CAD tools",
+      "Entry-level"
+    ],
+    "entities_by_type": {
+      "experiences": [
+        {
+          "id": "exp-0e31880e",
+          "type": "experience",
+          "name": "Head of Teaching Assistants - YAKA / ACU Program at EPITA",
+          "score": 65,
+          "reason": "Demonstrates leadership and experience with C++ and C in large-scale technical projects, though not direct software engineering for hardware IPs."
+        },
+        {
+          "id": "exp-df8d4cde",
+          "type": "experience",
+          "name": "Software Engineer Intern - Platform team at ARISTA",
+          "score": 85,
+          "reason": "Highly relevant experience in ASIC infrastructure, SDK parsing, code generation in Python and C++, directly matching the job's core mission."
+        }
+      ],
+      "projects": [
+        {
+          "id": "proj-1b63d04a",
+          "type": "project",
+          "name": "42sh",
+          "score": 70,
+          "reason": "Implementation of a shell interpreter in C with parsing and AST demonstrates strong systems programming and 'software intensive tool' development."
+        },
+        {
+          "id": "proj-2a5cd1e4",
+          "type": "project",
+          "name": "ARM project",
+          "score": 80,
+          "reason": "Embedded system development with ARM Cortex-M4, I2C, and UART directly aligns with hardware technologies and low-level interfacing."
+        },
+        {
+          "id": "proj-40cdf000",
+          "type": "project",
+          "name": "RFID Driver",
+          "score": 80,
+          "reason": "Development of a Linux kernel character device driver for RFID with SPI communication is highly relevant to Linux and hardware interfacing."
+        },
+        {
+          "id": "proj-4f43d05f",
+          "type": "project",
+          "name": "My Docker",
+          "score": 75,
+          "reason": "Building a container runtime in C using Linux namespaces and cgroups showcases strong low-level Linux and systems programming skills relevant to tool development."
+        },
+        {
+          "id": "proj-ad638299",
+          "type": "project",
+          "name": "Synchronous Real-Time Systems",
+          "score": 75,
+          "reason": "Experience with real-time schedulers and embedded systems on Raspberry Pi demonstrates interest and capability in relevant hardware technologies."
+        },
+        {
+          "id": "proj-b1f3b77a",
+          "type": "project",
+          "name": "myMalloc",
+          "score": 70,
+          "reason": "Custom memory allocator in C highlights deep understanding of low-level memory management and systems programming, beneficial for C++ tool optimization."
+        },
+        {
+          "id": "proj-e5cdf5a5",
+          "type": "project",
+          "name": "Unicycle CPU",
+          "score": 90,
+          "reason": "Designing an ARM-like CPU in VHDL and synthesizing it on FPGA is an exceptional match for 'strong interest in hardware technologies' and RTL design."
+        },
+        {
+          "id": "proj-irgpu",
+          "type": "project",
+          "name": "GPU-Accelerated Video Analysis System (IRGPU)",
+          "score": 80,
+          "reason": "C++ and CUDA development with iterative optimization and profiling directly addresses preferred skills in code optimization and software intensive tools."
+        },
+        {
+          "id": "proj-tiger",
+          "type": "project",
+          "name": "Tiger Compiler",
+          "score": 85,
+          "reason": "Building a compiler frontend with LLVM in C++ is highly relevant to developing 'software intensive tool's for 'high-level abstraction features' and 'collaterals generation'."
+        }
+      ],
+      "skills": [
+        {
+          "id": "skil-0247ad5c",
+          "type": "skill",
+          "name": "Programming & Languages",
+          "score": 85,
+          "reason": "Expertise in C, C++, Python, OOP, and VHDL directly matches required and preferred languages and hardware interest."
+        },
+        {
+          "id": "skil-2799aa77",
+          "type": "skill",
+          "name": "Embedded & Hardware",
+          "score": 90,
+          "reason": "Advanced knowledge in ASIC interfacing, FPGA, I2C, STM32, SPI is an outstanding match for the role's focus on interconnect hardware IPs and hardware technologies."
+        },
+        {
+          "id": "skil-52bcbd31",
+          "type": "skill",
+          "name": "Other / DevOps",
+          "score": 75,
+          "reason": "Proficiency in Git, GDB, Valgrind, optimization, and system analysis are highly valuable for code quality, debugging, and efficient software development in the role."
+        },
+        {
+          "id": "skil-a856cc8e",
+          "type": "skill",
+          "name": "Systems",
+          "score": 90,
+          "reason": "Expertise in Linux, Kernel, Drivers, DMA, low-latency, and real-time operating systems is an exceptional match for the working environment and low-level nature of the role."
+        }
+      ],
+      "education": [
+        {
+          "id": "edu-4b5b8a37",
+          "type": "education",
+          "name": "MSc Computer Engineering, Low-level & Systems (GISTRE) from EPITA",
+          "score": 90,
+          "reason": "Meets the minimum Master's degree qualification with a highly relevant specialization in 'Low-level & Systems' for this role."
+        }
+      ]
+    },
+    "confidence_score": 0.83,
+    "summary": "This candidate is an exceptional match for the Software Engineer role, particularly for a first graduate position. Their strong academic background in low-level and systems, coupled with an highly relevant internship in ASIC infrastructure development, aligns almost perfectly with Qualcomm's mission. While lacking extensive professional experience beyond the internship, their project portfolio demonstrates deep technical expertise directly relevant to hardware technologies and software tool development.",
+    "resume_tips": [
+      "Highlight the 'Software Engineer Intern - Platform team at ARISTA' experience more prominently, focusing on ASIC, code generation, and Python/C++ tool development.",
+      "Add 'Qt' as a skill if there is any relevant experience, as it's a key working environment technology.",
+      "Rephrase the compiler project description to explicitly mention 'collateral generation' or 'high-level abstraction features' to align with the job's tool description.",
+      "Consider adding 'Software Design Patterns' or 'Software Architecture' as a distinct skill to address the 'software design best practices' preferred qualification."
+    ],
+    "recommended_title": "Software Engineer — Embedded Systems & Hardware IP",
+    "recommended_profile": "Looking for a full-time position in software engineering with a focus on: embedded systems, hardware IP, Linux, C/C++. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded. Fluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running, cooking.",
+    "recommended_experience_ids": [
+      "exp-df8d4cde",
+      "exp-0e31880e"
+    ],
+    "recommended_project_ids": [
+      "proj-e5cdf5a5",
+      "proj-tiger",
+      "proj-2a5cd1e4",
+      "proj-40cdf000",
+      "proj-irgpu"
+    ],
+    "recommended_skill_ids": [
+      "skil-0247ad5c",
+      "skil-2799aa77",
+      "skil-a856cc8e",
+      "skil-52bcbd31"
+    ],
+    "recommended_skill_tags": {
+      "skil-0247ad5c": [
+        "C",
+        "C++",
+        "Python",
+        "VHDL",
+        "OOP"
+      ],
+      "skil-2799aa77": [
+        "ASIC interfacing",
+        "FPGA",
+        "I2C",
+        "STM32",
+        "UART",
+        "SPI"
+      ],
+      "skil-52bcbd31": [
+        "GDB",
+        "Git",
+        "optimisation",
+        "testing",
+        "valgrind",
+        "system analysis"
+      ],
+      "skil-a856cc8e": [
+        "Kernel",
+        "Linux",
+        "Drivers",
+        "low-latency",
+        "real-time"
+      ]
+    },
+    "suggested_new_skills": [
+      {
+        "name": "Qt",
+        "category": "Tools & Frameworks",
+        "level": "intermediate",
+        "tags": [
+          "GUI",
+          "Linux"
+        ],
+        "reason": "Explicitly mentioned as a working environment technology"
+      },
+      {
+        "name": "Software Design Principles",
+        "category": "Methodologies",
+        "level": "advanced",
+        "tags": [
+          "best practices",
+          "architecture"
+        ],
+        "reason": "Addresses the 'Fluent in software design best practices' preferred qualification"
+      }
+    ],
+    "suggested_new_skill_tags": [
+      {
+        "skill_id": "skil-0247ad5c",
+        "tag": "Verilog",
+        "reason": "Mentioned in 'Strong interest in hardware technologies (RTL Verilog)'"
+      },
+      {
+        "skill_id": "skil-2799aa77",
+        "tag": "SystemC",
+        "reason": "Mentioned in 'Strong interest in hardware technologies (SystemC)'"
+      },
+      {
+        "skill_id": "skil-0247ad5c",
+        "tag": "profiling",
+        "reason": "From 'Experience in profiling and code optimization' preferred qualification"
+      },
+      {
+        "skill_id": "skil-0247ad5c",
+        "tag": "code optimization",
+        "reason": "From 'Experience in profiling and code optimization' preferred qualification"
+      }
+    ],
+    "recommended_entity_descriptions": {
+      "exp-df8d4cde": "Implemented non-zero reset value management for ASIC Physical Table registers across chip-agnostic infrastructure, utilizing Python and C++. This directly involved developing software tools for hardware IP configuration and collateral generation. Won 1st place at Arista's Hackathon by building an AI agent optimization tool, demonstrating strong profiling and optimization skills.",
+      "proj-e5cdf5a5": "Designed a 32-bit single-cycle ARM-like processor in VHDL, including ALU, register file, instruction decoder, and control unit. Synthesized the design on a real FPGA using Intel Quartus, validating a strong interest in hardware technologies and RTL Verilog/VHDL development.",
+      "proj-tiger": "Developed a full compiler frontend in C++ for the Tiger language, encompassing lexing, parsing, binding, type checking, desugaring, and LLVM IR generation. This project showcases extensive experience in building a software intensive tool capable of generating various collaterals.",
+      "proj-2a5cd1e4": "Built an STM32F429ZI embedded system functioning as a UART command server using libgapcom (Protobuf over UART). Implemented a 4-level log subsystem and an MPU6050 gyroscope driver over I2C, demonstrating strong hands-on experience with hardware interfaces and embedded systems.",
+      "proj-40cdf000": "Developed a Linux kernel character device driver for the MFRC522 RFID reader with file_operations callbacks and SPI regmap communication. Tested extensively via QEMU emulation, showcasing expertise in low-level Linux systems and hardware interfacing.",
+      "proj-irgpu": "Engineered a real-time GPU-accelerated motion detection pipeline in C++/CUDA, utilizing reservoir sampling and morphological operations. Achieved a 20x CPU speedup through iterative CUDA optimization, profiled with Nsight Compute, highlighting strong C++ and code optimization skills for software intensive tools."
+    }
+  }
+}

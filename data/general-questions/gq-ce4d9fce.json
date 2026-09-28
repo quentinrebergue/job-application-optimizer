@@ -1,0 +1,10 @@
+{
+  "id": "gq-ce4d9fce",
+  "question": "What is dynamic typing?\n",
+  "answer": "Type of a variable is determined at runtime. A variable can hold any type of value. Examples: Python, JavaScript, Ruby. Flexible but type errors only appear when code runs.\n",
+  "tags": [
+    "typology",
+    "dynamic-typing",
+    "type-system"
+  ]
+}

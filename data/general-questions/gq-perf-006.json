@@ -1,0 +1,6 @@
+{
+  "id": "gq-perf-006",
+  "question": "What is the difference between CPU time and wall time?",
+  "answer": "Wall time (real time) is the actual elapsed time from start to finish — what a clock on the wall would measure. CPU time is only the time the CPU spent executing your process, excluding time waiting for I/O, sleeping, or when other processes ran. If your program uses multiple threads, CPU time can exceed wall time. If your program is I/O-bound, wall time will greatly exceed CPU time. Use `time ./myprogram` to see both (`real` = wall time, `user` + `sys` = CPU time).",
+  "tags": ["profiling", "performance"]
+}

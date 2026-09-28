@@ -1,0 +1,239 @@
+{
+  "id": "job-75b58f19",
+  "company": "NXP Semiconductors",
+  "title": "Candidature Spontanée – Ingénieur(e)",
+  "description": "Candidature Spontanée – Rejoignez NXP Semiconductors en France\n\nVous êtes prêt(e) à relever un nouveau défi dans l'industrie des semi-conducteurs ?\n\nChez NXP Semiconductors, nous développons des solutions sécurisées pour un monde plus intelligent. Leader mondial des technologies de connectivité et de sécurité, nous innovons dans les domaines de l'automobile, de l'IoT, des systèmes embarqués et des infrastructures critiques.\n\nNous constituons actuellement des viviers de talents pour nos futures opportunités en France et recherchons des profils du niveau junior à expérimenté dans nos sites de Toulouse, Caen, Sophia-Antipolis, Grenoble et Paris/Saclay.\n\nDOMAINES D'EXPERTISE RECHERCHÉS\n- Conception de circuits intégrés (Analogique, Numérique, Mixte)\n- Ingénierie RF & mmWave\n- Vérification et validation (Analogique, Numérique, Mixte)\n- Layout analogique / numérique\n- Produit et test\n- Architecture système IC / Logiciel\n- Logiciel embarqué & Firmware\n- Logiciel système eUICC / e-SIM\n- Sécurité HW/SW & Safety\n- Program Management\n- Business Development & Marketing\n- Analystes des activités commerciales\n- Field Application Engineers (FAE)\n- Account Managers\n- IA / ML / Deep Learning\n\nPOURQUOI REJOINDRE NXP ?\n- Innovation au cœur des technologies de demain : Véhicule connecté, sécurité embarquée, solutions eSIM pour IoT, RF pour 5G et bien plus.\n- Un environnement stimulant : Collaboration internationale, projets stratégiques, culture orientée innovation.\n- Package attractif : Salaire compétitif, avantages sociaux, télétravail flexible, mobilité internationale.\n- Relocation support : Accompagnement pour votre installation si nécessaire.\n\nNOS PROJETS STRATÉGIQUES ACTUELS\n- Automobile & Mobilité intelligente\n- Sécurité embarquée & cryptographie\n- IoT & Connectivité avancée\n\nVous ne trouvez pas d'offre correspondant à votre profil sur notre site carrière ? Envoyez votre candidature spontanée dès maintenant ! Notre équipe recrutement vous contactera pour explorer les opportunités adaptées à votre parcours.\n\n---\n\nSpontaneous Application – Join NXP Semiconductors in France\n\nAt NXP Semiconductors, we develop secure solutions for a smarter world. As a global leader in connectivity and security technologies, we innovate in automotive, IoT, embedded systems, and critical infrastructure.\n\nWe are currently building talent pools for future opportunities in France and are looking for junior to experienced profiles across our sites in Toulouse, Caen, Sophia-Antipolis, Grenoble and Paris.\n\nAREAS OF EXPERTISE WE'RE LOOKING FOR\nAnalog/Digital/Mixed-Signal IC Design, RF & mmWave IC Design, Analog/Digital/Mixed-Signal Verification & Validation, Analog/Digital Layout, Product and Test Engineering, System IC Architect / Software Architect, Embedded Software & Firmware, eUICC / eSIM System Software, Hardware/Software Security & Functional Safety, Program Management, Business Development & Marketing, Sales Operations Analyst, Field Application Engineers (FAE), Account Managers.\n\nWHY JOIN NXP?\nInnovation at the heart of tomorrow's technologies (connected vehicles, embedded security, eSIM solutions for IoT, RF for 5G), international collaboration, competitive package, relocation support if required.\n\nSTRATEGIC FOCUS AREAS: Automotive & Smart Mobility / Embedded Security & Cryptography / IoT & Advanced Connectivity (eSIM/eUICC solutions and RF technologies for 5G).",
+  "location": "Toulouse, Caen, Sophia-Antipolis, Grenoble, Paris/Saclay, France",
+  "status": "applied",
+  "date_added": "2026-09-24T09:22:41.428Z",
+  "tags": [
+    "Semiconductors",
+    "IC Design",
+    "RF",
+    "Embedded",
+    "Firmware",
+    "Security",
+    "eSIM",
+    "Analog",
+    "Digital",
+    "Verification",
+    "IoT",
+    "Automotive"
+  ],
+  "ats_tags": [
+    "Linux kernel",
+    "embedded systems",
+    "C/C++",
+    "ASIC",
+    "device drivers",
+    "firmware",
+    "STM32",
+    "SPI/I2C",
+    "systems programming",
+    "junior-level"
+  ],
+  "ai_analysis": {
+    "job_id": "job-75b58f19",
+    "analyzed_at": "2026-09-24T11:28:09.276Z",
+    "ats_tags": [
+      "Linux kernel",
+      "embedded systems",
+      "C/C++",
+      "ASIC",
+      "device drivers",
+      "firmware",
+      "STM32",
+      "SPI/I2C",
+      "systems programming",
+      "junior-level"
+    ],
+    "entities_by_type": {
+      "experiences": [
+        {
+          "id": "exp-df8d4cde",
+          "type": "experience",
+          "name": "Software Engineer - Platform team at ARISTA",
+          "score": 78,
+          "reason": "Strong match on ASIC/system-level infrastructure and firmware in C++/Python, though it's software-heavy rather than IC hardware design."
+        }
+      ],
+      "projects": [
+        {
+          "id": "proj-40cdf000",
+          "type": "project",
+          "name": "RFID Driver",
+          "score": 85,
+          "reason": "Direct Linux kernel driver and hardware interfacing experience, a core match for NXP's Embedded Software & Firmware domain."
+        },
+        {
+          "id": "proj-2a5cd1e4",
+          "type": "project",
+          "name": "ARM project",
+          "score": 80,
+          "reason": "Embedded firmware on STM32 with UART/I2C hardware interfacing closely matches NXP's embedded systems needs."
+        },
+        {
+          "id": "proj-4f43d05f",
+          "type": "project",
+          "name": "My Docker",
+          "score": 75,
+          "reason": "Deep Linux kernel security mechanisms (namespaces, seccomp, cgroups) align with HW/SW Security track, though it's a container runtime not chip-level security."
+        },
+        {
+          "id": "proj-4c4f5731",
+          "type": "project",
+          "name": "Linux System Tracing & Storage",
+          "score": 72,
+          "reason": "Strong Linux systems debugging and storage stack skills relevant to systems/verification work, but not hardware-specific."
+        },
+        {
+          "id": "proj-ad638299",
+          "type": "project",
+          "name": "Synchronous Real-Time Systems",
+          "score": 70,
+          "reason": "Real-time embedded scheduling on Raspberry Pi is relevant to firmware/real-time systems but is a small academic project."
+        }
+      ],
+      "skills": [
+        {
+          "id": "skil-a856cc8e",
+          "type": "skill",
+          "name": "Systems",
+          "score": 88,
+          "reason": "Covers ASIC interfacing, Linux, kernel, drivers, DMA — near-direct match to NXP's system/embedded domains."
+        },
+        {
+          "id": "skil-2799aa77",
+          "type": "skill",
+          "name": "Embedded & Hardware",
+          "score": 85,
+          "reason": "STM32, I2C, SPI, UART, FPGA, RTL directly match embedded/IC-adjacent hardware interfacing needs."
+        },
+        {
+          "id": "skil-0247ad5c",
+          "type": "skill",
+          "name": "Programming & Languages",
+          "score": 80,
+          "reason": "C/C++ expertise is core to embedded firmware and system software roles, though breadth includes irrelevant languages (Ocaml, VHDL noted separately)."
+        },
+        {
+          "id": "skil-52bcbd31",
+          "type": "skill",
+          "name": "Other / DevOps",
+          "score": 65,
+          "reason": "Debugging/profiling tools support verification and validation work but are generic rather than IC-specific."
+        }
+      ],
+      "education": [
+        {
+          "id": "edu-4b5b8a37",
+          "type": "education",
+          "name": "MSc Computer Engineering, Low-level & Systems (GISTRE)",
+          "score": 82,
+          "reason": "Degree specialization in low-level systems directly matches NXP's embedded/systems engineering tracks."
+        }
+      ]
+    },
+    "confidence_score": 0.58,
+    "summary": "Roughly a 55-60% fit: the candidate's strong Linux kernel/driver, embedded firmware, and ASIC-adjacent systems programming background aligns well with NXP's embedded software, system architecture, and HW/SW security tracks. However, the posting also spans analog/RF IC design, layout, eSIM/eUICC software, and business-facing roles where the candidate has no relevant experience, making this a partial match at best across the full breadth of the posting.",
+    "resume_tips": [
+      "Add explicit 'firmware' and 'embedded Linux' keywords near the top of the resume since NXP's ATS likely filters on these terms.",
+      "Quantify the impact of the Arista ASIC register management work (e.g. number of registers, chips supported, time saved) to strengthen the System IC Architecture match.",
+      "Promote the RFID Linux kernel driver and STM32 UART/I2C projects above general software projects (EpiTweet, Tiger Compiler) since they map directly to NXP's Embedded Software & Firmware track.",
+      "Explicitly mention 'device driver development' and 'hardware/software security' as skill labels, since My Docker (namespaces/seccomp/cgroups) is relevant to NXP's Security & Safety domain but currently framed as a generic systems project.",
+      "If pursuing NXP's Verification & Validation track, surface debugging/testing tools (GDB, strace, valgrind) more prominently — currently buried in a generic 'Other/DevOps' skill bucket.",
+      "Since NXP also recruits for RF/analog/layout and business roles, be explicit in the cover letter that you are targeting the Embedded Software / System Architecture / Security tracks specifically, to avoid ATS misrouting."
+    ],
+    "recommended_title": "Embedded Systems Engineer — Linux & Firmware",
+    "recommended_profile": "Looking for a full-time position in software engineering with a focus on embedded Linux, hardware interfacing, firmware development. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded. Fluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running, cooking.",
+    "recommended_experience_ids": [
+      "exp-df8d4cde"
+    ],
+    "recommended_project_ids": [
+      "proj-40cdf000",
+      "proj-2a5cd1e4",
+      "proj-4f43d05f",
+      "proj-4c4f5731",
+      "proj-ad638299"
+    ],
+    "recommended_skill_ids": [
+      "skil-a856cc8e",
+      "skil-2799aa77",
+      "skil-0247ad5c",
+      "skil-52bcbd31"
+    ],
+    "recommended_skill_tags": {
+      "skil-a856cc8e": [
+        "ASIC interfacing",
+        "DMA",
+        "Linux",
+        "drivers",
+        "kernel",
+        "memory architecture",
+        "real-time"
+      ],
+      "skil-2799aa77": [
+        "ASIC interfacing",
+        "I2C",
+        "STM32",
+        "UART",
+        "SPI",
+        "RTL",
+        "FPGA"
+      ],
+      "skil-0247ad5c": [
+        "C",
+        "C++",
+        "Bash",
+        "Python",
+        "algorithms",
+        "data structures"
+      ],
+      "skil-52bcbd31": [
+        "GDB",
+        "strace",
+        "valgrind",
+        "security",
+        "system analysis",
+        "testing"
+      ]
+    },
+    "suggested_new_skills": [
+      {
+        "name": "RTOS",
+        "category": "Embedded",
+        "level": "beginner",
+        "tags": [
+          "real-time scheduling",
+          "embedded firmware"
+        ],
+        "reason": "Real-time OS experience is commonly required for embedded firmware roles like those NXP is hiring for, and is not explicitly listed in current skills."
+      }
+    ],
+    "suggested_new_skill_tags": [
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "chip-agnostic infrastructure",
+        "reason": "Directly used in current Arista ASIC platform work, relevant to NXP System IC Architecture track."
+      },
+      {
+        "skill_id": "skil-2799aa77",
+        "tag": "device driver development",
+        "reason": "Demonstrated via RFID Linux kernel driver project, aligns with NXP Embedded Software & Firmware domain."
+      },
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "syscall filtering",
+        "reason": "Used in My Docker project, relevant to NXP HW/SW Security & Safety track."
+      }
+    ],
+    "recommended_entity_descriptions": {
+      "exp-df8d4cde": "Currently developing ASIC register management infrastructure for chip-agnostic hardware platforms (Strata) using Python and C++, including SDK parsing, code generation, and DMA handling. Contributing to low-level embedded software supporting production-grade network hardware. Won 1st place at internal Hackathon for an AI-driven code optimization tool, later approved for production development.",
+      "proj-40cdf000": "Developed a Linux kernel character device driver for the MFRC522 RFID reader, implementing file_operations callbacks and SPI regmap communication for direct hardware interfacing. Built a FIFO-based command interface and validated functionality via QEMU emulation, demonstrating strong Linux kernel and driver development skills.",
+      "proj-2a5cd1e4": "Built an embedded UART command server on an STM32F429ZI (ARM Cortex-M4) using libgapcom (Protobuf over UART), implementing a multi-level logging subsystem and an I2C-based MPU6050 gyroscope driver with FIFO reads — demonstrating firmware development and hardware interfacing skills.",
+      "proj-4f43d05f": "Built a lightweight container runtime in C leveraging Linux namespaces, pivot_root, capability dropping, seccomp syscall filtering, and cgroups, showcasing deep understanding of Linux kernel security mechanisms and low-level system programming.",
+      "proj-4c4f5731": "Used strace-based fault injection and syscall filtering to reverse-engineer binary behavior, and automated complex Linux storage stacks (LUKS2, LVM, RAID, dm-linear) via Bash scripting, reflecting strong Linux systems and low-level debugging expertise.",
+      "proj-ad638299": "Designed a Rate Monotonic scheduler in Heptagon, compiling deterministic C step functions with no heap allocation, and deployed the real-time system to a Raspberry Pi 3 via UART bootloader, relevant to embedded firmware and real-time systems engineering."
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "id": "gq-ffe51764",
+  "question": "You have N=2048 elements and want 128 threads per block. How many blocks do you launch, and what does the kernel launch look like?\n",
+  "answer": "2048 / 128 = 16 blocks. Launch: kernel<<<16, 128>>>(...). Inside the kernel, guard with if (i < N) in case N is not perfectly divisible by block size.\n",
+  "tags": [
+    "cuda",
+    "kernel",
+    "launch"
+  ]
+}

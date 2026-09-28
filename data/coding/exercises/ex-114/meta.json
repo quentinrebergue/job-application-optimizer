@@ -1,0 +1,14 @@
+{
+  "id": "ex-114",
+  "title": "Word Search",
+  "difficulty": "medium",
+  "category": "Backtracking",
+  "knowledge_ids": [
+    "k-backtracking"
+  ],
+  "tags": [
+    "backtracking",
+    "matrix"
+  ],
+  "leetcode": 79
+}

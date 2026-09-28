@@ -1,0 +1,6 @@
+{
+  "id": "gq-os-002",
+  "question": "What is a deadlock? How do you prevent it?",
+  "answer": "A deadlock occurs when two or more threads are each waiting for a resource held by the other, so none can proceed. Four conditions must all hold (Coffman conditions): mutual exclusion, hold and wait, no preemption, circular wait.\n\nPrevention strategies:\n- **Lock ordering**: always acquire locks in the same global order across all threads\n- **Try-lock with timeout**: use `try_lock()` and back off if failed\n- **Lock-free data structures**: avoid locks entirely\n- **Avoid holding locks while calling external code**",
+  "tags": ["os", "concurrency"]
+}

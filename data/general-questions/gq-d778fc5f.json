@@ -1,0 +1,10 @@
+{
+  "id": "gq-d778fc5f",
+  "question": "What is a shared memory bank conflict?\n",
+  "answer": "Shared memory has 32 banks. If two threads in the same warp hit the same bank, accesses serialize and performance drops.\n",
+  "tags": [
+    "cuda",
+    "memory",
+    "shared"
+  ]
+}

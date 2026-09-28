@@ -1,0 +1,69 @@
+{
+  "selected_entity_ids": [
+    "edu-4b5b8a37",
+    "edu-c735b9b1",
+    "exp-df8d4cde",
+    "exp-0e31880e",
+    "proj-irgpu",
+    "proj-e5cdf5a5",
+    "proj-2a5cd1e4",
+    "proj-40cdf000",
+    "proj-ad638299",
+    "skil-0247ad5c",
+    "skil-2799aa77",
+    "skil-a856cc8e",
+    "exp-b0ccfdd9"
+  ],
+  "ai_rankings": [],
+  "profile_text": "Looking for a SWE full-time position with a focus on low-level/embedded systems, performance, and computer architecture. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded.\nFluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running , cooking.",
+  "resume_title": "Quentin Rebergue - Graduate Software Engineer",
+  "ai_context": "Im searching a first graduate job in system, low-level, hardware interface, linux",
+  "skill_tag_overrides": {
+    "skil-0247ad5c": [
+      "ADA",
+      "ASM",
+      "Bash",
+      "C",
+      "C++",
+      "CUDA",
+      "Python",
+      "Rust",
+      "VHDL"
+    ],
+    "skil-2799aa77": [
+      "ASIC interfacing",
+      "FPGA",
+      "I2C",
+      "Raspberry Pi",
+      "STM32",
+      "UART",
+      "SPI"
+    ],
+    "skil-a856cc8e": [
+      "DMA",
+      "GPU",
+      "Linux",
+      "bootloader",
+      "drivers",
+      "kernel",
+      "low-latency",
+      "multithreading",
+      "real-time",
+      "virtual memory"
+    ]
+  },
+  "entity_description_overrides": {
+    "proj-irgpu": "Built a real-time motion detection pipeline in C++/CUDA (reser-\nvoir sampling, morphological ops, hysteresis thresholding) profiled with Nsight Compute. Team of 4.",
+    "proj-ad638299": "Built a Rate Monotonic scheduler in Heptagon, a dataflow language that compiles nodes to deterministic C step functions with no heap allocation, and deployed it to Raspberry Pi 3.",
+    "exp-df8d4cde": "Work on chip-agnostic middleware infrastructure for Strata ASIC chip (SDK parsing, code generation, DMA) in python and C++. Won 1st place at Arista’s Hackathon by building an AI agent optimization tool (70% token reduction on internal codebases). Approved for production development.",
+    "exp-b0ccfdd9": "Built and managed full-stack information systems for 10+ clients. Led B2B survey platform as first technical lead. Architected PIM + CRM + ERP ecosystem. Owned end-to-end IS.",
+    "proj-2a5cd1e4": "Built an STM32F429ZI embedded system acting as a UART command server using libgapcom (Protobuf over UART) with a 4-level log subsystem and an MPU6050 gyroscope driver over I2C with FIFO reads."
+  },
+  "project_order": [
+    "proj-irgpu",
+    "proj-e5cdf5a5",
+    "proj-2a5cd1e4",
+    "proj-40cdf000",
+    "proj-ad638299"
+  ]
+}

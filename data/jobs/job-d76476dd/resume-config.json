@@ -1,0 +1,85 @@
+{
+  "selected_entity_ids": [
+    "edu-4b5b8a37",
+    "edu-c735b9b1",
+    "exp-df8d4cde",
+    "exp-0e31880e",
+    "exp-b0ccfdd9",
+    "proj-4f43d05f",
+    "proj-40cdf000",
+    "proj-tiger",
+    "proj-irgpu",
+    "skil-0247ad5c",
+    "skil-52bcbd31",
+    "skil-a856cc8e"
+  ],
+  "ai_rankings": [],
+  "profile_text": "Looking for a full-time position in software engineering, from low-level systems to backend.\nMSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded.\nFluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running , cooking.",
+  "resume_title": "Quentin Rebergue - Software Engineer",
+  "ai_context": "Im searching a first graduate job in system, low-level, hardware interface, linux",
+  "skill_tag_overrides": {
+    "skil-0247ad5c": [
+      "ADA",
+      "C",
+      "C++",
+      "CUDA",
+      "Java",
+      "Ocaml",
+      "PostgreSQL",
+      "Python",
+      "Rust",
+      "Shell",
+      "VHDL"
+    ],
+    "skil-2799aa77": [
+      "ASIC interfacing",
+      "ESP32",
+      "FPGA",
+      "I2C",
+      "PCB design",
+      "SPI",
+      "UART"
+    ],
+    "skil-a856cc8e": [
+      "ASIC interfacing",
+      "Bootloader",
+      "DMA",
+      "Drivers",
+      "FPGA",
+      "GPU",
+      "Kernel",
+      "Linux",
+      "Multithreading",
+      "OS",
+      "Virtualization",
+      "low-latency",
+      "memory architecture",
+      "networking"
+    ],
+    "skil-52bcbd31": [
+      "Git",
+      "Kubernetes",
+      "Perforce",
+      "Security",
+      "profiling",
+      "system analysis"
+    ]
+  },
+  "entity_description_overrides": {
+    "exp-b0ccfdd9": "Built and managed full-stack information systems for 10+ clients. Led B2B survey platform as first technical lead. Architected PIM + CRM + ERP ecosystem. Owned end-to-end IS.",
+    "proj-tiger": "Built compiler frontend in C++: lexing, parsing, binding, type checking, desugaring and LLVM IR.",
+    "exp-df8d4cde": "Work on chip-agnostic middleware infrastructure for Strata ASIC chip  (SDK parsing, code generation, DMA) in python and C++.\nWon 1st place at Arista's Hackathon by building an AI agent optimization tool (70% token reduction on internal codebases). Approved for production development.",
+    "proj-irgpu": "Built a real-time motion detection pipeline in C++/CUDA (reservoir sampling, morphological ops, hysteresis thresholding) profiled with Nsight Compute. Team of 4."
+  },
+  "project_order": [
+    "proj-4f43d05f",
+    "proj-40cdf000",
+    "proj-tiger",
+    "proj-irgpu"
+  ],
+  "experience_order": [
+    "exp-df8d4cde",
+    "exp-0e31880e",
+    "exp-b0ccfdd9"
+  ]
+}

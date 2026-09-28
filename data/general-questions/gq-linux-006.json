@@ -1,0 +1,6 @@
+{
+  "id": "gq-linux-006",
+  "question": "What tools do you use to debug a slow Linux process?",
+  "answer": "1. `top`/`htop` — is it CPU, memory, or I/O bound?\n2. `perf record` + `perf report` — find hot functions\n3. `strace -p <pid>` — what syscalls is it making? Is it stuck on one?\n4. `lsof -p <pid>` — what files/sockets are open?\n5. `valgrind` / `AddressSanitizer` — memory issues causing slowness?\n6. `iostat`, `iotop` — disk I/O bottleneck?\n7. `netstat`/`ss` — network connections, backlog?\n8. `/proc/<pid>/status` — memory maps, thread count",
+  "tags": ["linux", "profiling", "debugging"]
+}

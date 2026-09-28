@@ -1,0 +1,11 @@
+{
+  "id": "ex-098",
+  "title": "Reverse Bits",
+  "difficulty": "easy",
+  "category": "Other",
+  "knowledge_ids": [],
+  "tags": [
+    "bit-manipulation"
+  ],
+  "leetcode": 190
+}

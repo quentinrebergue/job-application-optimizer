@@ -1,0 +1,6 @@
+{
+  "id": "gq-net-005",
+  "question": "What is a socket? How do you implement a basic client/server in C++?",
+  "answer": "A socket is a file descriptor representing a network endpoint. Server side: `socket()` → `bind()` → `listen()` → `accept()` → `read/write`. Client side: `socket()` → `connect()` → `read/write`.\n\n```cpp\n// Server (simplified)\nint fd = socket(AF_INET, SOCK_STREAM, 0);\nbind(fd, (sockaddr*)&addr, sizeof(addr));\nlisten(fd, 10);\nint client = accept(fd, nullptr, nullptr);\nread(client, buf, sizeof(buf));\nwrite(client, response, len);\n```",
+  "tags": ["networking", "cpp"]
+}

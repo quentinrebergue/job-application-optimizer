@@ -1,0 +1,6 @@
+{
+  "id": "gq-perf-005",
+  "question": "What is a flame graph and how do you read one?",
+  "answer": "A flame graph is a visualization of profiling data. The x-axis represents the total sample population (not time), and the y-axis represents the call stack depth. Each box is a function — its width shows how much total time was spent in it (including its callees). You read it bottom-up: the bottom row is the entry points, the top of each tower is where the CPU was actually executing. Wide boxes at the top are hot spots to optimize.",
+  "tags": ["profiling", "performance"]
+}

@@ -1,0 +1,17 @@
+{
+  "id": "exp-0e31880e",
+  "type": "experiences",
+  "title": "Head of Teaching Assistants - YAKA / ACU Program",
+  "company": "EPITA",
+  "location": "Kremlin-Bicetre",
+  "period": "09/2024 – 02/2026",
+  "description": "Led the national team of 67 TAs and supervised 5 intensive coding bootcamps (Java, C++, JS, C/Bash, SQL) and 7 large-scale projects (compiler, HTTP server in C, malloc, POSIX shell) for 700+ 3rd-year students across 5 campuses. Implemented 1-on-1 code review mentorship model, improving TA-to-student ratio from 1:30 to 1:20.",
+  "tags": [
+    "Team Lead",
+    "C",
+    "Java",
+    "SQL",
+    "Education"
+  ],
+  "latex_snippet": ""
+}

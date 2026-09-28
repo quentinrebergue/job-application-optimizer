@@ -1,0 +1,10 @@
+{
+  "id": "gq-130b40a7",
+  "question": "What is the maximum number of threads per block, and why does this limit exist?\n",
+  "answer": "1024. Because all threads in a block share the SM's register file and shared memory. A single block larger than 1024 would monopolize the SM, leaving no room for other blocks and killing the scheduler's ability to hide latency.\n",
+  "tags": [
+    "cuda",
+    "threads",
+    "limits"
+  ]
+}

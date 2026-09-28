@@ -1,0 +1,10 @@
+{
+  "id": "gq-db7d1617",
+  "question": "What is an Abstract Syntax Tree (AST)?\n",
+  "answer": "A tree representation of the syntactic structure of source code. Each node represents a language construct (expression, statement, declaration). Discards syntactic details (parentheses, semicolons) and keeps the essential structure.\n",
+  "tags": [
+    "compilation",
+    "ast",
+    "parsing"
+  ]
+}

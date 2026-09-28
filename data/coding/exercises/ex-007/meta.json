@@ -1,0 +1,15 @@
+{
+  "id": "ex-007",
+  "title": "Number of Islands",
+  "difficulty": "medium",
+  "category": "Matrix Traversal",
+  "knowledge_ids": [
+    "k-trees-graphs"
+  ],
+  "tags": [
+    "graphs",
+    "bfs",
+    "dfs",
+    "matrix"
+  ]
+}

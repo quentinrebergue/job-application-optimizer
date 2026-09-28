@@ -1,0 +1,10 @@
+{
+  "id": "gq-37327ac7",
+  "question": "What is temperature in LLM sampling?\n",
+  "answer": "A parameter controlling output randomness. temperature = 1: use model probabilities as-is. temperature > 1: flatten probabilities (more diversity, more mistakes). temperature < 1: sharpen probabilities (more confident, less diverse). Affects both quality and creativity.\n",
+  "tags": [
+    "ai",
+    "llm",
+    "sampling"
+  ]
+}

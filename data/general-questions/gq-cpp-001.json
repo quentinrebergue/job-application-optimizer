@@ -1,0 +1,6 @@
+{
+  "id": "gq-cpp-001",
+  "question": "What is RAII? Give an example.",
+  "answer": "RAII (Resource Acquisition Is Initialization) ties a resource's lifetime to an object's lifetime. The resource is acquired in the constructor and released in the destructor. This guarantees cleanup even if an exception is thrown. Classic example:\n\n```cpp\nclass FileHandle {\n    FILE* f;\npublic:\n    FileHandle(const char* path) { f = fopen(path, \"r\"); }\n    ~FileHandle() { if (f) fclose(f); }\n};\n```\n\n`std::unique_ptr`, `std::lock_guard`, `std::vector` are all RAII. It eliminates entire classes of resource leaks.",
+  "tags": ["cpp"]
+}

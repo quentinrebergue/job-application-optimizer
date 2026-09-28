@@ -1,0 +1,6 @@
+{
+  "id": "gq-perf-009",
+  "question": "What is `AddressSanitizer` vs `ThreadSanitizer`?",
+  "answer": "`AddressSanitizer` (ASan) detects memory errors: heap/stack buffer overflows, use-after-free, use-after-return, memory leaks. Compile with `-fsanitize=address`.\n\n`ThreadSanitizer` (TSan) detects data races — when two threads access the same memory concurrently and at least one is a write, without synchronization. Compile with `-fsanitize=thread`.\n\nYou can't use both at the same time. Use ASan for memory bugs, TSan for concurrency bugs.",
+  "tags": ["cpp", "profiling", "debugging"]
+}

@@ -1,0 +1,10 @@
+{
+  "id": "gq-5518ed0e",
+  "question": "What is coalesced memory access?\n",
+  "answer": "When threads in a warp access consecutive memory addresses, the hardware merges them into one transaction. Strided access causes 32 separate transactions.\n",
+  "tags": [
+    "cuda",
+    "memory",
+    "coalescing"
+  ]
+}

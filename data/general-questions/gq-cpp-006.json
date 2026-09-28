@@ -1,0 +1,6 @@
+{
+  "id": "gq-cpp-006",
+  "question": "What is undefined behavior in C++? Give 3 examples.",
+  "answer": "Undefined behavior (UB) is code that the C++ standard makes no guarantee about — the compiler is free to do anything, including producing unexpected optimizations or crashes.\n\nExamples:\n1. **Signed integer overflow**: `int x = INT_MAX; x++;` — the compiler may assume this never happens and optimize away checks\n2. **Null pointer dereference**: `int* p = nullptr; *p = 5;`\n3. **Use after free**: `int* p = new int(5); delete p; *p = 10;`\n\nOthers: out-of-bounds array access, data races, reading uninitialized variables. UB is dangerous because it can appear to work in debug builds but silently corrupt data in optimized builds.",
+  "tags": ["cpp"]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "ex-100",
+  "title": "Combination Sum",
+  "difficulty": "medium",
+  "category": "Backtracking",
+  "knowledge_ids": [
+    "k-backtracking"
+  ],
+  "tags": [
+    "backtracking"
+  ],
+  "leetcode": 39
+}

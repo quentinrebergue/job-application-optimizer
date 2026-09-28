@@ -1,0 +1,10 @@
+{
+  "id": "gq-11eb94d3",
+  "question": "What is the main architectural difference between a CPU and a GPU?\n",
+  "answer": "CPU has few powerful cores optimized for serial low-latency tasks. GPU has thousands of small cores designed for massive parallelism.\n",
+  "tags": [
+    "cuda",
+    "architecture",
+    "gpu"
+  ]
+}

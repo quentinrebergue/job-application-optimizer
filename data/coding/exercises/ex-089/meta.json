@@ -1,0 +1,14 @@
+{
+  "id": "ex-089",
+  "title": "Best Time to Buy and Sell Stock",
+  "difficulty": "easy",
+  "category": "Greedy",
+  "knowledge_ids": [
+    "k-greedy"
+  ],
+  "tags": [
+    "greedy",
+    "arrays"
+  ],
+  "leetcode": 121
+}

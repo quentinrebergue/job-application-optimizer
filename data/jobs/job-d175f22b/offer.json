@@ -1,0 +1,301 @@
+{
+  "id": "job-d175f22b",
+  "company": "IMC",
+  "title": "Graduate Software Engineer (2026)",
+  "description": "Graduate Software Engineer (2026) - Amsterdam, Netherlands\n\nYour IMC journey as a Graduate Software Engineer will begin with a five-week Global Trainee Programme led by our seasoned engineers and traders alongside graduates from all three IMC regions: Europe, the United States, and Asia-Pacific. During this traineeship, you'll deepen your knowledge about trading and financial markets, understand the tools and systems used at IMC, and learn how to write production software, craftsmanship and advanced topics in C++, Java or Python. Your training will continue back at your local office, where you'll receive support from your dedicated mentor, an experienced software engineer at IMC. What happens next is up to you – on our Execution teams you might build anything from advanced networks to proprietary algorithms, while on our Strategy teams you could design systems powering big data and cutting-edge analytics.\n\nCORE RESPONSIBILITIES\n\nDevelop cutting-edge technology in advanced algorithms\nSupport the development of our trading platform and software stack\nGain experience across the entire software development lifecycle\nCollaborate with traders, quant researchers, and hardware engineers to improve our systems\n\nSKILLS AND EXPERIENCES REQUIRED\n\nIn your ultimate year of study in computer science, software engineering, or a related field graduating, and are seeking to join IMC full-time in February or August 2026\nProficiency in C++ or Java is required. Additionally, experience with Python is preferred\nA working knowledge of algorithms and data structures\nFirst-class analytical skills and a desire to solve complicated problems programmatically\nA genuine interest in financial markets (no prior knowledge or experience is required)\n\nAbout IMC\n\nIMC is a global trading firm powered by a cutting-edge research environment and a world-class technology backbone. Since 1989, we've been a stabilizing force in financial markets, providing essential liquidity upon which market participants depend. Across our offices in the US, Europe, Asia Pacific, and India, our talented quant researchers, engineers, traders, and business operations professionals are united by our uniquely collaborative, high-performance culture, and our commitment to giving back.",
+  "location": "Amsterdam, Netherlands",
+  "url": "https://imc.com/careers/graduate-software-engineer",
+  "status": "rejected",
+  "date_added": "2026-06-11T00:00:00.000Z",
+  "tags": [],
+  "ats_tags": [
+    "C++",
+    "Java",
+    "Python",
+    "Algorithms",
+    "Data-Structures",
+    "Low-Latency",
+    "Systems-Programming",
+    "Trading",
+    "Graduate",
+    "Linux"
+  ],
+  "ai_analysis": {
+    "job_id": "job-d175f22b",
+    "analyzed_at": "2026-06-11T09:08:24.066Z",
+    "ats_tags": [
+      "C++",
+      "Java",
+      "Python",
+      "Algorithms",
+      "Data-Structures",
+      "Low-Latency",
+      "Systems-Programming",
+      "Trading",
+      "Graduate",
+      "Linux"
+    ],
+    "entities_by_type": {
+      "experiences": [
+        {
+          "id": "exp-0e31880e",
+          "type": "experience",
+          "name": "Head of Teaching Assistants - YAKA / ACU Program at EPITA",
+          "score": 88,
+          "reason": "Strong leadership and mentoring experience in C++ and Java, overseeing complex systems projects (compiler, HTTP server), directly aligning with advanced algorithms and production software."
+        },
+        {
+          "id": "exp-df8d4cde",
+          "type": "experience",
+          "name": "Software Engineer Intern - Platform team at ARISTA",
+          "score": 95,
+          "reason": "Directly relevant experience with C++ and Python in low-level systems (ASIC, DMA) and winning a hackathon for an AI optimization tool showcases cutting-edge technology and algorithmic problem-solving."
+        }
+      ],
+      "projects": [
+        {
+          "id": "proj-0bceb7b7",
+          "type": "project",
+          "name": "MyFind",
+          "score": 70,
+          "reason": "Demonstrates C proficiency and understanding of Unix utilities, relevant to foundational software development."
+        },
+        {
+          "id": "proj-1b63d04a",
+          "type": "project",
+          "name": "42sh",
+          "score": 85,
+          "reason": "Implementing a shell interpreter with lexer, parser, and AST in C demonstrates deep understanding of systems programming, algorithms, and data structures."
+        },
+        {
+          "id": "proj-2a5cd1e4",
+          "type": "project",
+          "name": "ARM project",
+          "score": 78,
+          "reason": "Embedded system development in C with STM32, I2C, and Protobuf shows low-level programming and hardware interaction, relevant for collaborating with hardware engineers."
+        },
+        {
+          "id": "proj-40cdf000",
+          "type": "project",
+          "name": "RFID Driver",
+          "score": 88,
+          "reason": "Developing a Linux kernel character device driver in C with SPI communication is highly relevant to low-level systems programming and interacting with hardware."
+        },
+        {
+          "id": "proj-4c4f5731",
+          "type": "project",
+          "name": "Linux System Tracing & Storage",
+          "score": 65,
+          "reason": "Demonstrates strong Linux system administration and scripting skills, which are valuable for managing development environments, though less direct for core software engineering."
+        },
+        {
+          "id": "proj-4f43d05f",
+          "type": "project",
+          "name": "My Docker",
+          "score": 90,
+          "reason": "Building a container runtime in C using Linux namespaces and cgroups is an excellent demonstration of expert-level systems programming and operating systems knowledge."
+        },
+        {
+          "id": "proj-58931465",
+          "type": "project",
+          "name": "EpiTweet",
+          "score": 92,
+          "reason": "Developing a microservices platform in Java with a distributed architecture, databases, and caching strongly matches requirements for Java proficiency and large-scale software stack development."
+        },
+        {
+          "id": "proj-953ddf40",
+          "type": "project",
+          "name": "MyHTTPd",
+          "score": 90,
+          "reason": "Implementing a C HTTP server with epoll for concurrent connection handling demonstrates expertise in network programming, I/O multiplexing, and building high-performance systems crucial for trading platforms."
+        },
+        {
+          "id": "proj-ad638299",
+          "type": "project",
+          "name": "Synchronous Real-Time Systems",
+          "score": 80,
+          "reason": "Building a Rate Monotonic scheduler in Heptagon and deploying it to Raspberry Pi directly applies to real-time systems and low-latency environments."
+        },
+        {
+          "id": "proj-b1f3b77a",
+          "type": "project",
+          "name": "myMalloc",
+          "score": 85,
+          "reason": "Custom malloc implementation in C showcases a deep understanding of memory management, which is critical for optimizing performance in trading systems."
+        },
+        {
+          "id": "proj-e5cdf5a5",
+          "type": "project",
+          "name": "Unicycle CPU",
+          "score": 75,
+          "reason": "Designing a 32-bit CPU in VHDL and synthesizing it on an FPGA shows strong hardware understanding, relevant for collaboration with hardware engineers."
+        },
+        {
+          "id": "proj-ero2",
+          "type": "project",
+          "name": "Queuing System Analysis",
+          "score": 72,
+          "reason": "Modeling and optimizing a queuing system using Python and queuing theory demonstrates strong analytical skills and a desire to solve complicated problems programmatically."
+        },
+        {
+          "id": "proj-irgpu",
+          "type": "project",
+          "name": "GPU-Accelerated Video Analysis System (IRGPU)",
+          "score": 95,
+          "reason": "Building a real-time motion detection pipeline in C++/CUDA with significant speedup showcases expertise in advanced algorithms, cutting-edge technology, and performance optimization."
+        },
+        {
+          "id": "proj-tiger",
+          "type": "project",
+          "name": "Tiger Compiler",
+          "score": 92,
+          "reason": "Building a compiler frontend in C++ with LLVM demonstrates exceptional skills in language processing, advanced algorithms, data structures, and complex software development."
+        }
+      ],
+      "skills": [
+        {
+          "id": "skil-0247ad5c",
+          "type": "skill",
+          "name": "Programming & Languages",
+          "score": 95,
+          "reason": "Expert proficiency in C++, Java (required), and Python (preferred), alongside C and CUDA, perfectly aligns with the core technical language requirements of the role."
+        },
+        {
+          "id": "skil-2799aa77",
+          "type": "skill",
+          "name": "Embedded & Hardware",
+          "score": 80,
+          "reason": "Advanced experience with ASIC interfacing, FPGA, STM32, I2C, and SPI is highly relevant for collaborating with hardware engineers and understanding low-level system interactions."
+        },
+        {
+          "id": "skil-52bcbd31",
+          "type": "skill",
+          "name": "Other / DevOps",
+          "score": 75,
+          "reason": "Advanced skills in optimization, testing (valgrind), system analysis, and GDB are crucial for developing high-quality, performant production software in the SDLC."
+        },
+        {
+          "id": "skil-a856cc8e",
+          "type": "skill",
+          "name": "Systems",
+          "score": 98,
+          "reason": "Expert-level understanding of low-latency, real-time, kernel, Linux, and multithreading operating systems is exceptionally relevant for developing high-performance trading platforms."
+        }
+      ],
+      "education": [
+        {
+          "id": "edu-45c721ed",
+          "type": "education",
+          "name": "Scientific Baccalaureate (Engineering & Computer Science)",
+          "score": 60,
+          "reason": "Provides a foundational academic background but is not specifically tailored to the advanced requirements of the role."
+        },
+        {
+          "id": "edu-4b5b8a37",
+          "type": "education",
+          "name": "MSc Computer Engineering, Low-level & Systems (GISTRE) from EPITA",
+          "score": 98,
+          "reason": "Perfectly matches the required academic background and graduation timeline, with a specialization in low-level and systems that is highly relevant to IMC's technical focus."
+        },
+        {
+          "id": "edu-c735b9b1",
+          "type": "education",
+          "name": "Preparatory Class (PTSI) in Engineering Science from Lycée Jules Ferry Versailles",
+          "score": 60,
+          "reason": "Represents a foundational step in engineering education, offering general scientific preparation but less direct relevance than the master's degree."
+        }
+      ]
+    },
+    "confidence_score": 0.92,
+    "summary": "This candidate is an exceptional match for the Graduate Software Engineer role at IMC, demonstrating deep expertise in C/C++/Java/Python, low-level systems, algorithms, and performance optimization critical for trading platforms. The timeline for their future internship and graduation perfectly aligns with the 2026 start date, but the resume lacks explicit articulation of a 'genuine interest in financial markets.'",
+    "resume_tips": [
+      "Explicitly state 'genuine interest in financial markets' in the professional summary or cover letter to address a key job requirement.",
+      "For the Head of Teaching Assistants role, quantify the impact of the 1-on-1 code review mentorship on student learning outcomes or project success rates.",
+      "Highlight relevant coursework from your EPITA MSc in algorithms, data structures, real-time systems, and low-latency programming more prominently.",
+      "Ensure your desired start date ('seeking to join IMC full-time in February or August 2026') is clearly visible in a summary statement."
+    ],
+    "recommended_title": "Graduate Software Engineer — Trading Systems & Algorithms",
+    "recommended_profile": "Looking for a full-time position in software engineering with a focus on low-latency trading systems, algorithms, C++, Java, Python. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded. Fluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running, cooking.",
+    "recommended_experience_ids": [
+      "exp-df8d4cde",
+      "exp-0e31880e"
+    ],
+    "recommended_project_ids": [
+      "proj-irgpu",
+      "proj-58931465",
+      "proj-tiger",
+      "proj-4f43d05f",
+      "proj-953ddf40"
+    ],
+    "recommended_skill_ids": [
+      "skil-a856cc8e",
+      "skil-0247ad5c",
+      "skil-2799aa77",
+      "skil-52bcbd31"
+    ],
+    "recommended_skill_tags": {
+      "skil-0247ad5c": [
+        "C",
+        "C++",
+        "C++20",
+        "Java",
+        "Python",
+        "CUDA",
+        "OOP"
+      ],
+      "skil-2799aa77": [
+        "ASIC interfacing",
+        "FPGA",
+        "I2C",
+        "STM32",
+        "UART",
+        "SPI"
+      ],
+      "skil-52bcbd31": [
+        "GDB",
+        "Git",
+        "optimisation",
+        "testing",
+        "valgrind",
+        "system analysis"
+      ],
+      "skil-a856cc8e": [
+        "Kernel",
+        "Linux",
+        "Multithreading",
+        "low-latency",
+        "real-time",
+        "operating systems",
+        "DMA",
+        "GPU"
+      ]
+    },
+    "suggested_new_skills": [],
+    "suggested_new_skill_tags": [
+      {
+        "skill_id": "skil-0247ad5c",
+        "tag": "algorithms",
+        "reason": "Required by job description, implicitly demonstrated but not explicitly tagged under programming languages."
+      },
+      {
+        "skill_id": "skil-0247ad5c",
+        "tag": "data structures",
+        "reason": "Required by job description, implicitly demonstrated but not explicitly tagged under programming languages."
+      },
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "networking",
+        "reason": "Job mentions advanced networks, relevant to candidate's systems expertise and projects, but missing as an explicit tag."
+      }
+    ],
+    "recommended_entity_descriptions": {
+      "exp-0e31880e": "Led a national team of 67 Teaching Assistants, supervising 5 intensive coding bootcamps in C++ and Java and 7 large-scale systems projects (compiler, HTTP server, malloc, POSIX shell) for over 700 students. Implemented a 1-on-1 code review mentorship model, deepening practical knowledge in production software development and algorithmic problem-solving.",
+      "exp-df8d4cde": "Implemented non-zero reset value management for ASIC Physical Table registers across chip-agnostic Strata infrastructure (SDK parsing, code generation, DMA) using Python and C++. Won 1st place at Arista's Hackathon by building an AI agent optimization tool, achieving 70% token reduction and approved for production development, demonstrating expertise in advanced algorithms and cutting-edge technology.",
+      "proj-irgpu": "Built a real-time motion detection pipeline in C++/CUDA, incorporating reservoir sampling, morphological operations, and hysteresis thresholding for advanced algorithms. Achieved a 20x CPU speedup through iterative CUDA optimization profiled with Nsight Compute, demonstrating proficiency in high-performance and low-latency systems.",
+      "proj-58931465": "Designed and implemented a Twitter-like microservices platform using Java, Quarkus, Maven, MongoDB, Neo4j, Elasticsearch, and Redis with a distributed architecture. Developed robust authentication, post management, user timelines, and search functionality, showcasing expertise across a modern software stack and handling big data.",
+      "proj-tiger": "Developed a comprehensive compiler frontend in C++, handling lexing, parsing, binding, type checking, desugaring, and LLVM IR generation. This project demonstrates strong proficiency in C++ and a deep understanding of advanced algorithms and data structures essential for complex software systems.",
+      "proj-4f43d05f": "Engineered a lightweight container runtime in C, leveraging Linux namespaces, pivot_root, capabilities dropping, seccomp syscall filtering, and cgroups. This showcases expert-level systems programming, operating systems knowledge, and foundational skills critical for developing robust production software.",
+      "proj-953ddf40": "Implemented an HTTP server in C using epoll with edge-triggered mode and a per-client state machine for efficient concurrent connection handling. Features dynamic buffer management, HTTP request parsing, and response generation, demonstrating expertise in network programming and building high-performance software systems."
+    }
+  }
+}

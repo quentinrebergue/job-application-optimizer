@@ -1,0 +1,6 @@
+{
+  "id": "gq-algo-004",
+  "question": "Find the shortest path in a weighted graph — implement Dijkstra.",
+  "answer": "Dijkstra works on weighted graphs with non-negative edges using a min-heap:\n\n```cpp\nvector<int> dijkstra(int src, vector<vector<pair<int,int>>>& adj, int n) {\n    vector<int> dist(n, INT_MAX);\n    priority_queue<pair<int,int>, vector<pair<int,int>>, greater<>> pq;\n    dist[src] = 0;\n    pq.push({0, src});\n\n    while (!pq.empty()) {\n        auto [d, u] = pq.top(); pq.pop();\n        if (d > dist[u]) continue;\n        for (auto [v, w] : adj[u]) {\n            if (dist[u] + w < dist[v]) {\n                dist[v] = dist[u] + w;\n                pq.push({dist[v], v});\n            }\n        }\n    }\n    return dist;\n}\n```\n\nTime complexity: O((V + E) log V).",
+  "tags": ["algorithms", "data-structures"]
+}

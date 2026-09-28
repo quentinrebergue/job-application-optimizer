@@ -1,0 +1,10 @@
+{
+  "id": "gq-66ec4636",
+  "question": "What is softmax?\n",
+  "answer": "Function that converts logits (raw model outputs) into probabilities: softmax(z_i) = exp(z_i) / sum(exp(z_j)). Outputs sum to 1. Used in classification and attention. Numerically stable variant subtracts max(z) before exp.\n",
+  "tags": [
+    "ai",
+    "neural-network",
+    "activation"
+  ]
+}

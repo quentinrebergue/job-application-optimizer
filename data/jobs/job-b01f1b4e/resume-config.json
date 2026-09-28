@@ -1,0 +1,32 @@
+{
+  "selected_entity_ids": [],
+  "ai_rankings": [],
+  "profile_text": "",
+  "resume_title": "",
+  "ai_context": "",
+  "skill_tag_overrides": {
+    "skil-0247ad5c": [
+      "C",
+      "ASM",
+      "Shell",
+      "VHDL",
+      "CUDA",
+      "C++",
+      "real-time",
+      "low-level"
+    ],
+    "skil-a856cc8e": [
+      "Linux",
+      "Kernel",
+      "Drivers",
+      "Virtualization",
+      "Multithreading",
+      "GPU"
+    ],
+    "skil-52bcbd31": [
+      "Git",
+      "Kubernetes",
+      "Security"
+    ]
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "id": "gq-net-001",
+  "question": "Explain TCP vs UDP — when would you use each?",
+  "answer": "TCP provides reliable, ordered, connection-oriented delivery with flow and congestion control. Use TCP for: web traffic, file transfer, databases, any protocol where correctness matters.\n\nUDP provides unreliable, unordered, connectionless datagrams with no handshake. Use UDP for: real-time audio/video (latency matters more than reliability), DNS (small queries, fast retries), game state updates, any case where you'd rather re-implement reliability selectively than pay TCP's overhead.",
+  "tags": ["networking"]
+}

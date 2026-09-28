@@ -1,0 +1,14 @@
+{
+  "id": "ex-045",
+  "title": "Jump Game II",
+  "difficulty": "medium",
+  "category": "Greedy",
+  "knowledge_ids": [
+    "k-greedy"
+  ],
+  "tags": [
+    "greedy",
+    "arrays",
+    "bfs"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "ex-039",
+  "title": "Find All Anagrams in a String",
+  "difficulty": "medium",
+  "category": "Sliding Window",
+  "knowledge_ids": [
+    "k-sliding-window",
+    "k-hash-map"
+  ],
+  "tags": [
+    "sliding-window",
+    "strings",
+    "fixed-window",
+    "anagram"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "id": "gq-1aa0db49",
+  "question": "What is a symbol table?\n",
+  "answer": "A data structure maintained by the compiler that stores information about identifiers (variables, functions, classes) in the program — name, type, scope, memory address. Used during semantic analysis and code generation.\n",
+  "tags": [
+    "compilation",
+    "symbol-table",
+    "semantic"
+  ]
+}

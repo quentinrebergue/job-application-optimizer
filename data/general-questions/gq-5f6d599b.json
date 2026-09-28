@@ -1,0 +1,10 @@
+{
+  "id": "gq-5f6d599b",
+  "question": "What is a compiled language?\n",
+  "answer": "Source code is translated entirely to machine code (or bytecode) before execution. Compilation happens once; execution is fast. Examples: C++, Rust, Java (bytecode), Go. Slower development cycle but fast execution.\n",
+  "tags": [
+    "typology",
+    "compiled",
+    "languages"
+  ]
+}

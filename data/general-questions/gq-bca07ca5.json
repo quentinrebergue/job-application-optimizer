@@ -1,0 +1,10 @@
+{
+  "id": "gq-bca07ca5",
+  "question": "What is dead code elimination?\n",
+  "answer": "A compiler optimization that removes code that is unreachable or has no effect on the program's output (e.g., code after a return statement, unused variables). Reduces binary size and improves performance.\n",
+  "tags": [
+    "compilation",
+    "optimization",
+    "deadcode"
+  ]
+}

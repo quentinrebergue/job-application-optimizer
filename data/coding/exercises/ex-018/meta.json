@@ -1,0 +1,13 @@
+{
+  "id": "ex-018",
+  "title": "Reverse Nodes in k-Group",
+  "difficulty": "hard",
+  "category": "Linked List Reversal",
+  "knowledge_ids": [
+    "k-linked-list"
+  ],
+  "tags": [
+    "linked-list",
+    "recursion"
+  ]
+}

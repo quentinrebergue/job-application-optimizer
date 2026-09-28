@@ -1,0 +1,27 @@
+{
+  "id": "job-d4bd37d4",
+  "company": "Amazon RIVR",
+  "title": "Hardware Interface Software Engineer",
+  "description": "Amazon RIVR is a robotics company pioneering Physical AI through real-world doorstep delivery. Founded in 2024 as an ETH Zurich spin-off, RIVR develops wheeled-legged robots designed to operate in complex, unstructured environments. Following acquisition by Amazon in March 2026, we're building the next generation of safe, reliable autonomous robots for last-mile delivery.\n\n**The Role:**\nAs a Hardware Interface Software Engineer, you will be the vital link between high-level autonomy stack and physical hardware. Your mission is to build robust, low-latency software bridges that translate AI-driven intent into physical action.\n\n**Key Responsibilities:**\n- Design and implement software interfaces decoupling high-level autonomy from specific hardware implementations\n- Write and maintain high-performance drivers for sensors and actuators\n- Implement and optimize communication protocols (CAN, Ethernet, SPI) for minimal latency and maximum reliability\n- Perform system identification of actuator characteristics and optimize control loops\n- Conduct lab testing and debugging at software-hardware boundary\n- Develop software-level safety monitors and emergency-stop logic\n- Improve Software-in-the-Loop (SIL) testing pipelines\n- Create and maintain documentation and best practices\n\n**Requirements:**\n- Bachelor's degree or higher in Robotics, Control, Computer Engineering, Electrical Engineering, or related field\n- Minimum 3 years industry experience (or PhD equivalent) in software-hardware interface\n- Experience deploying and testing software on hardware platforms\n- Modern C++ for production-level, performance-critical systems\n- Python for rapid algorithm development and data analysis\n- ROS/ROS2 (Robot Operating System) expertise as robotics middleware\n- Strong Linux understanding (system configuration, kernel drivers, network stack)\n- Good understanding of control theory for robotic actuators\n- Familiarity with embedded components and hardware datasheets\n\n**Bonus Points:**\n- PhD or Master's in Robotic Control, Real-Time Systems, or Mechatronics\n- Experience with legged or hybrid wheel-legged systems\n- Hardware interface frameworks in ROS2 (ros2_control)\n- Functional safety standards for autonomous vehicles or industrial robots\n\n**What We Offer:**\n- Work on cutting-edge robotics and Physical AI\n- Collaborate with talented team on real-world delivery robots\n- On-site presence required in Zurich office",
+  "location": "Zurich, Switzerland",
+  "url": "https://www.linkedin.com/jobs/search-results/?currentJobId=4410743256",
+  "status": "rejected",
+  "date_added": "2026-06-02T14:46:54.195Z",
+  "tags": [
+    "Robotics",
+    "Hardware Interface",
+    "C++",
+    "Python",
+    "ROS2",
+    "Linux",
+    "Control Theory",
+    "Embedded Systems",
+    "Real-time Systems",
+    "Driver Development",
+    "CAN",
+    "Ethernet",
+    "Legged Robots",
+    "Physical AI"
+  ],
+  "ats_tags": []
+}

@@ -1,0 +1,13 @@
+{
+  "id": "ex-126",
+  "title": "Subtree of Another Tree",
+  "difficulty": "easy",
+  "category": "Binary Tree",
+  "knowledge_ids": [
+    "k-trees-graphs"
+  ],
+  "tags": [
+    "binary-tree"
+  ],
+  "leetcode": 572
+}

@@ -1,0 +1,6 @@
+{
+  "id": "gq-gpu-005",
+  "question": "What is the difference between global memory, shared memory, and registers on a GPU?",
+  "answer": "- **Registers**: per-thread, fastest (~1 cycle), very limited (~32KB per SM)\n- **Shared memory**: per-block, fast (~5 cycles), explicitly managed, typically 48-96KB per SM — used for data shared between threads in a block\n- **Global memory** (VRAM): entire GPU, high capacity (GBs), high bandwidth but high latency (~100-500 cycles) — this is the main bottleneck\n\nThe key optimization strategy is to load data from global memory into shared memory once, then have threads operate on shared memory repeatedly.",
+  "tags": ["gpu", "cuda"]
+}

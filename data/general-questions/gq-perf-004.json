@@ -1,0 +1,6 @@
+{
+  "id": "gq-perf-004",
+  "question": "What is `strace` and when do you use it?",
+  "answer": "`strace` intercepts and logs all system calls made by a process. You use it when:\n- A program hangs and you want to see what syscall it's stuck on\n- A program fails mysteriously and you want to see what files/sockets it's accessing\n- You want to understand what a binary is doing without source code\n\nExample: `strace -p <pid>` attaches to a running process, `strace ./myprogram` traces from launch. Use `-e trace=network` to filter only network calls.",
+  "tags": ["profiling", "linux"]
+}

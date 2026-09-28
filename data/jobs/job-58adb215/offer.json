@@ -1,0 +1,232 @@
+{
+  "id": "job-58adb215",
+  "company": "Canonical",
+  "title": "Linux Devices Software Engineer - SnapD",
+  "description": "À propos de l'offre d'emploi\n\nCanonical is a leading provider of open source software and operating systems to the global enterprise and technology markets. Our platform, Ubuntu, is very widely used in breakthrough enterprise initiatives such as public cloud, data science, AI, engineering innovation, and IoT. Our customers include the world's leading public cloud and silicon providers, and industry leaders in many sectors. The company is a pioneer of global distributed collaboration, with 1200+ colleagues in 75+ countries and very few office-based roles. Teams meet two to four times yearly in person, in interesting locations around the world, to align on strategy and execution.\n\nThe company is founder-led, profitable, and growing.\n\nWe are hiring a Linux devices software engineer on our SnapD team to work on mission-critical Golang code, focused on software delivery, containers, security sandboxing, telemetry and device management.\n\nSnaps are next-generation software packaging and delivery for Linux. They are designed for safety, security and robustness, with application-specific confinement of containers optimised for IoT devices, desktops and servers. Our goal is that snaps work across multiple Linux flavors to ensure that publishers have the simplest way to reach the whole Linux world.\n\nThis role requires an obsession with quality and performance, for work at the heart of the operating system. It also requires an interest in the software publishing and consumption experience. Applicants should be passionate about open source software development. We value collaboration, peer reviews, good unit/integration testing and maintainable code. General knowledge and experience with Linux as a developer platform is required. Having previous experience with Golang is very nice to have.\n\nLocation: This role will be based remotely in the EMEA or Americas regions\n\nTHE ROLE ENTAILS\n- Collaborate proactively with a distributed team\n- Write high quality code to create new features\n- Debug Linux system level issues and produce high quality code to fix them\n- Review code produced by other engineers\n- Discuss ideas and collaborate on finding good solutions\n- Obsess over how to achieve robustness despite unexpected events like power outages\n- Work from home with global travel for up to two weeks, twice a year\n\nWHAT WE ARE LOOKING FOR IN YOU\n- You love technology and working with brilliant people\n- You are curious, flexible, articulate, and accountable\n- You value soft skills, are thoughtful and self-motivated\n- You have a Bachelor's or equivalent in Computer Science, STEM or similar degree\n- You have professional software development experience using Go, Python, C, or C++\n- You know Linux system-level fundamentals, e.g. cgroups, namespaces, apparmor\n- Commitment to software testing, code reviews and maintainable code\n\nWHAT WE OFFER COLLEAGUES\nWe consider geographical location, experience, and performance in shaping compensation worldwide. We revisit compensation annually (and more often for graduates and associates) to ensure we recognize outstanding performance. In addition to base pay, we offer a performance-driven annual bonus or commission.\n- Distributed work environment with twice-yearly team sprints in person\n- Personal learning and development budget of USD 2,000 per year\n- Annual compensation review\n- Recognition rewards\n- Annual holiday leave\n- Maternity and paternity leave\n- Team Member Assistance Program & Wellness Platform\n- Opportunity to travel to new locations to meet colleagues\n- Priority Pass and travel upgrades for long-haul company events\n\nABOUT CANONICAL\n\nCanonical is a pioneering tech firm at the forefront of the global move to open source. As the company that publishes Ubuntu, one of the most important open-source projects and the platform for AI, IoT, and the cloud, we are changing the world of software. Most colleagues at Canonical have worked from home since our inception in 2004.\n\nCanonical is an equal opportunity employer. We are proud to foster a workplace free from discrimination.",
+  "location": "Remote (EMEA or Americas)",
+  "status": "applied",
+  "date_added": "2026-09-24T10:04:17.289Z",
+  "tags": [
+    "Golang",
+    "Linux",
+    "SnapD",
+    "Containers",
+    "Security",
+    "cgroups",
+    "namespaces",
+    "apparmor",
+    "Open Source",
+    "IoT"
+  ],
+  "ats_tags": [
+    "Linux",
+    "Golang",
+    "C/C++",
+    "containers",
+    "cgroups",
+    "namespaces",
+    "apparmor",
+    "systems-programming",
+    "remote",
+    "open-source"
+  ],
+  "ai_analysis": {
+    "job_id": "job-58adb215",
+    "analyzed_at": "2026-09-24T11:47:17.488Z",
+    "ats_tags": [
+      "Linux",
+      "Golang",
+      "C/C++",
+      "containers",
+      "cgroups",
+      "namespaces",
+      "apparmor",
+      "systems-programming",
+      "remote",
+      "open-source"
+    ],
+    "entities_by_type": {
+      "experiences": [
+        {
+          "id": "exp-df8d4cde",
+          "type": "experience",
+          "name": "Software Engineer - Platform team at ARISTA",
+          "score": 62,
+          "reason": "Professional C++/Python systems programming experience matches the required languages, but focused on ASIC infrastructure rather than Linux OS-level work."
+        },
+        {
+          "id": "exp-0e31880e",
+          "type": "experience",
+          "name": "Head of Teaching Assistants - YAKA / ACU Program",
+          "score": 60,
+          "reason": "Strong code-review and collaboration experience on Linux/C projects (compiler, HTTP server, shell) aligns with soft-skill requirements, but is a teaching role, not engineering."
+        }
+      ],
+      "projects": [
+        {
+          "id": "proj-4f43d05f",
+          "type": "project",
+          "name": "My Docker",
+          "score": 92,
+          "reason": "Directly implements namespaces, cgroups, seccomp and container sandboxing, near-exact match to SnapD's core technical domain."
+        },
+        {
+          "id": "proj-4c4f5731",
+          "type": "project",
+          "name": "Linux System Tracing & Storage",
+          "score": 78,
+          "reason": "Deep Linux system-level debugging (strace, LVM, LUKS, RAID) matches the job's robustness and system fundamentals focus."
+        },
+        {
+          "id": "proj-40cdf000",
+          "type": "project",
+          "name": "RFID Driver",
+          "score": 75,
+          "reason": "Linux kernel driver development with SPI shows kernel-level Linux experience relevant to device software engineering."
+        },
+        {
+          "id": "proj-953ddf40",
+          "type": "project",
+          "name": "MyHTTPd",
+          "score": 62,
+          "reason": "Solid systems-level C programming with epoll, but network server work is only tangentially related to containers/sandboxing focus."
+        }
+      ],
+      "skills": [
+        {
+          "id": "skil-a856cc8e",
+          "type": "skill",
+          "name": "Systems",
+          "score": 90,
+          "reason": "Covers Linux, kernel, drivers, virtualization directly matching the job's core system-level requirements."
+        },
+        {
+          "id": "skil-0247ad5c",
+          "type": "skill",
+          "name": "Programming & Languages",
+          "score": 82,
+          "reason": "Strong C/C++/Python matches the job's accepted languages, though Go experience is absent."
+        },
+        {
+          "id": "skil-52bcbd31",
+          "type": "skill",
+          "name": "Other / DevOps",
+          "score": 80,
+          "reason": "strace, testing, security and system analysis align well with the job's debugging and quality requirements."
+        }
+      ],
+      "education": [
+        {
+          "id": "edu-4b5b8a37",
+          "type": "education",
+          "name": "MSc Computer Engineering, Low-level & Systems (GISTRE)",
+          "score": 85,
+          "reason": "Specialization in low-level systems and embedded engineering closely matches the job's Linux/systems focus."
+        }
+      ]
+    },
+    "confidence_score": 0.62,
+    "summary": "This is a moderate-to-good fit (~60-65%): the candidate's 'My Docker' project directly demonstrates namespaces, cgroups, seccomp and container internals, which is exactly what SnapD needs, and overall Linux/C fundamentals are strong. The biggest gaps are no professional Go experience and no production-scale OS/Linux distribution work — current professional experience is ASIC/hardware-infra focused (C++/Python) rather than OS-level Linux engineering.",
+    "resume_tips": [
+      "Add 'Go/Golang' explicitly to your skills list, even at beginner level, since it's a strong preference for this role's codebase",
+      "Move the 'My Docker' project to the top of your project list and emphasize namespaces, cgroups, seccomp, and pivot_root — these are exact job keywords",
+      "Quantify the impact of your Arista Platform work (e.g., number of registers, scale of chips supported, performance gains) to show production-grade rigor",
+      "Explicitly mention 'apparmor', 'security sandboxing', and 'software delivery' vocabulary from the job posting where applicable to your Linux projects",
+      "Highlight the RFID kernel driver project prominently to demonstrate Linux kernel-level debugging and driver development experience",
+      "Reframe the Head of TAs role around 'code review' and 'collaboration' language, since these are explicit soft-skill requirements in the posting"
+    ],
+    "recommended_title": "Linux Systems Engineer — C/C++ & Containers",
+    "recommended_profile": "Looking for a full-time position in software engineering with a focus on Linux systems, containers, and security sandboxing. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded. Fluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running, cooking.",
+    "recommended_experience_ids": [
+      "exp-df8d4cde",
+      "exp-0e31880e"
+    ],
+    "recommended_project_ids": [
+      "proj-4f43d05f",
+      "proj-4c4f5731",
+      "proj-40cdf000",
+      "proj-953ddf40"
+    ],
+    "recommended_skill_ids": [
+      "skil-a856cc8e",
+      "skil-52bcbd31",
+      "skil-0247ad5c"
+    ],
+    "recommended_skill_tags": {
+      "skil-a856cc8e": [
+        "Linux",
+        "drivers",
+        "kernel",
+        "virtualization",
+        "virtual memory",
+        "operating systems",
+        "OS",
+        "multithreading"
+      ],
+      "skil-52bcbd31": [
+        "Git",
+        "Security",
+        "strace",
+        "system analysis",
+        "testing",
+        "valgrind",
+        "perf",
+        "profiling",
+        "optimisation",
+        "monitoring"
+      ],
+      "skil-0247ad5c": [
+        "C",
+        "C++",
+        "Python",
+        "Bash",
+        "algorithms",
+        "data structures"
+      ]
+    },
+    "suggested_new_skills": [
+      {
+        "name": "Go (Golang)",
+        "category": "Languages",
+        "level": "beginner",
+        "tags": [
+          "concurrency",
+          "systems programming"
+        ],
+        "reason": "Explicitly preferred by the job for SnapD's Golang codebase, currently missing from candidate's skill list"
+      }
+    ],
+    "suggested_new_skill_tags": [
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "containers",
+        "reason": "Core theme of the job (container confinement) and demonstrated via My Docker project"
+      },
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "cgroups",
+        "reason": "Explicitly required Linux fundamental for this role"
+      },
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "namespaces",
+        "reason": "Explicitly required Linux fundamental for this role"
+      },
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "apparmor",
+        "reason": "Explicitly mentioned Linux security fundamental in job description"
+      },
+      {
+        "skill_id": "skil-52bcbd31",
+        "tag": "code review",
+        "reason": "Job emphasizes peer review and maintainable code practices"
+      }
+    ],
+    "recommended_entity_descriptions": {
+      "proj-4f43d05f": "Built a lightweight container runtime in C using Linux namespaces, cgroups, seccomp syscall filtering, and capability dropping, directly mirroring SnapD's core sandboxing and confinement mechanisms. Implemented pivot_root and registry-based rootfs mounting for isolated container execution.",
+      "proj-4c4f5731": "Automated Linux storage stack configuration (LUKS2, LVM, dm-linear, dm-delay, RAID) via Bash, and used strace-based fault injection to reverse-engineer syscall behavior, demonstrating the Linux system-level debugging skills required for robustness engineering.",
+      "proj-40cdf000": "Developed a Linux kernel character device driver for the MFRC522 RFID reader with SPI regmap communication and file_operations callbacks, validated via QEMU emulation, showing hands-on kernel-level Linux development experience."
+    }
+  }
+}

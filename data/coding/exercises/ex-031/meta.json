@@ -1,0 +1,13 @@
+{
+  "id": "ex-031",
+  "title": "Rotate Image",
+  "difficulty": "medium",
+  "category": "Matrix Traversal",
+  "knowledge_ids": [
+    "k-matrix"
+  ],
+  "tags": [
+    "matrix",
+    "in-place"
+  ]
+}

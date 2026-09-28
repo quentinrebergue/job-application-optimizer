@@ -1,0 +1,6 @@
+{
+  "id": "gq-perf-011",
+  "question": "What is instruction-level parallelism (ILP)?",
+  "answer": "ILP is the ability of a CPU to execute multiple instructions simultaneously within a single core. Modern CPUs use techniques like pipelining (overlapping instruction stages), out-of-order execution (reordering independent instructions), and superscalar execution (multiple execution units) to exploit ILP. Code with many data dependencies (where each instruction needs the result of the previous one) has low ILP. Compilers try to reorder instructions to maximize ILP.",
+  "tags": ["performance", "cpu-architecture"]
+}

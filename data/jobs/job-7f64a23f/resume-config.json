@@ -1,0 +1,66 @@
+{
+  "selected_entity_ids": [
+    "edu-4b5b8a37",
+    "edu-c735b9b1",
+    "exp-df8d4cde",
+    "proj-4f43d05f",
+    "proj-irgpu",
+    "proj-ero2",
+    "skil-a856cc8e",
+    "skil-52bcbd31",
+    "skil-0247ad5c",
+    "exp-0e31880e",
+    "exp-b0ccfdd9",
+    "proj-58931465"
+  ],
+  "ai_rankings": [],
+  "profile_text": "Looking for a full-time position in software engineering with a focus on GPU scheduling, Linux systems, and container internals. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded. Fluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running, cooking.",
+  "skill_tag_overrides": {
+    "skil-a856cc8e": [
+      "DMA",
+      "GPU",
+      "Linux",
+      "OS",
+      "containers",
+      "distributed systems",
+      "drivers",
+      "kernel",
+      "low-latency",
+      "memory architecture",
+      "multithreading",
+      "scheduling",
+      "virtualization"
+    ],
+    "skil-52bcbd31": [
+      "Kubernetes",
+      "observability",
+      "monitoring",
+      "Grafana/Prometheus",
+      "CI/CD",
+      "profiling",
+      "benchmarking",
+      "optimisation"
+    ],
+    "skil-0247ad5c": [
+      "C",
+      "C++",
+      "Python",
+      "CUDA",
+      "Bash",
+      "algorithms",
+      "data structures"
+    ]
+  },
+  "project_order": [
+    "proj-4f43d05f",
+    "proj-irgpu",
+    "proj-ero2",
+    "proj-58931465"
+  ],
+  "experience_order": [
+    "exp-df8d4cde",
+    "exp-0e31880e",
+    "exp-b0ccfdd9"
+  ],
+  "ai_context": "Im searching a first graduate job in system, low-level, hardware interface, linux"
+}

@@ -1,0 +1,10 @@
+{
+  "id": "gq-51802ed5",
+  "question": "What is flash attention?\n",
+  "answer": "An algorithm that reduces the I/O complexity of attention by processing blocks of tokens at a time. Fewer reads/writes to GPU memory, same mathematical result. 2-3x faster than standard attention without sacrificing accuracy.\n",
+  "tags": [
+    "ai",
+    "inference",
+    "optimization"
+  ]
+}

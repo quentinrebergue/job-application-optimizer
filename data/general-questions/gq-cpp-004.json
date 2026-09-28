@@ -1,0 +1,6 @@
+{
+  "id": "gq-cpp-004",
+  "question": "What is false sharing in multithreading?",
+  "answer": "False sharing happens when two threads access different variables that happen to be on the same cache line (64 bytes). Even though they're writing to different addresses, the CPU cache coherence protocol treats the whole cache line as shared — every write by one thread invalidates the other thread's cache line, causing constant cache misses. Fix: pad data so each thread's data occupies a separate cache line (`alignas(64)`), or use thread-local storage.",
+  "tags": ["cpp", "performance", "concurrency"]
+}

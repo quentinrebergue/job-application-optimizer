@@ -1,0 +1,6 @@
+{
+  "id": "gq-gpu-007",
+  "question": "What is memory coalescing on a GPU? How do you ensure it?",
+  "answer": "Memory coalescing means that when threads in a warp access global memory, their accesses are combined into as few memory transactions as possible. If 32 threads each access consecutive 4-byte addresses, that's one 128-byte transaction — fully coalesced. If they access random addresses, that's 32 separate transactions — fully uncoalesced, 32x slower. Ensure coalescing by having thread `i` access element `i` (not `i*stride`). Avoid structures with large strides; prefer sequential access patterns.",
+  "tags": ["gpu", "cuda", "performance"]
+}

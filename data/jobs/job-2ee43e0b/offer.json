@@ -1,0 +1,293 @@
+{
+  "id": "job-2ee43e0b",
+  "company": "Proton",
+  "title": "Backend Engineer - Storage Systems",
+  "description": "JOIN PROTON AND BUILD A BETTER INTERNET WHERE PRIVACY IS THE DEFAULT\n\nAt Proton, we believe that privacy is a fundamental human right and the cornerstone of democracy. Since our inception in 2014, founded by a team of scientists from CERN, we have dedicated ourselves to providing free and open-source technology to millions worldwide, ensuring access to privacy, security, and freedom online.\n\nOur journey began with Proton Mail, the largest secure email service globally, and has since expanded to include Proton VPN, Proton Calendar, Proton Drive, and Proton Pass.\n\nProton is a profitable company, supporting over 100 million user accounts with a growing team of over 500 people from over 50 different countries, from the world's top companies and universities.\n\nABOUT THE ROLE\n\nStorage is at the very center of everything we do. Whatever needs to be persisted eventually uses our Storage infrastructure. For this we run our storage infrastructure predominantly on-premise in multiple data centers. In this role you will join the Storage Dev team that is responsible to develop and maintain all the software required in the Storage realm. This, among others, includes Storage APIs, Seaweed & Ceph contributions.\n\nWHAT YOU WILL DO\n\n- Be responsible for the operational excellence of the systems/features and their interaction with other systems\n- Work closely with a group of Back-End Engineers and Architects to build resilient, massively-scalable solutions for millions of people to rely on\n- Collaborate with the SRE teams and other stakeholders to ensure that the Storage back-end meets critical business and reliability requirements\n- Document back-end capabilities and their proper use\n- Create technical designs and implement them to further develop the platform\n\nJOB REQUIREMENTS\n\n- Deep experience with Back-end development (C++, Go, Rust, or PHP)\n- Experience building complex production systems\n- Experience with profiling methods and tools\n- Experience leading a team initiative from discovery to production\n- Solid understanding of security best practices\n- High-level understanding of cryptography concepts\n\nBONUS POINTS FOR\n\n- Experience with storage systems (e.g. Ceph, Seaweed or Tape)\n- Operational experience such as SRE or on-call, demonstrating ability to diagnose and troubleshoot complex problems for critical systems\n\nWHAT WE OFFER\n\nOffice Locations: Geneva, Zurich, Prague, Barcelona, Paris, London, Vilnius, Skopje, Taipei\n- Work from home up to 30% of the time with three core days in the office\n- Technology: All devices and software needed to excel\n- Food: Lunch and snacks provided daily at offices\n- Transport: Subsidized public transport, bike allowances, or parking spaces based on office location\n- Stock Options: Everyone is an owner of the company\n- Flexible Working: Define your own working hours (aligned with team meetings)\n- Learning and Development: Training programs, conferences, events, continual learning\n- Comprehensive health insurance plans\n- Competitive retirement savings options\n- Generous vacation and leave policies\n- Wellness programs\n- Work that Matters: 100 million+ users trust Proton; user subscriptions are our only revenue source\n\nOUR COMMITMENT TO DIVERSITY AND INCLUSION\n\nProton believes diversity drives innovation. We are committed to fostering an inclusive environment where all individuals, regardless of race, ethnicity, gender, age, sexual orientation, physical ability, or socio-economic background, feel valued and empowered.",
+  "location": "Multiple Locations: Geneva, Zurich, Prague, Barcelona, Paris, London, Vilnius, Skopje, Taipei",
+  "status": "rejected",
+  "date_added": "2026-08-31T12:32:51.583Z",
+  "tags": [
+    "Backend",
+    "C++",
+    "Go",
+    "Rust",
+    "PHP",
+    "Storage Systems",
+    "Ceph",
+    "Seaweed",
+    "Distributed Systems",
+    "Scalability",
+    "Security",
+    "Cryptography",
+    "SRE",
+    "Open Source",
+    "Privacy",
+    "Data Centers"
+  ],
+  "ats_tags": [
+    "C++",
+    "Rust",
+    "C",
+    "Linux-kernel",
+    "Storage",
+    "Backend",
+    "Systems",
+    "Networking",
+    "Low-level",
+    "Graduate-level"
+  ],
+  "ai_analysis": {
+    "job_id": "job-2ee43e0b",
+    "analyzed_at": "2026-08-31T12:36:04.269Z",
+    "ats_tags": [
+      "C++",
+      "Rust",
+      "C",
+      "Linux-kernel",
+      "Storage",
+      "Backend",
+      "Systems",
+      "Networking",
+      "Low-level",
+      "Graduate-level"
+    ],
+    "entities_by_type": {
+      "experiences": [
+        {
+          "id": "exp-0e31880e",
+          "type": "experience",
+          "name": "Head of Teaching Assistants - YAKA / ACU Program at EPITA",
+          "score": 60,
+          "reason": "Provides team leadership and mentorship experience in a technically rigorous environment, although not directly related to production system development."
+        },
+        {
+          "id": "exp-b0ccfdd9",
+          "type": "experience",
+          "name": "Freelance Software Engineer at Various Clients",
+          "score": 75,
+          "reason": "Demonstrates experience building and managing full-stack information systems and leading a B2B platform as a technical lead, closely aligning with production systems and leadership."
+        },
+        {
+          "id": "exp-df8d4cde",
+          "type": "experience",
+          "name": "Software Engineer Intern - Platform team at ARISTA",
+          "score": 70,
+          "reason": "Shows strong C++ development and ASIC interfacing experience within a platform team, with a hackathon project approved for production, relevant for complex system building."
+        }
+      ],
+      "projects": [
+        {
+          "id": "proj-2a5cd1e4",
+          "type": "project",
+          "name": "ARM project",
+          "score": 70,
+          "reason": "Demonstrates strong embedded systems, C, I2C, and UART skills, valuable for understanding low-level hardware in on-premise infrastructure."
+        },
+        {
+          "id": "proj-40cdf000",
+          "type": "project",
+          "name": "RFID Driver",
+          "score": 85,
+          "reason": "Exceptional match for Linux kernel driver development in C, highly relevant for understanding and developing storage system interfaces."
+        },
+        {
+          "id": "proj-4c4f5731",
+          "type": "project",
+          "name": "Linux System Tracing & Storage",
+          "score": 90,
+          "reason": "Directly relevant to storage systems, showcasing strong expertise with Linux storage stacks including LVM, RAID, and LUKS."
+        },
+        {
+          "id": "proj-4f43d05f",
+          "type": "project",
+          "name": "My Docker",
+          "score": 80,
+          "reason": "Highly relevant for Linux systems, C, containerization, and security (`seccomp`), foundational for modern backend deployments."
+        },
+        {
+          "id": "proj-58931465",
+          "type": "project",
+          "name": "EpiTweet",
+          "score": 70,
+          "reason": "Demonstrates experience with complex distributed microservices architecture and various data stores, although not in the primary required languages."
+        },
+        {
+          "id": "proj-953ddf40",
+          "type": "project",
+          "name": "MyHTTPd",
+          "score": 85,
+          "reason": "Excellent match for C, network programming, and I/O multiplexing (`epoll`), essential for building scalable backend services."
+        },
+        {
+          "id": "proj-b1f3b77a",
+          "type": "project",
+          "name": "myMalloc",
+          "score": 80,
+          "reason": "Exceptional for C, memory management, and systems programming, directly applicable to optimizing storage system performance."
+        },
+        {
+          "id": "proj-irgpu",
+          "type": "project",
+          "name": "GPU-Accelerated Video Analysis System (IRGPU)",
+          "score": 75,
+          "reason": "Highlights strong C++, CUDA, profiling (`Nsight Compute`), and optimization skills, relevant for high-performance backend systems."
+        }
+      ],
+      "skills": [
+        {
+          "id": "skil-0247ad5c",
+          "type": "skill",
+          "name": "Programming & Languages",
+          "score": 85,
+          "reason": "Excellent coverage of core backend languages including C, C++, and Rust, which are central to the role."
+        },
+        {
+          "id": "skil-2799aa77",
+          "type": "skill",
+          "name": "Embedded & Hardware",
+          "score": 75,
+          "reason": "Provides strong understanding of hardware interaction and embedded systems, valuable for on-premise infrastructure and low-level development."
+        },
+        {
+          "id": "skil-52bcbd31",
+          "type": "skill",
+          "name": "Other / DevOps",
+          "score": 80,
+          "reason": "Covers critical aspects like security, monitoring, profiling methods (`perf`, `valgrind`), and system analysis, directly relevant to operational excellence."
+        },
+        {
+          "id": "skil-a856cc8e",
+          "type": "skill",
+          "name": "Systems",
+          "score": 95,
+          "reason": "Exceptional match for the role's core focus on storage systems, Linux kernel, drivers, networking, and low-latency/real-time operations."
+        }
+      ],
+      "education": [
+        {
+          "id": "edu-4b5b8a37",
+          "type": "education",
+          "name": "MSc Computer Engineering, Low-level & Systems (GISTRE) from EPITA",
+          "score": 85,
+          "reason": "Directly aligns with the systems, low-level, and embedded focus of the job, providing a strong academic foundation."
+        }
+      ]
+    },
+    "confidence_score": 0.65,
+    "summary": "This candidate presents exceptional low-level systems, C/C++/Rust, and Linux kernel programming skills highly relevant to storage infrastructure. However, the explicit requirement for 'deep experience building complex production systems' and 'leading a team initiative from discovery to production' poses a significant seniority mismatch for a first graduate role, critically impacting the overall fit for this specific Backend Engineer position.",
+    "resume_tips": [
+      "Quantify the scale and impact of 'complex production systems' built in freelance roles to better align with production system requirements.",
+      "Elaborate on specific security best practices and cryptography concepts applied in projects or coursework, beyond just LUKS.",
+      "Reframe leadership experience to explicitly highlight managing technical initiatives from 'discovery to production' if applicable, even in academic contexts.",
+      "Highlight Rust experience more prominently in project descriptions or dedicated sections, as it's a key required language.",
+      "Emphasize any operational aspects or reliability considerations from projects to address the 'operational excellence' and 'SRE' bonus points."
+    ],
+    "recommended_title": "Backend Engineer - Storage Systems",
+    "recommended_profile": "Looking for a full-time position in software engineering with a focus on: systems, low-level, storage, Linux, C++, Rust. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded. Fluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running, cooking.",
+    "recommended_experience_ids": [
+      "exp-b0ccfdd9",
+      "exp-df8d4cde",
+      "exp-0e31880e"
+    ],
+    "recommended_project_ids": [
+      "proj-4c4f5731",
+      "proj-40cdf000",
+      "proj-953ddf40",
+      "proj-b1f3b77a",
+      "proj-4f43d05f"
+    ],
+    "recommended_skill_ids": [
+      "skil-0247ad5c",
+      "skil-a856cc8e",
+      "skil-52bcbd31",
+      "skil-2799aa77"
+    ],
+    "recommended_skill_tags": {
+      "skil-0247ad5c": [
+        "C",
+        "C++",
+        "Rust",
+        "Bash",
+        "algorithms",
+        "data structures"
+      ],
+      "skil-a856cc8e": [
+        "drivers",
+        "kernel",
+        "Linux",
+        "multithreading",
+        "low-latency",
+        "networking",
+        "operating systems",
+        "profiling",
+        "virtual memory"
+      ],
+      "skil-52bcbd31": [
+        "GDB",
+        "Git",
+        "Security",
+        "monitoring",
+        "optimisation",
+        "strace",
+        "system analysis",
+        "testing",
+        "valgrind",
+        "perf"
+      ],
+      "skil-2799aa77": [
+        "ASIC interfacing",
+        "FPGA",
+        "I2C",
+        "Rasberry Pi",
+        "STM32",
+        "UART",
+        "SPI"
+      ]
+    },
+    "suggested_new_skills": [
+      {
+        "name": "Distributed Systems",
+        "category": "Architectural Patterns",
+        "level": "intermediate",
+        "tags": [
+          "scalability",
+          "resilience",
+          "consistency"
+        ],
+        "reason": "Directly supports 'massively-scalable solutions' requirement."
+      }
+    ],
+    "suggested_new_skill_tags": [
+      {
+        "skill_id": "skil-52bcbd31",
+        "tag": "security best practices",
+        "reason": "Explicitly required by job."
+      },
+      {
+        "skill_id": "skil-52bcbd31",
+        "tag": "cryptography concepts",
+        "reason": "Explicitly required by job."
+      },
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "Ceph",
+        "reason": "Mentioned as a bonus point storage system."
+      },
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "SeaweedFS",
+        "reason": "Mentioned as a bonus point storage system."
+      }
+    ],
+    "recommended_entity_descriptions": {
+      "exp-b0ccfdd9": "Built and managed end-to-end full-stack information systems for multiple clients, gaining experience with complex production systems. Led a B2B survey platform from discovery, serving as the first technical lead, and owned operational aspects of an information system at Aussitôt Bon, demonstrating initiative and system ownership.",
+      "exp-df8d4cde": "Implemented non-zero reset value management for ASIC Physical Table registers within the chip-agnostic Strata infrastructure using C++ and Python, showcasing deep backend development skills. Won Arista's Hackathon by developing an AI agent optimization tool, which was approved for production development, highlighting rapid prototyping and potential for production impact.",
+      "exp-0e31880e": "Led a national team of 67 Teaching Assistants, supervising intensive coding bootcamps and large-scale systems projects (e.g., C compiler, HTTP server in C, malloc, POSIX shell). Implemented a 1-on-1 code review mentorship model, demonstrating leadership in a technically demanding environment.",
+      "proj-4c4f5731": "Engineered a comprehensive Linux storage stack using Bash, LVM, RAID, and LUKS2 encryption, directly aligning with storage systems expertise. Applied `strace` for fault injection and syscall filtering to reverse-engineer a binary, demonstrating advanced system analysis and debugging capabilities.",
+      "proj-40cdf000": "Developed a low-level Linux kernel character device driver in C for an MFRC522 RFID reader, featuring SPI regmap communication and a FIFO command interface. Validated functionality via QEMU emulation, showcasing deep experience with Linux kernel development and hardware interfacing critical for storage systems.",
+      "proj-953ddf40": "Implemented a high-performance HTTP server in C using `epoll` with edge-triggered mode for efficient I/O multiplexing and concurrent connection handling. Designed a per-client state machine with dynamic buffer management for robust HTTP request parsing and response generation, demonstrating skills in building resilient and massively-scalable solutions.",
+      "proj-b1f3b77a": "Developed a custom `malloc` implementation in C, focusing on efficient memory reuse, fragmentation minimization, and page management via `mmap`. Supports `malloc`, `free`, `realloc`, and `calloc`, showcasing deep understanding of memory management, a critical aspect for optimized storage systems.",
+      "proj-4f43d05f": "Built a lightweight container runtime in C, leveraging Linux namespaces, pivot_root, capabilities dropping, and `seccomp` syscall filtering for enhanced security. This project demonstrates strong expertise in Linux systems, virtualization, and security best practices essential for robust backend infrastructure."
+    }
+  }
+}

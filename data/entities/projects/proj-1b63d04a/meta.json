@@ -1,0 +1,19 @@
+{
+  "id": "proj-1b63d04a",
+  "type": "projects",
+  "title": "42sh",
+  "tech": [
+    "C",
+    "Autotools",
+    "Unix",
+    "Parser",
+    "AST"
+  ],
+  "description": "Shell interpreter implementation in C with complete lexer, parser, and abstract syntax tree (AST). Implements command-line interpretation with support for redirection, pipes, and expression evaluation for Unix-like shells.",
+  "tags": [
+    "systems-programming",
+    "c",
+    "unix",
+    "interpreter"
+  ]
+}

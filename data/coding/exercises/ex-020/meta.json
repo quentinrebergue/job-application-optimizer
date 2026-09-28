@@ -1,0 +1,14 @@
+{
+  "id": "ex-020",
+  "title": "Pow(x, n)",
+  "difficulty": "medium",
+  "category": "Other",
+  "knowledge_ids": [
+    "k-fast-exponentiation"
+  ],
+  "tags": [
+    "math",
+    "recursion",
+    "divide-and-conquer"
+  ]
+}

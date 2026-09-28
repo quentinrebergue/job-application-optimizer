@@ -1,0 +1,73 @@
+{
+  "selected_entity_ids": [
+    "edu-4b5b8a37",
+    "edu-c735b9b1",
+    "exp-df8d4cde",
+    "exp-0e31880e",
+    "proj-b1f3b77a",
+    "proj-4f43d05f",
+    "proj-40cdf000",
+    "skil-a856cc8e",
+    "skil-0247ad5c",
+    "skil-2799aa77",
+    "exp-b0ccfdd9",
+    "proj-2a5cd1e4",
+    "proj-e5cdf5a5"
+  ],
+  "ai_rankings": [],
+  "profile_text": "Looking for a full-time position in software engineering with a focus on OS internals and adaptive memory management. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded. Fluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running, cooking.",
+  "resume_title": "",
+  "ai_context": "Im searching a first graduate job in system, low-level, hardware interface, linux",
+  "skill_tag_overrides": {
+    "skil-a856cc8e": [
+      "DMA",
+      "Linux",
+      "cache coherence",
+      "drivers",
+      "kernel",
+      "multithreading",
+      "shared memory",
+      "virtualization"
+    ],
+    "skil-0247ad5c": [
+      "ADA",
+      "ASM",
+      "C",
+      "C++",
+      "Python",
+      "Shell",
+      "VHDL"
+    ],
+    "skil-2799aa77": [
+      "ASIC interfacing",
+      "I2C",
+      "SPI",
+      "UART",
+      "FPGA",
+      "RTL"
+    ],
+    "skil-52bcbd31": [
+      "GDB",
+      "strace",
+      "valgrind",
+      "system analysis"
+    ]
+  },
+  "project_order": [
+    "proj-b1f3b77a",
+    "proj-4f43d05f",
+    "proj-40cdf000",
+    "proj-2a5cd1e4",
+    "proj-e5cdf5a5"
+  ],
+  "experience_order": [
+    "exp-df8d4cde",
+    "exp-0e31880e",
+    "exp-b0ccfdd9"
+  ],
+  "entity_description_overrides": {
+    "exp-b0ccfdd9": "Built and managed full-stack information systems for 10+ clients. Led B2B survey platform as first technical lead. Architected PIM + CRM + ERP ecosystem. Owned end-to-end IS.",
+    "proj-b1f3b77a": "Custom malloc implementation in C focusing on efficient memory reuse and fragmentation minimization with bucket-based allocation and free block tracking. Uses mmap for page management.",
+    "proj-2a5cd1e4": "Built an STM32F429ZI embedded system acting as a UART command server using libgapcom (Protobuf over UART). Implemented a 4-level log subsystem and an MPU6050 gyroscope driver over I2C with FIFO reads."
+  }
+}

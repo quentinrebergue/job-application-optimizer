@@ -1,0 +1,10 @@
+{
+  "id": "gq-468af742",
+  "question": "What is a warp, and how many threads does it contain?\n",
+  "answer": "A warp is 32 threads that execute the same instruction at the same clock cycle (SIMT). It is the actual scheduling unit on an SM — CUDA doesn't schedule individual threads, it schedules warps.\n",
+  "tags": [
+    "cuda",
+    "warp",
+    "simt"
+  ]
+}

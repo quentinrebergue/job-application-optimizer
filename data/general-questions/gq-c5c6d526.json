@@ -1,0 +1,10 @@
+{
+  "id": "gq-c5c6d526",
+  "question": "What is linking?\n",
+  "answer": "Final stage of compilation. Combines object files, resolves external references (function calls to other libraries), assigns final memory addresses, and produces an executable file.\n",
+  "tags": [
+    "compilation",
+    "linker",
+    "executable"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "id": "gq-dc2636f3",
+  "question": "What is the Transformer architecture, and what problem does it solve?\n",
+  "answer": "Transformer replaces RNNs with a pure attention-based mechanism. Problem: RNNs process sequentially (slow, can't parallelize), forget long-range context due to vanishing gradients. Transformer processes all tokens in parallel and attends to any token regardless of distance.\n",
+  "tags": [
+    "ai",
+    "transformer",
+    "architecture"
+  ]
+}

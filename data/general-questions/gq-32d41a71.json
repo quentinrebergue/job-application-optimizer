@@ -1,0 +1,10 @@
+{
+  "id": "gq-32d41a71",
+  "question": "What does cudaMemcpyAsync do differently from cudaMemcpy?\n",
+  "answer": "It returns immediately — the CPU doesn't wait. The DMA engine handles the transfer in the background.\n",
+  "tags": [
+    "cuda",
+    "memory",
+    "async"
+  ]
+}

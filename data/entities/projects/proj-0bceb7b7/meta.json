@@ -1,0 +1,15 @@
+{
+  "id": "proj-0bceb7b7",
+  "type": "projects",
+  "title": "MyFind",
+  "tech": [
+    "C",
+    "Unix Utilities"
+  ],
+  "description": "File search utility implementation in C, similar to Unix `find` command. Features operators and expression evaluation for flexible file discovery and filtering across directory trees.",
+  "tags": [
+    "systems-programming",
+    "c",
+    "unix"
+  ]
+}

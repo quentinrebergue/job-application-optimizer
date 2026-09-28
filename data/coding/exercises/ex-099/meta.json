@@ -1,0 +1,15 @@
+{
+  "id": "ex-099",
+  "title": "Word Break",
+  "difficulty": "medium",
+  "category": "Dynamic Programming",
+  "knowledge_ids": [
+    "k-dynamic-programming",
+    "k-string-dp"
+  ],
+  "tags": [
+    "dynamic-programming",
+    "string-dp"
+  ],
+  "leetcode": 139
+}

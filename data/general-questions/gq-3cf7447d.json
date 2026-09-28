@@ -1,0 +1,10 @@
+{
+  "id": "gq-3cf7447d",
+  "question": "What is distillation?\n",
+  "answer": "Train a small 'student' model to mimic a large 'teacher' model. Student learns from teacher's soft targets (probabilities). Smaller model, faster inference, nearly same accuracy. Used extensively to deploy LLMs on edge devices.\n",
+  "tags": [
+    "ai",
+    "inference",
+    "optimization"
+  ]
+}

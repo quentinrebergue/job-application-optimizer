@@ -1,0 +1,10 @@
+{
+  "id": "gq-e4ac3ecc",
+  "question": "What is lexical analysis?\n",
+  "answer": "The first phase of compilation. Scans the source code character-by-character and breaks it into tokens (keywords, identifiers, operators, literals, etc.). Produces a token stream.\n",
+  "tags": [
+    "compilation",
+    "lexer",
+    "tokenization"
+  ]
+}

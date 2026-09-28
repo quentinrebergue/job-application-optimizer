@@ -1,0 +1,21 @@
+{
+  "id": "proj-irgpu",
+  "type": "projects",
+  "title": "GPU-Accelerated Video Analysis System (IRGPU)",
+  "tech": [
+    "C++",
+    "CUDA",
+    "GStreamer",
+    "CMake"
+  ],
+  "description": "Built a real-time motion detection pipeline in C++/CUDA (reservoir sampling, morphological ops, hysteresis thresholding). Achieved 20x CPU speedup through iterative CUDA optimization profiled with Nsight Compute. Team of 4.",
+  "tags": [
+    "CUDA",
+    "GPU Acceleration",
+    "C++",
+    "Computer Vision",
+    "Performance Optimization",
+    "Profiling"
+  ],
+  "latex_snippet": ""
+}

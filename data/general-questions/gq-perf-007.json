@@ -1,0 +1,6 @@
+{
+  "id": "gq-perf-007",
+  "question": "What is Amdahl's law? What does it imply for optimization?",
+  "answer": "Amdahl's law states that the speedup of a program from parallelization is limited by the sequential fraction of the code:\n\n```\nSpeedup = 1 / (S + (1-S)/N)\n```\n\nwhere S is the fraction that must run sequentially and N is the number of processors. If 20% of your code is sequential, you can never get more than 5x speedup no matter how many cores you add. The implication: always find and optimize the bottleneck first. Adding more parallelism to already-parallel code gives diminishing returns.",
+  "tags": ["performance", "algorithms"]
+}

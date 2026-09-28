@@ -1,0 +1,10 @@
+{
+  "id": "gq-824cab25",
+  "question": "What is subtype polymorphism?\n",
+  "answer": "A subtype (derived class) can be used wherever a supertype (base class) is expected. Enables code to work with any subtype without knowing the exact type. Fundamental to object-oriented programming.\n",
+  "tags": [
+    "typology",
+    "polymorphism",
+    "inheritance"
+  ]
+}

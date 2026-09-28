@@ -1,0 +1,14 @@
+{
+  "id": "ex-129",
+  "title": "Lowest Common Ancestor of a Binary Search Tree",
+  "difficulty": "medium",
+  "category": "Binary Tree",
+  "knowledge_ids": [
+    "k-trees-graphs"
+  ],
+  "tags": [
+    "binary-tree",
+    "bst"
+  ],
+  "leetcode": 235
+}

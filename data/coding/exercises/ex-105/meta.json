@@ -1,0 +1,14 @@
+{
+  "id": "ex-105",
+  "title": "Longest Consecutive Sequence",
+  "difficulty": "medium",
+  "category": "Hash Map",
+  "knowledge_ids": [
+    "k-hash-map"
+  ],
+  "tags": [
+    "hash-map",
+    "arrays"
+  ],
+  "leetcode": 128
+}

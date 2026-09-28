@@ -1,0 +1,267 @@
+{
+  "id": "job-e3334cd3",
+  "company": "Thales",
+  "title": "Ingénieur Développement Logiciel Embarqué",
+  "description": "À propos de l'offre d'emploi\n\nLieu : Gennevilliers, France\n\nConstruisons ensemble un avenir de confiance\n\nThales est un leader mondial des hautes technologies spécialisé dans trois secteurs d'activité : Défense & Sécurité, Aéronautique & Spatial, et Cyber & Digital. Il développe des produits et solutions qui contribuent à un monde plus sûr, plus respectueux de l'environnement et plus inclusif. Le Groupe investit près de 4,5 milliards d'euros par an en Recherche & Développement, notamment dans des domaines clés de l'innovation tels que l'IA, la cybersécurité, le quantique, les technologies du cloud et la 6G. Thales compte près de 85 000 collaborateurs dans 65 pays.\n\nNOS ENGAGEMENTS, VOS AVANTAGES\n- Une réussite portée par notre excellence technologique, votre expérience et notre ambition partagée\n- Un package de rémunération attractif\n- Un développement des compétences en continu : parcours de formation, académies et communautés internes\n- Un environnement inclusif, bienveillant et respectant l'équilibre des collaborateurs\n- Un engagement sociétal et environnemental reconnu\n\nVOTRE QUOTIDIEN\n\nLe Campus de Gennevilliers est le cœur des activités de conception, de développement et de soutien des grands systèmes de défense : radiocommunications, réseaux et systèmes d'infrastructure résilients, communications par satellite, combat collaboratif et cybersécurité. Situé au nord de Paris, il est rapidement accessible en transports en commun.\n\nLe service OS & Services for Secured Platforms (OSS) appartient au centre de service Hardware & Tools Engineering (HTE). Il a en responsabilité le développement, la configuration et l'industrialisation des couches logicielles bas-niveau (boot, OS, driver) des produits en transverse de la GBU SIX. Du fait de ce positionnement, la typologie des produits adressés au sein du service est très variée : produits de radio-communication, produits de sécurités, produits satellites ou aéro.\n\nLe service est bi-site (Gennevilliers et Cholet) et se compose d'environ 25 experts logiciels bas-niveau. Nous encourageons le partage des connaissances et la montée en compétence au sein de l'équipe.\n\nEn tant qu'Ingénieur Développement Logiciel Embarqué, vous avez pour missions principales de :\n- Participer à la conception des modules logiciels embarqués,\n- Contribuer à / être responsable de l'implémentation et du test des BSP/Drivers,\n- Évaluer et caractériser les performances des modules/drivers,\n- Contribuer à la réutilisation des modules logiciels dans un objectif de capitalisation au sein du service, et participer aux groupes de travail métier,\n- Piloter techniquement des sous-traitants.\n\nVous participez également à des revues de pairs, réalisez de la veille technologique et évaluez des solutions techniques innovantes et stratégiques pour le service.\n\nEn nous rejoignant, vous serez formé.e sur les technologies matérielles et logicielles propres à Thales (métier radio, aéro, etc.), notre ambition étant de nous offrir de multiples possibilités d'évolutions de carrière (par ex : responsable de lot technique, ou architecte logiciel) au sein d'une entreprise apprenante.\n\nVOTRE PROFIL\n\nCe que vous savez faire :\n- Compiler/déployer/personnaliser un noyau Linux ou des drivers complexes.\n- Compiler/déployer/personnaliser un chargeur de démarrage (Uboot par exemple).\n- Débugger avec une sonde JTAG.\n- Configurer/utiliser/ajuster une chaîne de compilation croisée (Yocto, buildroot, autre)\n- Utiliser / Analyser / debugger des bus de communication : SPI, I2C, Ethernet, USB, etc.\n- Maîtriser les problématiques liées aux systèmes multi-tâches sur systèmes embarqués (consommation, empreinte mémoire, etc.).\n- Analyser des synoptiques de carte numérique, analyser des signaux avec un oscilloscope ou un analyseur logique.\n- Maîtriser les outils de développement : gestionnaire de code source (Git) et workflow de tickets ou faits techniques (JIRA par exemple).\n- Participer/Contribuer à des réunions/revues d'architecture matérielle et logicielle.\n- La connaissance des séquences de démarrage d'un processeur et éventuellement démarrage sécurisé, d'un hyperviseur (type KVM/Qemu par exemple) ou container (Docker/Chroot) et des méthodes d'intégration continue (Jenkins) serait un plus.\n\nCe que l'on reconnaît chez vous :\n- Une grande curiosité\n- Un esprit d'équipe, une bonne communication écrite comme orale et une bonne pédagogie\n- Une bonne autonomie, avec un reporting pertinent et adapté aux circonstances.\n\nThales, entreprise Handi-Engagée, reconnait tous les talents. La diversité est notre meilleur atout.\n\nLe poste pouvant nécessiter d'accéder à des informations relevant du secret de la défense nationale, la personne retenue fera l'objet d'une procédure d'habilitation, conformément aux dispositions des articles R.2311-1 et suivants du Code de la défense et de l'IGI 1300 SGDSN/PSE du 09 août 2021.",
+  "location": "Gennevilliers, France",
+  "status": "applied",
+  "date_added": "2026-09-24T09:56:42.691Z",
+  "tags": [
+    "Linux",
+    "Embedded",
+    "Drivers",
+    "BSP",
+    "JTAG",
+    "Yocto",
+    "Buildroot",
+    "Uboot",
+    "C",
+    "Git",
+    "Defense",
+    "Aerospace"
+  ],
+  "ats_tags": [
+    "embedded-Linux",
+    "Linux-kernel",
+    "device-drivers",
+    "SPI",
+    "I2C",
+    "Yocto",
+    "bootloader",
+    "C",
+    "graduate",
+    "on-site"
+  ],
+  "ai_analysis": {
+    "job_id": "job-e3334cd3",
+    "analyzed_at": "2026-09-24T13:24:02.132Z",
+    "ats_tags": [
+      "embedded-Linux",
+      "Linux-kernel",
+      "device-drivers",
+      "SPI",
+      "I2C",
+      "Yocto",
+      "bootloader",
+      "C",
+      "graduate",
+      "on-site"
+    ],
+    "entities_by_type": {
+      "experiences": [
+        {
+          "id": "exp-df8d4cde",
+          "type": "experience",
+          "name": "Software Engineer - Platform team at ARISTA",
+          "score": 62,
+          "reason": "Low-level ASIC register/DMA work shows hardware-adjacent engineering rigor but lacks direct Linux driver/embedded OS focus required by the job."
+        }
+      ],
+      "projects": [
+        {
+          "id": "proj-40cdf000",
+          "type": "project",
+          "name": "RFID Driver",
+          "score": 90,
+          "reason": "Direct hands-on Linux kernel driver and SPI implementation, the closest match to the job's BSP/driver core requirement."
+        },
+        {
+          "id": "proj-2a5cd1e4",
+          "type": "project",
+          "name": "ARM project",
+          "score": 85,
+          "reason": "STM32 embedded driver work over I2C/UART matches the embedded module and bus debugging requirements almost exactly."
+        },
+        {
+          "id": "proj-ad638299",
+          "type": "project",
+          "name": "Synchronous Real-Time Systems",
+          "score": 75,
+          "reason": "Real-time scheduling and UART bootloader deployment align with multi-task system and boot-sequence knowledge, though not Linux-specific."
+        },
+        {
+          "id": "proj-4f43d05f",
+          "type": "project",
+          "name": "My Docker",
+          "score": 72,
+          "reason": "Namespaces/cgroups/seccomp work matches the job's 'plus' requirement for containers, but is not core to the driver/BSP focus."
+        },
+        {
+          "id": "proj-4c4f5731",
+          "type": "project",
+          "name": "Linux System Tracing & Storage",
+          "score": 68,
+          "reason": "Strong Linux internals and debugging skills (strace, storage stacks) relevant to OS-level work, but not embedded/driver specific."
+        },
+        {
+          "id": "proj-e5cdf5a5",
+          "type": "project",
+          "name": "Unicycle CPU",
+          "score": 60,
+          "reason": "FPGA/VHDL hardware design shows digital circuit understanding relevant to board analysis, but far from embedded software/driver scope."
+        }
+      ],
+      "skills": [
+        {
+          "id": "skil-a856cc8e",
+          "type": "skill",
+          "name": "Systems",
+          "score": 92,
+          "reason": "Directly covers Linux, kernel, drivers, bootloader, Yocto and containers — near-perfect alignment with the job's core technical stack."
+        },
+        {
+          "id": "skil-2799aa77",
+          "type": "skill",
+          "name": "Embedded & Hardware",
+          "score": 88,
+          "reason": "I2C, SPI, UART, STM32, FPGA match the job's bus and board-level requirements closely, missing only JTAG/oscilloscope explicitly."
+        },
+        {
+          "id": "skil-0247ad5c",
+          "type": "skill",
+          "name": "Programming & Languages",
+          "score": 78,
+          "reason": "Strong C proficiency matches the job's primary language, though many other listed languages are irrelevant here."
+        },
+        {
+          "id": "skil-52bcbd31",
+          "type": "skill",
+          "name": "Other / DevOps",
+          "score": 68,
+          "reason": "Git and GDB align with the job's required dev tools, but JIRA and Jenkins are not explicitly covered."
+        }
+      ],
+      "education": [
+        {
+          "id": "edu-4b5b8a37",
+          "type": "education",
+          "name": "MSc Computer Engineering, Low-level & Systems (GISTRE)",
+          "score": 88,
+          "reason": "Specialization directly matches the job's low-level/embedded systems domain, though still ongoing/recent graduate level."
+        }
+      ]
+    },
+    "confidence_score": 0.68,
+    "summary": "Solid technical fit for an entry-level embedded Linux/driver role: candidate has direct hands-on experience writing a Linux kernel SPI driver and STM32 firmware with I2C/UART, plus strong systems fundamentals (kernel, containers, bootloaders). The main gaps are professional/industrial experience with U-Boot, JTAG hardware debugging, oscilloscope/logic analyzer work, and Yocto/Jenkins toolchains, which are only partially covered by academic projects rather than production work.",
+    "resume_tips": [
+      "Explicitly add 'Linux kernel driver', 'BSP', and 'Yocto/Buildroot' keywords near the top of the resume to match ATS parsing of this job.",
+      "Move the RFID Driver and ARM project entries above web/microservices projects (EpiTweet, MyHTTPd) since they are far more relevant to this role.",
+      "Add any exposure to U-Boot, JTAG debugging, oscilloscope/logic analyzer, or Jenkins CI, even if minimal — these are explicitly required or 'plus' skills for this job.",
+      "Quantify the RFID Driver and ARM project work (e.g., test coverage, latency figures, FIFO throughput) to demonstrate rigor expected for driver/BSP performance characterization.",
+      "Reframe the Arista experience to highlight low-level register/hardware interfacing work (DMA, ASIC tables) since it's your only professional low-level engineering experience.",
+      "Mention JIRA if used academically or professionally, since it's an explicit tool requirement alongside Git."
+    ],
+    "recommended_title": "Embedded Software Engineer — Linux & Drivers",
+    "recommended_profile": "Looking for a full-time position in software engineering with a focus on embedded Linux, drivers, and low-level systems. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded. Fluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running, cooking.",
+    "recommended_experience_ids": [
+      "exp-df8d4cde"
+    ],
+    "recommended_project_ids": [
+      "proj-40cdf000",
+      "proj-2a5cd1e4",
+      "proj-ad638299",
+      "proj-4f43d05f",
+      "proj-4c4f5731"
+    ],
+    "recommended_skill_ids": [
+      "skil-a856cc8e",
+      "skil-2799aa77",
+      "skil-0247ad5c",
+      "skil-52bcbd31"
+    ],
+    "recommended_skill_tags": {
+      "skil-a856cc8e": [
+        "Linux",
+        "drivers",
+        "kernel",
+        "bootloader",
+        "YOCTO",
+        "containers",
+        "virtualization",
+        "OS"
+      ],
+      "skil-2799aa77": [
+        "I2C",
+        "SPI",
+        "UART",
+        "STM32",
+        "FPGA"
+      ],
+      "skil-0247ad5c": [
+        "C",
+        "ASM",
+        "Shell",
+        "Bash"
+      ],
+      "skil-52bcbd31": [
+        "Git",
+        "GDB",
+        "strace",
+        "system analysis",
+        "testing"
+      ]
+    },
+    "suggested_new_skills": [
+      {
+        "name": "JTAG Debugging",
+        "category": "Embedded & Hardware",
+        "level": "beginner",
+        "tags": [
+          "hardware debug",
+          "probe"
+        ],
+        "reason": "Explicitly required skill for board-level debugging in this job, absent from candidate profile"
+      },
+      {
+        "name": "U-Boot",
+        "category": "Embedded & Hardware",
+        "level": "beginner",
+        "tags": [
+          "bootloader",
+          "cross-compilation"
+        ],
+        "reason": "Explicitly required bootloader tool, candidate has related UART bootloader project but no named U-Boot experience"
+      },
+      {
+        "name": "JIRA",
+        "category": "Other / DevOps",
+        "level": "beginner",
+        "tags": [
+          "ticketing",
+          "workflow"
+        ],
+        "reason": "Explicitly required tool alongside Git for this job, missing from candidate skill list"
+      }
+    ],
+    "suggested_new_skill_tags": [
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "Yocto/Buildroot cross-compilation",
+        "reason": "Job explicitly requires configuring cross-compilation toolchains"
+      },
+      {
+        "skill_id": "skil-2799aa77",
+        "tag": "oscilloscope/logic analyzer",
+        "reason": "Job requires analyzing digital signals with oscilloscope/logic analyzer"
+      },
+      {
+        "skill_id": "skil-2799aa77",
+        "tag": "JTAG",
+        "reason": "Job requires debugging with JTAG probe"
+      },
+      {
+        "skill_id": "skil-52bcbd31",
+        "tag": "Jenkins",
+        "reason": "Job lists Jenkins/CI as a valued plus"
+      }
+    ],
+    "recommended_entity_descriptions": {
+      "exp-df8d4cde": "Software Engineer on Arista's Platform team, implementing non-zero reset value management for ASIC Physical Table registers across chip-agnostic infrastructure (SDK parsing, code generation, DMA) in Python and C++. Low-level hardware/register interfacing work directly transferable to embedded driver and BSP performance characterization tasks.",
+      "proj-40cdf000": "Developed a Linux kernel character device driver for the MFRC522 RFID reader, implementing file_operations callbacks, SPI regmap communication, and a FIFO command interface, then validated it via QEMU emulation — directly demonstrating BSP/driver development and SPI bus debugging skills required for this role.",
+      "proj-2a5cd1e4": "Built an STM32F429ZI (ARM Cortex-M4) embedded system as a UART command server using Protobuf over UART, implementing a 4-level log subsystem and an MPU6050 gyroscope driver over I2C with FIFO reads — hands-on embedded driver and communication bus experience matching the role's BSP/driver focus.",
+      "proj-ad638299": "Designed a Rate Monotonic scheduler in Heptagon, compiling deterministic C step functions with no heap allocation, and deployed it to a Raspberry Pi 3 via UART bootloader — demonstrating real-time embedded systems and bootloader/boot-sequence knowledge relevant to low-level firmware development.",
+      "proj-4f43d05f": "Built a lightweight container runtime in C using Linux namespaces, pivot_root, capabilities dropping, seccomp syscall filtering, and cgroups, pulling and mounting root filesystems from a container registry — relevant to the job's mention of container/virtualization technologies (Docker/Chroot) as a valued plus.",
+      "proj-4c4f5731": "Used strace-based fault injection and syscall filtering to reverse-engineer a binary, and automated Linux storage stacks (loop devices, LUKS2, LVM, dm-linear, dm-delay, RAID) via Bash scripting — showing strong Linux systems internals knowledge applicable to OS/driver debugging."
+    }
+  }
+}

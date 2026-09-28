@@ -1,0 +1,10 @@
+{
+  "id": "gq-d29b161b",
+  "question": "What is top-k and top-p (nucleus) sampling?\n",
+  "answer": "top-k: only sample from the k most likely tokens. top-p (nucleus): sample from the smallest set of tokens with cumulative probability >= p. Both reduce the chance of nonsense while preserving diversity. top-p is often preferred because k depends on the distribution.\n",
+  "tags": [
+    "ai",
+    "llm",
+    "sampling"
+  ]
+}

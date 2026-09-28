@@ -1,0 +1,10 @@
+{
+  "id": "gq-bcb55284",
+  "question": "Can threads from different blocks communicate or synchronize directly?\n",
+  "answer": "No. Threads in different blocks have no shared memory between them and cannot call __syncthreads() across blocks. Inter-block communication requires going through global memory and is generally avoided.\n",
+  "tags": [
+    "cuda",
+    "sync",
+    "memory"
+  ]
+}

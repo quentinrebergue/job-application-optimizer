@@ -1,0 +1,281 @@
+{
+  "id": "job-89e5ad8d",
+  "company": "Namespace",
+  "title": "Mac Infrastructure Engineer",
+  "description": "Join Namespace as a Mac Infrastructure Engineer. Responsible for the core virtualization layer powering macOS platform on Apple Silicon.\n\n**About Namespace:**\nWe're building a developer infrastructure platform that accelerates teams by eliminating CI/CD bottlenecks. Our macOS platform provides high-performance, ephemeral compute environments running on native Apple Silicon, designed for Xcode builds, iOS CI, and graphics workloads.\n\n**The Role:**\nYou'll own critical platform components enabling developers to spin up isolated macOS environments in seconds and run demanding Apple ecosystem workloads at scale.\n\n**Key Responsibilities:**\n- Build a great macOS virtualization platform—pushing Apple's Virtualization.framework to its limits on performance, cold-start times, and density\n- Own the Mac-specific layer end to end: VM lifecycle, host integration, storage, and image pipeline for fast cloning and snapshotting\n- Draw on hands-on virtualization experience (Virtualization.framework, KVM, QEMU, or similar) to solve problems without documented answers\n- Integrate with and extend fleet scheduler to place growing number of VMs across Apple Silicon fleet\n\n**What We're Looking For:**\n- Grit and ownership mentality—push through ambiguity and ship, learn, iterate quickly\n- Deep curiosity and drive to understand how systems work\n- Hands-on virtualization experience\n- Strong bias to execution and impact\n\n**What We Offer:**\n- Competitive salary and stock options\n- Flexible working hours\n- Market-leading parental leave\n- Small team of experts\n- Full transparency and autonomy",
+  "location": "Zurich, Switzerland",
+  "url": "https://www.linkedin.com/jobs/search-results/?currentJobId=4421899931&eBP=JOBS_AUCTION_SERVICE_FAILED&refId=rgF%2FwsKdJ7PIbok4azG0Nw%3D%3D&trackingId=IrMy18yQJwkpQzv%2FkXi%2Bmw%3D%3D&keywords=System%20software%20engineer%20graduate&origin=JOBS_HOME_KEYWORD_HISTORY&start=75&geoId=106693272&distance=0.0",
+  "status": "rejected",
+  "date_added": "2026-06-02T14:36:02.139Z",
+  "tags": [
+    "macOS",
+    "Apple Silicon",
+    "Virtualization",
+    "Infrastructure",
+    "CI/CD",
+    "Virtualization.framework",
+    "KVM",
+    "QEMU",
+    "Performance Optimization",
+    "Fleet Management"
+  ],
+  "ats_tags": [
+    "Virtualization",
+    "C",
+    "C++",
+    "Systems-Programming",
+    "Linux-Kernel",
+    "Low-Level",
+    "Performance-Optimization",
+    "Infrastructure",
+    "Junior-Level",
+    "Apple-Silicon"
+  ],
+  "ai_analysis": {
+    "job_id": "job-89e5ad8d",
+    "analyzed_at": "2026-06-02T14:37:02.805Z",
+    "ats_tags": [
+      "Virtualization",
+      "C",
+      "C++",
+      "Systems-Programming",
+      "Linux-Kernel",
+      "Low-Level",
+      "Performance-Optimization",
+      "Infrastructure",
+      "Junior-Level",
+      "Apple-Silicon"
+    ],
+    "entities_by_type": {
+      "experiences": [
+        {
+          "id": "exp-df8d4cde",
+          "type": "experience",
+          "name": "Software Engineer Intern - Platform team at ARISTA",
+          "score": 65,
+          "reason": "This internship involved low-level C++ platform work with SDK parsing and DMA, which aligns with infrastructure and host integration, though it is not Mac-specific or directly virtualization-focused."
+        }
+      ],
+      "projects": [
+        {
+          "id": "proj-2a5cd1e4",
+          "type": "project",
+          "name": "ARM project",
+          "score": 60,
+          "reason": "Involved low-level C programming on ARM Cortex-M4 and hardware interfacing (I2C, UART), which provides a foundational understanding of underlying architectures relevant to Apple Silicon, but is an embedded project, not macOS virtualization."
+        },
+        {
+          "id": "proj-40cdf000",
+          "type": "project",
+          "name": "RFID Driver",
+          "score": 80,
+          "reason": "This project features Linux kernel device driver development and explicit QEMU emulation experience, providing direct hands-on virtualization and low-level system understanding highly relevant to the role's technical requirements."
+        },
+        {
+          "id": "proj-4c4f5731",
+          "type": "project",
+          "name": "Linux System Tracing & Storage",
+          "score": 70,
+          "reason": "The project's focus on automating Linux storage stacks (LVM, RAID, LUKS) is directly applicable to managing storage for VM image pipelines, though it is Linux-specific and uses Bash."
+        },
+        {
+          "id": "proj-4f43d05f",
+          "type": "project",
+          "name": "My Docker",
+          "score": 85,
+          "reason": "Building a container runtime in C using Linux namespaces and cgroups demonstrates exceptional low-level system control and understanding of isolated environments, a core concept for virtualization on macOS."
+        },
+        {
+          "id": "proj-ad638299",
+          "type": "project",
+          "name": "Synchronous Real-Time Systems",
+          "score": 60,
+          "reason": "Developed a real-time scheduler in C, showcasing strong systems programming capabilities and control over execution, which is foundational for high-performance infrastructure but not directly virtualization or Mac-related."
+        },
+        {
+          "id": "proj-b1f3b77a",
+          "type": "project",
+          "name": "myMalloc",
+          "score": 75,
+          "reason": "Implementing a custom memory allocator in C highlights deep understanding of low-level memory management and optimization, critical skills for pushing performance and density limits in a virtualization platform."
+        },
+        {
+          "id": "proj-e5cdf5a5",
+          "type": "project",
+          "name": "Unicycle CPU",
+          "score": 60,
+          "reason": "Designed a 32-bit ARM-like processor in VHDL, demonstrating a solid grasp of CPU architecture and low-level hardware, which is valuable for understanding Apple Silicon but not direct software development for this role."
+        },
+        {
+          "id": "proj-irgpu",
+          "type": "project",
+          "name": "GPU-Accelerated Video Analysis System (IRGPU)",
+          "score": 70,
+          "reason": "Developed a C++/CUDA GPU-accelerated system with significant speedup through optimization, directly aligning with the job's requirement for performance engineering and handling graphics workloads."
+        }
+      ],
+      "skills": [
+        {
+          "id": "skil-0247ad5c",
+          "type": "skill",
+          "name": "Programming & Languages",
+          "score": 90,
+          "reason": "The candidate has expert-level proficiency in C, C++, ASM, CUDA, and Rust, which are critical languages for low-level systems and performance-sensitive infrastructure development."
+        },
+        {
+          "id": "skil-2799aa77",
+          "type": "skill",
+          "name": "Embedded & Hardware",
+          "score": 70,
+          "reason": "Skills in ASIC interfacing, FPGA, I2C, and SPI demonstrate a strong understanding of hardware interaction and low-level control, which is foundational for host integration, even if primarily from an embedded context."
+        },
+        {
+          "id": "skil-52bcbd31",
+          "type": "skill",
+          "name": "Other / DevOps",
+          "score": 75,
+          "reason": "Includes strong skills in Git, monitoring, optimization, testing, GDB, and Valgrind, which are essential engineering practices for building and maintaining a high-performance infrastructure platform."
+        },
+        {
+          "id": "skil-a856cc8e",
+          "type": "skill",
+          "name": "Systems",
+          "score": 90,
+          "reason": "The candidate's expert-level systems knowledge covers Linux, Kernel, Drivers, Virtualization, Multithreading, GPU, DMA, and low-latency, directly matching many core requirements of the Mac Infrastructure Engineer role, despite being Linux-centric."
+        }
+      ],
+      "education": [
+        {
+          "id": "edu-4b5b8a37",
+          "type": "education",
+          "name": "MSc Computer Engineering, Low-level & Systems (GISTRE) from EPITA",
+          "score": 85,
+          "reason": "This Master's degree specialized in low-level and systems engineering provides an excellent theoretical and practical foundation directly relevant to the core technical domain of the role."
+        }
+      ]
+    },
+    "confidence_score": 0.68,
+    "summary": "This candidate possesses a strong foundation in low-level systems programming, C/C++, and Linux kernel development, with demonstrable experience in virtualization-adjacent technologies like QEMU and container runtimes. However, a notable gap exists in explicit macOS, Apple Silicon, and Virtualization.framework experience, further compounded by the candidate seeking a \"first graduate job\" for a role that implies production-level ownership and expertise.",
+    "resume_tips": [
+      "Explicitly mention any theoretical or academic exposure to macOS internals, Apple Silicon architecture, or Virtualization.framework to address key gaps.",
+      "Rephrase Linux-specific projects like 'My Docker' to emphasize general virtualization and isolated environment concepts relevant to macOS platform development.",
+      "Quantify the impact of performance optimizations in projects like 'GPU-Accelerated Video Analysis System' to align with the job's focus on pushing performance limits.",
+      "Add keywords such as 'macOS', 'Apple Silicon', and 'Virtualization.framework' to skills or project descriptions, even if showcasing foundational understanding rather than direct experience.",
+      "Consider adding a career objective or cover letter detailing the desire to transition systems expertise from Linux to macOS infrastructure roles."
+    ],
+    "recommended_title": "Software Engineer — Systems & Virtualization",
+    "recommended_profile": "Looking for a full-time position in software engineering with a focus on: Systems, Virtualization, Low-Level, C++. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded. Fluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running, cooking.",
+    "recommended_experience_ids": [
+      "exp-df8d4cde"
+    ],
+    "recommended_project_ids": [
+      "proj-40cdf000",
+      "proj-4c4f5731",
+      "proj-4f43d05f",
+      "proj-b1f3b77a",
+      "proj-irgpu"
+    ],
+    "recommended_skill_ids": [
+      "skil-0247ad5c",
+      "skil-2799aa77",
+      "skil-52bcbd31",
+      "skil-a856cc8e"
+    ],
+    "recommended_skill_tags": {
+      "skil-0247ad5c": [
+        "C",
+        "ASM",
+        "CUDA",
+        "Rust",
+        "C++",
+        "Bash",
+        "C++20"
+      ],
+      "skil-2799aa77": [
+        "ASIC interfacing",
+        "FPGA",
+        "I2C",
+        "SPI",
+        "UART"
+      ],
+      "skil-52bcbd31": [
+        "Git",
+        "Kubernetes",
+        "monitoring",
+        "optimisation",
+        "testing",
+        "GDB",
+        "valgrind"
+      ],
+      "skil-a856cc8e": [
+        "Linux",
+        "Kernel",
+        "Drivers",
+        "Virtualization",
+        "Multithreading",
+        "GPU",
+        "real-time",
+        "DMA",
+        "operational systems",
+        "low-latency"
+      ]
+    },
+    "suggested_new_skills": [
+      {
+        "name": "Virtualization.framework",
+        "category": "Virtualization",
+        "level": "beginner",
+        "tags": [
+          "macOS",
+          "Apple Silicon"
+        ],
+        "reason": "Core technology explicitly mentioned and required by the job description."
+      },
+      {
+        "name": "macOS",
+        "category": "Operating Systems",
+        "level": "intermediate",
+        "tags": [
+          "systems",
+          "platform"
+        ],
+        "reason": "The primary operating system target for the role, critical for platform ownership."
+      },
+      {
+        "name": "Apple Silicon",
+        "category": "Hardware",
+        "level": "intermediate",
+        "tags": [
+          "ARM",
+          "platform"
+        ],
+        "reason": "The specific hardware architecture for the role's core virtualization layer."
+      }
+    ],
+    "suggested_new_skill_tags": [
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "macOS",
+        "reason": "The primary operating system target of the job, for which the candidate's systems knowledge is relevant."
+      },
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "Apple Silicon",
+        "reason": "The target hardware platform for the role's core virtualization, where candidate's low-level skills apply."
+      },
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "Virtualization.framework",
+        "reason": "The specific virtualization technology mentioned in the job description where candidate's general virtualization knowledge would be applied."
+      }
+    ],
+    "recommended_entity_descriptions": {
+      "exp-df8d4cde": "Implemented non-zero reset value management for ASIC Physical Table registers, utilizing C++ and SDK parsing for platform infrastructure. Gained experience in code generation and DMA, relevant for low-level host integration and platform engineering.",
+      "proj-40cdf000": "Developed a Linux kernel character device driver for an RFID reader with SPI communication, tested via QEMU emulation. This demonstrates direct hands-on virtualization experience and low-level driver development crucial for host integration.",
+      "proj-4c4f5731": "Automated complex Linux storage stacks, including loop devices, LUKS2, LVM, and RAID, via Bash scripting. This experience in managing diverse storage layers is valuable for designing robust storage solutions and optimizing VM image pipelines.",
+      "proj-4f43d05f": "Built a lightweight container runtime in C, utilizing Linux namespaces, pivot_root, capabilities dropping, seccomp syscall filtering, and cgroups. This showcases deep understanding of isolated environment creation and system resource management, critical for achieving high density in macOS virtualization.",
+      "proj-b1f3b77a": "Engineered a custom memory allocator in C, incorporating advanced memory alignment, block recycling, and page management. This project highlights crucial skills in low-level memory management and optimization strategies for high-performance and density in virtualization platforms.",
+      "proj-irgpu": "Developed a GPU-accelerated video analysis pipeline in C++/CUDA (reservoir sampling, morphological ops, hysteresis thresholding), achieving a 20x CPU speedup. This demonstrates strong performance optimization capabilities for demanding graphics workloads, a key aspect of the macOS platform."
+    }
+  }
+}

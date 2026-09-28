@@ -1,0 +1,10 @@
+{
+  "id": "gq-b6748b13",
+  "question": "What is the difference between a type and a value?\n",
+  "answer": "A type is the category or class of data (int, string, etc.). A value is an instance of that type (42, 'hello'). Types exist at compile-time or runtime depending on the language; values exist at runtime.\n",
+  "tags": [
+    "typology",
+    "types",
+    "values"
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "selected_entity_ids": [
+    "edu-4b5b8a37",
+    "edu-c735b9b1",
+    "exp-df8d4cde",
+    "exp-0e31880e",
+    "proj-e5cdf5a5",
+    "proj-40cdf000",
+    "proj-b1f3b77a",
+    "proj-2a5cd1e4",
+    "skil-a856cc8e",
+    "skil-2799aa77",
+    "skil-0247ad5c",
+    "exp-b0ccfdd9",
+    "proj-4f43d05f"
+  ],
+  "ai_rankings": [],
+  "profile_text": "",
+  "skill_tag_overrides": {
+    "skil-a856cc8e": [
+      "DMA",
+      "FPGA",
+      "Linux",
+      "OS",
+      "cache coherence",
+      "drivers",
+      "kernel",
+      "memory architecture",
+      "multithreading"
+    ],
+    "skil-2799aa77": [
+      "ASIC interfacing",
+      "FPGA",
+      "RTL",
+      "I2C",
+      "UART",
+      "SPI"
+    ],
+    "skil-0247ad5c": [
+      "ADA",
+      "ASM",
+      "C",
+      "C++",
+      "C++20",
+      "Python",
+      "Shell",
+      "VHDL"
+    ]
+  },
+  "project_order": [
+    "proj-e5cdf5a5",
+    "proj-40cdf000",
+    "proj-b1f3b77a",
+    "proj-2a5cd1e4",
+    "proj-4f43d05f"
+  ],
+  "experience_order": [
+    "exp-df8d4cde",
+    "exp-0e31880e",
+    "exp-b0ccfdd9"
+  ],
+  "entity_description_overrides": {
+    "proj-b1f3b77a": "Custom malloc implementation in C focusing on efficient memory reuse and fragmentation minimization with bucket-based allocation and free block tracking. Uses mmap for page management.",
+    "proj-2a5cd1e4": "Built STM32F429ZI embedded system acting as a UART command server using libgapcom (Protobuf over UART). Implemented a 4-level log subsystem and MPU6050 gyroscope driver over I2C with FIFO reads."
+  }
+}

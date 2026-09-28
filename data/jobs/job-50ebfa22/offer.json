@@ -1,0 +1,278 @@
+{
+  "id": "job-50ebfa22",
+  "company": "Alice & Bob",
+  "title": "Spontaneous Application",
+  "description": "À propos de l'offre d'emploi\n\nAlice & Bob — Spontaneous Application\nVille de Paris, Île-de-France, France · Hybride · Temps plein\n\nWe may use artificial intelligence (AI) tools to support parts of the hiring process, such as reviewing applications, analyzing resumes, or assessing responses and identifying potential inconsistencies or verification signals in application materials based on available information. These tools assist our recruitment team but do not replace human judgment. Final hiring decisions are ultimately made by humans. If you would like more information about how your data is processed, please contact us.\n\nNote : cette annonce LinkedIn est une candidature spontanée générique — aucune description de poste, responsabilités ou prérequis détaillés n'étaient fournis dans le texte source au-delà du disclaimer IA ci-dessus. Alice & Bob est une entreprise française spécialisée dans l'informatique quantique (qubits de chat / cat qubits).",
+  "location": "Paris, Île-de-France, France (Hybride)",
+  "status": "applied",
+  "date_added": "2026-09-24T09:55:35.384Z",
+  "tags": [
+    "Quantum Computing"
+  ],
+  "ats_tags": [
+    "Linux",
+    "embedded systems",
+    "low-level",
+    "C/C++",
+    "hardware interface",
+    "device drivers",
+    "FPGA",
+    "ASIC",
+    "systems programming",
+    "Paris"
+  ],
+  "ai_analysis": {
+    "job_id": "job-50ebfa22",
+    "analyzed_at": "2026-09-24T10:45:36.957Z",
+    "ats_tags": [
+      "Linux",
+      "embedded systems",
+      "low-level",
+      "C/C++",
+      "hardware interface",
+      "device drivers",
+      "FPGA",
+      "ASIC",
+      "systems programming",
+      "Paris"
+    ],
+    "entities_by_type": {
+      "experiences": [
+        {
+          "id": "exp-df8d4cde",
+          "type": "experience",
+          "name": "Software Engineer - Platform team at ARISTA",
+          "score": 85,
+          "reason": "Direct ASIC/hardware register and DMA-level low-level systems work strongly matches candidate's stated focus, though not on Linux kernel specifically."
+        },
+        {
+          "id": "exp-0e31880e",
+          "type": "experience",
+          "name": "Head of Teaching Assistants - YAKA/ACU Program",
+          "score": 60,
+          "reason": "Systems curriculum (malloc, shell, HTTP server) is relevant but this is a teaching/leadership role, not hands-on engineering work."
+        }
+      ],
+      "projects": [
+        {
+          "id": "proj-40cdf000",
+          "type": "project",
+          "name": "RFID Driver",
+          "score": 92,
+          "reason": "Direct Linux kernel driver development with SPI hardware interfacing — near-perfect match to stated focus."
+        },
+        {
+          "id": "proj-2a5cd1e4",
+          "type": "project",
+          "name": "ARM project",
+          "score": 88,
+          "reason": "Embedded hardware interfacing (UART, I2C, STM32) closely matches low-level/hardware interface focus."
+        },
+        {
+          "id": "proj-4f43d05f",
+          "type": "project",
+          "name": "My Docker",
+          "score": 85,
+          "reason": "Deep Linux systems programming (namespaces, cgroups, seccomp) directly matches Linux/systems focus."
+        },
+        {
+          "id": "proj-4c4f5731",
+          "type": "project",
+          "name": "Linux System Tracing & Storage",
+          "score": 82,
+          "reason": "Strong Linux internals and storage stack work matches systems focus, though not hardware-specific."
+        },
+        {
+          "id": "proj-b1f3b77a",
+          "type": "project",
+          "name": "myMalloc",
+          "score": 78,
+          "reason": "Classic low-level systems programming project, relevant but a well-worn academic exercise."
+        },
+        {
+          "id": "proj-953ddf40",
+          "type": "project",
+          "name": "MyHTTPd",
+          "score": 75,
+          "reason": "Systems-level network programming (epoll) is relevant but less hardware/kernel-focused."
+        },
+        {
+          "id": "proj-ad638299",
+          "type": "project",
+          "name": "Synchronous Real-Time Systems",
+          "score": 74,
+          "reason": "Real-time embedded scheduling on Raspberry Pi matches hardware/embedded interest but is a niche academic language (Heptagon)."
+        },
+        {
+          "id": "proj-e5cdf5a5",
+          "type": "project",
+          "name": "Unicycle CPU",
+          "score": 72,
+          "reason": "FPGA/VHDL hardware design is relevant to hardware interfacing though not software/Linux-focused."
+        },
+        {
+          "id": "proj-1b63d04a",
+          "type": "project",
+          "name": "42sh",
+          "score": 68,
+          "reason": "Unix shell/C systems project relevant to low-level focus but a common academic exercise."
+        },
+        {
+          "id": "proj-irgpu",
+          "type": "project",
+          "name": "GPU-Accelerated Video Analysis System (IRGPU)",
+          "score": 65,
+          "reason": "C++/CUDA systems-level optimization is relevant but GPU compute is tangential to hardware interfacing/Linux focus."
+        },
+        {
+          "id": "proj-0bceb7b7",
+          "type": "project",
+          "name": "MyFind",
+          "score": 62,
+          "reason": "Basic Unix utility in C shows systems programming basics but is a simple academic exercise."
+        }
+      ],
+      "skills": [
+        {
+          "id": "skil-a856cc8e",
+          "type": "skill",
+          "name": "Systems",
+          "score": 95,
+          "reason": "Expert-level Linux, kernel, drivers, DMA, ASIC interfacing directly matches candidate's stated focus."
+        },
+        {
+          "id": "skil-2799aa77",
+          "type": "skill",
+          "name": "Embedded & Hardware",
+          "score": 90,
+          "reason": "Advanced hardware interfacing skills (I2C, SPI, UART, FPGA, STM32) strongly match hardware interface focus."
+        },
+        {
+          "id": "skil-0247ad5c",
+          "type": "skill",
+          "name": "Programming & Languages",
+          "score": 85,
+          "reason": "Expert C/C++/ASM/Shell strongly support low-level systems work, though breadth includes irrelevant languages (JS, OCaml)."
+        },
+        {
+          "id": "skil-52bcbd31",
+          "type": "skill",
+          "name": "Other / DevOps",
+          "score": 72,
+          "reason": "Debugging/profiling tools (GDB, strace, valgrind) are highly relevant to systems/low-level debugging."
+        }
+      ],
+      "education": [
+        {
+          "id": "edu-4b5b8a37",
+          "type": "education",
+          "name": "MSc Computer Engineering, Low-level & Systems (GISTRE)",
+          "score": 90,
+          "reason": "Degree specialization directly named 'Low-level & Systems' is an exact match to candidate's target domain."
+        }
+      ]
+    },
+    "confidence_score": 0.48,
+    "summary": "This is a generic spontaneous application with no concrete job requirements, so fit is inferred from the candidate's stated goal (systems/low-level/hardware/Linux) matched against Alice & Bob's hardware-centric quantum computing domain. The candidate's Linux kernel driver, embedded (STM32/FPGA), and ASIC-level work at Arista are strong signals, but there is zero evidence of quantum computing, control-systems, or RF/cryogenics experience that such a hardware startup would likely value. Overall a plausible but speculative match (~48%) given the absence of a real job description.",
+    "resume_tips": [
+      "Add 'quantum computing' or 'control systems' context/interest since Alice & Bob is a hardware-focused quantum startup, even if only in a cover letter.",
+      "Quantify the Arista ASIC register/DMA work with concrete metrics (e.g. number of chip variants supported, defects reduced) to strengthen the low-level hardware narrative.",
+      "Move Linux kernel driver (RFID) and embedded STM32/I2C/UART projects higher on the resume since they best match 'hardware interface, Linux' focus.",
+      "Explicitly mention 'real-time' and 'RTOS' vocabulary given the Synchronous Real-Time Systems and Rate Monotonic scheduler project, as hardware control companies often screen for this.",
+      "Surface FPGA/VHDL experience (Unicycle CPU) more prominently — quantum hardware companies frequently need FPGA-based control electronics skills.",
+      "Since no formal job requirements exist, tailor the cover letter to explicitly connect systems/driver experience to quantum control-system or FPGA-based instrumentation use cases."
+    ],
+    "recommended_title": "Embedded Systems Engineer — Linux & Hardware",
+    "recommended_profile": "Looking for a full-time position in software engineering with a focus on embedded Linux, low-level systems, hardware interfacing. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded. Fluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running, cooking.",
+    "recommended_experience_ids": [
+      "exp-df8d4cde",
+      "exp-0e31880e"
+    ],
+    "recommended_project_ids": [
+      "proj-40cdf000",
+      "proj-2a5cd1e4",
+      "proj-4f43d05f",
+      "proj-4c4f5731",
+      "proj-b1f3b77a"
+    ],
+    "recommended_skill_ids": [
+      "skil-a856cc8e",
+      "skil-2799aa77",
+      "skil-0247ad5c",
+      "skil-52bcbd31"
+    ],
+    "recommended_skill_tags": {
+      "skil-a856cc8e": [
+        "ASIC interfacing",
+        "bootloader",
+        "DMA",
+        "drivers",
+        "kernel",
+        "Linux",
+        "low-latency",
+        "operating systems",
+        "virtual memory"
+      ],
+      "skil-2799aa77": [
+        "ASIC interfacing",
+        "FPGA",
+        "I2C",
+        "UART",
+        "SPI",
+        "STM32",
+        "Rasberry Pi",
+        "ESP32"
+      ],
+      "skil-0247ad5c": [
+        "C",
+        "ASM",
+        "Shell",
+        "Bash",
+        "C++",
+        "Python",
+        "VHDL"
+      ],
+      "skil-52bcbd31": [
+        "GDB",
+        "strace",
+        "valgrind",
+        "perf",
+        "profiling",
+        "system analysis"
+      ]
+    },
+    "suggested_new_skills": [
+      {
+        "name": "RTOS",
+        "category": "Embedded & Hardware",
+        "level": "intermediate",
+        "tags": [
+          "real-time",
+          "scheduling"
+        ],
+        "reason": "Hardware-focused quantum computing companies often require real-time control system experience, and candidate's Synchronous Real-Time Systems project supports this."
+      }
+    ],
+    "suggested_new_skill_tags": [
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "control systems",
+        "reason": "Relevant to hardware control loops used in quantum computing infrastructure."
+      },
+      {
+        "skill_id": "skil-2799aa77",
+        "tag": "cryogenics-adjacent electronics",
+        "reason": "Speculative but relevant domain keyword for quantum hardware companies like Alice & Bob."
+      }
+    ],
+    "recommended_entity_descriptions": {
+      "exp-df8d4cde": "Developed low-level firmware/software for ASIC physical register management within a chip-agnostic hardware infrastructure (Strata), using Python and C++. Worked directly with SDK parsing, code generation, and DMA-level hardware interfacing. Built and shipped an AI tooling optimization achieving 70% token reduction, approved for production.",
+      "exp-0e31880e": "Led a national team of 67 teaching assistants delivering low-level systems coursework (C/Bash, malloc, POSIX shell, HTTP server, compiler) to 700+ students. Implemented a 1-on-1 code review mentorship model improving mentoring ratio, reinforcing strong systems/Linux fundamentals across cohorts.",
+      "proj-40cdf000": "Developed a Linux kernel character device driver for the MFRC522 RFID reader, implementing file_operations callbacks and SPI regmap-based hardware communication with a FIFO command interface, validated via QEMU emulation.",
+      "proj-2a5cd1e4": "Built an STM32F429ZI embedded Linux-adjacent hardware system acting as a UART command server (Protobuf over UART), including a gyroscope driver over I2C with FIFO reads and a multi-level logging subsystem.",
+      "proj-4f43d05f": "Built a lightweight container runtime in C using Linux namespaces, pivot_root, capability dropping, seccomp syscall filtering, and cgroups, demonstrating deep low-level Linux systems interfacing.",
+      "proj-4c4f5731": "Reverse-engineered a binary via strace fault injection and syscall filtering, and automated Linux storage stack configuration (loop devices, LUKS2, LVM, dm-linear, dm-delay, RAID) via Bash scripting.",
+      "proj-b1f3b77a": "Implemented a custom malloc/free/realloc/calloc allocator in C with bucket-based allocation, fragmentation minimization, and mmap-based page management, demonstrating low-level memory and systems programming skills."
+    }
+  }
+}

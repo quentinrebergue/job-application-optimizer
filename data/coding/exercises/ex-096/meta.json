@@ -1,0 +1,14 @@
+{
+  "id": "ex-096",
+  "title": "Counting Bits",
+  "difficulty": "easy",
+  "category": "Dynamic Programming",
+  "knowledge_ids": [
+    "k-dynamic-programming"
+  ],
+  "tags": [
+    "dynamic-programming",
+    "bit-manipulation"
+  ],
+  "leetcode": 338
+}

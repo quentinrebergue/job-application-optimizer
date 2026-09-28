@@ -1,0 +1,6 @@
+{
+  "id": "gq-perf-003",
+  "question": "What is `valgrind`? What is `callgrind`?",
+  "answer": "`valgrind` is a framework for dynamic analysis tools. Its most used tool is `memcheck`, which detects memory errors (leaks, invalid reads/writes, use-after-free). `callgrind` is another valgrind tool that simulates the CPU and records function call counts and instruction costs. It produces detailed call graphs showing which functions are most expensive. You visualize the output with `kcachegrind`. Note: valgrind significantly slows down execution (10-50x), so it's used for debugging, not production.",
+  "tags": ["profiling", "performance", "cpp"]
+}

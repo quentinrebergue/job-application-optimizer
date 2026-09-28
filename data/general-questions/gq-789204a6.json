@@ -1,0 +1,10 @@
+{
+  "id": "gq-789204a6",
+  "question": "What is type checking?\n",
+  "answer": "Verifying that operations are applied to values of compatible types. Static type checking happens at compile time (C++, Java). Dynamic type checking happens at runtime (Python, JavaScript). Prevents type errors.\n",
+  "tags": [
+    "compilation",
+    "type-checking",
+    "semantics"
+  ]
+}

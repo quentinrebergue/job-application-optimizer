@@ -1,0 +1,6 @@
+{
+  "id": "k-prefix-sum",
+  "name": "Prefix Sum",
+  "category": "Arrays",
+  "tags": ["prefix-sum", "array", "hash-map", "range-query"]
+}

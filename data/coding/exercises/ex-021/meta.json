@@ -1,0 +1,15 @@
+{
+  "id": "ex-021",
+  "title": "Minimum Window Substring",
+  "difficulty": "hard",
+  "category": "Sliding Window",
+  "knowledge_ids": [
+    "k-sliding-window",
+    "k-hash-map"
+  ],
+  "tags": [
+    "sliding-window",
+    "hash-map",
+    "strings"
+  ]
+}

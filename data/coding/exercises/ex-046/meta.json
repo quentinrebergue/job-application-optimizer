@@ -1,0 +1,14 @@
+{
+  "id": "ex-046",
+  "title": "Gas Station",
+  "difficulty": "medium",
+  "category": "Greedy",
+  "knowledge_ids": [
+    "k-greedy"
+  ],
+  "tags": [
+    "greedy",
+    "arrays",
+    "circular"
+  ]
+}

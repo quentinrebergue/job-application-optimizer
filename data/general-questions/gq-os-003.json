@@ -1,0 +1,6 @@
+{
+  "id": "gq-os-003",
+  "question": "Explain virtual memory and how paging works.",
+  "answer": "Virtual memory gives each process the illusion of a large, private address space. The CPU's MMU (Memory Management Unit) translates virtual addresses to physical addresses using a page table. Memory is divided into pages (typically 4KB). Pages are mapped on demand — only pages that are accessed are loaded into physical RAM. If a process accesses an unmapped page, a page fault occurs and the OS loads it from disk (swap) or zero-fills it. This allows processes to use more memory than physically available and provides isolation between processes.",
+  "tags": ["os", "linux"]
+}

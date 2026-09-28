@@ -1,0 +1,14 @@
+{
+  "id": "ex-008",
+  "title": "LRU Cache",
+  "difficulty": "medium",
+  "category": "Hash Map",
+  "knowledge_ids": [
+    "k-hash-map"
+  ],
+  "tags": [
+    "design",
+    "hash-map",
+    "linked-list"
+  ]
+}

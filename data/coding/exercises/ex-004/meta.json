@@ -1,0 +1,13 @@
+{
+  "id": "ex-004",
+  "title": "Valid Parentheses",
+  "difficulty": "easy",
+  "category": "Stack",
+  "knowledge_ids": [
+    "k-stack"
+  ],
+  "tags": [
+    "strings",
+    "stack"
+  ]
+}

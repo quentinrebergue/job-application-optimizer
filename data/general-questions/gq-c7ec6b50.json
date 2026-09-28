@@ -1,0 +1,10 @@
+{
+  "id": "gq-c7ec6b50",
+  "question": "What is weak typing?\n",
+  "answer": "Type system that allows implicit type conversions between types. Example: JavaScript auto-converts '5' + 2 to '52' (string concatenation). Flexible but can hide bugs.\n",
+  "tags": [
+    "typology",
+    "weak-typing",
+    "type-system"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "id": "gq-bac159a8",
+  "question": "Why divide by sqrt(d_k) in attention?\n",
+  "answer": "d_k is the dimension of the Key. Prevents the dot products from becoming too large (which would saturate softmax and have tiny gradients). Normalizes the scale regardless of embedding dimension. Empirically improves training stability.\n",
+  "tags": [
+    "ai",
+    "attention",
+    "numerical-stability"
+  ]
+}

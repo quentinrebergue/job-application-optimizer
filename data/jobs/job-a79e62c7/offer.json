@@ -1,0 +1,326 @@
+{
+  "id": "job-a79e62c7",
+  "company": "Jane Street",
+  "title": "Linux Engineer",
+  "description": "We are looking for Linux Engineers to join the team that maintains the critical infrastructure underlying the rest of Jane Street's technology. Our group includes hard-working Systems Engineers, Administrators and Programmers, tasked with maintaining and improving the platform that powers Jane Street's production trading systems.\n\nKey Responsibilities:\n- Debugging kernel performance\n- Developing management tools\n- Resolving production issues in real time\n- Deployment automation and scalable configuration management\n- Obsessive monitoring and observability\n\nRequirements:\n- Bachelor's degree in Computer Science, Software Engineering, or equivalent experience\n- Experience managing/troubleshooting Linux systems\n- Exposure to Linux environments through software development, IT operations, or similar field\n- Interested in systems programming and administration\n- Willing to learn OCaml (no prior experience required)\n- Able to analyze and deconstruct technical problems\n- Knowledge of operating system fundamentals, especially Linux\n- Confident with Unix command line and basic shell scripting\n- Basic understanding of network protocols\n- Comfortable with fundamental programming concepts\n\nPlus Skills:\n- Practical experience with modern Linux systems and systems programming (C, sockets, virtual memory, process life cycle)\n- Intermediate/advanced knowledge of troubleshooting tools (gdb, perf, DTrace, eBPF, SystemTap)\n- Knowledge of modern computer architecture techniques (PCIe, NVMe, NUMA)\n- Strong programmer in any language\n- Fluent in English",
+  "location": "London",
+  "url": "https://www.janestreet.com/join-jane-street/position/8061111002/",
+  "status": "rejected",
+  "date_added": "2026-06-18T19:09:17.304Z",
+  "tags": [
+    "Linux",
+    "Systems Engineering",
+    "Infrastructure",
+    "DevOps",
+    "OCaml",
+    "C",
+    "Shell Scripting",
+    "Network Protocols"
+  ],
+  "ats_tags": [
+    "Linux",
+    "Systems-Engineering",
+    "C",
+    "C++",
+    "Kernel",
+    "Drivers",
+    "OS-Fundamentals",
+    "Networking",
+    "Debugging",
+    "Automation",
+    "Graduate"
+  ],
+  "ai_analysis": {
+    "job_id": "job-a79e62c7",
+    "analyzed_at": "2026-06-18T19:11:13.764Z",
+    "ats_tags": [
+      "Linux",
+      "Systems-Engineering",
+      "C",
+      "C++",
+      "Kernel",
+      "Drivers",
+      "OS-Fundamentals",
+      "Networking",
+      "Debugging",
+      "Automation",
+      "Graduate"
+    ],
+    "entities_by_type": {
+      "experiences": [
+        {
+          "id": "exp-0e31880e",
+          "type": "experience",
+          "name": "Head of Teaching Assistants - YAKA / ACU Program at EPITA",
+          "score": 70,
+          "reason": "Demonstrates leadership, mentorship, and extensive exposure to relevant systems programming and OS fundamentals through project supervision."
+        },
+        {
+          "id": "exp-df8d4cde",
+          "type": "experience",
+          "name": "Software Engineer Intern - Platform team at ARISTA",
+          "score": 85,
+          "reason": "Directly relevant experience in platform-level software engineering, ASIC interfacing, and C++ development for critical infrastructure."
+        }
+      ],
+      "projects": [
+        {
+          "id": "proj-0bceb7b7",
+          "type": "project",
+          "name": "MyFind",
+          "score": 75,
+          "reason": "Shows proficiency with Unix command line utilities, C programming, and understanding of file system operations relevant to Linux."
+        },
+        {
+          "id": "proj-1b63d04a",
+          "type": "project",
+          "name": "42sh",
+          "score": 85,
+          "reason": "Directly demonstrates expertise in Unix command line, shell scripting, and operating system fundamentals through C-based shell implementation."
+        },
+        {
+          "id": "proj-2a5cd1e4",
+          "type": "project",
+          "name": "ARM project",
+          "score": 75,
+          "reason": "Showcases strong embedded systems programming, C language proficiency, and low-level hardware interaction (I2C, UART)."
+        },
+        {
+          "id": "proj-40cdf000",
+          "type": "project",
+          "name": "RFID Driver",
+          "score": 98,
+          "reason": "Direct experience in Linux kernel development, device drivers, SPI communication, and QEMU-based testing, directly aligning with kernel debugging and systems programming."
+        },
+        {
+          "id": "proj-4c4f5731",
+          "type": "project",
+          "name": "Linux System Tracing & Storage",
+          "score": 95,
+          "reason": "Highlights practical Linux troubleshooting with `strace`, shell scripting, and advanced Linux storage stack management relevant to deployment automation."
+        },
+        {
+          "id": "proj-4f43d05f",
+          "type": "project",
+          "name": "My Docker",
+          "score": 98,
+          "reason": "Exceptional demonstration of deep understanding of Linux internals, namespaces, cgroups, and containerization using C, highly relevant to modern infrastructure."
+        },
+        {
+          "id": "proj-953ddf40",
+          "type": "project",
+          "name": "MyHTTPd",
+          "score": 85,
+          "reason": "Demonstrates strong network programming skills in C, I/O multiplexing with epoll, and handling concurrent connections, crucial for high-performance systems."
+        },
+        {
+          "id": "proj-ad638299",
+          "type": "project",
+          "name": "Synchronous Real-Time Systems",
+          "score": 75,
+          "reason": "Relevant experience with real-time systems, embedded programming, and scheduler implementation, important for understanding low-latency environments."
+        },
+        {
+          "id": "proj-b1f3b77a",
+          "type": "project",
+          "name": "myMalloc",
+          "score": 90,
+          "reason": "Directly showcases systems programming expertise in memory management, virtual memory, and process life cycle using C and mmap."
+        },
+        {
+          "id": "proj-e5cdf5a5",
+          "type": "project",
+          "name": "Unicycle CPU",
+          "score": 70,
+          "reason": "Demonstrates fundamental knowledge of computer architecture and hardware design, contributing to understanding 'modern computer architecture techniques'."
+        },
+        {
+          "id": "proj-irgpu",
+          "type": "project",
+          "name": "GPU-Accelerated Video Analysis System (IRGPU)",
+          "score": 70,
+          "reason": "Showcases strong C++/CUDA programming, performance optimization, and exposure to GPU architecture, relevant for advanced systems programming."
+        },
+        {
+          "id": "proj-tiger",
+          "type": "project",
+          "name": "Tiger Compiler",
+          "score": 65,
+          "reason": "Demonstrates strong programming and understanding of low-level compilation concepts, valuable for systems engineering roles."
+        }
+      ],
+      "skills": [
+        {
+          "id": "skil-0247ad5c",
+          "type": "skill",
+          "name": "Programming & Languages",
+          "score": 95,
+          "reason": "Expertise in C, C++, ASM, Shell, and Bash directly matches key requirements and plus skills for systems programming."
+        },
+        {
+          "id": "skil-2799aa77",
+          "type": "skill",
+          "name": "Embedded & Hardware",
+          "score": 90,
+          "reason": "Advanced knowledge in ASIC interfacing, FPGA, and various low-level communication protocols is highly relevant to understanding system architecture."
+        },
+        {
+          "id": "skil-52bcbd31",
+          "type": "skill",
+          "name": "Other / DevOps",
+          "score": 90,
+          "reason": "Includes crucial troubleshooting tools like GDB and directly addresses monitoring, optimisation, and system analysis responsibilities."
+        },
+        {
+          "id": "skil-a856cc8e",
+          "type": "skill",
+          "name": "Systems",
+          "score": 99,
+          "reason": "Nearly perfect alignment with job requirements, explicitly listing Linux, Kernel, Drivers, low-latency, operating systems, and networking expertise."
+        }
+      ],
+      "education": [
+        {
+          "id": "edu-4b5b8a37",
+          "type": "education",
+          "name": "MSc Computer Engineering, Low-level & Systems (GISTRE) from EPITA",
+          "score": 95,
+          "reason": "Directly fulfills the degree requirement and indicates a specialized focus in low-level and systems engineering, aligning perfectly with the role."
+        }
+      ]
+    },
+    "confidence_score": 0.79,
+    "summary": "This candidate is an exceptional graduate match for a Linux Engineer role, demonstrating deep understanding and practical application of Linux internals and systems programming through a robust project portfolio. While professional experience in real-time production issues is limited due to their graduate status, their strong technical foundation and explicit interest position them well for growth within Jane Street's infrastructure team.",
+    "resume_tips": [
+      "Quantify leadership and impact in 'Head of Teaching Assistants' by detailing specific system improvements or technical achievements from supervised projects.",
+      "Explicitly list any exposure to modern computer architecture techniques like PCIe, NVMe, or NUMA within projects or the 'Embedded & Hardware' skill section, if applicable.",
+      "Enhance descriptions for projects like 'Linux System Tracing & Storage' to highlight aspects of deployment automation and scalable configuration management.",
+      "Ensure 'monitoring' and 'observability' keywords are prominently featured where relevant in projects or experiences."
+    ],
+    "recommended_title": "Linux Systems Engineer — C/C++",
+    "recommended_profile": "Looking for a full-time position in software engineering with a focus on: Linux, systems programming, low-level. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded. Fluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running, cooking.",
+    "recommended_experience_ids": [
+      "exp-df8d4cde",
+      "exp-0e31880e"
+    ],
+    "recommended_project_ids": [
+      "proj-40cdf000",
+      "proj-4f43d05f",
+      "proj-4c4f5731",
+      "proj-b1f3b77a",
+      "proj-1b63d04a"
+    ],
+    "recommended_skill_ids": [
+      "skil-a856cc8e",
+      "skil-0247ad5c",
+      "skil-52bcbd31",
+      "skil-2799aa77"
+    ],
+    "recommended_skill_tags": {
+      "skil-a856cc8e": [
+        "Kernel",
+        "Linux",
+        "Drivers",
+        "Multithreading",
+        "Virtualization",
+        "low-latency",
+        "operating systems",
+        "networking",
+        "DMA",
+        "ASIC interfacing"
+      ],
+      "skil-0247ad5c": [
+        "C",
+        "ASM",
+        "Shell",
+        "C++",
+        "Bash",
+        "Rust",
+        "Python"
+      ],
+      "skil-52bcbd31": [
+        "GDB",
+        "Git",
+        "monitoring",
+        "optimisation",
+        "system analysis",
+        "valgrind",
+        "testing"
+      ],
+      "skil-2799aa77": [
+        "ASIC interfacing",
+        "FPGA",
+        "I2C",
+        "Raspberry Pi",
+        "STM32",
+        "UART",
+        "SPI"
+      ]
+    },
+    "suggested_new_skills": [
+      {
+        "name": "OCaml",
+        "category": "Languages",
+        "level": "beginner",
+        "tags": [
+          "functional programming",
+          "systems"
+        ],
+        "reason": "Explicitly required as 'willing to learn' by the job"
+      },
+      {
+        "name": "eBPF",
+        "category": "Systems",
+        "level": "intermediate",
+        "tags": [
+          "kernel tracing",
+          "observability",
+          "performance"
+        ],
+        "reason": "Listed as a 'plus skill' for advanced troubleshooting"
+      },
+      {
+        "name": "perf",
+        "category": "Systems",
+        "level": "intermediate",
+        "tags": [
+          "kernel profiling",
+          "performance analysis",
+          "troubleshooting"
+        ],
+        "reason": "Listed as a 'plus skill' for advanced troubleshooting and kernel performance"
+      }
+    ],
+    "suggested_new_skill_tags": [
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "PCIe",
+        "reason": "Relates to 'modern computer architecture techniques' mentioned in job plus skills"
+      },
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "NVMe",
+        "reason": "Relates to 'modern computer architecture techniques' and storage mentioned in job plus skills"
+      },
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "NUMA",
+        "reason": "Relates to 'modern computer architecture techniques' mentioned in job plus skills"
+      }
+    ],
+    "recommended_entity_descriptions": {
+      "exp-df8d4cde": "Implemented non-zero reset value management for ASIC Physical Table registers within a chip-agnostic infrastructure, utilizing Python and C++. This project demonstrates practical experience with systems programming and low-level platform development, relevant to Jane Street's critical infrastructure. Won Arista's Hackathon, developing an AI agent optimization tool approved for production.",
+      "exp-0e31880e": "Led a national team of 67 TAs, supervising 5 intensive coding bootcamps and 7 large-scale systems projects, including a compiler, HTTP server in C, malloc implementation, and a POSIX shell, for 700+ students. This role highlights strong leadership, mentorship, and deep exposure to operating system fundamentals and systems programming concepts.",
+      "proj-40cdf000": "Developed a Linux kernel character device driver for an MFRC522 RFID reader, implementing file_operations callbacks and SPI regmap communication. The driver was thoroughly tested via QEMU emulation, demonstrating core competencies in Linux kernel development and debugging kernel performance.",
+      "proj-4f43d05f": "Engineered a lightweight container runtime in C, leveraging Linux namespaces, cgroups, pivot_root, capabilities dropping, and seccomp syscall filtering. This project showcases an expert-level understanding of Linux operating system fundamentals and systems programming, critical for managing scalable infrastructure.",
+      "proj-4c4f5731": "Utilized strace for fault injection and syscall filtering to reverse-engineer a binary, demonstrating advanced Linux troubleshooting skills. Developed a comprehensive Bash script to automate complex Linux storage stacks including loop devices, LUKS2, LVM, and RAID, directly applicable to deployment automation and scalable configuration management.",
+      "proj-b1f3b77a": "Designed and implemented a custom memory allocator (malloc) in C, focusing on efficient memory reuse and fragmentation minimization using bucket-based allocation and mmap for page management. This project highlights deep knowledge of systems programming, virtual memory, and process life cycle.",
+      "proj-1b63d04a": "Developed a robust shell interpreter in C, featuring a complete lexer, parser, and abstract syntax tree (AST) for command-line interpretation. The implementation supports redirection, pipes, and expression evaluation, showcasing strong proficiency with Unix command line, basic shell scripting, and operating system fundamentals.",
+      "proj-0bceb7b7": "Implemented a file search utility in C, mirroring the functionality of the Unix `find` command with advanced operators and expression evaluation. This project demonstrates practical experience with Unix utilities and fundamental programming concepts critical for Linux environments.",
+      "proj-2a5cd1e4": "Built an STM32F429ZI embedded system functioning as a UART command server, integrating a 4-level log subsystem and an MPU6050 gyroscope driver over I2C with FIFO reads. This project showcases strong systems programming and low-level hardware interfacing experience relevant to critical infrastructure.",
+      "proj-953ddf40": "Constructed an HTTP server in C, utilizing epoll with edge-triggered mode and a per-client state machine for efficient concurrent connection handling. The server includes dynamic buffer management and robust HTTP request parsing, demonstrating strong network programming and fundamental programming concepts.",
+      "proj-ad638299": "Developed a Rate Monotonic scheduler in Heptagon, a dataflow language compiling to deterministic C, and deployed it to a Raspberry Pi 3 via UART bootloader. This project highlights experience with real-time systems and embedded programming, relevant to understanding low-latency environments.",
+      "proj-irgpu": "Architected and built a real-time GPU-accelerated motion detection pipeline in C++/CUDA, achieving a 20x CPU speedup. This demonstrates strong programming skills, performance optimization, and exposure to modern computer architecture techniques with GPUs."
+    }
+  }
+}

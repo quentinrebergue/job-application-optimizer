@@ -1,0 +1,6 @@
+{
+  "id": "gq-linux-005",
+  "question": "How does `epoll` differ from `select`?",
+  "answer": "`select` has O(n) complexity — it checks all file descriptors in a set on every call, and is limited to 1024 fds by default. `epoll` is O(1) for adding/removing and O(k) for waiting, where k is the number of *ready* fds, not total. `epoll` uses a kernel-maintained interest list, so you register fds once with `epoll_ctl` and then call `epoll_wait` repeatedly — the kernel only returns the ready ones. For servers with thousands of connections, `epoll` is dramatically faster than `select`.",
+  "tags": ["linux", "networking", "performance"]
+}

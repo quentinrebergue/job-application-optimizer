@@ -1,0 +1,68 @@
+{
+  "selected_entity_ids": [
+    "edu-4b5b8a37",
+    "edu-c735b9b1",
+    "exp-df8d4cde",
+    "exp-0e31880e",
+    "proj-40cdf000",
+    "proj-4f43d05f",
+    "proj-1b63d04a",
+    "skil-a856cc8e",
+    "skil-0247ad5c",
+    "skil-52bcbd31",
+    "exp-b0ccfdd9",
+    "proj-tiger"
+  ],
+  "ai_rankings": [],
+  "profile_text": "Looking for a full-time position in software engineering with a focus on Linux systems, kernel, and open-source packaging. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded. Fluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running, cooking.",
+  "skill_tag_overrides": {
+    "skil-a856cc8e": [
+      "ASIC interfacing",
+      "Linux",
+      "OS",
+      "YOCTO",
+      "bootloader",
+      "containers",
+      "drivers",
+      "kernel",
+      "memory architecture",
+      "multithreading",
+      "profiling",
+      "virtualization"
+    ],
+    "skil-0247ad5c": [
+      "ADA",
+      "ASM",
+      "C",
+      "C++",
+      "OOP",
+      "Ocaml",
+      "Python",
+      "Rust",
+      "Shell",
+      "VHDL"
+    ],
+    "skil-52bcbd31": [
+      "GDB",
+      "Git",
+      "strace",
+      "testing",
+      "valgrind",
+      "perf",
+      "profiling",
+      "CI/CD"
+    ]
+  },
+  "project_order": [
+    "proj-40cdf000",
+    "proj-4f43d05f",
+    "proj-1b63d04a",
+    "proj-tiger"
+  ],
+  "experience_order": [
+    "exp-df8d4cde",
+    "exp-0e31880e",
+    "exp-b0ccfdd9"
+  ],
+  "resume_title": "Quentin Rebergue - Systems Engineer"
+}

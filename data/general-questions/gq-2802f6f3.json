@@ -1,0 +1,10 @@
+{
+  "id": "gq-2802f6f3",
+  "question": "What is batching in inference?\n",
+  "answer": "Process multiple requests together in one forward pass. Increases throughput (requests/sec) but increases latency (time per request). Important for server-side inference. Trade-off: batching helps GPU utilization but hurts per-request latency.\n",
+  "tags": [
+    "ai",
+    "inference",
+    "batching"
+  ]
+}

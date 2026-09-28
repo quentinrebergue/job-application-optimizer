@@ -1,0 +1,13 @@
+{
+  "id": "ex-130",
+  "title": "Implement Trie (Prefix Tree)",
+  "difficulty": "medium",
+  "category": "Other",
+  "knowledge_ids": [],
+  "tags": [
+    "trie",
+    "string",
+    "design"
+  ],
+  "leetcode": 208
+}

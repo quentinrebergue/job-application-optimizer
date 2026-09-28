@@ -1,0 +1,10 @@
+{
+  "id": "gq-5f8bfcc8",
+  "question": "What is the vocabulary in an LLM?\n",
+  "answer": "The set of tokens the model can output. Tokens are often subword units (BPE, SentencePiece) rather than characters or full words. Typical vocab size: 50k-100k tokens. Larger vocab = more flexibility but higher embedding memory; smaller = smaller model but may need multiple tokens per word.\n",
+  "tags": [
+    "ai",
+    "llm",
+    "tokenization"
+  ]
+}

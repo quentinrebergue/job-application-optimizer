@@ -1,0 +1,10 @@
+{
+  "id": "gq-614efacf",
+  "question": "What is batch normalization?\n",
+  "answer": "Normalize activations across the batch dimension during training. Reduces internal covariate shift, stabilizes training, allows higher learning rates. Running mean/var computed per batch, used at inference. Different from layer norm.\n",
+  "tags": [
+    "ai",
+    "training",
+    "normalization"
+  ]
+}

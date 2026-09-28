@@ -1,0 +1,10 @@
+{
+  "id": "gq-6f20f80e",
+  "question": "What is backpropagation?\n",
+  "answer": "Algorithm to compute gradients of the loss with respect to all weights. Chain rule applied in reverse through the network. Enables efficient gradient descent optimization. Core of modern deep learning.\n",
+  "tags": [
+    "ai",
+    "training",
+    "backpropagation"
+  ]
+}

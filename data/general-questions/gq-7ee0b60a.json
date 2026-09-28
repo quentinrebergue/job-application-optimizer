@@ -1,0 +1,10 @@
+{
+  "id": "gq-7ee0b60a",
+  "question": "What is overfitting?\n",
+  "answer": "Model memorizes training data instead of learning generalizable patterns. High train loss, high test loss. Caused by: too much capacity, too much training, not enough data. Solutions: regularization, dropout, early stopping, more data, data augmentation.\n",
+  "tags": [
+    "ai",
+    "training",
+    "generalization"
+  ]
+}

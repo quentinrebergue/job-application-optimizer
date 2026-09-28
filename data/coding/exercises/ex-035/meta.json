@@ -1,0 +1,14 @@
+{
+  "id": "ex-035",
+  "title": "Minimum Size Subarray Sum",
+  "difficulty": "medium",
+  "category": "Sliding Window",
+  "knowledge_ids": [
+    "k-sliding-window"
+  ],
+  "tags": [
+    "sliding-window",
+    "arrays",
+    "variable-window"
+  ]
+}

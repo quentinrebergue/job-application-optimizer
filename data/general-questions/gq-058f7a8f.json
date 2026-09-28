@@ -1,0 +1,10 @@
+{
+  "id": "gq-058f7a8f",
+  "question": "What is a Just-In-Time (JIT) compiler?\n",
+  "answer": "A runtime compiler that compiles bytecode or intermediate code to machine code during program execution. Combines benefits of interpretation (quick startup) and compilation (fast execution). Used by Java, V8 (JavaScript), PyPy (Python).\n",
+  "tags": [
+    "compilation",
+    "jit",
+    "runtime"
+  ]
+}

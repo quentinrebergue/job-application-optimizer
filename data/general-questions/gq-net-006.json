@@ -1,0 +1,6 @@
+{
+  "id": "gq-net-006",
+  "question": "How would you optimize high-throughput data transfer between machines?",
+  "answer": "- Use large send/receive buffers (`setsockopt SO_SNDBUF/SO_RCVBUF`)\n- Use `sendfile()` or `splice()` for zero-copy transfer\n- Use multiple parallel TCP streams (single stream can't saturate high-bandwidth links)\n- Consider RDMA (Remote Direct Memory Access) for ultra-low latency\n- Use UDP with a custom reliability layer (like QUIC) for latency-sensitive transfers\n- Compress data if CPU is cheaper than bandwidth\n- Tune TCP buffer sizes and use TCP_NODELAY where appropriate",
+  "tags": ["networking", "performance"]
+}

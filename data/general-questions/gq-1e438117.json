@@ -1,0 +1,10 @@
+{
+  "id": "gq-1e438117",
+  "question": "What is the vanishing gradient problem?\n",
+  "answer": "Gradients shrink as they propagate backward through many layers (sigmoid/tanh have gradients < 1). Deep networks train very slowly. Solution: ReLU, residual connections, batch norm. Opposite: exploding gradients (solved by gradient clipping).\n",
+  "tags": [
+    "ai",
+    "training",
+    "optimization"
+  ]
+}

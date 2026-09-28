@@ -1,0 +1,10 @@
+{
+  "id": "gq-651610c9",
+  "question": "What is early stopping?\n",
+  "answer": "Monitor validation loss during training; stop when it stops improving. Prevents overfitting without explicit regularization. Trade-off: stops too early = underfitting, too late = overfitting. Simple and effective.\n",
+  "tags": [
+    "ai",
+    "training",
+    "regularization"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "id": "ex-005",
+  "title": "Merge Intervals",
+  "difficulty": "medium",
+  "category": "Intervals",
+  "knowledge_ids": [],
+  "tags": [
+    "arrays",
+    "sorting",
+    "intervals"
+  ]
+}

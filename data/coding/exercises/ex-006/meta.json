@@ -1,0 +1,13 @@
+{
+  "id": "ex-006",
+  "title": "Search in Rotated Sorted Array",
+  "difficulty": "medium",
+  "category": "Binary Search",
+  "knowledge_ids": [
+    "k-binary-search"
+  ],
+  "tags": [
+    "arrays",
+    "binary-search"
+  ]
+}

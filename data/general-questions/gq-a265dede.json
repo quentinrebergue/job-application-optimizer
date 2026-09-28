@@ -1,0 +1,10 @@
+{
+  "id": "gq-a265dede",
+  "question": "What is parametric polymorphism?\n",
+  "answer": "A single piece of code works uniformly on values of multiple types. The type is a parameter. Examples: generics (List<T>), function overloading with type parameters. Also called 'templates' in C++.\n",
+  "tags": [
+    "typology",
+    "polymorphism",
+    "generics"
+  ]
+}

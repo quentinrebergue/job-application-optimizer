@@ -1,0 +1,14 @@
+{
+  "id": "ex-091",
+  "title": "Product of Array Except Self",
+  "difficulty": "medium",
+  "category": "Prefix Sum",
+  "knowledge_ids": [
+    "k-prefix-sum"
+  ],
+  "tags": [
+    "prefix-sum",
+    "arrays"
+  ],
+  "leetcode": 238
+}

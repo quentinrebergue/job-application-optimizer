@@ -1,0 +1,6 @@
+{
+  "id": "gq-perf-001",
+  "question": "What is the difference between a CPU profiler and a tracing tool?",
+  "answer": "A CPU profiler (e.g. `perf`, `gprof`) samples the call stack at regular intervals to tell you *where* your program spends most of its time — it gives a statistical picture of hot functions. A tracing tool (e.g. `strace`, `ltrace`, `ftrace`) records every event (system calls, function calls, kernel events) as they happen, giving you a precise log of *what* happened and in what order. Profilers are better for finding performance bottlenecks; tracers are better for understanding behaviour and debugging.",
+  "tags": ["profiling", "performance", "linux"]
+}

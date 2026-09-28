@@ -1,0 +1,10 @@
+{
+  "id": "gq-35f73dcc",
+  "question": "What is strong typing?\n",
+  "answer": "Type system that does not allow implicit type conversions — operations between incompatible types are forbidden. Example: Python won't let you add a string and an integer without explicit conversion. Prevents silent errors.\n",
+  "tags": [
+    "typology",
+    "strong-typing",
+    "type-system"
+  ]
+}

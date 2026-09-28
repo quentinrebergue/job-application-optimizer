@@ -1,0 +1,6 @@
+{
+  "id": "k-topological-sort",
+  "name": "Topological Sort",
+  "category": "Graphs",
+  "tags": ["graph", "dfs", "bfs", "dag", "scheduling"]
+}

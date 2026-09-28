@@ -1,0 +1,15 @@
+{
+  "id": "exp-b0ccfdd9",
+  "type": "experiences",
+  "title": "Freelance Software Engineer",
+  "company": "Various Clients",
+  "location": "Paris",
+  "period": "09/2021 – 03/2024",
+  "description": "Built and managed full-stack information systems for 10+ clients. Led B2B survey platform (200k euros, 2 devs) as first technical lead. Architected PIM + CRM + ERP ecosystem. Owned end-to-end IS at Aussitôt Bon.",
+  "tags": [
+    "Web",
+    "Freelance",
+    "JavaScript"
+  ],
+  "latex_snippet": ""
+}

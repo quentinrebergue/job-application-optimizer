@@ -1,0 +1,6 @@
+{
+  "id": "gq-os-001",
+  "question": "What is the difference between a process and a thread?",
+  "answer": "A process is an independent program instance with its own virtual address space, file descriptors, and resources. A thread is a unit of execution within a process — threads share the same address space and file descriptors but have their own stack and registers. Creating a process is expensive (fork + exec); creating a thread is cheap. Communication between processes requires IPC (pipes, sockets, shared memory); threads communicate via shared memory directly (with synchronization). A crash in one process doesn't affect another; a crash in one thread can kill the whole process.",
+  "tags": ["os", "linux"]
+}

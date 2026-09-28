@@ -1,0 +1,12 @@
+{
+  "id": "ex-121",
+  "title": "Encode and Decode Strings",
+  "difficulty": "medium",
+  "category": "Other",
+  "knowledge_ids": [],
+  "tags": [
+    "string",
+    "design"
+  ],
+  "leetcode": 271
+}

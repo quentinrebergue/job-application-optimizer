@@ -1,0 +1,71 @@
+{
+  "selected_entity_ids": [
+    "edu-4b5b8a37",
+    "edu-c735b9b1",
+    "exp-df8d4cde",
+    "proj-40cdf000",
+    "proj-4f43d05f",
+    "skil-a856cc8e",
+    "skil-2799aa77",
+    "skil-0247ad5c",
+    "skil-52bcbd31",
+    "proj-2a5cd1e4",
+    "proj-ad638299",
+    "exp-0e31880e",
+    "exp-b0ccfdd9"
+  ],
+  "ai_rankings": [],
+  "profile_text": "Looking for a full-time position in software engineering with a focus on low-level systems, Linux drivers, and hardware interfacing. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded. Fluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running, cooking.",
+  "resume_title": "Quentin Rebergue - Software Engineer",
+  "ai_context": "Im searching a first graduate job in system, low-level, hardware interface, linux",
+  "skill_tag_overrides": {
+    "skil-a856cc8e": [
+      "ASIC interfacing",
+      "bootloader",
+      "DMA",
+      "drivers",
+      "FPGA",
+      "kernel",
+      "Linux",
+      "real-time",
+      "virtual memory"
+    ],
+    "skil-2799aa77": [
+      "ASIC interfacing",
+      "FPGA",
+      "I2C",
+      "PCB design",
+      "SPI",
+      "STM32",
+      "UART"
+    ],
+    "skil-0247ad5c": [
+      "ASM",
+      "Bash",
+      "C",
+      "C++",
+      "Python",
+      "Rust",
+      "Shell",
+      "VHDL"
+    ],
+    "skil-52bcbd31": [
+      "GDB",
+      "strace",
+      "valgrind",
+      "perf",
+      "system analysis"
+    ]
+  },
+  "project_order": [
+    "proj-40cdf000",
+    "proj-4f43d05f",
+    "proj-2a5cd1e4",
+    "proj-ad638299"
+  ],
+  "experience_order": [
+    "exp-df8d4cde",
+    "exp-0e31880e",
+    "exp-b0ccfdd9"
+  ]
+}

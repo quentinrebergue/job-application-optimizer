@@ -1,0 +1,6 @@
+{
+  "id": "gq-linux-003",
+  "question": "Explain the Linux file descriptor model.",
+  "answer": "Every process has a file descriptor table — an array of integers (0, 1, 2, ...) where each entry points to an open file description in the kernel. fd 0 is stdin, 1 is stdout, 2 is stderr by convention. File descriptors abstract over files, sockets, pipes, devices — everything is a file in Unix. Operations like `read`, `write`, `close`, `select` all take file descriptors. When you fork, the child inherits copies of the parent's file descriptors pointing to the same underlying files.",
+  "tags": ["linux", "os"]
+}

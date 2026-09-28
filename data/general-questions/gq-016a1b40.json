@@ -1,0 +1,10 @@
+{
+  "id": "gq-016a1b40",
+  "question": "What is an inference engine?\n",
+  "answer": "Software/hardware system that runs a trained model to generate predictions. Takes input, passes through the network, returns output. Optimized for latency (speed per request) and throughput (requests per second). Examples: vLLM, TensorRT, ONNX Runtime.\n",
+  "tags": [
+    "ai",
+    "inference",
+    "engine"
+  ]
+}

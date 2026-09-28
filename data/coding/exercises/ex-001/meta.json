@@ -1,0 +1,10 @@
+{
+  "id": "ex-001",
+  "title": "Two Sum",
+  "difficulty": "easy",
+  "category": "Hash Map",
+  "knowledge_ids": [
+    "k-hash-map"
+  ],
+  "tags": []
+}

@@ -1,0 +1,24 @@
+{
+  "id": "proj-58931465",
+  "type": "projects",
+  "title": "EpiTweet",
+  "tech": [
+    "Java",
+    "Quarkus",
+    "Maven",
+    "MongoDB",
+    "Neo4j",
+    "Elasticsearch",
+    "Redis",
+    "Microservices",
+    "Docker",
+    "Kubernetes"
+  ],
+  "description": "Twitter-like microservices platform with Quarkus/Java 17. Multi-database architecture (MongoDB, Neo4j, Elasticsearch) deployed on Kubernetes with Docker and GitLab CI.",
+  "tags": [
+    "microservices",
+    "backend",
+    "database",
+    "social-network"
+  ]
+}

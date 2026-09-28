@@ -1,0 +1,13 @@
+{
+  "id": "ex-023",
+  "title": "Remove Duplicates from Sorted List II",
+  "difficulty": "medium",
+  "category": "Fast & Slow Pointers",
+  "knowledge_ids": [
+    "k-linked-list"
+  ],
+  "tags": [
+    "linked-list",
+    "two-pointers"
+  ]
+}

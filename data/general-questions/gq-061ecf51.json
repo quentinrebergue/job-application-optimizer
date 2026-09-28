@@ -1,0 +1,10 @@
+{
+  "id": "gq-061ecf51",
+  "question": "What is multi-head attention?\n",
+  "answer": "Instead of one attention function, use h parallel (head) attention functions with different learned linear projections. Each head attends to different patterns (some focus on nearby tokens, some on distant ones, some on specific features). Concatenate outputs. Allows rich, diverse attention patterns.\n",
+  "tags": [
+    "ai",
+    "attention",
+    "transformer"
+  ]
+}

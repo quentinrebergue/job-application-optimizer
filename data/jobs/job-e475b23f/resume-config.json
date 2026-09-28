@@ -1,0 +1,69 @@
+{
+  "selected_entity_ids": [
+    "edu-4b5b8a37",
+    "edu-c735b9b1",
+    "exp-df8d4cde",
+    "exp-0e31880e",
+    "proj-irgpu",
+    "proj-tiger",
+    "proj-4f43d05f",
+    "skil-0247ad5c",
+    "skil-a856cc8e",
+    "skil-52bcbd31",
+    "exp-b0ccfdd9",
+    "proj-40cdf000"
+  ],
+  "ai_rankings": [],
+  "profile_text": "Looking for a full-time position in software engineering with a focus on low-latency C++ systems and infrastructure. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded. Fluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running, cooking.",
+  "skill_tag_overrides": {
+    "skil-0247ad5c": [
+      "ASM",
+      "C",
+      "C++",
+      "OOP",
+      "Python",
+      "Rust",
+      "SQL",
+      "VHDL"
+    ],
+    "skil-a856cc8e": [
+      "ASIC interfacing",
+      "Linux",
+      "OS",
+      "TCP/IP",
+      "cache coherence",
+      "kernel",
+      "low-latency",
+      "memory architecture",
+      "multithreading",
+      "networking",
+      "profiling",
+      "real-time",
+      "shared memory",
+      "virtual memory"
+    ],
+    "skil-52bcbd31": [
+      "GDB",
+      "valgrind",
+      "perf",
+      "profiling",
+      "optimisation",
+      "strace",
+      "system analysis",
+      "testing",
+      "benchmarking"
+    ]
+  },
+  "project_order": [
+    "proj-irgpu",
+    "proj-tiger",
+    "proj-4f43d05f",
+    "proj-40cdf000"
+  ],
+  "experience_order": [
+    "exp-df8d4cde",
+    "exp-0e31880e",
+    "exp-b0ccfdd9"
+  ],
+  "resume_title": "Quentin Rebergue - C++ Systems Engineer"
+}

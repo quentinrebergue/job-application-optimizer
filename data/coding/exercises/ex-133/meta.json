@@ -1,0 +1,14 @@
+{
+  "id": "ex-133",
+  "title": "Find Median from Data Stream",
+  "difficulty": "hard",
+  "category": "Top K / Heap",
+  "knowledge_ids": [
+    "k-heap-priority-queue"
+  ],
+  "tags": [
+    "heap",
+    "design"
+  ],
+  "leetcode": 295
+}

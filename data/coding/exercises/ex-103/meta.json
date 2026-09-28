@@ -1,0 +1,15 @@
+{
+  "id": "ex-103",
+  "title": "Course Schedule",
+  "difficulty": "medium",
+  "category": "DFS",
+  "knowledge_ids": [
+    "k-topological-sort"
+  ],
+  "tags": [
+    "dfs",
+    "graphs",
+    "topological-sort"
+  ],
+  "leetcode": 207
+}

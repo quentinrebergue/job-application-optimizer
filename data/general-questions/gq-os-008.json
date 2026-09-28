@@ -1,0 +1,6 @@
+{
+  "id": "gq-os-008",
+  "question": "Explain what a system call is.",
+  "answer": "A system call is a request from user-space code to the kernel to perform a privileged operation (I/O, memory allocation, process creation, networking). User-space runs in ring 3 (unprivileged); the kernel runs in ring 0. A syscall triggers a mode switch: the CPU saves user-space state, switches to kernel mode, executes the kernel handler, then returns to user space. Examples: `read`, `write`, `open`, `fork`, `mmap`, `socket`. Syscalls are relatively expensive (~100ns) due to the mode switch — minimize them in hot paths.",
+  "tags": ["os", "linux"]
+}

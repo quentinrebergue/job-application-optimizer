@@ -1,0 +1,68 @@
+{
+  "selected_entity_ids": [
+    "edu-45c721ed",
+    "edu-4b5b8a37",
+    "edu-c735b9b1",
+    "exp-df8d4cde",
+    "exp-0e31880e",
+    "proj-40cdf000",
+    "proj-4f43d05f",
+    "proj-4c4f5731",
+    "proj-2a5cd1e4",
+    "proj-953ddf40",
+    "skil-a856cc8e",
+    "skil-2799aa77",
+    "skil-0247ad5c",
+    "skil-52bcbd31"
+  ],
+  "ai_rankings": [],
+  "profile_text": "",
+  "resume_title": "",
+  "ai_context": "Im searching a first graduate job in system, low-level, hardware interface, linux",
+  "skill_tag_overrides": {
+    "skil-a856cc8e": [
+      "ASIC interfacing",
+      "bootloader",
+      "DMA",
+      "drivers",
+      "FPGA",
+      "kernel",
+      "Linux",
+      "operating systems",
+      "real-time",
+      "virtual memory"
+    ],
+    "skil-0247ad5c": [
+      "C",
+      "ASM",
+      "Shell",
+      "VHDL",
+      "C++",
+      "Bash",
+      "C++20",
+      "Python",
+      "algorithms",
+      "data structures"
+    ],
+    "skil-52bcbd31": [
+      "GDB",
+      "Git",
+      "strace",
+      "system analysis",
+      "valgrind",
+      "perf",
+      "profiling"
+    ]
+  },
+  "project_order": [
+    "proj-40cdf000",
+    "proj-4f43d05f",
+    "proj-4c4f5731",
+    "proj-2a5cd1e4",
+    "proj-953ddf40"
+  ],
+  "experience_order": [
+    "exp-df8d4cde",
+    "exp-0e31880e"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "id": "gq-cf7b0466",
+  "question": "What is tail call optimization?\n",
+  "answer": "An optimization where a recursive call at the end of a function is replaced with a jump, avoiding a new stack frame. Enables recursion to run with O(1) stack space instead of O(n), preventing stack overflow on deep recursion.\n",
+  "tags": [
+    "compilation",
+    "optimization",
+    "recursion"
+  ]
+}

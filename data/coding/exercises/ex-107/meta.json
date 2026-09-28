@@ -1,0 +1,12 @@
+{
+  "id": "ex-107",
+  "title": "Graph Valid Tree",
+  "difficulty": "medium",
+  "category": "DFS",
+  "knowledge_ids": [],
+  "tags": [
+    "dfs",
+    "graphs"
+  ],
+  "leetcode": 261
+}

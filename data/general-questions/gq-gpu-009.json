@@ -1,0 +1,6 @@
+{
+  "id": "gq-gpu-009",
+  "question": "How would you transfer data efficiently between CPU and GPU?",
+  "answer": "- Use pinned (page-locked) host memory (`cudaMallocHost`) instead of regular `malloc` — enables faster DMA transfers\n- Use asynchronous transfers (`cudaMemcpyAsync`) with streams to overlap transfer with computation\n- Batch small transfers into one large transfer — latency dominates for small transfers\n- Use `cudaMemcpy2D` for 2D arrays to handle pitch correctly\n- Consider Unified Memory (`cudaMallocManaged`) for simpler code, but understand it may have worse performance",
+  "tags": ["gpu", "cuda"]
+}

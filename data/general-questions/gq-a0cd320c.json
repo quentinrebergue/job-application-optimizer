@@ -1,0 +1,10 @@
+{
+  "id": "gq-a0cd320c",
+  "question": "What is type inference?\n",
+  "answer": "The compiler or runtime automatically deduces the type of a variable without explicit type annotation. Example:  in TypeScript infers x is number. Reduces boilerplate while maintaining type safety.\n",
+  "tags": [
+    "typology",
+    "type-inference",
+    "static-typing"
+  ]
+}

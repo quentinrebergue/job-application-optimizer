@@ -1,0 +1,15 @@
+{
+  "id": "ex-017",
+  "title": "Merge k Sorted Lists",
+  "difficulty": "hard",
+  "category": "Top K / Heap",
+  "knowledge_ids": [
+    "k-heap-priority-queue",
+    "k-linked-list"
+  ],
+  "tags": [
+    "linked-list",
+    "heap",
+    "divide-and-conquer"
+  ]
+}

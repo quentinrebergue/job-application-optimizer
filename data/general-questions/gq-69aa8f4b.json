@@ -1,0 +1,10 @@
+{
+  "id": "gq-69aa8f4b",
+  "question": "What are the three main memory types in CUDA, from fastest to slowest?\n",
+  "answer": "Registers (per thread) → Shared memory (per block) → Global memory (whole grid).\n",
+  "tags": [
+    "cuda",
+    "memory",
+    "hierarchy"
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "id": "gq-linux-002",
+  "question": "What is `mmap` and when would you use it over `read/write`?",
+  "answer": "`mmap` maps a file (or anonymous memory) directly into the process's virtual address space. Instead of copying data through kernel buffers with `read/write`, you access the file as if it were an array in memory — the OS handles paging data in on demand. Use `mmap` when: randomly accessing large files (avoids seeking), sharing memory between processes, implementing memory-mapped databases, or when you want the OS to manage buffering. Use `read/write` for sequential streaming of data where you process and discard it.",
+  "tags": ["linux", "systems", "performance"]
+}

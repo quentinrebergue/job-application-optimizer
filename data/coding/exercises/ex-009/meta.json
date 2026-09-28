@@ -1,0 +1,14 @@
+{
+  "id": "ex-009",
+  "title": "Implement Softmax from Scratch",
+  "difficulty": "easy",
+  "category": "Other",
+  "knowledge_ids": [
+    "k-transformer"
+  ],
+  "tags": [
+    "ml",
+    "math",
+    "numpy"
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "id": "gq-gpu-008",
+  "question": "What is the difference between compute-bound and memory-bound GPU kernels?",
+  "answer": "A compute-bound kernel spends most time doing arithmetic — the bottleneck is FLOPS (floating point operations per second). A memory-bound kernel spends most time waiting for data from global memory — the bottleneck is bandwidth. You can determine which by calculating the arithmetic intensity (FLOPs / bytes accessed) and comparing to the hardware's roofline model. For memory-bound kernels, optimize data layout and coalescing. For compute-bound kernels, optimize algorithm efficiency and use hardware-specific intrinsics.",
+  "tags": ["gpu", "cuda", "performance"]
+}

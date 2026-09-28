@@ -1,0 +1,10 @@
+{
+  "id": "gq-00bcf0cd",
+  "question": "What does \"hiding PCIe latency\" mean?\n",
+  "answer": "The GPU computes on chunk N while chunk N+1 is already being transferred over PCIe — the transfer cost is hidden behind useful work.\n",
+  "tags": [
+    "cuda",
+    "pcie",
+    "optimization"
+  ]
+}

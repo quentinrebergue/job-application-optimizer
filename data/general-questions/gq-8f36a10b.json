@@ -1,0 +1,10 @@
+{
+  "id": "gq-8f36a10b",
+  "question": "What is an SM, and how do blocks map to it?\n",
+  "answer": "A Streaming Multiprocessor is a self-contained compute unit with its own CUDA cores, register file, shared memory, and warp schedulers. When you launch a kernel, CUDA distributes blocks across SMs. One block lives entirely on one SM — it never splits across two.\n",
+  "tags": [
+    "cuda",
+    "sm",
+    "architecture"
+  ]
+}

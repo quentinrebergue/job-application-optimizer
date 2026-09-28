@@ -1,0 +1,10 @@
+{
+  "id": "gq-75acd06d",
+  "question": "What is inlining?\n",
+  "answer": "A compiler optimization that replaces a function call with the function's code at the call site. Eliminates function call overhead but increases code size. Used for small, frequently-called functions.\n",
+  "tags": [
+    "compilation",
+    "optimization",
+    "inlining"
+  ]
+}

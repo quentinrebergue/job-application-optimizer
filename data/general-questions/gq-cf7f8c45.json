@@ -1,0 +1,10 @@
+{
+  "id": "gq-cf7f8c45",
+  "question": "What is continuous batching (dynamic batching)?\n",
+  "answer": "As soon as one request finishes, add a new request to the batch without waiting for all requests to finish. Keeps GPU fully utilized while avoiding stale requests waiting for slow ones. Better throughput-latency trade-off than static batching.\n",
+  "tags": [
+    "ai",
+    "inference",
+    "batching"
+  ]
+}

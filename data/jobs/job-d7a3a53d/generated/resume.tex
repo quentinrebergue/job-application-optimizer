@@ -1,0 +1,119 @@
+\documentclass[9pt,a4paper]{article}
+
+% === Margins ===
+\usepackage[top=0.2cm,bottom=0.2cm,left=1cm,right=1cm]{geometry}
+
+% === Font ===
+\usepackage[scaled]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{tcolorbox}
+\tcbset{mybox/.style={colback=gray!6,boxrule=0pt,arc=4pt,boxsep=0pt,left=0pt,right=4pt,top=8pt,bottom=8pt}}
+\tcbset{mybox2/.style={colback=gray!6,boxrule=0pt,arc=4pt,boxsep=0pt,left=8pt,right=8pt,top=8pt,bottom=8pt}}
+
+\usepackage{enumitem}
+\setlist[itemize]{leftmargin=2em,itemsep=0.5em}
+
+% === Hyperref (ATS keywords) ===
+\usepackage[
+  hidelinks,
+  pdfauthor={Quentin Rebergue},
+  pdftitle={Resume – Quentin Rebergue},
+  pdfsubject={Full-time Software Engineer – Low-level Systems, Firmware, Hardware/Software Interface},
+  pdfkeywords={EPITA, MSc Computer Engineering, Systems Programming, Embedded Systems, Real-Time Systems, Linux, Kernel Development, C, C++, ASM, Rust, Ada, Bash, Python, VHDL, FPGA, PCB Design, FreeRTOS, Device Drivers, Bootloader, Virtualization, Docker, Kubernetes, CI/CD, GitLab CI, Networking, TCP/IP, Bluetooth, LoRaWAN, Wi-Fi, Sigfox, Secure Development, Cryptography, Compiler Design, LLVM, Flex/Bison, GPU Programming, CUDA, Project Management, Team Leadership},
+  pdfcreator={Quentin Rebergue with LaTeX},
+  pdfproducer={Custom PDF build – Quentin Rebergue}
+]{hyperref}
+
+% === Section styling ===
+\usepackage{titlesec}
+\titleformat{\section}{\large\bfseries}{}{0em}{}[\vspace{0mm}]
+
+% === Name font ===
+\newcommand{\namefont}{\fontsize{18}{22}\selectfont}
+\newcommand{\tinyscript}{\fontsize{8}{8}\selectfont}
+
+% === No page numbers ===
+\pagestyle{empty}
+
+\begin{document}
+\renewcommand\normalsize{\fontsize{10.5}{15}\selectfont}
+\normalsize
+
+% === Contact ===
+\begin{center}
+  {\tinyscript\itshape
+  Email: \href{mailto:reberguequentin@gmail.com}{reberguequentin@gmail.com} \,|\,
+  LinkedIn: \href{https://linkedin.com/in/quentin-rebergue}{linkedin.com/in/quentin-rebergue} \,|\,
+  Phone: +33658269014 \,|\,
+  Address: Paris, France}
+\end{center}
+
+% === Header ===
+\begin{center}
+  {\namefont Quentin Rebergue - Graduate Software Engineer}
+\end{center}
+
+% === Profile ===
+\section*{Profile}
+\begin{tcolorbox}[mybox2]
+Looking for a full-time position in software engineering with a focus on ASIC, low-level systems / hardware integration.\\[0.3em]
+MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded.\\[0.3em]
+Fluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running , cooking.
+\end{tcolorbox}
+
+\section*{Work Experience}
+\begin{tcolorbox}[mybox]
+\begin{itemize}
+\item\textbf{Software Engineer Intern - Platform team, ARISTA}, Dublin \hfill {\small02/2026 – 08/2026}\\[0.5em]
+\textcolor{gray!40!black}{Implemented non-zero reset value management for ASIC Physical Table registers across the chip-agnostic Strata infrastructure (SDK parsing, code generation, DMA) in python and C++.
+Won 1st place at Arista's Hackathon by building an AI agent optimization tool (70\% token reduction on internal codebases). Approved for production development.}
+
+\item\textbf{Head of Teaching Assistants - YAKA / ACU Program, EPITA}, Kremlin-Bicetre \hfill {\small09/2024 – 02/2026}\\[0.5em]
+\textcolor{gray!40!black}{Led the national team of 67 TAs and supervised 5 intensive coding bootcamps (Java, C++, JS, C/Bash, SQL) and 7 large-scale projects (compiler, HTTP server in C, malloc, POSIX shell) for 700+ 3rd-year students across 5 campuses. Implemented 1-on-1 code review mentorship model, improving TA-to-student ratio from 1:30 to 1:20.}
+
+\item\textbf{Freelance Software Engineer, Various Clients}, Paris \hfill {\small09/2021 – 03/2024}\\[0.5em]
+\textcolor{gray!40!black}{Built and managed full-stack information systems for 10+ clients. Led B2B survey platform (200k euros, 2 devs) as first technical lead. Architected PIM + CRM + ERP ecosystem. Owned end-to-end IS at Aussitôt Bon.}
+\end{itemize}
+\end{tcolorbox}
+
+
+\section*{School Projects}
+\begin{tcolorbox}[mybox]
+\begin{itemize}
+\item \textbf{Unicycle CPU} -- Designed a 32-bit single-cycle ARM-like processor in VHDL (ALU, register file, instruction decoder, control unit, conditional branching), synthesized on a real FPGA with Intel Quartus, and validated with testbenches.
+
+\item \textbf{Tiger Compiler} -- Built compiler frontend in C++: lexing, parsing, binding, type checking, desugaring and LLVM IR. Team of 4.
+
+\item \textbf{RFID Driver} -- Developed a Linux kernel character device driver for the MFRC522 RFID reader with file\_operations callbacks, SPI regmap communication, and a FIFO command interface. Tested via QEMU emulation.
+
+\item \textbf{ARM project} -- Built an STM32F429ZI embedded system acting as a UART command server using libgapcom (Protobuf over UART). Implemented a 4-level log subsystem and an MPU6050 gyroscope driver over I2C with FIFO reads.Team of 2.
+\end{itemize}
+\end{tcolorbox}
+
+
+\section*{Education}
+\begin{tcolorbox}[mybox]
+\begin{itemize}
+\item \textbf{MSc Computer Engineering, Low-level \& Systems (GISTRE)}, EPITA {\small{\hfill 2020 – 2026}}
+
+\item \textbf{Preparatory Class (PTSI) in Engineering Science}, Lycée Jules Ferry Versailles {\small{\hfill 2019 – 2020}}
+\end{itemize}
+\end{tcolorbox}
+
+
+\section*{Technical Expertise}
+\begin{tcolorbox}[mybox]
+\begin{itemize}
+\item \textbf{Programming \& Languages:} ASM, C, C++, CUDA, OOP, Python, Shell, VHDL, algorithms, data structures.
+
+\item \textbf{Embedded \& Hardware:} ASIC interfacing, FPGA, I2C, PCB design, SPI, STM32, UART.
+
+\item \textbf{Other / DevOps:} Git, GDB, strace, system analysis, testing, valgrind.
+
+\item \textbf{Systems:} DMA, Drivers, FPGA, Kernel, Linux, Virtualization, low-latency, networking, operational systems, profiling.
+\end{itemize}
+\end{tcolorbox}
+
+
+\end{document}

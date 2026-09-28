@@ -1,0 +1,62 @@
+{
+  "selected_entity_ids": [
+    "edu-4b5b8a37",
+    "edu-c735b9b1",
+    "exp-df8d4cde",
+    "exp-0e31880e",
+    "proj-2a5cd1e4",
+    "proj-40cdf000",
+    "proj-ad638299",
+    "skil-2799aa77",
+    "skil-0247ad5c",
+    "skil-a856cc8e",
+    "exp-b0ccfdd9",
+    "proj-4f43d05f"
+  ],
+  "ai_rankings": [],
+  "profile_text": "Looking for a full-time position in software engineering with a focus on embedded systems, low-level C, hardware interfacing. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded. Fluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running, cooking.",
+  "resume_title": "",
+  "ai_context": "",
+  "skill_tag_overrides": {
+    "skil-2799aa77": [
+      "ASIC interfacing",
+      "FPGA",
+      "I2C",
+      "SPI",
+      "STM32",
+      "UART"
+    ],
+    "skil-0247ad5c": [
+      "ADA",
+      "ASM",
+      "Bash",
+      "C",
+      "C++",
+      "Python",
+      "Rust",
+      "VHDL"
+    ],
+    "skil-a856cc8e": [
+      "FPGA",
+      "Linux",
+      "OS",
+      "YOCTO",
+      "drivers",
+      "kernel",
+      "memory architecture",
+      "real-time",
+      "virtualization"
+    ]
+  },
+  "project_order": [
+    "proj-2a5cd1e4",
+    "proj-40cdf000",
+    "proj-ad638299",
+    "proj-4f43d05f"
+  ],
+  "experience_order": [
+    "exp-df8d4cde",
+    "exp-0e31880e",
+    "exp-b0ccfdd9"
+  ]
+}

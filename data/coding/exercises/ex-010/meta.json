@@ -1,0 +1,15 @@
+{
+  "id": "ex-010",
+  "title": "Scaled Dot-Product Attention",
+  "difficulty": "medium",
+  "category": "Other",
+  "knowledge_ids": [
+    "k-transformer"
+  ],
+  "tags": [
+    "ml",
+    "transformers",
+    "attention",
+    "numpy"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "id": "gq-42686a0e",
+  "question": "What is an LLM?\n",
+  "answer": "A Large Language Model is a Transformer-based neural network trained on massive amounts of text to predict the next token. Examples: GPT-4, Claude, Llama, Mistral. Exhibits emergent abilities like reasoning, coding, translation without explicit training for those tasks.\n",
+  "tags": [
+    "ai",
+    "llm",
+    "transformer"
+  ]
+}

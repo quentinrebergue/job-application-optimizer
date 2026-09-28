@@ -1,0 +1,16 @@
+{
+  "id": "ex-050",
+  "title": "Contiguous Array",
+  "category": "Prefix Sum",
+  "difficulty": "medium",
+  "tags": [
+    "prefix-sum",
+    "hash-map",
+    "array"
+  ],
+  "leetcode": 525,
+  "knowledge_ids": [
+    "k-prefix-sum",
+    "k-hash-map"
+  ]
+}

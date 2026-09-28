@@ -1,0 +1,10 @@
+{
+  "id": "gq-8dd3fd8a",
+  "question": "What is constant folding?\n",
+  "answer": "A compiler optimization that evaluates expressions with constant operands at compile time instead of runtime. Example: 3 + 5 is replaced with 8, avoiding runtime computation.\n",
+  "tags": [
+    "compilation",
+    "optimization",
+    "constants"
+  ]
+}

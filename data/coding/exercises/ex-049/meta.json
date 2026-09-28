@@ -1,0 +1,15 @@
+{
+  "id": "ex-049",
+  "title": "Range Sum Query - Immutable",
+  "category": "Prefix Sum",
+  "difficulty": "easy",
+  "tags": [
+    "prefix-sum",
+    "array",
+    "design"
+  ],
+  "leetcode": 303,
+  "knowledge_ids": [
+    "k-prefix-sum"
+  ]
+}

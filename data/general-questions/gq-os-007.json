@@ -1,0 +1,6 @@
+{
+  "id": "gq-os-007",
+  "question": "What is the difference between stack and heap memory?",
+  "answer": "The stack is automatically managed — local variables are pushed/popped with function calls, allocation is O(1), and it's limited (typically 1-8MB). The heap is manually managed (via `malloc/new`) — arbitrary size, longer lifetime, but requires explicit deallocation and is slower due to allocator bookkeeping. Stack memory has excellent cache locality; heap memory can fragment over time. Stack overflow crashes the program; heap exhaustion returns null from malloc.",
+  "tags": ["os", "cpp"]
+}

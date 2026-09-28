@@ -1,0 +1,279 @@
+{
+  "id": "job-9aab87fb",
+  "company": "Canonical",
+  "title": "Junior Software Engineer - Ubuntu Engineering (General Track)",
+  "description": "À propos de l'offre d'emploi\n\nCanonical is a leading provider of open source software and operating systems to the global enterprise and technology markets. Our platform, Ubuntu, is very widely used in breakthrough enterprise initiatives such as public cloud, data science, AI, engineering innovation and IoT. Our customers include the world's leading public cloud and silicon providers, and industry leaders in many sectors. The company is a pioneer of global distributed collaboration, with 1200+ colleagues in 75+ countries and very few office based roles. Teams meet two to four times yearly in person, in interesting locations around the world, to align on strategy and execution.\n\nThe company is founder led, profitable and growing.\n\nWe are hiring junior engineers to work across the breadth of our Ubuntu Engineering organisation - engineers who care deeply for quality, performance and resilience in software, engineers who are just as comfortable designing and engineering new software as they are packaging, integrating, testing and shipping the incredible catalog of open source software provided by the Ubuntu repositories.\n\nOur engineers integrate the freshest open source software, provide robust upgrade paths and engineer the future of Ubuntu. Ubuntu is not just the world's most deployed open source operating system, it's a platform that enables innovation for millions of users across the globe.\n\nTHE FOUR KEY TEAMS THAT SHIP UBUNTU ARE\n- Foundations: maintaining foundational software: architectures, package managers, compilers, toolchains, bootloaders, filesystems and core utilities\n- Server: leading the design, evolution and future of our Ubuntu Server distribution\n- Desktop: driving Ubuntu Desktop, our future immutable desktop: Ubuntu Core Desktop, WSL, gaming technology, and a suite of modern applications for the desktop crafted with Flutter\n- Debcrafters: a new team responsible for the forward movement, maintenance and overall health of the Ubuntu archive: one of the most abundant repositories of open source software available today\n\nAs an engineer working on Ubuntu you could work on any or all of the following categories:\n- Development: design, build and ship new foundational systems software and applications in Rust, Go, Flutter, and Python\n- Architecture: engineer the integration of open source from boot firmware to cloud applications deployment\n- Packaging: a combination of Debian and Snap packaging to ship software in the distribution\n- Automation: build and maintain the machinery responsible for building, testing and shipping Ubuntu\n- Distro Engineering: the maintenance and evolution of a Linux distribution and its repositories\n\nOur junior career path caters for both new graduates and early careers engineers.\n\nLocation: We have remote roles open in every time zone.\n\nTHE ROLE ENTAILS\n\nBased on the first round of interviews, we identify specific teams where you might be an excellent fit and conduct second-round interviews with those teams. Our engineers are:\n- Designing, building and shipping software in Rust, Go, Python and C/C++\n- Packaging, integrating, testing and uploading open source software to the Ubuntu repositories\n- Debugging issues, then designing and delivering robust solutions\n- Authoring and improving technical and community documentation\n- Contributing to upstream and neighboring open source projects\n- Collaborating as part of a globally distributed team\n- Continuously learning and progressing their technical and professional skills\n\nWHAT WE ARE LOOKING FOR IN YOU\n- An exceptional academic track record from both high school and university\n- Undergraduate degree in Computer Science or STEM, or a compelling narrative about your alternative path\n- Drive and a track record of going above and beyond expectations\n- A passion for open source software\n- Experience with Rust, Go, Python, Flutter or C/C++\n- Professional written and spoken English\n- Excellent communication and interpersonal skills\n- Ability to travel twice a year, for company events up to two weeks each\n\nNICE-TO-HAVE SKILLS\n- Familiarity with Linux distributions\n- Familiarity with system debugging tools and techniques\n- Familiarity with automation tooling and CI/CD systems\n- Experience contributing to open source projects\n\nWHAT WE OFFER YOU\nWe consider geographical location, experience, and performance in shaping compensation worldwide. We revisit compensation annually (and more often for graduates and associates) to ensure we recognize outstanding performance. In addition to base pay, we offer a performance-driven annual bonus.\n- Distributed work environment with twice-yearly team sprints in person\n- Personal learning and development budget of USD 2,000 per year\n- Annual compensation review\n- Recognition rewards\n- Annual holiday leave\n- Maternity and paternity leave\n- Team Member Assistance Program & Wellness Platform\n- Opportunity to travel to new locations to meet colleagues\n- Priority Pass, and travel upgrades for long haul company events\n\nABOUT CANONICAL\n\nCanonical is a pioneering tech firm at the forefront of the global move to open source. As the company that publishes Ubuntu, one of the most important open source projects and the platform for AI, IoT and the cloud, we are changing the world on a daily basis. Canonical has been a remote-first company since its inception in 2004.\n\nCanonical is an equal opportunity employer. We are proud to foster a workplace free from discrimination.",
+  "location": "Remote (all time zones)",
+  "status": "applied",
+  "date_added": "2026-09-24T10:06:41.754Z",
+  "tags": [
+    "Rust",
+    "Go",
+    "Python",
+    "C++",
+    "Flutter",
+    "Linux",
+    "Ubuntu",
+    "Packaging",
+    "CI/CD",
+    "Open Source",
+    "Junior",
+    "Graduate"
+  ],
+  "ats_tags": [
+    "Linux",
+    "C/C++",
+    "Python",
+    "Rust",
+    "kernel",
+    "systems programming",
+    "open-source",
+    "packaging",
+    "remote",
+    "junior-level"
+  ],
+  "ai_analysis": {
+    "job_id": "job-9aab87fb",
+    "analyzed_at": "2026-09-24T12:00:48.377Z",
+    "ats_tags": [
+      "Linux",
+      "C/C++",
+      "Python",
+      "Rust",
+      "kernel",
+      "systems programming",
+      "open-source",
+      "packaging",
+      "remote",
+      "junior-level"
+    ],
+    "entities_by_type": {
+      "experiences": [
+        {
+          "id": "exp-df8d4cde",
+          "type": "experience",
+          "name": "Software Engineer - Platform team at ARISTA",
+          "score": 76,
+          "reason": "Strong systems/low-level programming in Python/C++ but focused on ASIC/networking rather than Linux distro engineering."
+        },
+        {
+          "id": "exp-0e31880e",
+          "type": "experience",
+          "name": "Head of Teaching Assistants - YAKA / ACU Program at EPITA",
+          "score": 64,
+          "reason": "Demonstrates C systems curriculum and leadership/communication but not direct hands-on Ubuntu-relevant engineering work."
+        }
+      ],
+      "projects": [
+        {
+          "id": "proj-40cdf000",
+          "type": "project",
+          "name": "RFID Driver",
+          "score": 90,
+          "reason": "Direct Linux kernel driver development experience, a core skill for Canonical's Foundations team."
+        },
+        {
+          "id": "proj-4f43d05f",
+          "type": "project",
+          "name": "My Docker",
+          "score": 88,
+          "reason": "Deep Linux namespaces/cgroups/seccomp work directly relevant to container and OS-level engineering at Canonical."
+        },
+        {
+          "id": "proj-4c4f5731",
+          "type": "project",
+          "name": "Linux System Tracing & Storage",
+          "score": 85,
+          "reason": "Hands-on Linux storage stack and debugging tooling closely matches Server/distro engineering needs."
+        },
+        {
+          "id": "proj-1b63d04a",
+          "type": "project",
+          "name": "42sh",
+          "score": 80,
+          "reason": "Core Unix shell/utility engineering in C matches Foundations team's core-utilities focus."
+        },
+        {
+          "id": "proj-b1f3b77a",
+          "type": "project",
+          "name": "myMalloc",
+          "score": 78,
+          "reason": "Low-level memory management in C is relevant systems programming but a smaller academic-scale project."
+        },
+        {
+          "id": "proj-953ddf40",
+          "type": "project",
+          "name": "MyHTTPd",
+          "score": 74,
+          "reason": "Systems-level network programming in C relevant to server engineering, though less directly tied to Ubuntu packaging."
+        },
+        {
+          "id": "proj-0bceb7b7",
+          "type": "project",
+          "name": "MyFind",
+          "score": 68,
+          "reason": "Reimplements a core Unix utility in C, relevant to Foundations team but a basic academic exercise."
+        },
+        {
+          "id": "proj-tiger",
+          "type": "project",
+          "name": "Tiger Compiler",
+          "score": 66,
+          "reason": "Compiler/toolchain work aligns with Foundations team's toolchain focus but frontend-only and academic scope."
+        },
+        {
+          "id": "proj-2a5cd1e4",
+          "type": "project",
+          "name": "ARM project",
+          "score": 62,
+          "reason": "Embedded systems and hardware interfacing skills are tangential to Ubuntu distro engineering focus."
+        }
+      ],
+      "skills": [
+        {
+          "id": "skil-a856cc8e",
+          "type": "skill",
+          "name": "Systems",
+          "score": 92,
+          "reason": "Direct match: Linux, kernel, drivers, virtualization, containers are all core to this role."
+        },
+        {
+          "id": "skil-0247ad5c",
+          "type": "skill",
+          "name": "Programming & Languages",
+          "score": 88,
+          "reason": "Covers C, C++, Rust, Python — all explicitly required languages for this role."
+        },
+        {
+          "id": "skil-52bcbd31",
+          "type": "skill",
+          "name": "Other / DevOps",
+          "score": 78,
+          "reason": "Debugging tools (GDB, strace, valgrind) match job's nice-to-have system debugging requirement."
+        },
+        {
+          "id": "skil-2799aa77",
+          "type": "skill",
+          "name": "Embedded & Hardware",
+          "score": 62,
+          "reason": "Hardware interfacing skills are tangential rather than core to Ubuntu software engineering work."
+        }
+      ],
+      "education": [
+        {
+          "id": "edu-4b5b8a37",
+          "type": "education",
+          "name": "MSc Computer Engineering, Low-level & Systems (GISTRE)",
+          "score": 88,
+          "reason": "Directly aligned degree specialization in low-level/systems engineering matches the role's academic requirement well."
+        }
+      ]
+    },
+    "confidence_score": 0.84,
+    "summary": "Strong fit (~80%) for this junior systems engineering role: the candidate's kernel driver, container runtime, and Linux storage-stack projects directly mirror Canonical's Foundations/Server/Debcrafters work, and their systems skillset (Linux, drivers, virtualization) is near expert level for a junior candidate. The main gaps are no explicit Debian/Snap packaging experience, no Go, and limited demonstrated open-source upstream contribution — all of which are core to this specific role.",
+    "resume_tips": [
+      "Explicitly mention 'Debian packaging' or 'Snap packaging' if you have any exposure, even minor — this is a core requirement for the Debcrafters/Foundations teams and currently absent.",
+      "Add 'Go' to your language list if you have any exposure, since the job explicitly lists Go alongside Rust, Python and C/C++.",
+      "Quantify the RFID kernel driver and My Docker projects (e.g. lines of code, test coverage, performance gains) to strengthen ATS keyword density around 'Linux kernel' and 'containers'.",
+      "Reframe the Arista experience with more emphasis on 'Linux' and 'toolchain/compiler' keywords if applicable, since it's your only professional systems engineering role.",
+      "Highlight any upstream open-source contributions explicitly — the job values this and it's currently not visible in your listed experience.",
+      "Move Linux kernel/systems projects (RFID driver, My Docker, storage stack) above less relevant projects (EpiTweet, Queuing System) at the top of your resume."
+    ],
+    "recommended_title": "Junior Software Engineer — Linux Systems & Kernel",
+    "recommended_profile": "Looking for a full-time position in software engineering with a focus on Linux systems, kernel, and open-source packaging. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded. Fluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running, cooking.",
+    "recommended_experience_ids": [
+      "exp-df8d4cde",
+      "exp-0e31880e"
+    ],
+    "recommended_project_ids": [
+      "proj-40cdf000",
+      "proj-4f43d05f",
+      "proj-4c4f5731",
+      "proj-1b63d04a",
+      "proj-b1f3b77a"
+    ],
+    "recommended_skill_ids": [
+      "skil-a856cc8e",
+      "skil-0247ad5c",
+      "skil-52bcbd31"
+    ],
+    "recommended_skill_tags": {
+      "skil-a856cc8e": [
+        "Linux",
+        "kernel",
+        "drivers",
+        "bootloader",
+        "virtualization",
+        "containers",
+        "memory architecture",
+        "operating systems"
+      ],
+      "skil-0247ad5c": [
+        "C",
+        "C++",
+        "Rust",
+        "Python",
+        "Bash",
+        "algorithms",
+        "data structures"
+      ],
+      "skil-52bcbd31": [
+        "GDB",
+        "Git",
+        "strace",
+        "testing",
+        "valgrind",
+        "perf",
+        "profiling"
+      ]
+    },
+    "suggested_new_skills": [
+      {
+        "name": "Go",
+        "category": "Languages",
+        "level": "beginner",
+        "tags": [
+          "systems programming"
+        ],
+        "reason": "Explicitly listed as a required language for this Ubuntu Engineering role, currently missing from resume"
+      },
+      {
+        "name": "Debian/Snap Packaging",
+        "category": "Systems",
+        "level": "beginner",
+        "tags": [
+          "packaging",
+          "Ubuntu",
+          "distro engineering"
+        ],
+        "reason": "Core requirement for the Debcrafters/Foundations teams shipping Ubuntu packages"
+      }
+    ],
+    "suggested_new_skill_tags": [
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "Ubuntu",
+        "reason": "Job is explicitly about Ubuntu distro engineering"
+      },
+      {
+        "skill_id": "skil-52bcbd31",
+        "tag": "CI/CD",
+        "reason": "Job lists automation/CI-CD as a nice-to-have skill area"
+      },
+      {
+        "skill_id": "skil-0247ad5c",
+        "tag": "Flutter",
+        "reason": "Job mentions Flutter as one of the primary development stacks for Ubuntu Desktop"
+      }
+    ],
+    "recommended_entity_descriptions": {
+      "exp-df8d4cde": "Software Engineer on Arista's Platform team, implementing non-zero reset value management for ASIC Physical Table registers across the chip-agnostic Strata infrastructure (SDK parsing, code generation, DMA) in Python and C++. Built low-level systems tooling comparable to distro/toolchain engineering. Won 1st place at Arista's Hackathon building an AI agent optimization tool (70% token reduction), approved for production development.",
+      "exp-0e31880e": "Led a national team of 67 Teaching Assistants supervising 700+ students across 5 campuses through intensive C/C++/Bash/SQL bootcamps and systems projects (compiler, HTTP server in C, malloc, POSIX shell). Implemented a 1-on-1 code review mentorship model, improving TA-to-student ratio from 1:30 to 1:20, demonstrating strong communication and technical mentoring skills relevant to a distributed engineering team.",
+      "proj-40cdf000": "Developed a Linux kernel character device driver for the MFRC522 RFID reader with file_operations callbacks, SPI regmap communication, and a FIFO command interface, tested via QEMU emulation — directly demonstrating kernel-level Linux driver development skills.",
+      "proj-4f43d05f": "Built a lightweight container runtime in C using Linux namespaces, pivot_root, capabilities dropping, seccomp syscall filtering, and cgroups, pulling and mounting a root filesystem from a container registry — closely aligned with Ubuntu Core and containerization technologies.",
+      "proj-4c4f5731": "Reverse-engineered a binary using strace fault injection and syscall filtering, and wrote a Bash script automating Linux storage stacks including loop devices, LUKS2, LVM, dm-linear, dm-delay, and RAID — directly relevant to Ubuntu Server distro engineering.",
+      "proj-1b63d04a": "Implemented a shell interpreter in C with a complete lexer, parser, and AST, supporting redirection, pipes, and expression evaluation for Unix-like shells — foundational core-utility engineering skills applicable to Ubuntu's Foundations team.",
+      "proj-b1f3b77a": "Built a custom malloc implementation in C with bucket-based allocation, free block tracking, and mmap-based page management, supporting malloc/free/realloc/calloc — demonstrating low-level memory management skills relevant to systems software engineering."
+    }
+  }
+}

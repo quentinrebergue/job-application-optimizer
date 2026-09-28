@@ -1,0 +1,10 @@
+{
+  "id": "gq-28ad8124",
+  "question": "What is a loss function?\n",
+  "answer": "Measures how wrong the model's predictions are: loss(y_pred, y_true). Optimization aims to minimize it. Examples: cross-entropy (classification), MSE (regression), perplexity (language modeling). Guides learning.\n",
+  "tags": [
+    "ai",
+    "training",
+    "loss"
+  ]
+}

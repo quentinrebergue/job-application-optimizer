@@ -1,0 +1,22 @@
+[
+  {
+    "id": "q-cpu-1",
+    "question": "How did you structure the single-cycle datapath and what are its main components?",
+    "answer": "The processor is composed of three major units instantiated and wired in processeur.vhd. The instruction unit manages the PC: each cycle it increments PC by 4 or adds a sign-extended 24-bit offset for branch instructions, controlled by the nPCsel signal from the control unit. The processing unit contains the register file (16 x 32-bit registers), the ALU, the data memory, and two multiplexers — COM1 selects between register B and an 8-bit immediate for the ALU's second operand, COM2 selects between the ALU result and a memory read for the write-back value. The control unit decodes the 32-bit ARM-like instruction, reads the NZCV flags, and drives all control signals (RegWr, ALUSrc, MemWr, WrSrc, ALUCtr, nPCsel). Everything is clocked on a single CLK edge, so every instruction completes in exactly one cycle — no pipeline stages, no stalls."
+  },
+  {
+    "id": "q-cpu-2",
+    "question": "Walk through your ALU design — what operations does it support and how are the flags computed?",
+    "answer": "The ALU takes a 3-bit OP code and two 32-bit operands A and B, and produces a 32-bit result S plus four flags. The eight operations are: 000=ADD, 001=PASS B, 010=SUB, 011=PASS A, 100=OR, 101=AND, 110=XOR, 111=NOT A. All arithmetic uses IEEE.numeric_std SIGNED casts so signed overflow is handled correctly. The four flags are: Z (zero) — set when the result is all zeros; N (negative) — set when bit 31 of the result is 1; C (carry) — set for ADD when both operands had bit 31 set but the result doesn't (unsigned carry out); V (overflow) — set when the two inputs have the same sign but the result has the opposite sign. These flags are stored in the PSR register and used by the control unit to evaluate conditional branch instructions."
+  },
+  {
+    "id": "q-cpu-3",
+    "question": "How does the control unit handle conditional branching?",
+    "answer": "The control unit receives the full 32-bit instruction and the current NZCV flags from the PSR. For a branch instruction, it evaluates the condition field (bits 31:28 in ARM encoding) against the flags — for example, BEQ checks Z=1, BNE checks Z=0, BGT checks Z=0 and N=V. If the condition is true, it asserts nPCsel=1, which selects the branch target (PC + 4 + sign-extended offset×4) in the instruction unit's PC multiplexer; otherwise nPCsel=0 and the PC increments normally. The condition evaluation is purely combinational, so the branch decision is resolved within the same cycle as the instruction fetch — there is no branch delay slot and no misprediction penalty in a single-cycle design."
+  },
+  {
+    "id": "q-cpu-4",
+    "question": "What were the main challenges of implementing and synthesizing this in VHDL on an FPGA?",
+    "answer": "Three main challenges. First, VHDL's signal assignment semantics: signals update only at the end of a process, so writing combinational logic requires careful use of variables or signal sensitivity lists — we had bugs early on where a flag depended on a signal that hadn't yet propagated within the same delta cycle. Second, the register file needed a synchronous write (on CLK rising edge) but asynchronous reads to avoid adding a cycle of latency; getting this right in VHDL without inferring unwanted latches required explicit if-rising_edge guards on writes and plain concurrent assignments for reads. Third, synthesis with Intel Quartus: some constructs that simulate correctly (e.g., reading an undefined register) are flagged as incomplete case statements and infer latches in hardware. We fixed these by adding default assignments at the top of every process. Testbenches (tb_processeur.vhd) were essential for catching these issues before flashing to the FPGA."
+  }
+]

@@ -1,0 +1,11 @@
+{
+  "id": "skil-7fbd06aa",
+  "type": "skills",
+  "name": "OCaml",
+  "category": "Languages",
+  "level": "beginner",
+  "tags": [
+    "functional programming",
+    "systems"
+  ]
+}

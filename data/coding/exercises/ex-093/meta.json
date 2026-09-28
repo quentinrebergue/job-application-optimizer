@@ -1,0 +1,14 @@
+{
+  "id": "ex-093",
+  "title": "Maximum Product Subarray",
+  "difficulty": "medium",
+  "category": "Dynamic Programming",
+  "knowledge_ids": [
+    "k-dynamic-programming"
+  ],
+  "tags": [
+    "dynamic-programming",
+    "arrays"
+  ],
+  "leetcode": 152
+}

@@ -1,0 +1,10 @@
+{
+  "id": "gq-662e9bb2",
+  "question": "What is a context-free grammar (CFG)?\n",
+  "answer": "A formal grammar used to describe the syntax of programming languages. Defines rules (productions) that show how to construct valid sentences (programs). Parsers use CFGs to check if code is syntactically correct.\n",
+  "tags": [
+    "compilation",
+    "grammar",
+    "parsing"
+  ]
+}

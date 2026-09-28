@@ -1,0 +1,147 @@
+{
+  "id": "job-a18e2976",
+  "company": "Crédit Agricole CIB (CACIB)",
+  "title": "Développeur C#/C++ Trade Processing Equity H/F",
+  "description": "À propos de l'offre d'emploi\n\nNOUS CONNAITRE !\n\nLa Direction Information System & Risks IT (ISR) a pour objectif de doter CACIB de la meilleure Plateforme IT et Opérations pour répondre aux besoins de maintenir et renforcer la qualité des services rendus à CACIB et de se préparer aux enjeux de croissance et de transformation digitale de CACIB dans les années futures.\n\nRejoignez la Direction ISR / Global IT (GIT) de CA-CIB, responsable de la conception, du développement, de la maintenance des applications et des systèmes de la Banque !\n\nA la pointe de l'innovation technologique, ses équipes accompagnent sur le plan technique et fonctionnel, les activités et projets de développement des différents métiers de la Banque de Financements et d'Investissement dans un environnement international.\n\nEn intégrant une filière informatique de plus de 2.500 collaborateurs, vous bénéficierez de multiples opportunités professionnelles, grâce à la diversité de nos métiers et à nos parcours évolutifs au sein de nos entités.\n\nLa Direction des Systèmes d'information, « Global IT », recherche un(e) :\nDéveloppeur C#/C++ Trade Processing Equity H/F - Basé à Montrouge (92)\n\nVOS MISSIONS\n\nDéveloppement & Architecture\n- Concevoir, déployer et maintenir la plateforme de trade processing\n- Participer à la mise en place de nouvelles architectures (API, micro-services, architecture data-centrique)\n- Proposer et valider des solutions techniques répondant aux besoins métiers\n\nPerformance & Qualité\n- Garantir les contraintes de performance, stabilité, maintenabilité et évolutivité des plateformes\n- Être garant de la stabilité de la plateforme et du design des solutions implémentées\n- Contribuer à l'amélioration continue de la performance du périmètre applicatif\n\nSupport & Collaboration\n- Assurer le support aux traders en salle de marché\n- Collaborer étroitement avec les équipes métier pour comprendre et anticiper leurs besoins\n- Participer à la transformation et simplification du système existant\n\nTransformation & Innovation\n- Encourager l'innovation et favoriser les idées nouvelles au sein de l'équipe\n- Contribuer à la mise en œuvre d'une architecture d'entreprise data-centrique dédiée aux Marchés de Capitaux\n- Faire évoluer les solutions en intégrant les dernières technologies, notamment les environnements cloud\n\nVOTRE EQUIPE\n\nVous intégrez le département Capital Markets IT (CMI), qui pilote le système d'information mondial des Marchés de Capitaux sur l'ensemble de la chaîne de valeur. Au sein de l'IT Division Equity, vous contribuez au support, à la maintenance et aux évolutions majeures du SI (Front to back to Risk) des activités Equity Derivatives, Delta One et Financing.\n\nVotre équipe : dynamique, agile, orientée innovation technologique et transformation digitale. Vous travaillez avec des équipes de trading, support et infrastructure dans un environnement data-centrique s'appuyant sur les technologies leaders du marché.\n\nEn tant que Développeur C#/C++, vous jouez un rôle clé dans le développement et l'optimisation du système de trade processing Equity Derivatives et Buy/Sell.\n\nVotre enjeu : assurer la croissance sur les émissions de produits structurés complexes et permettre le développement de l'activité Delta One.",
+  "location": "Montrouge (92), France",
+  "status": "saved",
+  "date_added": "2026-09-24T10:03:37.737Z",
+  "tags": [
+    "C++",
+    "C#",
+    "Trading",
+    "Capital Markets",
+    "Microservices",
+    "API",
+    "Banking",
+    "Finance"
+  ],
+  "ats_tags": [
+    "C#",
+    "C++",
+    "Trade Processing",
+    "Equity Derivatives",
+    "Capital Markets IT",
+    "microservices",
+    "on-site",
+    "Montrouge",
+    "finance IT"
+  ],
+  "ai_analysis": {
+    "job_id": "job-a18e2976",
+    "analyzed_at": "2026-09-24T13:23:00.839Z",
+    "ats_tags": [
+      "C#",
+      "C++",
+      "Trade Processing",
+      "Equity Derivatives",
+      "Capital Markets IT",
+      "microservices",
+      "on-site",
+      "Montrouge",
+      "finance IT"
+    ],
+    "entities_by_type": {
+      "experiences": [],
+      "projects": [],
+      "skills": [
+        {
+          "id": "skil-0247ad5c",
+          "name": "Programming & Languages",
+          "score": 65,
+          "reason": "Expert-level C++ directly matches half the required stack, but C# is entirely absent, a core job requirement.",
+          "type": "skill"
+        }
+      ],
+      "education": []
+    },
+    "confidence_score": 0.2,
+    "summary": "Overall fit is weak: the candidate is a strong systems/embedded C++ engineer with zero C# experience and no finance/trading domain exposure, while this role is fundamentally a C#/C++ trade-processing platform job for Capital Markets. Strongest overlap is raw C++ proficiency and some microservices/architecture exposure (EpiTweet), but the total absence of C# and any finance background is a major gap that the candidate's own stated goal (embedded/low-level/Linux) also confirms is not their target.",
+    "resume_tips": [
+      "Add C# explicitly to the skills list if any exposure exists (even coursework), since it is a core required language for this role",
+      "Reframe ARISTA and EpiTweet experience around 'performance, stability, maintainability' vocabulary used in the job description",
+      "Quantify the impact of the EpiTweet microservices architecture (latency, scalability, number of services) to align with 'architecture data-centrique' requirements",
+      "If any finance, trading, or capital-markets exposure exists (even personal projects), surface it prominently — it is currently absent from the resume",
+      "Highlight C++ performance optimization work (IRGPU 20x speedup, ARISTA register management) since 'performance, stabilité, évolutivité' are explicit priorities",
+      "Consider omitting or de-emphasizing pure embedded/hardware projects (STM32, VHDL, RFID driver) for this application since they are not relevant to a finance trade-processing role"
+    ],
+    "recommended_title": "C++/C# Developer — Trade Processing Equity",
+    "recommended_profile": "Looking for a full-time position in software engineering with a focus on C++/C# trade processing systems for capital markets. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded. Fluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running, cooking.",
+    "recommended_experience_ids": [
+      "exp-df8d4cde",
+      "exp-b0ccfdd9"
+    ],
+    "recommended_project_ids": [
+      "proj-58931465",
+      "proj-tiger",
+      "proj-irgpu"
+    ],
+    "recommended_skill_ids": [
+      "skil-0247ad5c",
+      "skil-52bcbd31"
+    ],
+    "recommended_skill_tags": {
+      "skil-0247ad5c": [
+        "C++",
+        "C++20",
+        "OOP",
+        "algorithms",
+        "data structures"
+      ],
+      "skil-52bcbd31": [
+        "optimisation",
+        "profiling",
+        "CI/CD",
+        "testing",
+        "system analysis"
+      ]
+    },
+    "suggested_new_skills": [
+      {
+        "name": "C#",
+        "category": "Programming Languages",
+        "level": "beginner",
+        "tags": [
+          ".NET",
+          "OOP"
+        ],
+        "reason": "Core required language for this role, currently absent from candidate's skill set"
+      },
+      {
+        "name": "Financial Markets Domain Knowledge",
+        "category": "Domain",
+        "tags": [
+          "Equity Derivatives",
+          "Delta One",
+          "trading"
+        ],
+        "level": "beginner",
+        "reason": "Job requires understanding of equity derivatives and trade processing workflows"
+      }
+    ],
+    "suggested_new_skill_tags": [
+      {
+        "skill_id": "skil-0247ad5c",
+        "tag": "C#",
+        "reason": "Explicitly required by the job title and description"
+      },
+      {
+        "skill_id": "skil-52bcbd31",
+        "tag": "microservices architecture",
+        "reason": "Job mentions API and micro-services architecture as a key mission"
+      },
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "cloud",
+        "reason": "Job mentions integrating cloud environments as part of transformation"
+      }
+    ],
+    "recommended_entity_descriptions": {
+      "exp-df8d4cde": "Software Engineer developing performance-critical C++ and Python components for chip-agnostic infrastructure, focused on stability, maintainability, and code generation — directly transferable skills for trade-processing platform performance and reliability requirements.",
+      "exp-b0ccfdd9": "Acted as first technical lead architecting full-stack information systems (PIM, CRM, ERP) for 10+ clients, including end-to-end ownership of platform design and stability, demonstrating experience proposing and validating technical solutions for business needs.",
+      "proj-58931465": "Designed a microservices-based platform (Java/Quarkus) with multi-database architecture deployed on Kubernetes, demonstrating experience with API-driven, data-centric architecture relevant to modern trade-processing platform design.",
+      "proj-tiger": "Built a C++ compiler frontend including lexing, parsing, type checking and LLVM IR generation, demonstrating strong C++ engineering and software architecture skills applicable to complex platform development.",
+      "proj-irgpu": "Developed a real-time C++/CUDA processing pipeline achieving 20x performance improvement through iterative optimization, illustrating capability to guarantee performance, stability and scalability constraints on demanding applicative platforms."
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "id": "gq-4f1f588e",
+  "question": "What is an interpreted language?\n",
+  "answer": "Source code is executed line-by-line by an interpreter at runtime, without prior compilation to machine code. Examples: Python, JavaScript, Ruby. Fast development (no compile step) but slower execution.\n",
+  "tags": [
+    "typology",
+    "interpreted",
+    "languages"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "id": "gq-5b5fe3b8",
+  "question": "What is the Feed-Forward Network (FFN) in a Transformer?\n",
+  "answer": "Two linear layers with a ReLU activation between them: FFN(x) = ReLU(W1 x + b1) W2 + b2. Applied independently to each token. Adds non-linearity and model capacity. Expands to 4x the embedding dimension, then projects back.\n",
+  "tags": [
+    "ai",
+    "transformer",
+    "ffn"
+  ]
+}

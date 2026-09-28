@@ -1,0 +1,14 @@
+{
+  "id": "ex-013",
+  "title": "Median of Two Sorted Arrays",
+  "difficulty": "hard",
+  "category": "Binary Search",
+  "knowledge_ids": [
+    "k-binary-search"
+  ],
+  "tags": [
+    "binary-search",
+    "arrays",
+    "divide-and-conquer"
+  ]
+}

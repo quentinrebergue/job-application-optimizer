@@ -1,0 +1,70 @@
+{
+  "selected_entity_ids": [
+    "edu-4b5b8a37",
+    "edu-c735b9b1",
+    "exp-df8d4cde",
+    "proj-40cdf000",
+    "proj-4c4f5731",
+    "proj-4f43d05f",
+    "skil-0247ad5c",
+    "skil-2799aa77",
+    "skil-52bcbd31",
+    "skil-a856cc8e",
+    "exp-0e31880e",
+    "proj-e5cdf5a5",
+    "proj-b1f3b77a",
+    "proj-irgpu"
+  ],
+  "ai_rankings": [],
+  "profile_text": "Looking for a full-time position in software engineering with a focus on ystems, Virtualization, Low-Level, C++.\nMSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded.\nFluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running , cooking.",
+  "resume_title": "Quentin Rebergue - Graduate Software Engineer - Systems & Virtualization",
+  "ai_context": "Im searching a first graduate job in system, low-level, hardware interface, linux",
+  "skill_tag_overrides": {
+    "skil-0247ad5c": [
+      "ASM",
+      "Bash",
+      "C",
+      "C++",
+      "C++20",
+      "CUDA",
+      "Rust",
+      "Shell"
+    ],
+    "skil-2799aa77": [
+      "ASIC interfacing",
+      "FPGA",
+      "I2C",
+      "SPI",
+      "UART"
+    ],
+    "skil-52bcbd31": [
+      "GDB",
+      "Git",
+      "Kubernetes",
+      "Security",
+      "monitoring",
+      "optimisation",
+      "testing",
+      "valgrind"
+    ],
+    "skil-a856cc8e": [
+      "Linux",
+      "Kernel",
+      "Drivers",
+      "Virtualization",
+      "Multithreading",
+      "GPU",
+      "real-time",
+      "DMA",
+      "operational systems",
+      "low-latency"
+    ]
+  },
+  "entity_description_overrides": {},
+  "project_order": [
+    "proj-4f43d05f",
+    "proj-40cdf000",
+    "proj-4c4f5731",
+    "proj-e5cdf5a5"
+  ]
+}

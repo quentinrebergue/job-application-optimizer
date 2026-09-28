@@ -1,0 +1,294 @@
+{
+  "id": "job-8271e27b",
+  "company": "Qube Research & Technologies (QRT)",
+  "title": "2027 – Graduate or Internship, Infrastructure Engineer",
+  "description": "À propos de l'offre d'emploi\n\n2027 – Graduate or Internship, Infrastructure Engineer\nLocation: London, Paris\nProgramme duration: 3–6-month internship, 12-month industrial placement or graduate position\nWho qualifies: Penultimate or final-year students completing a bachelor's or master's degree\n\nQube Research & Technologies (QRT) is a global quantitative and systematic investment manager operating across liquid asset classes and markets worldwide. Our approach to investing is scientific: we bring together data, research, technology and trading expertise to develop and run systematic strategies.\n\nTechnology is central to how QRT works. Over the years, we have built a global research and execution platform spanning geographies, asset classes and trading horizons, from ultra-low-latency systems to large-scale research, analytics, and risk infrastructure. We invest heavily in engineering, automation, and scalable systems because better technology allows us to test ideas faster, operate more reliably, and tackle harder problems.\n\nOur internships are designed to give students meaningful experience of that work. You'll join a team, contribute to real projects, and learn from engineers, researchers, and traders working on live problems. The environment is technical and collaborative, with plenty of scope to ask questions, explore different approaches, and take ownership. Strong performance during the internship may lead to consideration for a full-time graduate role.\n\nYOUR FUTURE ROLE AT QRT\n\nAs part of QRT's Infrastructure group, you'll help build and operate the systems behind our research, trading and business activities. The work spans hardware, operating systems, compute, storage, networking and platform engineering, with a common focus on performance, reliability and automation.\n\nThroughout the recruitment process, we'll consider your skills and interests alongside the problems our teams are working on. Depending on the strongest fit, your internship may focus on one of the following areas:\n\nInfrastructure\nThe Infrastructure team looks after the on-premise hardware and operating systems behind our production trading environment. The work goes well beyond keeping systems running: engineers measure and optimise hardware performance, investigate Linux internals and tune systems where small changes can make a meaningful difference. You'll develop a detailed understanding of how hardware and software interact and how to make production systems faster, more stable and more predictable.\n\nResearch Infrastructure\nResearch Infrastructure builds and operates the high-performance compute, networking and storage systems behind QRT's research. These systems support large-scale data processing, advanced analytics and machine learning and AI workloads using technologies such as PyTorch. The team works closely with researchers to understand what their workloads need and design infrastructure that can meet those demands efficiently. The aim is simple: give researchers reliable, scalable compute so they can spend more time on research and less time thinking about the infrastructure underneath it.\n\nHPC Storage\nThe HPC Storage team builds and operates the high-performance storage infrastructure behind large-scale research and computing workloads across QRT. The problems involve moving and serving large volumes of data reliably, securely and quickly enough to support demanding simulations and analyses. You'll work with enterprise-scale storage technologies and collaborate with engineers, researchers and technology vendors. It's an opportunity to understand storage at scale, from the underlying architecture and performance characteristics to the way researchers and compute systems interact with it.\n\nNetwork Operations\nNetwork Operations is responsible for the availability, reliability and security of QRT's global network, connecting the systems behind our research and trading activities. The team investigates incidents, develops observability tooling and builds automation to make operating the network more reliable and efficient. Alongside day-to-day operations, the team works on the infrastructure needed for high-performance compute and low-latency trading. This means understanding how networks behave in practice, finding the source of difficult problems and looking for ways to make systems simpler to operate and easier to observe.\n\nDevOps\nPlatform Engineering builds and automates the infrastructure, tools and workflows behind QRT's research and trading platforms. Working across cloud and on-premise environments, the team brings together DevOps, cloud, networking, security, infrastructure and software engineering. You'll work on the systems that allow researchers and developers to build, deploy and operate technology efficiently at scale. That could mean improving deployment workflows, automating infrastructure or finding better ways to make complex systems reliable and repeatable.\n\nSRE\nSite Reliability Engineering sits at the intersection of software engineering, quantitative research and trading. Working closely with researchers and traders, the team builds reliable, high-performance systems and develops tooling and automation for deployment, monitoring, operations and incident response. The work combines software engineering with an interest in how systems behave in production. You'll investigate technical problems, improve observability and help design systems that remain resilient as they scale, while developing an understanding of the quantitative workflows they support.\n\nYOUR CURRENT SKILLSET\n\nEligibility – Penultimate or final-year students pursuing a Bachelor's, Master's in a STEM discipline, such as Computer Science, Information Technology, Networks or a related subject, on track for a 2:1 or above.\n\nInterest in technology – We're interested in what you've explored and built, whether through hobbies, personal projects, academic work or open-source contributions.\n\nTechnical skills – You don't need experience with everything below. Depending on the team, relevant knowledge and experience may include:\n- Programming or scripting in languages such as Python or Bash.\n- Tools such as Git, SQL and GCC.\n- Confidence working from the Linux command line, including familiarity with Linux/Unix system administration fundamentals.\n- An understanding of storage concepts such as RAID, erasure coding, file systems and networking protocols.\n- Knowledge of networking concepts including TCP/IP and Ethernet.\n- Experience with monitoring and observability tools such as Grafana, Prometheus and PromQL.\n- Hands-on experimentation with Linux, such as building Linux systems on laptops or Raspberry Pis or working with custom Android installations, particularly for on-premise Infrastructure roles.\n\nMindset – Curious about how systems work and comfortable getting into the detail when something doesn't behave as expected. You approach problems methodically, ask questions and look for practical ways to improve performance or reliability.\n\nApproach – Self-motivated, collaborative and comfortable taking ownership of a technical problem.\n\nINTERVIEWING\n1. Application – Submit your application online. We review applications on a rolling basis, so applying early is recommended.\n2. Technical Assessment – Selected candidates will complete a coding challenge focused on core programming and problem-solving skills.\n3. Assessment Centre / Online Interviews – Shortlisted candidates will take part in interviews, either on-site at an assessment centre or via Microsoft Teams. We'll explore your technical thinking, how you approach unfamiliar problems and how you work with others.\n\nQRT is an equal opportunity employer. We welcome diversity as essential to our success. QRT empowers employees to work openly and respectfully to achieve collective success. In addition to professional achievement, we are offering initiatives and programs to enable employees achieve a healthy work-life balance.",
+  "location": "London, Paris",
+  "status": "applied",
+  "date_added": "2026-09-24T09:21:38.940Z",
+  "tags": [
+    "Linux",
+    "Infrastructure",
+    "HPC",
+    "Networking",
+    "Storage",
+    "SRE",
+    "DevOps",
+    "Python",
+    "Bash",
+    "Git",
+    "TCP/IP",
+    "Monitoring",
+    "Internship",
+    "Graduate"
+  ],
+  "ats_tags": [
+    "Linux",
+    "C/C++",
+    "Linux-kernel",
+    "systems programming",
+    "storage",
+    "networking",
+    "embedded",
+    "graduate",
+    "on-premise infrastructure",
+    "internship"
+  ],
+  "ai_analysis": {
+    "job_id": "job-8271e27b",
+    "analyzed_at": "2026-09-24T12:57:41.360Z",
+    "ats_tags": [
+      "Linux",
+      "C/C++",
+      "Linux-kernel",
+      "systems programming",
+      "storage",
+      "networking",
+      "embedded",
+      "graduate",
+      "on-premise infrastructure",
+      "internship"
+    ],
+    "entities_by_type": {
+      "experiences": [
+        {
+          "id": "exp-df8d4cde",
+          "type": "experience",
+          "name": "Software Engineer - Platform team at ARISTA",
+          "score": 88,
+          "reason": "Direct hands-on experience with chip-agnostic hardware infrastructure, SDK and DMA in Python/C++, closely mirrors QRT's Infrastructure/hardware focus, though not on-prem trading systems specifically."
+        },
+        {
+          "id": "exp-0e31880e",
+          "type": "experience",
+          "name": "Head of Teaching Assistants - YAKA / ACU Program at EPITA",
+          "score": 62,
+          "reason": "Demonstrates strong systems/Linux fundamentals and leadership at scale, but is teaching-focused rather than direct infrastructure engineering work."
+        }
+      ],
+      "projects": [
+        {
+          "id": "proj-4c4f5731",
+          "type": "project",
+          "name": "Linux System Tracing & Storage",
+          "score": 92,
+          "reason": "Near-perfect match to HPC Storage/Infrastructure requirements (RAID, LVM, LUKS, strace) with no direct gap."
+        },
+        {
+          "id": "proj-40cdf000",
+          "type": "project",
+          "name": "RFID Driver",
+          "score": 90,
+          "reason": "Kernel driver development is a strong match for Infrastructure's Linux internals focus, though it's a student project rather than production-scale."
+        },
+        {
+          "id": "proj-4f43d05f",
+          "type": "project",
+          "name": "My Docker",
+          "score": 90,
+          "reason": "Namespaces/cgroups/seccomp directly align with DevOps/Platform Engineering and SRE container tooling needs."
+        },
+        {
+          "id": "proj-953ddf40",
+          "type": "project",
+          "name": "MyHTTPd",
+          "score": 78,
+          "reason": "Low-level networking and performance engineering relevant to SRE/Network Ops, but not enterprise-scale or observability-tooled."
+        },
+        {
+          "id": "proj-2a5cd1e4",
+          "type": "project",
+          "name": "ARM project",
+          "score": 72,
+          "reason": "Embedded hardware interfacing skills relevant to on-premise Infrastructure, though scope is small/academic."
+        },
+        {
+          "id": "proj-irgpu",
+          "type": "project",
+          "name": "GPU-Accelerated Video Analysis System (IRGPU)",
+          "score": 70,
+          "reason": "CUDA/GPU optimisation experience aligns with Research Infrastructure's ML/AI compute focus, but domain (video) differs from finance research workloads."
+        },
+        {
+          "id": "proj-1b63d04a",
+          "type": "project",
+          "name": "42sh",
+          "score": 68,
+          "reason": "Solid Unix/shell systems programming relevant to Linux fundamentals, but less directly tied to any specific team's core stack."
+        },
+        {
+          "id": "proj-b1f3b77a",
+          "type": "project",
+          "name": "myMalloc",
+          "score": 65,
+          "reason": "Demonstrates low-level memory management skills relevant to systems engineering, but limited direct relevance to networking/storage/DevOps."
+        },
+        {
+          "id": "proj-58931465",
+          "type": "project",
+          "name": "EpiTweet",
+          "score": 62,
+          "reason": "Kubernetes/Docker/CI experience is relevant to Platform Engineering/DevOps, but the microservices/database focus is tangential to core infra work."
+        }
+      ],
+      "skills": [
+        {
+          "id": "skil-a856cc8e",
+          "type": "skill",
+          "name": "Systems",
+          "score": 95,
+          "reason": "Covers Linux, kernel, drivers, DMA, virtualization — near-exact match to the job's core technical requirements."
+        },
+        {
+          "id": "skil-52bcbd31",
+          "type": "skill",
+          "name": "Other / DevOps",
+          "score": 85,
+          "reason": "Strace, profiling, monitoring and CI/CD align well with Infrastructure/SRE/DevOps needs, though lacks specific tools like Grafana/Prometheus."
+        },
+        {
+          "id": "skil-0247ad5c",
+          "type": "skill",
+          "name": "Programming & Languages",
+          "score": 80,
+          "reason": "Strong C/C++/Python/Bash proficiency matches the required scripting and systems languages directly."
+        },
+        {
+          "id": "skil-2799aa77",
+          "type": "skill",
+          "name": "Embedded & Hardware",
+          "score": 78,
+          "reason": "ASIC interfacing and low-level hardware protocols relevant to Infrastructure's hardware performance focus, though more embedded-oriented than data-center hardware."
+        }
+      ],
+      "education": [
+        {
+          "id": "edu-4b5b8a37",
+          "type": "education",
+          "name": "MSc Computer Engineering, Low-level & Systems (GISTRE)",
+          "score": 92,
+          "reason": "Degree specialization in low-level systems is an almost exact academic match for this role's eligibility and technical focus."
+        }
+      ]
+    },
+    "confidence_score": 0.85,
+    "summary": "This is a strong domain fit: the candidate's academic background (EPITA Low-level & Systems MSc), current Arista role on chip/ASIC infrastructure, and multiple hands-on projects (Linux kernel driver, container runtime, storage stack with LVM/RAID/LUKS) map directly onto QRT's Infrastructure, HPC Storage and SRE tracks. The main gaps are limited exposure to enterprise networking/monitoring tooling (Grafana, Prometheus, PromQL) and no direct trading/finance context, but the technical depth in Linux internals and hardware-software interaction is well above what's typically expected at internship/graduate level.",
+    "resume_tips": [
+      "Explicitly surface Linux storage stack keywords (RAID, LVM, LUKS, erasure coding, file systems) near the top since HPC Storage and Infrastructure teams screen for these terms.",
+      "Add a monitoring/observability line (Grafana, Prometheus, PromQL) even if only from personal experimentation — currently missing and explicitly requested for SRE/Network Ops tracks.",
+      "Quantify the RFID kernel driver and container runtime projects (e.g. syscalls covered, latency achieved) to match the job's emphasis on performance and reliability.",
+      "Reframe the Arista experience with more infrastructure-facing language (chip-agnostic SDK, ASIC register infrastructure) rather than only 'Software Engineer' to align with the on-prem hardware focus of the Infrastructure team.",
+      "Mention TCP/IP or Ethernet protocol exposure explicitly if any exists (even academic) since Networking is a named requirement."
+    ],
+    "recommended_title": "Infrastructure Engineer — Linux Systems & Storage",
+    "recommended_profile": "Looking for a full-time position in software engineering with a focus on Linux internals, storage, and infrastructure systems. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded. Fluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running, cooking.",
+    "recommended_experience_ids": [
+      "exp-df8d4cde",
+      "exp-0e31880e"
+    ],
+    "recommended_project_ids": [
+      "proj-4c4f5731",
+      "proj-40cdf000",
+      "proj-4f43d05f",
+      "proj-953ddf40",
+      "proj-2a5cd1e4"
+    ],
+    "recommended_skill_ids": [
+      "skil-a856cc8e",
+      "skil-52bcbd31",
+      "skil-0247ad5c",
+      "skil-2799aa77"
+    ],
+    "recommended_skill_tags": {
+      "skil-a856cc8e": [
+        "Linux",
+        "OS",
+        "drivers",
+        "kernel",
+        "DMA",
+        "cache coherence",
+        "memory architecture",
+        "virtualization",
+        "networking"
+      ],
+      "skil-52bcbd31": [
+        "Git",
+        "strace",
+        "monitoring",
+        "optimisation",
+        "system analysis",
+        "profiling",
+        "CI/CD"
+      ],
+      "skil-0247ad5c": [
+        "C",
+        "Bash",
+        "SQL",
+        "Python",
+        "C++"
+      ],
+      "skil-2799aa77": [
+        "ASIC interfacing",
+        "I2C",
+        "UART",
+        "SPI",
+        "STM32"
+      ]
+    },
+    "suggested_new_skills": [
+      {
+        "name": "Grafana/Prometheus",
+        "category": "DevOps",
+        "level": "beginner",
+        "tags": [
+          "monitoring",
+          "observability",
+          "PromQL"
+        ],
+        "reason": "Explicitly required for Network Operations and SRE tracks, currently absent from candidate's skill list"
+      },
+      {
+        "name": "Networking Protocols (TCP/IP, Ethernet)",
+        "category": "Systems",
+        "level": "intermediate",
+        "tags": [
+          "TCP/IP",
+          "Ethernet",
+          "networking fundamentals"
+        ],
+        "reason": "Named requirement for Network Operations and general infrastructure roles"
+      }
+    ],
+    "suggested_new_skill_tags": [
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "RAID",
+        "reason": "Used in Linux System Tracing & Storage project, matches HPC Storage requirements"
+      },
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "LVM",
+        "reason": "Directly used in storage project, relevant to HPC Storage/Infrastructure tracks"
+      },
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "erasure coding",
+        "reason": "Explicitly mentioned in job requirements for storage concepts"
+      },
+      {
+        "skill_id": "skil-52bcbd31",
+        "tag": "observability",
+        "reason": "Job explicitly mentions observability tooling for Network Ops/SRE"
+      }
+    ],
+    "recommended_entity_descriptions": {
+      "exp-df8d4cde": "Software Engineer on Arista's Platform team, working on chip-agnostic infrastructure (Strata) for ASIC Physical Table registers, including SDK parsing, code generation and DMA handling in Python and C++. Won 1st place at Arista's internal Hackathon for an AI agent optimisation tool achieving 70% token reduction on internal codebases, approved for production. Hands-on exposure to low-level hardware/software interfaces directly relevant to infrastructure engineering.",
+      "exp-0e31880e": "Led a national team of 67 Teaching Assistants and supervised 5 intensive coding bootcamps (C/Bash, SQL, Java, C++, JS) and 7 systems-level projects (compiler, HTTP server in C, malloc, POSIX shell) for 700+ students across 5 campuses. Implemented a 1-on-1 code review mentorship model, improving TA-to-student ratio from 1:30 to 1:20, demonstrating strong Linux/Unix and systems programming fundamentals at scale.",
+      "proj-4c4f5731": "Used strace fault injection and syscall filtering to reverse-engineer a binary, and wrote a Bash script automating the full Linux storage stack: loop devices, LUKS2 encryption, LVM, dm-linear, dm-delay and RAID, directly demonstrating enterprise-relevant storage and Linux internals skills for HPC Storage / Infrastructure roles.",
+      "proj-40cdf000": "Developed a Linux kernel character device driver for the MFRC522 RFID reader, implementing file_operations callbacks, SPI regmap communication and a FIFO command interface, validated via QEMU emulation — hands-on experience with Linux kernel internals and hardware-software interaction.",
+      "proj-4f43d05f": "Built a lightweight container runtime in C using Linux namespaces, pivot_root, capability dropping, seccomp syscall filtering and cgroups, pulling and mounting root filesystems from a container registry — directly relevant to Linux system internals and platform/DevOps engineering.",
+      "proj-953ddf40": "Implemented an HTTP server in C using epoll in edge-triggered mode with a per-client state machine for efficient concurrent connection handling, including dynamic buffer management and HTTP request parsing — demonstrates low-level networking and performance-focused systems programming.",
+      "proj-2a5cd1e4": "Built an STM32F429ZI embedded system as a UART command server using Protobuf-over-UART (libgapcom), implementing a 4-level log subsystem and an I2C gyroscope driver with FIFO reads, showing hands-on hardware/firmware interfacing skills relevant to on-premise infrastructure work."
+    }
+  }
+}

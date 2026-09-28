@@ -1,0 +1,21 @@
+{
+  "id": "job-6a5f7d01",
+  "title": "Software Engineer (Backend)",
+  "company": "Helsing",
+  "description": "Helsing is a defence AI company building AI-based capabilities and enabling infrastructure that allow semi-autonomous platforms to localise, navigate, and perceive the world in real time. Engineering challenges span distributed systems (intermittent connectivity, byzantine actors), embedded computing (resource-constrained compute, reverse-engineering), robotics (control systems, tasking), networking (long-range low-bandwidth radios, cross-medium routing), deployment infrastructure (air-gapped devices, heterogeneous fleets), security (data sharing in low-trust/no-TLS networks), and machine learning (systems for model development, storage, dissemination).\n\nDay-to-day: review code contributions/proposals/RFCs from colleagues; propose and implement new features/capabilities/algorithms/infrastructure across the stack (a mix of Rust and Python, Python mainly in ML-heavy sections); mentor and support the interviewing pipeline; share technical know-how via tech talks and office hours; maintain the existing software stack (reliability, performance, reducing technical debt); develop tests and benchmarks; present work at weekly demo sessions.\n\nYou should apply if you can write legible, maintainable, performant code; communicate well in English; enjoy collaborating (code review, pair programming); are comfortable working asynchronously (PRs, RFCs, email discussions); have backend development experience ideally with Rust, Java, Go, or C++; are familiar with backend interface tools (REST, GraphQL, gRPC/Protocol Buffers, Arrow); and feel ethical considerations are an inherent part of engineering.\n\nNice to have: Rust and Python specifically; container-based/cloud-native architectures (Docker, Azure, AWS); metrics tooling (Prometheus, Grafana, ELK); SQL and streaming databases; routing protocols (IGP, BGP); cryptographic protocols (Signal, WireGuard); hardware interfaces (Arduino); robotics; production ML systems.\n\nOffer: focus on outcomes not time-tracking; competitive compensation and VSOP options; relocation support; social and education allowances; hands-on onboarding program (\"Infraduction\").",
+  "status": "saved",
+  "date_added": "2026-09-24T17:48:39.543Z",
+  "tags": [
+    "Rust",
+    "Python",
+    "Backend",
+    "Distributed Systems",
+    "Embedded",
+    "Robotics",
+    "Networking",
+    "Security",
+    "Machine Learning",
+    "gRPC",
+    "Docker"
+  ]
+}

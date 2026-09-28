@@ -1,0 +1,234 @@
+{
+  "id": "job-a01c3d7c",
+  "company": "CERN",
+  "title": "C++ Software Engineer (BE-CSS-DSP-2026-90-GRAP)",
+  "description": "Location: Geneva, Switzerland (Hybrid)\nContract: 24 months (extendable to 36)\nStart: 1 September 2026\nClosing date: 21 June 2026\nStipend: 6372–7004 CHF/month (tax free)\n\nRESPONSIBILITIES\n- Design, develop and deploy C++ software for the ISOLDE timing system upgrade at CERN\n- Work with the White Rabbit timing technology and real-time software framework for equipment control\n- Develop software controlling White Rabbit hardware modules for equipment synchronisation\n- Contribute to adaptation of existing real-time software to the new timing system\n\nREQUIRED PROFILE\n- Proven C++ development experience in Linux/Unix environments, including real-time systems\n- Experience with low-level development, libraries and kernel modules\n- Software quality assurance techniques and tooling\n\nKEY SKILLS\n- Hands-on C++ (real-time, embedded, low-level)\n- Linux, kernel modules, low-level libraries\n- Object-oriented programming, DevOps, testing and optimisation\n- Monitoring and troubleshooting of operational software\n- English required, French a plus\n\nELIGIBILITY\n- National of a CERN Member/Associate Member State\n- Master's degree + 2–6 years post-graduation experience, or PhD + up to 3 years\n- No previous CERN fellow or graduate contract\n\nField: Software Engineering and IT (Controls Software & Services group, Timing team)",
+  "url": "https://www.linkedin.com/jobs/view/4414028463/",
+  "status": "applied",
+  "date_added": "2026-05-31T11:20:00.811Z",
+  "tags": [],
+  "ats_tags": [
+    "C++",
+    "Real-time",
+    "Embedded",
+    "Low-level",
+    "Linux-kernel",
+    "Driver-development",
+    "Hardware-interface",
+    "Timing-systems",
+    "DevOps",
+    "Graduate-level"
+  ],
+  "ai_analysis": {
+    "job_id": "job-a01c3d7c",
+    "analyzed_at": "2026-06-02T10:38:19.964Z",
+    "ats_tags": [
+      "C++",
+      "Real-time",
+      "Embedded",
+      "Low-level",
+      "Linux-kernel",
+      "Driver-development",
+      "Hardware-interface",
+      "Timing-systems",
+      "DevOps",
+      "Graduate-level"
+    ],
+    "entities_by_type": {
+      "experiences": [
+        {
+          "id": "exp-0e31880e",
+          "type": "experience",
+          "name": "Head of Teaching Assistants — YAKA / ACU Program at EPITA",
+          "score": 70,
+          "reason": "Demonstrates leadership and mentorship on C/C++ systems programming projects, showing significant C/C++ exposure and teaching ability."
+        },
+        {
+          "id": "exp-df8d4cde",
+          "type": "experience",
+          "name": "Software Engineer Intern — Platform team at ARISTA",
+          "score": 90,
+          "reason": "Directly involves C++ and Python for low-level ASIC register management and DMA, aligning perfectly with required low-level and hardware interfacing experience."
+        }
+      ],
+      "projects": [
+        {
+          "id": "proj-1b6304a",
+          "type": "project",
+          "name": "42sh",
+          "score": 65,
+          "reason": "Shell interpreter in C demonstrates strong command-line interpretation and Unix system programming, relevant for Linux environments."
+        },
+        {
+          "id": "proj-2a5cd1e4",
+          "type": "project",
+          "name": "ARM project",
+          "score": 85,
+          "reason": "Develops an embedded system with STM32, ARM Cortex-M4, I2C, and UART, directly relevant to equipment control and low-level hardware interaction."
+        },
+        {
+          "id": "proj-40cdf000",
+          "type": "project",
+          "name": "RFID Driver",
+          "score": 90,
+          "reason": "Implementation of a Linux kernel character device driver with SPI communication is an exceptional match for low-level development and kernel modules."
+        },
+        {
+          "id": "proj-4f43d05f",
+          "type": "project",
+          "name": "My Docker",
+          "score": 75,
+          "reason": "Building a container runtime in C using Linux namespaces and cgroups showcases strong low-level Linux systems programming expertise."
+        },
+        {
+          "id": "proj-ad638299",
+          "type": "project",
+          "name": "Synchronous Real-Time Systems",
+          "score": 90,
+          "reason": "Built a real-time scheduler in C for embedded systems on Raspberry Pi, demonstrating direct experience with real-time software and embedded development."
+        },
+        {
+          "id": "proj-e5cdf5a5",
+          "type": "project",
+          "name": "Unicycle CPU",
+          "score": 60,
+          "reason": "Hardware design in VHDL for an ARM-like processor provides valuable context and understanding of hardware systems, though not directly C++ software."
+        },
+        {
+          "id": "proj-irgpu",
+          "type": "project",
+          "name": "GPU-Accelerated Video Analysis System (IRGPU)",
+          "score": 80,
+          "reason": "C++/CUDA development with real-time motion detection and significant optimization demonstrates strong C++ skills, real-time processing, and performance tuning."
+        }
+      ],
+      "skills": [
+        {
+          "id": "skil-0247ad5c",
+          "type": "skill",
+          "name": "Programming & Languages",
+          "score": 95,
+          "reason": "Expert proficiency in C, C++, real-time, low-level, embedded, and driver development directly addresses core job requirements."
+        },
+        {
+          "id": "skil-2799aa77",
+          "type": "skill",
+          "name": "Embedded & Hardware",
+          "score": 90,
+          "reason": "Advanced experience with STM32, Raspberry Pi, FPGA, I2C, UART, and ASIC interfacing is highly relevant for hardware control and timing systems."
+        },
+        {
+          "id": "skil-52bcbd31",
+          "type": "skill",
+          "name": "Other / DevOps",
+          "score": 75,
+          "reason": "Includes essential skills like Git, testing, optimisation, and monitoring, crucial for software quality assurance and operational software."
+        },
+        {
+          "id": "skil-6e8f7be7",
+          "type": "skill",
+          "name": "Equipment Control",
+          "score": 90,
+          "reason": "Directly lists 'hardware interface' and 'automation', perfectly matching the job's focus on equipment synchronisation and control."
+        },
+        {
+          "id": "skil-a856cc8e",
+          "type": "skill",
+          "name": "Systems",
+          "score": 95,
+          "reason": "Expert in Linux, Kernel, Drivers, real-time, and DMA directly aligns with the job's core technical stack and requirements."
+        }
+      ],
+      "education": [
+        {
+          "id": "edu-4b5b8a37",
+          "type": "education",
+          "name": "MSc Computer Engineering, Low-level & Systems (GISTRE) from EPITA",
+          "score": 85,
+          "reason": "A relevant Master's degree with a focus on low-level and systems, directly aligning with the job's technical domain and eligibility for a graduate contract."
+        }
+      ]
+    },
+    "confidence_score": 0.85,
+    "summary": "This candidate presents an exceptionally strong technical profile for a C++ Software Engineer role focusing on real-time, low-level Linux systems, with extensive project experience directly aligning with core requirements like kernel modules and embedded hardware control. While applying for a first graduate job, the depth of practical experience demonstrated through projects compensates significantly for the lack of post-graduation industry experience. This candidate is an outstanding technical match for a graduate-level position that demands deep systems programming expertise.",
+    "resume_tips": [
+      "Explicitly mention 'software quality assurance' and 'troubleshooting operational software' as distinct skills, as they are required.",
+      "Consider adding a brief objective statement highlighting interest in 'White Rabbit timing technology' or 'high-precision timing systems' if this is a strong draw.",
+      "Rephrase the 'Head of Teaching Assistants' experience to explicitly quantify the C++ and low-level C projects' complexity and outcomes, aligning with software development contributions."
+    ],
+    "recommended_title": "C++ Software Engineer — Real-time Embedded Linux",
+    "recommended_profile": "Looking for a full-time position in software engineering with a focus on: real-time C++, Linux, embedded systems, hardware interfacing. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded. Fluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running, cooking.",
+    "recommended_experience_ids": [
+      "exp-df8d4cde",
+      "exp-0e31880e"
+    ],
+    "recommended_project_ids": [
+      "proj-40cdf000",
+      "proj-ad638299",
+      "proj-2a5cd1e4",
+      "proj-irgpu",
+      "proj-4f43d05f"
+    ],
+    "recommended_skill_ids": [
+      "skil-0247ad5c",
+      "skil-a856cc8e",
+      "skil-2799aa77",
+      "skil-6e8f7be7"
+    ],
+    "recommended_skill_tags": {
+      "skil-0247ad5c": [
+        "C",
+        "C++",
+        "real-time",
+        "low-level",
+        "embedded",
+        "driver development",
+        "CUDA",
+        "OOP"
+      ],
+      "skil-a856cc8e": [
+        "Linux",
+        "Kernel",
+        "Drivers",
+        "real-time",
+        "DMA",
+        "Multithreading",
+        "operational systems"
+      ],
+      "skil-2799aa77": [
+        "STM32",
+        "Rasberry Pi",
+        "FPGA",
+        "UART",
+        "I2C",
+        "ASIC interfacing"
+      ],
+      "skil-6e8f7be7": [
+        "hardware interface",
+        "automation"
+      ]
+    },
+    "suggested_new_skills": [],
+    "suggested_new_skill_tags": [
+      {
+        "skill_id": "skil-52bcbd31",
+        "tag": "software quality assurance",
+        "reason": "Explicitly required by the job and missing as a specific tag."
+      },
+      {
+        "skill_id": "skil-52bcbd31",
+        "tag": "troubleshooting",
+        "reason": "Explicitly required for operational software troubleshooting."
+      }
+    ],
+    "recommended_entity_descriptions": {
+      "exp-0e31880e": "Led a team of 67 TAs, supervising 5 intensive coding bootcamps and 7 large-scale systems projects (e.g., C compiler, HTTP server in C, malloc, POSIX shell). Implemented a 1-on-1 code review mentorship, demonstrating leadership and deep exposure to low-level C/C++ development.",
+      "exp-df8d4cde": "Implemented non-zero reset value management for ASIC Physical Table registers, utilizing Python and C++ within a chip-agnostic Strata infrastructure (SDK parsing, code generation, DMA). Gained practical experience in low-level development and hardware interfacing.",
+      "proj-40cdf000": "Developed a Linux kernel character device driver for an MFRC522 RFID reader. Featured file_operations callbacks, SPI regmap communication, and a FIFO command interface, with testing via QEMU emulation. Directly relevant to kernel modules and low-level driver development for equipment synchronisation.",
+      "proj-ad638299": "Built a Rate Monotonic scheduler in Heptagon, a dataflow language compiling to deterministic C step functions without heap allocation. Deployed to Raspberry Pi 3 via UART bootloader, showcasing strong expertise in synchronous real-time embedded systems and equipment control.",
+      "proj-2a5cd1e4": "Engineered an STM32F429ZI embedded system functioning as a UART command server, leveraging libgapcom (Protobuf over UART). Implemented a 4-level log subsystem and an MPU6050 gyroscope driver over I2C with FIFO reads, demonstrating significant experience with low-level hardware modules and embedded systems.",
+      "proj-irgpu": "Developed a real-time motion detection pipeline using C++/CUDA, incorporating reservoir sampling, morphological operations, and hysteresis thresholding. Achieved a 20x CPU speedup through iterative CUDA optimization profiled with Nsight Compute, highlighting strong C++ real-time optimization skills.",
+      "proj-4f43d05f": "Constructed a lightweight container runtime in C, utilizing Linux namespaces, pivot_root, capabilities dropping, seccomp syscall filtering, and cgroups. This project demonstrates profound understanding of Linux low-level systems programming and operational software."
+    }
+  }
+}

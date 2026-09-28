@@ -1,0 +1,289 @@
+{
+  "id": "job-5d58c48d",
+  "company": "OVHcloud",
+  "title": "Graduate Software Engineer — Platform & Infrastructure",
+  "description": "OVHcloud is Europe's leading cloud provider, managing millions of servers across global datacentres. We handle everything from server hardware design to cloud platform development, with a strong focus on open source and European sovereignty.\n\nAbout the Role:\nYou will join our Platform Infrastructure team working on low-latency systems, Linux infrastructure and distributed systems at scale. You will contribute to building and optimizing the software layer powering OVHcloud's datacentres.\n\nKey Responsibilities:\n- Design and implement infrastructure software in Go and Rust\n- Work on low-latency networking and platform engineering\n- Contribute to Linux systems optimization and monitoring\n- Automate infrastructure management and deployment pipelines\n- Collaborate with hardware and network teams\n\nRequirements:\n- Strong Linux knowledge — kernel, system programming, drivers\n- Experience with C, Rust or Go\n- Low-level systems programming background\n- Understanding of networking and distributed systems\n- Python or Bash scripting\n\nNice to Have:\n- Kernel driver development\n- Container runtimes and virtualization\n- Performance profiling tools (perf, strace, valgrind)\n- Experience with storage systems\n\nTech Stack:\nGo, Rust, Linux, Kubernetes, Prometheus, Grafana",
+  "location": "Paris, France",
+  "status": "applied",
+  "date_added": "2026-06-20T18:37:48.604Z",
+  "tags": [
+    "Go",
+    "Rust",
+    "Linux",
+    "Platform Engineering",
+    "Infrastructure",
+    "Systems Programming",
+    "Kubernetes",
+    "Prometheus",
+    "Grafana",
+    "Distributed Systems",
+    "Networking"
+  ],
+  "ats_tags": [
+    "Linux",
+    "Kernel",
+    "System-Programming",
+    "Low-Level",
+    "Go",
+    "Rust",
+    "C",
+    "Networking",
+    "Distributed-Systems",
+    "Infrastructure",
+    "Graduate"
+  ],
+  "ai_analysis": {
+    "job_id": "job-5d58c48d",
+    "analyzed_at": "2026-06-20T18:39:10.948Z",
+    "ats_tags": [
+      "Linux",
+      "Kernel",
+      "System-Programming",
+      "Low-Level",
+      "Go",
+      "Rust",
+      "C",
+      "Networking",
+      "Distributed-Systems",
+      "Infrastructure",
+      "Graduate"
+    ],
+    "entities_by_type": {
+      "experiences": [
+        {
+          "id": "exp-0e31880e",
+          "type": "experience",
+          "name": "Head of Teaching Assistants - YAKA / ACU Program at EPITA",
+          "score": 75,
+          "reason": "Demonstrates strong foundational understanding of C/Bash and systems-level projects like HTTP servers and malloc through a leadership and teaching role."
+        },
+        {
+          "id": "exp-df8d4cde",
+          "type": "experience",
+          "name": "Software Engineer Intern - Platform team at ARISTA",
+          "score": 85,
+          "reason": "Direct experience in a 'Platform team' working on ASIC interfacing with C++ and Python, focusing on low-level systems and optimization, highly relevant to the role."
+        }
+      ],
+      "projects": [
+        {
+          "id": "proj-1b63d04a",
+          "type": "project",
+          "name": "42sh",
+          "score": 80,
+          "reason": "Directly implements a shell interpreter in C, showcasing strong Unix system programming, parser development, and command-line handling relevant to Linux infrastructure."
+        },
+        {
+          "id": "proj-2a5cd1e4",
+          "type": "project",
+          "name": "ARM project",
+          "score": 85,
+          "reason": "Demonstrates practical experience with embedded systems, UART communication, I2C driver development, and low-level hardware interaction using C."
+        },
+        {
+          "id": "proj-40cdf000",
+          "type": "project",
+          "name": "RFID Driver",
+          "score": 95,
+          "reason": "Outstanding match due to direct Linux kernel character device driver development, SPI communication, and testing via QEMU, fulfilling a key requirement."
+        },
+        {
+          "id": "proj-4c4f5731",
+          "type": "project",
+          "name": "Linux System Tracing & Storage",
+          "score": 90,
+          "reason": "Exceptional match for Linux systems optimization, Bash scripting, and understanding of storage systems (LUKS2, LVM, RAID) and performance profiling tools like strace."
+        },
+        {
+          "id": "proj-4f43d05f",
+          "type": "project",
+          "name": "My Docker",
+          "score": 90,
+          "reason": "Exceptional match for container runtimes and virtualization, as it involves building a lightweight container runtime from scratch using Linux namespaces and cgroups in C."
+        },
+        {
+          "id": "proj-953ddf40",
+          "type": "project",
+          "name": "MyHTTPd",
+          "score": 85,
+          "reason": "Demonstrates excellent C network programming skills using epoll for low-latency, concurrent connection handling, directly relevant to low-latency networking systems."
+        },
+        {
+          "id": "proj-ad638299",
+          "type": "project",
+          "name": "Synchronous Real-Time Systems",
+          "score": 80,
+          "reason": "Showcases experience with real-time embedded systems and scheduler implementation, contributing to understanding of low-latency systems."
+        },
+        {
+          "id": "proj-b1f3b77a",
+          "type": "project",
+          "name": "myMalloc",
+          "score": 85,
+          "reason": "Strong demonstration of low-level systems programming and memory management in C, essential for optimizing infrastructure software."
+        },
+        {
+          "id": "proj-e5cdf5a5",
+          "type": "project",
+          "name": "Unicycle CPU",
+          "score": 75,
+          "reason": "Provides foundational hardware design knowledge (VHDL, FPGA, ARM-like CPU), beneficial for collaborating with hardware teams and understanding underlying systems."
+        },
+        {
+          "id": "proj-irgpu",
+          "type": "project",
+          "name": "GPU-Accelerated Video Analysis System (IRGPU)",
+          "score": 75,
+          "reason": "Demonstrates C++ and CUDA skills for real-time, high-performance systems and profiling with Nsight Compute, relevant for low-latency optimization."
+        },
+        {
+          "id": "proj-tiger",
+          "type": "project",
+          "name": "Tiger Compiler",
+          "score": 70,
+          "reason": "Showcases strong C++ development and understanding of compiler internals, which is a foundational aspect of systems programming."
+        }
+      ],
+      "skills": [
+        {
+          "id": "skil-0247ad5c",
+          "type": "skill",
+          "name": "Programming & Languages",
+          "score": 90,
+          "reason": "Expertise in C, Rust, C++, Python, and Bash directly covers the primary language requirements and preferred languages, though Go is not explicitly listed."
+        },
+        {
+          "id": "skil-2799aa77",
+          "type": "skill",
+          "name": "Embedded & Hardware",
+          "score": 90,
+          "reason": "Advanced experience with ASIC interfacing, FPGA, I2C, and SPI is highly relevant for collaboration with hardware teams and low-level platform engineering."
+        },
+        {
+          "id": "skil-52bcbd31",
+          "type": "skill",
+          "name": "Other / DevOps",
+          "score": 90,
+          "reason": "Advanced skills in Kubernetes, monitoring, optimization, strace, valgrind, and perf directly align with the job's tech stack and responsibilities for system optimization and infrastructure."
+        },
+        {
+          "id": "skil-a856cc8e",
+          "type": "skill",
+          "name": "Systems",
+          "score": 95,
+          "reason": "Expert-level understanding of Kernel, Linux, Drivers, low-latency, networking, virtualization, and profiling directly matches almost all core requirements of the role."
+        }
+      ],
+      "education": [
+        {
+          "id": "edu-4b5b8a37",
+          "type": "education",
+          "name": "MSc Computer Engineering, Low-level & Systems (GISTRE) from EPITA",
+          "score": 85,
+          "reason": "The specialization in 'Low-level & Systems' from a reputable institution is a strong academic foundation directly aligned with the job's focus."
+        }
+      ]
+    },
+    "confidence_score": 0.9,
+    "summary": "This candidate is an exceptional match for a Graduate Software Engineer position, demonstrating deep technical expertise in Linux systems, low-level programming, kernel development, and embedded systems through numerous highly relevant projects. While strong in C, Rust, Python, and Bash, explicit experience with Go is not highlighted but likely quickly acquirable given their strong background.",
+    "resume_tips": [
+      "Add explicit mention of Go language experience, even if self-taught or indicating strong aptitude to learn.",
+      "Quantify the impact of the AI agent optimization tool in the ARISTA internship (e.g., specific metrics beyond 70% token reduction).",
+      "Highlight 'Linux Kernel' as a distinct skill or sub-category under Systems, given its direct relevance to the role.",
+      "For the ARISTA internship, explicitly connect the ASIC work to 'low-latency systems' or 'platform engineering' if applicable.",
+      "Consolidate 'operational systems' and 'operating systems' into a single, comprehensive 'Operating Systems' skill tag for clarity."
+    ],
+    "recommended_title": "Graduate Software Engineer — Linux Infrastructure & Systems",
+    "recommended_profile": "Looking for a full-time position in software engineering with a focus on: Linux, low-level systems, infrastructure, Go, Rust. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded. Fluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running, cooking.",
+    "recommended_experience_ids": [
+      "exp-df8d4cde",
+      "exp-0e31880e"
+    ],
+    "recommended_project_ids": [
+      "proj-40cdf000",
+      "proj-4f43d05f",
+      "proj-4c4f5731",
+      "proj-953ddf40",
+      "proj-b1f3b77a"
+    ],
+    "recommended_skill_ids": [
+      "skil-a856cc8e",
+      "skil-0247ad5c",
+      "skil-52bcbd31"
+    ],
+    "recommended_skill_tags": {
+      "skil-0247ad5c": [
+        "C",
+        "ASM",
+        "Shell",
+        "Rust",
+        "C++",
+        "Bash",
+        "Python",
+        "algorithms",
+        "data structures"
+      ],
+      "skil-52bcbd31": [
+        "GDB",
+        "Git",
+        "Kubernetes",
+        "monitoring",
+        "optimisation",
+        "strace",
+        "system analysis",
+        "valgrind",
+        "perf"
+      ],
+      "skil-a856cc8e": [
+        "ASIC interfacing",
+        "Drivers",
+        "Kernel",
+        "Linux",
+        "Multithreading",
+        "Virtualization",
+        "low-latency",
+        "networking",
+        "operating systems",
+        "profiling",
+        "real-time",
+        "virtual memory"
+      ]
+    },
+    "suggested_new_skills": [
+      {
+        "name": "Go",
+        "category": "Languages",
+        "level": "intermediate",
+        "tags": [
+          "concurrency",
+          "backend",
+          "systems"
+        ],
+        "reason": "Required by job and part of tech stack; candidate has strong C/Rust background for fast acquisition."
+      }
+    ],
+    "suggested_new_skill_tags": [
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "distributed systems",
+        "reason": "Explicitly mentioned as a job requirement and matches candidate's demonstrated project experience."
+      },
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "platform engineering",
+        "reason": "Directly mentioned in job role and aligns with candidate's experience in low-level systems and infrastructure."
+      }
+    ],
+    "recommended_entity_descriptions": {
+      "exp-0e31880e": "Led a national team of 67 TAs, supervising intensive coding bootcamps in C/Bash and large-scale projects including HTTP servers in C, custom malloc, and POSIX shells, demonstrating strong foundational understanding of low-level systems programming and infrastructure concepts.",
+      "exp-df8d4cde": "Implemented non-zero reset value management for ASIC Physical Table registers within the chip-agnostic Strata infrastructure using Python and C++, gaining direct experience in low-level systems programming and hardware interfacing for platform engineering. Won a hackathon by building an AI agent optimization tool approved for production development, highlighting performance optimization skills.",
+      "proj-1b63d04a": "Developed a robust shell interpreter in C with a complete lexer, parser, and abstract syntax tree, handling command-line interpretation, redirection, and pipes, showcasing strong Unix system programming skills relevant to Linux infrastructure.",
+      "proj-2a5cd1e4": "Built an STM32F429ZI embedded system acting as a UART command server, implementing a 4-level log subsystem and an MPU6050 gyroscope driver over I2C, demonstrating practical experience in low-level embedded systems and hardware driver development.",
+      "proj-40cdf000": "Engineered a Linux kernel character device driver for the MFRC522 RFID reader with file_operations callbacks, SPI regmap communication, and a FIFO command interface, tested via QEMU, directly fulfilling the kernel driver development and low-level Linux system programming requirements.",
+      "proj-4c4f5731": "Used strace for syscall filtering and fault injection to reverse-engineer a binary, and wrote a Bash script automating Linux storage stacks including loop devices, LUKS2, LVM, and RAID, demonstrating deep Linux systems optimization and infrastructure management capabilities.",
+      "proj-4f43d05f": "Implemented a lightweight container runtime in C, utilizing Linux namespaces, pivot_root, capabilities dropping, seccomp syscall filtering, and cgroups, gaining direct experience in container runtimes and low-level Linux virtualization techniques essential for platform infrastructure.",
+      "proj-953ddf40": "Developed an efficient HTTP server in C using epoll with edge-triggered mode and a per-client state machine for concurrent connection handling, showcasing expertise in low-latency networking and systems programming.",
+      "proj-b1f3b77a": "Implemented a custom malloc in C focusing on efficient memory reuse and fragmentation minimization with bucket-based allocation and mmap for page management, highlighting advanced systems programming and memory management skills crucial for low-level infrastructure optimization."
+    }
+  }
+}

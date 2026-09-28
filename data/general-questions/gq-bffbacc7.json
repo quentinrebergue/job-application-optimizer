@@ -1,0 +1,10 @@
+{
+  "id": "gq-bffbacc7",
+  "question": "What is quantization?\n",
+  "answer": "Reduce the precision (bits) of model weights and activations: float32 → float16 → int8. Smaller model (less memory), faster inference (fewer ops), slightly lower accuracy. Examples: 8-bit quantization shrinks model 4x. Critical for deploying large models.\n",
+  "tags": [
+    "ai",
+    "inference",
+    "optimization"
+  ]
+}

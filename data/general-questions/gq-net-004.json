@@ -1,0 +1,6 @@
+{
+  "id": "gq-net-004",
+  "question": "How does TCP handle congestion control?",
+  "answer": "TCP uses several mechanisms:\n- **Slow start**: begins with a small congestion window (cwnd), doubles it every RTT until a threshold\n- **Congestion avoidance**: after threshold, increases cwnd linearly (additive increase)\n- **Fast retransmit**: 3 duplicate ACKs trigger retransmission before timeout\n- **Fast recovery** (CUBIC, BBR): modern algorithms adjust cwnd based on packet loss or delay signals\n\nThe goal is to fill the pipe without overflowing routers — probe for available bandwidth while reacting to congestion signals.",
+  "tags": ["networking"]
+}

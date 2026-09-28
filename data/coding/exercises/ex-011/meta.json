@@ -1,0 +1,14 @@
+{
+  "id": "ex-011",
+  "title": "Design a Rate Limiter",
+  "difficulty": "medium",
+  "category": "Other",
+  "knowledge_ids": [
+    "k-system-design"
+  ],
+  "tags": [
+    "system-design",
+    "api",
+    "distributed-systems"
+  ]
+}

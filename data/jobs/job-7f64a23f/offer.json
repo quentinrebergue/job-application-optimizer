@@ -1,0 +1,228 @@
+{
+  "id": "job-7f64a23f",
+  "company": "Poolside",
+  "title": "Member of Engineering (Inference Infrastructure)",
+  "description": "Poolside is building toward AGI through intelligence systems built for software development, with a team distributed across Europe and North America (monthly in-person gathering in Paris).\n\nRole: working in the compute team on GPU workload scheduling and inference serving optimization. Partner with the inference team to improve inference throughput/latency for evals and reinforcement learning; collaborate with the scalability team on stabilizing large-scale fault-tolerant training; work with the infra team to keep GPU nodes healthy and fully utilized.\n\nMission: optimize GPU utilization across the company and deliver a stable, scalable inference serving stack for Poolside's researchers.\n\nResponsibilities: design and develop an internal scheduling system to maximize GPU utilization; build API and tooling to manage the lifecycle of GPU workloads and troubleshoot failures; design and improve the inference control plane to speed up model deployment and inference request serving; collaborate with research to continuously improve research velocity.\n\nSkills & experience: strong programming skills in Go or similar languages; strong systems engineering background (distributed systems, schedulers, control planes, or high-throughput data planes); production experience with Kubernetes internals (controllers, informers, operators, not just deploying to it); bias toward observability and debuggability. Plus: experience serving large-scale inference requests.\n\nProcess: intro call, technical interview(s) with a Member of Engineering, team fit call with People, final interview with a Founding Engineer.\n\nBenefits: fully remote & flexible hours; 37 days/year vacation & holidays; health insurance allowance for you & dependents; 16 weeks flexible full-pay parental leave; well-being/learning/home office allowances; company-provided equipment; frequent team get-togethers.",
+  "location": "Remote (EMEA)",
+  "status": "saved",
+  "date_added": "2026-09-24T17:53:58.655Z",
+  "tags": [
+    "Go",
+    "Distributed Systems",
+    "Kubernetes",
+    "GPU",
+    "Inference",
+    "Scheduling",
+    "Systems Engineering",
+    "Machine Learning Infrastructure"
+  ],
+  "ats_tags": [
+    "Go",
+    "Kubernetes",
+    "GPU scheduling",
+    "distributed systems",
+    "Linux",
+    "inference serving",
+    "control plane",
+    "systems engineering",
+    "graduate-level"
+  ],
+  "ai_analysis": {
+    "job_id": "job-7f64a23f",
+    "analyzed_at": "2026-09-24T18:13:49.124Z",
+    "ats_tags": [
+      "Go",
+      "Kubernetes",
+      "GPU scheduling",
+      "distributed systems",
+      "Linux",
+      "inference serving",
+      "control plane",
+      "systems engineering",
+      "graduate-level"
+    ],
+    "entities_by_type": {
+      "experiences": [
+        {
+          "id": "exp-df8d4cde",
+          "name": "Software Engineer - Platform team at ARISTA",
+          "score": 62,
+          "reason": "Production low-level systems work (SDK, DMA, code generation in C++/Python) shows real systems engineering rigor but has no overlap with Go, Kubernetes, or inference serving.",
+          "type": "experience"
+        }
+      ],
+      "projects": [
+        {
+          "id": "proj-4f43d05f",
+          "name": "My Docker",
+          "score": 72,
+          "reason": "Namespaces/cgroups/seccomp container runtime directly parallels GPU workload lifecycle and isolation concepts central to this role.",
+          "type": "project"
+        },
+        {
+          "id": "proj-irgpu",
+          "name": "GPU-Accelerated Video Analysis System (IRGPU)",
+          "score": 66,
+          "reason": "Hands-on CUDA/GPU optimization and profiling experience is relevant to GPU utilization work, though not inference serving specifically.",
+          "type": "project"
+        },
+        {
+          "id": "proj-ero2",
+          "name": "Queuing System Analysis",
+          "score": 63,
+          "reason": "Queuing theory and server allocation modeling is conceptually close to scheduler design, but it's an academic simulation, not production code.",
+          "type": "project"
+        },
+        {
+          "id": "proj-4c4f5731",
+          "name": "Linux System Tracing & Storage",
+          "score": 61,
+          "reason": "Strong Linux debuggability/observability skills (strace, storage stacks) align with the job's observability bias, but lacks distributed systems/scheduler scope.",
+          "type": "project"
+        },
+        {
+          "id": "proj-953ddf40",
+          "name": "MyHTTPd",
+          "score": 60,
+          "reason": "Epoll-based high-throughput server shows relevant data-plane engineering skills but is single-node and unrelated to inference serving or Kubernetes.",
+          "type": "project"
+        }
+      ],
+      "skills": [
+        {
+          "id": "skil-a856cc8e",
+          "name": "Systems",
+          "score": 80,
+          "reason": "Deep Linux, kernel, GPU, and virtualization knowledge closely matches the systems engineering background required, though production distributed-systems scale is unproven.",
+          "type": "skill"
+        },
+        {
+          "id": "skil-52bcbd31",
+          "name": "Other / DevOps",
+          "score": 75,
+          "reason": "Kubernetes, observability, and monitoring tooling experience aligns well, but lacks controller/operator-level depth explicitly required.",
+          "type": "skill"
+        },
+        {
+          "id": "skil-0247ad5c",
+          "name": "Programming & Languages",
+          "score": 62,
+          "reason": "Strong C/C++/Python foundation is solid, but Go, the job's primary required language, is entirely absent.",
+          "type": "skill"
+        }
+      ],
+      "education": [
+        {
+          "id": "edu-4b5b8a37",
+          "name": "MSc Computer Engineering, Low-level & Systems (GISTRE)",
+          "score": 70,
+          "reason": "Degree specialization in low-level systems is directly relevant, though it doesn't cover distributed systems or inference-serving specifics.",
+          "type": "education"
+        }
+      ]
+    },
+    "confidence_score": 0.35,
+    "summary": "This is a moderate-to-weak match: the candidate has solid Linux/systems fundamentals (containers, kernel drivers, GPU/CUDA, epoll-based servers) that map conceptually to GPU workload management, but has zero Go experience and no production Kubernetes internals (controllers/informers/operators) or inference-serving track record, which are the job's core hard requirements. This role also appears to expect more production seniority than a first graduate job, creating a seniority gap despite the candidate's genuine low-level/systems interest.",
+    "resume_tips": [
+      "Add Go/Golang explicitly to your skills or gain quick project exposure, since it is the primary required language for this role and currently absent from your profile",
+      "Reframe 'My Docker' project description to emphasize workload lifecycle management (namespaces, cgroups, seccomp) — this is the closest match to the job's GPU workload scheduling responsibilities",
+      "Quantify the ARISTA experience (scale of registers/chips affected, performance or reliability gains) to demonstrate production systems impact",
+      "Highlight Kubernetes exposure from EpiTweet but be honest it's deployment-level; if possible add a small project using client-go, controllers, or operator-sdk to close the internals gap",
+      "Surface GPU/CUDA work (IRGPU) higher on the resume with concrete throughput numbers, since GPU utilization is central to this role",
+      "Add observability tooling (Prometheus/Grafana) usage tied to a concrete project to support the 'bias toward observability/debuggability' requirement"
+    ],
+    "recommended_title": "Systems Software Engineer — GPU & Linux Infrastructure",
+    "recommended_profile": "Looking for a full-time position in software engineering with a focus on GPU scheduling, Linux systems, and container internals. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded. Fluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running, cooking.",
+    "recommended_experience_ids": [
+      "exp-df8d4cde"
+    ],
+    "recommended_project_ids": [
+      "proj-4f43d05f",
+      "proj-irgpu",
+      "proj-ero2",
+      "proj-4c4f5731",
+      "proj-953ddf40"
+    ],
+    "recommended_skill_ids": [
+      "skil-a856cc8e",
+      "skil-52bcbd31",
+      "skil-0247ad5c"
+    ],
+    "recommended_skill_tags": {
+      "skil-a856cc8e": [
+        "GPU",
+        "Linux",
+        "kernel",
+        "drivers",
+        "containers",
+        "DMA",
+        "virtualization",
+        "multithreading",
+        "memory architecture",
+        "low-latency"
+      ],
+      "skil-52bcbd31": [
+        "Kubernetes",
+        "observability",
+        "monitoring",
+        "Grafana/Prometheus",
+        "CI/CD",
+        "profiling",
+        "benchmarking",
+        "optimisation"
+      ],
+      "skil-0247ad5c": [
+        "C",
+        "C++",
+        "Python",
+        "CUDA",
+        "Bash",
+        "algorithms",
+        "data structures"
+      ]
+    },
+    "suggested_new_skills": [
+      {
+        "name": "Go",
+        "category": "Languages",
+        "level": "beginner",
+        "tags": [
+          "systems programming",
+          "concurrency"
+        ],
+        "reason": "Explicitly required as the primary language for this role"
+      },
+      {
+        "name": "Kubernetes Controllers/Operators Development",
+        "category": "DevOps",
+        "level": "beginner",
+        "tags": [
+          "client-go",
+          "informers",
+          "CRDs"
+        ],
+        "reason": "Job requires production experience with Kubernetes internals beyond deployment"
+      }
+    ],
+    "suggested_new_skill_tags": [
+      {
+        "skill_id": "skil-52bcbd31",
+        "tag": "controllers/operators",
+        "reason": "Job requires production experience with Kubernetes controllers, informers, and operators"
+      },
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "distributed systems",
+        "reason": "Job requires a distributed systems background for scheduler and control plane design"
+      },
+      {
+        "skill_id": "skil-a856cc8e",
+        "tag": "scheduling",
+        "reason": "Core responsibility of the role is designing a GPU workload scheduling system"
+      }
+    ],
+    "recommended_entity_descriptions": {
+      "proj-4f43d05f": "Built a lightweight container runtime in C using Linux namespaces, pivot_root, capability dropping, cgroups, and seccomp syscall filtering to isolate and manage process lifecycles, closely mirroring GPU workload lifecycle management and control-plane concepts. Implemented registry image pulling and root filesystem mounting, demonstrating hands-on Linux systems engineering relevant to inference infrastructure tooling."
+    }
+  }
+}

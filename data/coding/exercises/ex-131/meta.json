@@ -1,0 +1,13 @@
+{
+  "id": "ex-131",
+  "title": "Add and Search Word",
+  "difficulty": "medium",
+  "category": "Other",
+  "knowledge_ids": [],
+  "tags": [
+    "trie",
+    "dfs",
+    "design"
+  ],
+  "leetcode": 211
+}

@@ -1,0 +1,6 @@
+{
+  "id": "gq-os-009",
+  "question": "What happens when you run a program on Linux?",
+  "answer": "1. Shell calls `fork()` — creates a child process\n2. Child calls `execve(path, argv, envp)` — kernel loads the ELF binary\n3. Kernel reads ELF headers, maps segments into virtual memory (code, data, BSS)\n4. Dynamic linker (`ld.so`) is invoked — loads shared libraries, resolves symbols\n5. Stack is set up with `argc`, `argv`, `envp`\n6. Control transferred to `_start` (CRT startup code)\n7. CRT initializes C++ globals, calls `main()`\n8. On return from `main`, `exit()` is called — flushes stdio buffers, calls `atexit` handlers, kernel cleans up process",
+  "tags": ["os", "linux"]
+}

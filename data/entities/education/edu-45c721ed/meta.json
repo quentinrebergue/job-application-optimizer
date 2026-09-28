@@ -1,0 +1,13 @@
+{
+  "id": "edu-45c721ed",
+  "type": "education",
+  "degree": "Scientific Baccalaureate (Engineering & Computer Science) — Honors",
+  "institution": "Lycée Chaptal",
+  "period": "2016 – 2019",
+  "tags": [
+    "Bac",
+    "Honors",
+    "Computer Science"
+  ],
+  "latex_snippet": "\\item \\textbf{Scientific Baccalaureate (Engineering \\& Computer Science) --- Honors}, Lycee Chaptal, Paris {\\small{\\hfill 2016--2019}}"
+}

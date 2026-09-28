@@ -1,0 +1,10 @@
+{
+  "id": "gq-5ac514b8",
+  "question": "What is pruning?\n",
+  "answer": "Remove weights (or neurons/channels) that contribute little to accuracy. Sparse models require fewer operations and memory. Can combine with quantization. Trade-off: faster inference, lower accuracy, requires retraining or fine-tuning.\n",
+  "tags": [
+    "ai",
+    "inference",
+    "optimization"
+  ]
+}

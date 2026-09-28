@@ -1,0 +1,10 @@
+{
+  "id": "gq-617fce8c",
+  "question": "What is static typing?\n",
+  "answer": "Type of every variable is known at compile time and checked before the program runs. Examples: C++, Java, Rust. Catches type errors early but requires explicit type declarations (or inference).\n",
+  "tags": [
+    "typology",
+    "static-typing",
+    "type-system"
+  ]
+}

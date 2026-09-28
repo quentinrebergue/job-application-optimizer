@@ -1,0 +1,10 @@
+{
+  "id": "gq-1fd164c0",
+  "question": "What do the two DMA engines on a modern GPU enable?\n",
+  "answer": "Host→Device and Device→Host transfers simultaneously — full duplex on top of compute.\n",
+  "tags": [
+    "cuda",
+    "dma",
+    "transfer"
+  ]
+}

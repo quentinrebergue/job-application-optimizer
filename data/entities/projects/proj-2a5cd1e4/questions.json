@@ -1,0 +1,22 @@
+[
+  {
+    "id": "q-arm-1",
+    "question": "How did you integrate libgapcom and why use interrupt-driven UART instead of polling?",
+    "answer": "libgapcom is a Protobuf-over-UART library provided by the GISTRE team. Integrating it required adding it as a STM32 static library and configuring the include paths in the .ioc project. We chose interrupt-driven UART (HAL_UART_Receive_IT) rather than polling for two reasons: polling would block the main loop and make the firmware unresponsive while waiting for bytes, and it introduces non-deterministic latency. With interrupts, the UART ISR fills a ring buffer and sets a flag; the main loop processes complete frames only when ready. This keeps the control flow clean and avoids busy-waiting. The trade-off is more complex state management across the ISR and main context, which we handled by keeping the ISR minimal (buffer write only) and doing all parsing in the main loop."
+  },
+  {
+    "id": "q-arm-2",
+    "question": "Walk through your MPU6050 driver — init sequence, FIFO usage, and I2C register access.",
+    "answer": "The MPU6050 communicates over I2C at address 0x68. Our init sequence: (1) write 0x00 to PWR_MGMT_1 to wake the device and select the internal oscillator; (2) set SMPLRT_DIV to 49 for a 20 Hz sample rate; (3) configure the DLPF via CONFIG for bandwidth filtering; (4) set GYRO_CONFIG to ±250°/s range; (5) disable I2C master mode via USER_CTRL; (6) enable the gyro FIFO via FIFO_EN. We used the FIFO rather than direct register reads to avoid timing-sensitive polling — the FIFO accumulates samples at the hardware sample rate and we drain it on demand with MPU6050_ReadGyroFIFO, reading FIFO_COUNT first then the correct number of bytes. All register access goes through two internal helpers (writeRegister / readRegisters) wrapping HAL_I2C_Mem_Write/Read, which kept the rest of the driver clean."
+  },
+  {
+    "id": "q-arm-3",
+    "question": "How did you handle interrupt priority conflicts on the STM32 (.ioc configuration)?",
+    "answer": "STM32 Cortex-M4 uses NVIC preemption priorities (0 = highest). When we enabled both UART and I2C interrupts, we observed that the I2C transfer inside the gyroscope callback was occasionally corrupted. The root cause was that the UART ISR had a higher preemption priority than the I2C event ISR, so a UART interrupt could fire mid-I2C transfer and corrupt the HAL state. The fix was to open the .ioc file in STM32CubeMX, go to NVIC settings, and assign the I2C event and error IRQs a higher priority (lower number) than the UART IRQ. We also verified that HAL_I2C_Mem_Write/Read must not be called from an ISR context that can be preempted by another HAL IRQ — so gyroscope reads happen only in the main loop, gated by a boolean flag set by the gyroscope callback."
+  },
+  {
+    "id": "q-arm-4",
+    "question": "Why Docker for the Sphinx developer guide, and how is it wired into the Makefile?",
+    "answer": "The team works on both macOS ARM and Windows amd64, and native Sphinx installations behaved differently across platforms (different Python versions, theme compatibility issues with the furo theme). Dockerizing the build gives a single reproducible environment: the Dockerfile installs a pinned Python, Sphinx, and furo, and the container's entrypoint runs sphinx-build. We deliberately did not bake the build command into the Dockerfile CMD — instead the Makefile passes the command at container run time (docker run --rm ... make html), so the same image can be used for both HTML generation and clean-up without rebuilding. The three Makefile targets are: container-build (docker build), container-run (docker run with the build command), and container-clean (removes the build/ output directory)."
+  }
+]

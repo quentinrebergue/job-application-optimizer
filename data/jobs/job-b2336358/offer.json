@@ -1,0 +1,21 @@
+{
+  "id": "job-b2336358",
+  "company": "ELSYS Design",
+  "title": "Ingénieur(e) Linux Kernel Driver - F/H",
+  "description": "Dans le cadre de création d'une équipe ELSYS basée à Sophia-Antipolis pour un projet international, développement du BSP d'un SoC multicoeur ARMv8 à destination de super calculateurs.\n\nResponsabilités :\n- Développement et/ou customisation de drivers kernel avec tests unitaires associés\n- Reverse engineering\n- Exemple de modules : Contrôleur d'interruptions (GIC), MMU, PCIx, HBM\n- Création du BSP\n- Suivi et résolution des bugs\n- Création des tests de non régression\n\nEnvironnement technique : C/C++, Linux, Kernel, Driver, Yocto (un plus)\n\nProfil recherché :\n- Bac+5 en école d'ingénieur ou équivalent universitaire en informatique embarquée\n- Expérience d'au moins 5 ans en développement embarqué dans un environnement industriel\n- Maîtrise impérative du langage C/C++ sous Linux\n- Expérience en développement de kernel Linux\n- Connaissances sur le protocole PCIx (ou équivalent) est un gros plus\n- Anglais : lu, écrit, parlé\n\nELSYS Design est spécialisé en micro-électronique (FPGA, ASIC, SoC), carte électronique & logiciel embarqué.",
+  "location": "Vallauris, Provence-Alpes-Côte d'Azur, France",
+  "status": "rejected",
+  "date_added": "2026-06-02T21:54:18.362Z",
+  "tags": [
+    "C",
+    "C++",
+    "Linux",
+    "Kernel",
+    "Driver",
+    "BSP",
+    "Yocto",
+    "ARMv8",
+    "PCIe",
+    "Embedded"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "id": "gq-6803335a",
+  "question": "What are the three levels of the CUDA thread hierarchy, from smallest to largest?\n",
+  "answer": "Thread → Block → Grid. A thread is one worker, a block is a group of threads that share memory and can synchronize, a grid is the full collection of blocks for one kernel launch.\n",
+  "tags": [
+    "cuda",
+    "threads",
+    "hierarchy"
+  ]
+}

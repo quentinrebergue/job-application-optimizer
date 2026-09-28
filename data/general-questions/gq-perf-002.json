@@ -1,0 +1,6 @@
+{
+  "id": "gq-perf-002",
+  "question": "What is `perf` and how do you use it?",
+  "answer": "`perf` is a Linux performance analysis tool that uses hardware performance counters and kernel tracepoints. Common usage:\n- `perf stat ./myprogram` — shows CPU counters (cycles, instructions, cache misses)\n- `perf record ./myprogram` — records a performance profile\n- `perf report` — shows the profile interactively\n- `perf top` — live view of hot functions system-wide\n\nIt can profile CPU usage, cache misses, branch mispredictions, and more without modifying the program.",
+  "tags": ["profiling", "performance", "linux"]
+}

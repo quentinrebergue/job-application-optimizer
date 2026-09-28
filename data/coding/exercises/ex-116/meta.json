@@ -1,0 +1,14 @@
+{
+  "id": "ex-116",
+  "title": "Unique Paths",
+  "difficulty": "medium",
+  "category": "Dynamic Programming",
+  "knowledge_ids": [
+    "k-dynamic-programming"
+  ],
+  "tags": [
+    "dynamic-programming",
+    "matrix"
+  ],
+  "leetcode": 62
+}

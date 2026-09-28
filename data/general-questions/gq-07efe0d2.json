@@ -1,0 +1,10 @@
+{
+  "id": "gq-07efe0d2",
+  "question": "What is a residual connection (skip connection)?\n",
+  "answer": "Add the input directly to the layer output: y = layer(x) + x. Allows gradients to flow backward without shrinking. Enables training of very deep networks (ResNet, Transformer). Critical architectural innovation.\n",
+  "tags": [
+    "ai",
+    "neural-network",
+    "architecture"
+  ]
+}

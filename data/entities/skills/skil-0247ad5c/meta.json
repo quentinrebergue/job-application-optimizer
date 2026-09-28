@@ -1,0 +1,30 @@
+{
+  "id": "skil-0247ad5c",
+  "type": "skills",
+  "name": "Programming & Languages",
+  "category": "Programming",
+  "level": "expert",
+  "tags": [
+    "C",
+    "ASM",
+    "Shell",
+    "VHDL",
+    "CUDA",
+    "ADA",
+    "Rust",
+    "OOP",
+    "C++",
+    "Bash",
+    "SQL",
+    "PostgreSQL",
+    "C++20",
+    "Python",
+    "Java",
+    "Javascript",
+    "algorithms",
+    "data structures",
+    "Ocaml",
+    "XML"
+  ],
+  "latex_snippet": "\\item \\textbf{Programming \\& Languages:} C, C++, ASM, Shell, Python, VHDL, CUDA, ADA, Rust, TAC, OOP."
+}

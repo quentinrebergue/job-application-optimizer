@@ -1,0 +1,14 @@
+{
+  "id": "ex-118",
+  "title": "Group Anagrams",
+  "difficulty": "medium",
+  "category": "Hash Map",
+  "knowledge_ids": [
+    "k-hash-map"
+  ],
+  "tags": [
+    "hash-map",
+    "string"
+  ],
+  "leetcode": 49
+}

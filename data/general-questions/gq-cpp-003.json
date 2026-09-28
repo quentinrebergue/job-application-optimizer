@@ -1,0 +1,6 @@
+{
+  "id": "gq-cpp-003",
+  "question": "What is cache locality and how do you optimize for it?",
+  "answer": "Cache locality means keeping data that is accessed together close together in memory, so it fits in CPU cache (L1/L2/L3) and avoids expensive main memory fetches. Two types:\n- **Temporal locality**: reuse data you recently accessed (keep it in registers/cache)\n- **Spatial locality**: access data at nearby addresses (cache lines are 64 bytes — access arrays sequentially, not with large strides)\n\nOptimizations: use arrays (not linked lists), process data row-by-row (not column-by-column), pack structs tightly, use Structure of Arrays over Array of Structures for SIMD workloads.",
+  "tags": ["cpp", "performance"]
+}

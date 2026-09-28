@@ -1,0 +1,17 @@
+[
+  {
+    "id": "proj-ero2-q1",
+    "question": "What problem does your Distributed Task Queue project solve?",
+    "answer": "It decouples task producers from workers, allowing background jobs (like email sending or data processing) to be queued and processed asynchronously. It handles retries on failure, dead-letter queues for unprocessable messages, and priority scheduling for urgent tasks."
+  },
+  {
+    "id": "proj-ero2-q2",
+    "question": "Why did you choose Redis as the broker?",
+    "answer": "Redis offers sub-millisecond latency, atomic list operations (LPUSH/BRPOP) that map naturally to a queue, and built-in persistence options. It was the simplest choice for a project of this scope without the operational overhead of Kafka or RabbitMQ."
+  },
+  {
+    "id": "proj-ero2-q3",
+    "question": "How did you handle task failures and retries?",
+    "answer": "Each task has a maximum retry count stored in its metadata. On failure, the worker catches the exception, decrements the retry counter, and re-enqueues the task with exponential backoff. After exhausting retries, the task is moved to a dead-letter queue for manual inspection."
+  }
+]

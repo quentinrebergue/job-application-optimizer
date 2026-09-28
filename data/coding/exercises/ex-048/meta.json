@@ -1,0 +1,14 @@
+{
+  "id": "ex-048",
+  "title": "Non-overlapping Intervals",
+  "difficulty": "medium",
+  "category": "Greedy",
+  "knowledge_ids": [
+    "k-greedy"
+  ],
+  "tags": [
+    "greedy",
+    "intervals",
+    "sorting"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "id": "gq-25aaa30f",
+  "question": "What is the difference between encoder and decoder Transformers?\n",
+  "answer": "Encoder: bidirectional, attends to all tokens. Used for understanding (BERT, embeddings). Decoder: causal/unidirectional, attends to past tokens only. Used for generation (GPT, LLMs). Encoder-Decoder (seq2seq): encoder reads input, decoder generates output with cross-attention to encoder.\n",
+  "tags": [
+    "ai",
+    "transformer",
+    "architecture"
+  ]
+}

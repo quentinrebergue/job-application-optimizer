@@ -1,0 +1,10 @@
+{
+  "id": "gq-67035e88",
+  "question": "What is duck typing?\n",
+  "answer": "If an object walks like a duck and quacks like a duck, it's a duck. Type is not about inheritance or explicit declaration, but about what methods/attributes it has. If an object has the required methods, it can be used. Common in Python, Ruby.\n",
+  "tags": [
+    "typology",
+    "duck-typing",
+    "dynamic"
+  ]
+}

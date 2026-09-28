@@ -1,0 +1,24 @@
+{
+  "id": "job-a04139b4",
+  "company": "Exegy",
+  "title": "Ingénieur Logiciel, C++",
+  "description": "À propos d'Exegy\n\nExegy est un leader mondial dans les domaines des données de marché intelligentes, des systèmes de trading avancés et des technologies pérennes. Exegy est un partenaire de confiance pour l'ensemble de l'écosystème buy-side, sell-side, les bourses et les entreprises de technologies financières dans le monde entier.\n\nBasée à Saint-Louis, avec des bureaux régionaux en Amérique du Nord, au Royaume-Uni/Europe et dans la région Asie-Pacifique, Exegy possède une empreinte mondiale permettant de fournir un support et des services managés de classe mondiale.\n\nRÉSUMÉ DU POSTE\n\nEn tant qu'Ingénieur Logiciel (C++), vous ferez partie de l'équipe d'ingénierie Trading responsable des solutions de trading autour des produits suivants:\n\nnxFeed: Un feed handler complet qui simplifie le développement d'applications utilisant des données de marché en traitant les flux de données sur FPGA et en les rendant disponibles aux applications via une API simple et normalisée\n\nnxAccess: Un moteur d'exécution complet avec un sandbox algorithmique FPGA permettant aux utilisateurs de précharger des ordres dans le matériel, de recevoir des données de marché, de déclencher et de mettre à jour ces ordres puis de les envoyer vers la place de marché.\n\nCe rôle combine l'ingénierie logicielle et la compréhension des systèmes bas niveau, en travaillant en étroite collaboration avec les ingénieurs hardware, les chefs de produit et les responsables techniques.\n\nRESPONSABILITÉS\n\n- Collaborer avec les parties prenantes pour recueillir et affiner les besoins logiciels\n- Contribuer aux discussions sur l'architecture logicielle et aux activités de conception système\n- Développer, tester et maintenir des fonctionnalités en C++ dans des environnements Linux\n- Déboguer les problèmes liés aux performances, au réseau ou à la conception système\n- Aider à améliorer les pipelines CI/CD, les workflows de développement et l'automatisation des builds\n- Participer aux revues de code, aux tests, à la documentation et aux activités de livraison\n- Veiller au respect des jalons et des délais de développement\n- Préparer et maintenir la documentation des composants logiciels livrés\n\nPROFIL IDÉAL\n\n- Diplôme en Informatique, Génie Informatique ou domaine pertinent\n- 3 à 6+ années d'expérience professionnelle en ingénierie logicielle\n- Solide expérience en développement logiciel en C++ moderne sous Linux\n- Forte capacité analytique et de résolution de problèmes\n- Bonnes compétences en communication et en travail d'équipe\n- Une expérience avec les systèmes Linux bas niveau et les réseaux est un plus\n\nCOMPÉTENCES TECHNIQUES\n\n- C++, Linux, Python, Réseaux, Scripting\n- Git, Jenkins ou outils CI/CD similaires\n- Anglais et français professionnels\n\nÀ PROPOS DE VOUS\n\n- Vous aimez résoudre des problèmes techniques complexes et multidisciplinaires\n- Vous vous intéressez aux systèmes accélérés matériellement, à la performance et aux infrastructures de trading\n- Vous êtes rigoureux, curieux et proactif dans l'amélioration des outils, des workflows et de la qualité du code\n- Vous appréciez apprendre, expérimenter de nouvelles technologies et contribuer aux discussions d'équipe\n- Vous êtes à l'aise dans des environnements collaboratifs orientés ingénierie\n\nCE QUE CELA VOUS APPORTERA\n\n- Impact direct sur des produits de trading hautement techniques utilisés à l'échelle mondiale\n- Opportunité de travailler avec des systèmes accélérés par FPGA et des logiciels haute performance\n- Environnement valorisant la performance, l'innovation et l'excellence en ingénierie\n\nAVANTAGES DU BUREAU DE PARIS\n\n- Prise en charge à 70% de l'abonnement de transport\n- Forfait mobilité durable\n- Tickets restaurant (9,86 €/jour, 60% pris en charge par Exegy)\n- Programme de participation aux bénéfices\n- Contribution au plan de retraite jusqu'à 1 000 €/an\n- Accès Egym Wellpass entièrement pris en charge\n- Salle de sport gratuite sur site\n- \"Prévoyance collective\" 100% financée par l'employeur\n- Panier de fruits hebdomadaire\n- Télétravail jusqu'à 3 jours par semaine\n- Événements sociaux trimestriels (Happy Hours, off-sites, etc.)",
+  "location": "Paris, France",
+  "status": "applied",
+  "date_added": "2026-08-31T12:26:00.716Z",
+  "tags": [
+    "C++",
+    "Linux",
+    "FPGA",
+    "Trading Systems",
+    "High Performance",
+    "Python",
+    "Networking",
+    "CI/CD",
+    "Git",
+    "Jenkins",
+    "Real-time Systems",
+    "Hardware-Accelerated",
+    "Financial Technology"
+  ]
+}

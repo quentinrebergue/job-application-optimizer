@@ -1,0 +1,10 @@
+{
+  "id": "gq-733c2a30",
+  "question": "What does __syncthreads() do?\n",
+  "answer": "It is a block-level barrier. No thread moves past it until every thread in the block has reached it. Required when using shared memory to avoid race conditions.\n",
+  "tags": [
+    "cuda",
+    "sync",
+    "barrier"
+  ]
+}

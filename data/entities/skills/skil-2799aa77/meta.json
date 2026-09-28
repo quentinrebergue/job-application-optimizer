@@ -1,0 +1,21 @@
+{
+  "id": "skil-2799aa77",
+  "type": "skills",
+  "name": "Embedded & Hardware",
+  "category": "Embedded",
+  "level": "advanced",
+  "tags": [
+    "ASIC interfacing",
+    "ESP32",
+    "FPGA",
+    "I2C",
+    "PCB design",
+    "Rasberry Pi",
+    "STM32",
+    "UART",
+    "SPI",
+    "RTL",
+    "JTAG"
+  ],
+  "latex_snippet": "\\item \\textbf{Embedded \\& Hardware:} STM32, Raspberry Pi, ESP32, FPGA, PCB design (KiCad), UART/I2C, ASIC interfacing."
+}

@@ -1,0 +1,10 @@
+{
+  "id": "gq-0131fba4",
+  "question": "What is polymorphism?\n",
+  "answer": "The ability for a function, operator, or object to work with multiple types. Three kinds: parametric (generics), ad-hoc (function overloading), subtype (inheritance). Enables code reuse and flexibility.\n",
+  "tags": [
+    "typology",
+    "polymorphism",
+    "oop"
+  ]
+}

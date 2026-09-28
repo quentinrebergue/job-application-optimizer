@@ -1,0 +1,10 @@
+{
+  "id": "gq-8c861772",
+  "question": "What is RLHF?\n",
+  "answer": "Reinforcement Learning from Human Feedback. Train a reward model on human preferences (A vs B), then use RL to fine-tune the LLM to maximize reward. Makes the model more helpful, harmless, and honest. Used to align models with human values.\n",
+  "tags": [
+    "ai",
+    "llm",
+    "alignment"
+  ]
+}

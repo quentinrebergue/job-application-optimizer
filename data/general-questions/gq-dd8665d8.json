@@ -1,0 +1,10 @@
+{
+  "id": "gq-dd8665d8",
+  "question": "What is positional encoding?\n",
+  "answer": "Since Transformers don't process tokens sequentially, they need to know each token's position in the sequence. Positional encodings are added to embeddings using sine/cosine waves of different frequencies. Allows the model to attend relative to position, not just semantic similarity.\n",
+  "tags": [
+    "ai",
+    "transformer",
+    "positional-encoding"
+  ]
+}

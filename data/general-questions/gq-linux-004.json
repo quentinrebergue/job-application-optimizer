@@ -1,0 +1,6 @@
+{
+  "id": "gq-linux-004",
+  "question": "What are cgroups and namespaces?",
+  "answer": "**Namespaces** provide isolation — each namespace type gives a process its own view of a resource: `pid` namespace (isolated process tree), `net` namespace (isolated network stack), `mnt` namespace (isolated filesystem), `uts` (isolated hostname), `user` (isolated UIDs). Containers use multiple namespaces together to appear as separate machines.\n\n**Cgroups** (control groups) provide resource limiting and accounting — you can limit CPU, memory, disk I/O, and network bandwidth for a group of processes. Docker/Kubernetes use cgroups to enforce resource limits on containers.",
+  "tags": ["linux", "containers", "docker"]
+}

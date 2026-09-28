@@ -1,0 +1,23 @@
+{
+  "id": "proj-4c4f5731",
+  "type": "projects",
+  "title": "Linux System Tracing & Storage",
+  "tech": [
+    "Bash",
+    "Linux",
+    "strace",
+    "LVM",
+    "RAID",
+    "LUKS",
+    "losetup"
+  ],
+  "description": "Used strace fault injection and syscall filtering to reverse-engineer a binary. Wrote a Bash script automating Linux storage stacks: loop devices, LUKS2, LVM, dm-linear, dm-delay, and RAID.",
+  "tags": [
+    "Linux",
+    "Bash",
+    "Systems Programming",
+    "Storage",
+    "Tracing"
+  ],
+  "latex_snippet": ""
+}

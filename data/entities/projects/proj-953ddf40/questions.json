@@ -1,0 +1,22 @@
+[
+  {
+    "id": "q-httpd-1",
+    "question": "Why epoll instead of select/poll, and how does your non-blocking event loop work?",
+    "answer": "select and poll have O(n) scaling: the kernel must scan the entire fd set on every call. epoll uses an internal red-black tree and only returns ready fds, giving O(1) per event regardless of how many connections are open. Our event loop works as follows: one epoll instance is created at startup; the listening socket is registered with EPOLLIN. When epoll_wait returns, we iterate over the ready events — a ready event on the listening fd triggers accept() and registers the new connection fd with O_NONBLOCK; a ready event on a connection fd triggers a read-parse-respond cycle. Non-blocking fds ensure that a slow client never stalls the event loop. SIGINT is handled via sigaction to set a run flag to 0, which breaks the epoll_wait loop for a clean shutdown."
+  },
+  {
+    "id": "q-httpd-2",
+    "question": "Walk through your HTTP/1.1 request parser — how do you handle the request line, headers, and body?",
+    "answer": "The parser reads the raw request into a 4096-byte buffer and processes it in three stages. First, the request line is split on spaces to extract method, target, and HTTP version into an HTTP_RL struct. For the target, we handle both absolute URIs (http://ip:port/path) and origin-form (/path) by stripping any host prefix and resolving the path relative to the configured root_dir. Second, headers are parsed line by line (splitting on '\\r\\n') looking for known fields — Host, Content-Length, Content-Type — stored in the same struct. Third, if Content-Length > 0, we read that many bytes as the body. The whole struct is then dispatched to the response builder which serves the file at root_dir + target, returning 200 with appropriate headers or 404/405 for missing files or unsupported methods."
+  },
+  {
+    "id": "q-httpd-3",
+    "question": "How does the virtual host config system work, and how does it map requests to root directories?",
+    "answer": "The config file is parsed into a config struct containing a servers array of server_config entries, each with server_name, ip, port, root_dir, and default_file fields. At startup, we iterate over the servers array and create a listening socket for each (ip, port) pair. When a request arrives, the parser extracts the Host header and matches it against server_name entries — the matching vhost's root_dir is used to resolve the file path. If no vhost matches, we fall back to the first entry. This means a single process can serve multiple sites on different ports or IPs from different directories, all managed in one .conf file without restarting."
+  },
+  {
+    "id": "q-httpd-4",
+    "question": "How did you implement Unix daemonization and why is the PID file important?",
+    "answer": "Daemonization follows the classic double-fork pattern: fork() once so the parent exits (detaching from the terminal), then setsid() to create a new session and drop the controlling terminal, then fork() again so the process can never reacquire a terminal. The child closes stdin/stdout/stderr and redirects them to /dev/null. Before forking, we check the PID file: if it exists and contains a PID for a running process (kill(pid, 0) returns 0), we refuse to start a second instance. After forking, we write the new PID to the file. On shutdown (SIGINT), the PID file is removed. This prevents accidental duplicate instances that would fight over the same port and makes it possible to send signals to the daemon by reading the PID file."
+  }
+]

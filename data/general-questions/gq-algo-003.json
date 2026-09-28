@@ -1,0 +1,6 @@
+{
+  "id": "gq-algo-003",
+  "question": "Implement a thread-safe queue in C++.",
+  "answer": "Use a mutex and condition variable:\n\n```cpp\ntemplate<typename T>\nclass ThreadSafeQueue {\n    queue<T> q;\n    mutex m;\n    condition_variable cv;\npublic:\n    void push(T val) {\n        lock_guard<mutex> lock(m);\n        q.push(val);\n        cv.notify_one();\n    }\n\n    T pop() {\n        unique_lock<mutex> lock(m);\n        cv.wait(lock, [this]{ return !q.empty(); });\n        T val = q.front(); q.pop();\n        return val;\n    }\n};\n```",
+  "tags": ["algorithms", "cpp", "concurrency"]
+}

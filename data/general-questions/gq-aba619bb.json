@@ -1,0 +1,10 @@
+{
+  "id": "gq-aba619bb",
+  "question": "What are Query, Key, and Value in attention?\n",
+  "answer": "Linear projections of the input: Query (what am I looking for), Key (what are my properties), Value (what information do I hold). Attention score = softmax(Query dot Key / sqrt(d_k)). High scores mean the query is relevant to that key, so take more of that value.\n",
+  "tags": [
+    "ai",
+    "attention",
+    "transformer"
+  ]
+}

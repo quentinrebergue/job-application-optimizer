@@ -1,0 +1,15 @@
+{
+  "id": "ex-027",
+  "title": "Wildcard Matching",
+  "difficulty": "hard",
+  "category": "Dynamic Programming",
+  "knowledge_ids": [
+    "k-string-dp",
+    "k-dynamic-programming"
+  ],
+  "tags": [
+    "dp",
+    "strings",
+    "recursion"
+  ]
+}

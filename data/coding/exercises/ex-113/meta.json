@@ -1,0 +1,13 @@
+{
+  "id": "ex-113",
+  "title": "Set Matrix Zeroes",
+  "difficulty": "medium",
+  "category": "Matrix Traversal",
+  "knowledge_ids": [
+    "k-matrix"
+  ],
+  "tags": [
+    "matrix"
+  ],
+  "leetcode": 73
+}

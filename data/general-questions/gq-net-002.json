@@ -1,0 +1,6 @@
+{
+  "id": "gq-net-002",
+  "question": "What happens when you type a URL in a browser?",
+  "answer": "1. DNS resolution — browser checks cache, then OS, then DNS resolver to get the server IP\n2. TCP handshake (SYN, SYN-ACK, ACK) to the server on port 80/443\n3. TLS handshake (for HTTPS) — negotiate cipher, exchange certificates\n4. HTTP request sent — `GET /path HTTP/1.1`\n5. Server processes request, sends HTTP response\n6. Browser receives HTML, parses it, fetches additional resources (CSS, JS, images)\n7. Page rendered",
+  "tags": ["networking", "systems"]
+}
