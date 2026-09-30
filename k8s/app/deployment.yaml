@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app
+  namespace: job-optimizer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: job-optimizer
+  template:
+    metadata:
+      labels:
+        app: job-optimizer
+    spec:
+      imagePullSecrets:
+        - name: ghcr-pull-secret
+      containers:
+        - name: app
+          image: ghcr.io/quentinrebergue/job-application-optimizer:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: POSTGRES_PASSWORD
+            - name: DATABASE_URL
+              value: "postgres://app:$(POSTGRES_PASSWORD)@postgres:5432/job_optimizer"
+          envFrom:
+            - secretRef:
+                name: app-secrets

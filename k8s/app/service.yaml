@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: app
+  namespace: job-optimizer
+spec:
+  type: LoadBalancer
+  selector:
+    app: job-optimizer
+  ports:
+    - port: 80
+      targetPort: 3000
