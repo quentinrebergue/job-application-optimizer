@@ -9,8 +9,8 @@
 
 import fs from 'fs/promises'
 import path from 'path'
-import { DATA_DIR, JOBS_DIR } from './config.js'
-import { readJob, listJobs, createJob, updateJobStatus, setJobProfile, updateJobTags, type ApplicationStatus } from './jobs.js'
+import { DATA_DIR } from './config.js'
+import { readJob, listJobs, createJob, updateJobStatus, setJobProfile, setJobAiContext, updateJobTags, type ApplicationStatus } from './jobs.js'
 import { createExperience, createProject, createSkill, createEducation, listEntities, type SkillLevel } from './entities.js'
 import { readProjectFiles, readStagingProject, listStagingProjects, analyzeProject } from './project-analyzer.js'
 import {
@@ -31,7 +31,7 @@ export async function handleToolCall(name: string, args: Record<string, any>): P
     if (!title?.trim() || !company?.trim()) {
       return { content: [{ type: 'text', text: 'Error: title and company are required.' }], isError: true }
     }
-    const job = await createJob(JOBS_DIR, { title, company, description, location, url, status, tags })
+    const job = await createJob({ title, company, description, location, url, status, tags })
     return {
       content: [{
         type: 'text',
@@ -42,13 +42,13 @@ export async function handleToolCall(name: string, args: Record<string, any>): P
 
   if (name === 'tag_job') {
     const { id, tags } = args as { id: string; tags: string[] }
-    const job = await updateJobTags(JOBS_DIR, id, tags)
+    const job = await updateJobTags(id, tags)
     if (!job) return { content: [{ type: 'text', text: `Error: job "${id}" not found` }], isError: true }
     return { content: [{ type: 'text', text: `✓ Updated tags for "${job.title}": ${tags.join(', ')}` }] }
   }
 
   if (name === 'list_jobs') {
-    const jobs = await listJobs(JOBS_DIR)
+    const jobs = await listJobs()
     if (jobs.length === 0) return { content: [{ type: 'text', text: 'No jobs tracked yet.' }] }
     const lines = jobs.map((j) => `[${j.status.padEnd(9)}]  ${j.title} @ ${j.company}  (${j.id})`)
     return { content: [{ type: 'text', text: lines.join('\n') }] }
@@ -56,7 +56,7 @@ export async function handleToolCall(name: string, args: Record<string, any>): P
 
   if (name === 'update_job_status') {
     const { id, status } = args as { id: string; status: ApplicationStatus }
-    const result = await updateJobStatus(JOBS_DIR, id, status)
+    const result = await updateJobStatus(id, status)
     if (!result) {
       return { content: [{ type: 'text', text: `Error: job "${id}" not found. Use list_jobs to find valid IDs.` }], isError: true }
     }
@@ -65,7 +65,7 @@ export async function handleToolCall(name: string, args: Record<string, any>): P
 
   if (name === 'set_job_profile') {
     const { id, profile_text } = args as { id: string; profile_text: string }
-    await setJobProfile(JOBS_DIR, id, profile_text)
+    await setJobProfile(id, profile_text)
     const msg = profile_text.trim()
       ? `✓ Profile set for job ${id} (${profile_text.length} chars).`
       : `✓ Profile cleared for job ${id} — will use default.`
@@ -74,7 +74,7 @@ export async function handleToolCall(name: string, args: Record<string, any>): P
 
   if (name === 'rank_job_offer') {
     const { id, provider } = args as { id: string; provider?: 'gemini' | 'claude' }
-    const job = await readJob(JOBS_DIR, id)
+    const job = await readJob(id)
     if (!job) {
       return { content: [{ type: 'text', text: `Error: job "${id}" not found. Use list_jobs to find valid IDs.` }], isError: true }
     }
@@ -112,18 +112,14 @@ export async function handleToolCall(name: string, args: Record<string, any>): P
 
   if (name === 'analyze_job_for_resume') {
     const { id, context, provider } = args as { id: string; context?: string; provider?: 'gemini' | 'claude' }
-    const job = await readJob(JOBS_DIR, id)
+    const job = await readJob(id)
     if (!job) {
       return { content: [{ type: 'text', text: `Error: job "${id}" not found. Use list_jobs to find valid IDs.` }], isError: true }
     }
     try {
       // Optionally persist context so the rank endpoint picks it up
       if (context?.trim()) {
-        const cfgPath = path.join(JOBS_DIR, id, 'resume-config.json')
-        let cfg: Record<string, unknown> = {}
-        try { cfg = JSON.parse(await fs.readFile(cfgPath, 'utf-8')) } catch { /* new */ }
-        cfg.ai_context = context.trim()
-        await fs.writeFile(cfgPath, JSON.stringify(cfg, null, 2))
+        await setJobAiContext(id, context.trim())
       }
 
       const response = await fetch('http://localhost:3000/api/jobs/' + id + '/rank', {
