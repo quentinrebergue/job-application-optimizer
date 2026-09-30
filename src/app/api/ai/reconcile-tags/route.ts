@@ -92,8 +92,8 @@ export async function POST(request: Request) {
 
     type Aliasable = { tag: string; nodeId: string; label: string; path: string; confidence: number }
     type Novel = { tag: string; suggestedLabel: string; suggestedParentId?: string; suggestedParentLabel?: string }
-    let aliasable: Aliasable[] = []
-    let novel: Novel[] = []
+    const aliasable: Aliasable[] = []
+    const novel: Novel[] = []
 
     // ── Step 2: AI classification for unmatched tags ──────────────────────────
     if (unmatched.length > 0) {

@@ -14,12 +14,6 @@
 import fs from 'fs/promises'
 import path from 'path'
 
-// Folders to skip when scanning source files
-const SKIP_DIRS = new Set([
-  'node_modules', '.git', 'dist', 'build', 'out', '__pycache__',
-  '.next', 'target', 'vendor', 'coverage', '.cache', 'venv', '.venv',
-])
-
 // Config / manifest filenames to always include
 const CONFIG_FILES = new Set([
   'package.json', 'Cargo.toml', 'CMakeLists.txt', 'Makefile', 'meson.build',

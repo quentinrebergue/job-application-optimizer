@@ -2,7 +2,21 @@ import { v4 as uuidv4 } from 'uuid'
 import type { Exercise, ExerciseMeta } from '@/types'
 import { pool } from '@/lib/db'
 
-function rowToMeta(row: any): ExerciseMeta {
+interface ExerciseRow {
+  id: string
+  title: string
+  difficulty: ExerciseMeta['difficulty']
+  knowledge_ids: string[]
+  tags: string[]
+  category: string | null
+  leetcode: number | null
+  pattern_justifications: ExerciseMeta['patternJustifications'] | null
+  description?: string | null
+  steps?: string | null
+  code?: string | null
+}
+
+function rowToMeta(row: ExerciseRow): ExerciseMeta {
   return {
     id: row.id,
     title: row.title,

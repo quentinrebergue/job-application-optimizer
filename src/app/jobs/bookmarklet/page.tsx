@@ -59,14 +59,14 @@ export default function BookmarkletPage() {
       <section className="flex flex-col gap-4">
         <h2 className="font-semibold text-slate-900">Install</h2>
         <ol className="list-decimal list-inside text-sm text-slate-600 space-y-2">
-          <li>Make sure your browser's bookmarks bar is visible <span className="text-slate-400">(⌘ + Shift + B in Chrome/Edge)</span>.</li>
+          <li>Make sure your browser&apos;s bookmarks bar is visible <span className="text-slate-400">(⌘ + Shift + B in Chrome/Edge)</span>.</li>
           <li>Drag the button below onto your bookmarks bar.</li>
           <li>Alternatively, copy the code and create a new bookmark — paste the code as the URL.</li>
         </ol>
 
         <div className="flex items-center gap-4 mt-2">
           {/* Draggable bookmarklet link */}
-          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+          { }
           <a
             href={BOOKMARKLET_MINI}
             onClick={(e) => e.preventDefault()}
@@ -96,7 +96,7 @@ export default function BookmarkletPage() {
               linkedin.com/jobs/view/…
             </code>
           </li>
-          <li>Click <strong>"+ Save to JobOptimizer"</strong> in your bookmarks bar.</li>
+          <li>Click <strong>&quot;+ Save to JobOptimizer&quot;</strong> in your bookmarks bar.</li>
           <li>A new tab opens at <code className="rounded bg-slate-100 px-1 py-0.5 text-xs">localhost:3000/jobs/new</code> with the form pre-filled.</li>
           <li>Review the description, adjust if needed, and hit <strong>Save</strong>.</li>
         </ol>

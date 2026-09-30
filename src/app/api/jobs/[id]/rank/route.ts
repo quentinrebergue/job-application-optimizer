@@ -70,6 +70,7 @@ export async function DELETE(_request: Request, { params }: { params: Promise<{ 
     if (!job) return Response.json({ error: 'Job not found' }, { status: 404 })
 
     // Remove ai_analysis and ats_tags by rewriting offer.json without them
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { ai_analysis: _ai, ats_tags: _tags, ...rest } = job
     const offerPath = path.join(process.cwd(), 'data', 'jobs', id, 'offer.json')
     await fs.writeFile(offerPath, JSON.stringify({ ...rest, ats_tags: [] }, null, 2))

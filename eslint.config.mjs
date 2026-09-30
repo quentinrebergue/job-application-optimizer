@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Raw project sources used only for AI analysis (not part of the app, not in git)
+    "data/projects/**",
   ]),
 ]);
 

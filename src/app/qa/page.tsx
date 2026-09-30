@@ -26,7 +26,7 @@ export default async function QAPage() {
       <div className="mb-8 rounded-xl border border-slate-200 bg-white p-6">
         <h2 className="text-base font-semibold text-slate-900 mb-1">General Flashcards</h2>
         <p className="text-sm text-slate-500 mb-4">
-          Browse by topic, add new cards, or remove ones you've mastered. These appear in every session.
+          Browse by topic, add new cards, or remove ones you&apos;ve mastered. These appear in every session.
         </p>
         <GeneralQAManager />
       </div>

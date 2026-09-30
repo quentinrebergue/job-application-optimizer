@@ -9,7 +9,23 @@ const DEFAULT_RESUME_CONFIG: ResumeConfig = {
   profile_text: '',
 }
 
-function rowToJobOffer(row: any): JobOffer {
+interface JobRow {
+  id: string
+  company: string
+  title: string
+  description: string
+  location: string | null
+  url: string | null
+  status: JobOffer['status']
+  date_added: Date
+  tags: string[]
+  ats_tags: string[] | null
+  ai_analysis: JobOffer['ai_analysis'] | null
+  resume_config: ResumeConfig | null
+  questions: EntityQuestion[] | null
+}
+
+function rowToJobOffer(row: JobRow): JobOffer {
   return {
     id: row.id,
     company: row.company,
@@ -20,7 +36,7 @@ function rowToJobOffer(row: any): JobOffer {
     status: row.status,
     date_added: row.date_added.toISOString(),
     tags: row.tags,
-    ats_tags: row.ats_tags,
+    ats_tags: row.ats_tags ?? undefined,
     ai_analysis: row.ai_analysis ?? undefined,
   }
 }

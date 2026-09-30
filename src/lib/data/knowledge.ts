@@ -2,7 +2,14 @@ import { v4 as uuidv4 } from 'uuid'
 import type { KnowledgeItem, KnowledgeMeta } from '@/types'
 import { pool } from '@/lib/db'
 
-function rowToMeta(row: any): KnowledgeMeta {
+interface KnowledgeRow {
+  id: string
+  name: string
+  category: string
+  tags: string[]
+}
+
+function rowToMeta(row: KnowledgeRow): KnowledgeMeta {
   return { id: row.id, name: row.name, category: row.category, tags: row.tags }
 }
 

@@ -15,6 +15,9 @@ export default function QATestPage() {
     const raw = sessionStorage.getItem(SESSION_KEY)
     if (raw) {
       try {
+        // sessionStorage is only available client-side, hence the effect;
+        // this is a one-time mount hydration, not a render-loop risk.
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setSession(JSON.parse(raw) as TestSession)
       } catch {
         // malformed — ignore
