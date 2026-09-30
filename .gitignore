@@ -48,6 +48,7 @@ next-env.d.ts
 terraform/terraform.tfvars
 terraform/.terraform/
 terraform/*.tfstate*
+terraform/kubeconfig.yaml
 
 # ansible
 ansible/inventory.ini
