@@ -1,5 +1,4 @@
 import { pool } from '@/lib/db'
-import path from 'path'
 import { randomUUID } from 'crypto'
 import type { Taxonomy, TaxonomyNode } from '@/types'
 import { purgeTagAliases } from './tag-cleanup'

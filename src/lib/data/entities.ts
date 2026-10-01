@@ -2,7 +2,16 @@ import { v4 as uuidv4 } from 'uuid'
 import type { EntityType, EntityMeta, Entity, EntityQuestion } from '@/types'
 import { pool } from '@/lib/db'
 
-function rowToEntityMeta(row: any): EntityMeta {
+interface EntityRow {
+  id: string
+  type: EntityType
+  tags: string[]
+  latex_snippet: string
+  data: Record<string, unknown>
+  questions: EntityQuestion[] | null
+}
+
+function rowToEntityMeta(row: EntityRow): EntityMeta {
   return {
     id: row.id,
     type: row.type,
@@ -33,7 +42,7 @@ export async function createEntity(
   data: Omit<EntityMeta, 'id' | 'type'>
 ): Promise<EntityMeta> {
   const id = `${type.slice(0, 4)}-${uuidv4().slice(0, 8)}`
-  const { tags, latex_snippet, ...rest } = data as any
+  const { tags, latex_snippet, ...rest } = data
   const { rows } = await pool.query(
     `INSERT INTO entities (id, type, tags, latex_snippet, data, questions)
      VALUES ($1,$2,$3,$4,$5,'[]') RETURNING *`,
@@ -49,7 +58,8 @@ export async function updateEntity(
 ): Promise<EntityMeta | null> {
   const existing = await pool.query('SELECT * FROM entities WHERE type=$1 AND id=$2', [type, id])
   if (existing.rows.length === 0) return null
-  const merged = { ...rowToEntityMeta(existing.rows[0]), ...data } as any
+  const merged = { ...rowToEntityMeta(existing.rows[0]), ...data }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { tags, latex_snippet, id: _id, type: _type, ...rest } = merged
   const { rows } = await pool.query(
     `UPDATE entities SET tags=$3, latex_snippet=$4, data=$5 WHERE type=$1 AND id=$2 RETURNING *`,

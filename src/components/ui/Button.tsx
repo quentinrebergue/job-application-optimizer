@@ -9,7 +9,7 @@ export function Button({ onClick, onTouchEnd, ...props }: ButtonProps) {
     e.preventDefault()
     onTouchEnd?.(e)
     // Trigger the click handler on touch
-    onClick?.(e as any)
+    onClick?.(e as unknown as React.MouseEvent<HTMLButtonElement>)
   }
 
   return (

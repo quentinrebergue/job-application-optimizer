@@ -12,7 +12,7 @@ import { CoverLetterPanel } from '@/components/jobs/CoverLetterPanel'
 import { QuestionEditor } from '@/components/entities/QuestionEditor'
 import type { ApplicationStatus, JobOffer, EntityQuestion } from '@/types'
 import type { AIAnalysisResult } from '@/types/job'
-import { APPLICATION_STATUSES, APPLICATION_STATUS_LABELS } from '@/config'
+import { APPLICATION_STATUS_LABELS } from '@/config'
 
 const STATUS_PIPELINE: ApplicationStatus[] = ['saved', 'applied', 'interview', 'offer', 'rejected']
 

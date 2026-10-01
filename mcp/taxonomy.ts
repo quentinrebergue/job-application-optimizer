@@ -235,7 +235,7 @@ export async function reconcileTags(tags: string[]): Promise<ReconcileResult> {
 
   type Aliasable = ReconcileResult['aliasable'][number]
   type Novel = ReconcileResult['novel'][number]
-  let aliasable: Aliasable[] = []
+  const aliasable: Aliasable[] = []
   let novel: Novel[] = []
 
   if (unmatched.length > 0) {

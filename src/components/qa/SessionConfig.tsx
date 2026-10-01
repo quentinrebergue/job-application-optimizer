@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { Check } from 'lucide-react'
 import type { JobOffer, TestConfig, TestCard, TestSession, TestScope } from '@/types'
 import { DEFAULT_QUESTION_COUNT } from '@/config'
@@ -33,7 +34,7 @@ export function SessionConfig({ jobs }: Props) {
     try {
       fetch('/api/questions')
         .then((r) => r.json())
-        .then((qs: any[]) => {
+        .then((qs: { tags: string[] }[]) => {
           const tags = [...new Set(qs.flatMap((q) => q.tags))].sort()
           setAvailableTags(tags)
         })
@@ -167,7 +168,7 @@ export function SessionConfig({ jobs }: Props) {
           <label className="block text-sm font-medium text-slate-700 mb-1">Job</label>
           {jobs.length === 0 ? (
             <p className="text-sm text-slate-400">
-              No jobs yet. <a href="/jobs/new" className="text-blue-600 hover:underline">Add one</a> first.
+              No jobs yet. <Link href="/jobs/new" className="text-blue-600 hover:underline">Add one</Link> first.
             </p>
           ) : (
             <select

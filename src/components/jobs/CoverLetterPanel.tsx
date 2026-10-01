@@ -128,6 +128,8 @@ export function CoverLetterPanel({ jobId }: { jobId: string }) {
 
   useEffect(() => {
     if (!open) return
+    // Kicks off an async fetch right below — not a render-loop risk.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true)
     Promise.all([
       fetch('/api/cover-letter/sentences').then((r) => r.json()),

@@ -1,8 +1,9 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import Link from 'next/link'
 import { Loader2, FileDown, ChevronDown, ChevronRight, Sparkles, Plus, XCircle, RotateCcw } from 'lucide-react'
-import type { AIRanking, EntityMeta, ResumeConfig, SkillMeta } from '@/types'
+import type { EntityMeta, ResumeConfig, SkillMeta } from '@/types'
 import type { AIAnalysisResult, SuggestedSkill } from '@/types/job'
 import { AIRankButton } from './AIRankButton'
 
@@ -70,6 +71,8 @@ export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClea
   useEffect(() => {
     if (profileTimeoutRef.current) clearTimeout(profileTimeoutRef.current)
     if (profileDraft === config.profile_text) return // No change
+    // Debounced auto-save timer kickoff — not a render-loop risk.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSavingProfile(true)
     profileTimeoutRef.current = setTimeout(async () => {
       await persistConfig({ ...config, profile_text: profileDraft })
@@ -84,6 +87,8 @@ export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClea
   useEffect(() => {
     if (titleTimeoutRef.current) clearTimeout(titleTimeoutRef.current)
     if (titleDraft === config.resume_title) return // No change
+    // Debounced auto-save timer kickoff — not a render-loop risk.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSavingProfile(true)
     titleTimeoutRef.current = setTimeout(async () => {
       await persistConfig({ ...config, resume_title: titleDraft })
@@ -98,6 +103,8 @@ export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClea
   useEffect(() => {
     if (aiContextTimeoutRef.current) clearTimeout(aiContextTimeoutRef.current)
     if (aiContextDraft === config.ai_context) return // No change
+    // Debounced auto-save timer kickoff — not a render-loop risk.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSavingProfile(true)
     aiContextTimeoutRef.current = setTimeout(async () => {
       await persistConfig({ ...config, ai_context: aiContextDraft })
@@ -212,7 +219,7 @@ export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClea
     const isProject = entity?.type === 'projects'
     const isExperience = entity?.type === 'experiences'
 
-    let updated: ResumeConfig = {
+    const updated: ResumeConfig = {
       ...config,
       selected_entity_ids: isSelected
         ? config.selected_entity_ids.filter((x) => x !== id)
@@ -375,7 +382,11 @@ export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClea
   function toggleExpanded(id: string) {
     setExpandedEntities((prev) => {
       const next = new Set(prev)
-      next.has(id) ? next.delete(id) : next.add(id)
+      if (next.has(id)) {
+        next.delete(id)
+      } else {
+        next.add(id)
+      }
       return next
     })
   }
@@ -506,15 +517,15 @@ export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClea
     if (t === 'education') {
       // Sort by end date, most recent first
       group.sort((a, b) => {
-        const periodA = (a as any).period ?? ''
-        const periodB = (b as any).period ?? ''
+        const periodA = (a as { period?: string }).period ?? ''
+        const periodB = (b as { period?: string }).period ?? ''
         return parseEndDate(periodB).getTime() - parseEndDate(periodA).getTime()
       })
     } else if (t === 'experiences') {
       // Sort by custom experience_order if available, otherwise by end date (most recent first)
       const byDate = (a: EntityMeta, b: EntityMeta) => {
-        const periodA = (a as any).period ?? ''
-        const periodB = (b as any).period ?? ''
+        const periodA = (a as { period?: string }).period ?? ''
+        const periodB = (b as { period?: string }).period ?? ''
         return parseEndDate(periodB).getTime() - parseEndDate(periodA).getTime()
       }
       if (config.experience_order && config.experience_order.length > 0) {
@@ -789,7 +800,6 @@ export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClea
                   const isRecommended = aiAnalysis?.recommended_experience_ids?.includes(entity.id) || aiAnalysis?.recommended_project_ids?.includes(entity.id)
                   const descDraft = descriptionDrafts[entity.id] ?? config.entity_description_overrides?.[entity.id] ?? originalDescription
                   const hasDescOverride = !!(config.entity_description_overrides?.[entity.id])
-                  const isExpandable = isSkill || hasDescription
 
                   return (
                     <div
@@ -1132,7 +1142,7 @@ export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClea
       {entities.length === 0 && (
         <p className="text-sm text-slate-400 italic">
           No entities in your library yet.{' '}
-          <a href="/entities/new" className="text-blue-600 hover:underline">Add one</a>.
+          <Link href="/entities/new" className="text-blue-600 hover:underline">Add one</Link>.
         </p>
       )}
     </div>

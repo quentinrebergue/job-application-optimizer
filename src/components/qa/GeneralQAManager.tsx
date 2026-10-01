@@ -26,6 +26,9 @@ export function GeneralQAManager() {
     setLoading(false)
   }, [])
 
+  // `load` is async; its setState calls happen after the awaited fetch,
+  // not synchronously within this effect.
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { load() }, [load])
 
   const allTags = [...new Set(questions.flatMap((q) => q.tags))].sort()

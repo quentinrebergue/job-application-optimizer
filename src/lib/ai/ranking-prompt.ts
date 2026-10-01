@@ -1,4 +1,4 @@
-import type { EntityMeta } from '@/types'
+import type { EntityMeta, ExperienceMeta, ProjectMeta, SkillMeta, EducationMeta } from '@/types'
 import type { AIAnalysisResult } from '@/types/job'
 
 /**
@@ -22,25 +22,25 @@ export function buildRankingPrompt(
   const formattedEntities = {
     experiences: entities.experiences
       .map((e) => {
-        const exp = e as any
+        const exp = e as ExperienceMeta
         return `- [ID: ${exp.id}] ${exp.title} at ${exp.company} (${exp.period})\n  Description: ${exp.description}`
       })
       .join('\n'),
     projects: entities.projects
       .map((p) => {
-        const proj = p as any
+        const proj = p as ProjectMeta
         return `- [ID: ${proj.id}] ${proj.title} [${proj.tech?.join(', ')}]\n  Description: ${proj.description}`
       })
       .join('\n'),
     skills: entities.skills
       .map((s) => {
-        const skill = s as any
+        const skill = s as SkillMeta
         return `- [ID: ${skill.id}] ${skill.name} — ${skill.level} (${skill.tags?.join(', ')})`
       })
       .join('\n'),
     education: entities.education
       .map((ed) => {
-        const edu = ed as any
+        const edu = ed as EducationMeta
         return `- [ID: ${edu.id}] ${edu.degree} from ${edu.institution} (${edu.period})`
       })
       .join('\n'),
@@ -190,19 +190,19 @@ export function parseRankingResponse(
   const entitiesByType = analysisData.entities_by_type ?? {}
 
   const enrichedEntities = {
-    experiences: (entitiesByType.experiences || []).map((e: any) => ({
+    experiences: (entitiesByType.experiences || []).map((e: Record<string, unknown>) => ({
       ...e,
       type: 'experience' as const,
     })),
-    projects: (entitiesByType.projects || []).map((p: any) => ({
+    projects: (entitiesByType.projects || []).map((p: Record<string, unknown>) => ({
       ...p,
       type: 'project' as const,
     })),
-    skills: (entitiesByType.skills || []).map((s: any) => ({
+    skills: (entitiesByType.skills || []).map((s: Record<string, unknown>) => ({
       ...s,
       type: 'skill' as const,
     })),
-    education: (entitiesByType.education || []).map((ed: any) => ({
+    education: (entitiesByType.education || []).map((ed: Record<string, unknown>) => ({
       ...ed,
       type: 'education' as const,
     })),
