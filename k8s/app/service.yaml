@@ -4,7 +4,7 @@ metadata:
   name: app
   namespace: job-optimizer
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     app: job-optimizer
   ports:
