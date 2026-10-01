@@ -1,10 +1,15 @@
 import { NextResponse } from 'next/server'
 import { updateNode, deleteNode, addAlias, removeAlias } from '@/lib/data'
+import { getSessionUserId } from '@/lib/auth/session'
 
 export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const userId = await getSessionUserId()
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
   try {
     const { id } = await params
     const body = await request.json()
@@ -19,19 +24,19 @@ export async function PATCH(
 
     if (action === 'add_alias') {
       if (!patch.alias) return NextResponse.json({ error: 'alias required' }, { status: 400 })
-      const node = await addAlias(id, patch.alias)
+      const node = await addAlias(userId, id, patch.alias)
       if (!node) return NextResponse.json({ error: 'Node not found' }, { status: 404 })
       return NextResponse.json(node)
     }
 
     if (action === 'remove_alias') {
       if (!patch.alias) return NextResponse.json({ error: 'alias required' }, { status: 400 })
-      const node = await removeAlias(id, patch.alias)
+      const node = await removeAlias(userId, id, patch.alias)
       if (!node) return NextResponse.json({ error: 'Node not found' }, { status: 404 })
       return NextResponse.json(node)
     }
 
-    const node = await updateNode(id, patch)
+    const node = await updateNode(userId, id, patch)
     if (!node) return NextResponse.json({ error: 'Node not found' }, { status: 404 })
     return NextResponse.json(node)
   } catch (err) {
@@ -44,11 +49,15 @@ export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const userId = await getSessionUserId()
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
   try {
     const { id } = await params
     const { searchParams } = new URL(request.url)
     const cascade = searchParams.get('cascade') === 'true'
-    const ok = await deleteNode(id, cascade)
+    const ok = await deleteNode(userId, id, cascade)
     if (!ok) return NextResponse.json({ error: 'Node not found' }, { status: 404 })
     return NextResponse.json({ ok: true })
   } catch (err) {

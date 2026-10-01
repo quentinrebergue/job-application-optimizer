@@ -29,13 +29,16 @@ function rowToMeta(row: ExerciseRow): ExerciseMeta {
   }
 }
 
-export async function listExercises(): Promise<ExerciseMeta[]> {
-  const { rows } = await pool.query('SELECT * FROM exercises ORDER BY id')
+export async function listExercises(userId: string): Promise<ExerciseMeta[]> {
+  const { rows } = await pool.query('SELECT * FROM exercises WHERE user_id = $1 ORDER BY id', [userId])
   return rows.map(rowToMeta)
 }
 
-export async function getExercise(id: string): Promise<Exercise | null> {
-  const { rows } = await pool.query('SELECT * FROM exercises WHERE id = $1', [id])
+export async function getExercise(userId: string, id: string): Promise<Exercise | null> {
+  const { rows } = await pool.query(
+    'SELECT * FROM exercises WHERE user_id = $1 AND id = $2',
+    [userId, id]
+  )
   if (rows.length === 0) return null
   const row = rows[0]
   return {
@@ -46,14 +49,15 @@ export async function getExercise(id: string): Promise<Exercise | null> {
 }
 
 export async function createExercise(
+  userId: string,
   data: Omit<ExerciseMeta, 'id'> & { description: string; steps: string; code: string }
 ): Promise<ExerciseMeta> {
   const id = `ex-${uuidv4().slice(0, 8)}`
   const { rows } = await pool.query(
-    `INSERT INTO exercises (id, title, difficulty, knowledge_ids, tags, category, leetcode, pattern_justifications, description, steps, code)
-     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING *`,
+    `INSERT INTO exercises (id, user_id, title, difficulty, knowledge_ids, tags, category, leetcode, pattern_justifications, description, steps, code)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) RETURNING *`,
     [
-      id, data.title, data.difficulty, data.knowledge_ids ?? [], data.tags ?? [],
+      id, userId, data.title, data.difficulty, data.knowledge_ids ?? [], data.tags ?? [],
       data.category ?? null, data.leetcode ?? null,
       data.patternJustifications ? JSON.stringify(data.patternJustifications) : null,
       data.description, data.steps, data.code,
@@ -63,10 +67,11 @@ export async function createExercise(
 }
 
 export async function updateExercise(
+  userId: string,
   id: string,
   data: Partial<Omit<ExerciseMeta, 'id'> & { description: string; steps: string; code: string }>
 ): Promise<ExerciseMeta | null> {
-  const existing = await pool.query('SELECT * FROM exercises WHERE id = $1', [id])
+  const existing = await pool.query('SELECT * FROM exercises WHERE user_id = $1 AND id = $2', [userId, id])
   if (existing.rows.length === 0) return null
   const row = existing.rows[0]
   const merged = {
@@ -82,11 +87,11 @@ export async function updateExercise(
     code: data.code ?? row.code,
   }
   const { rows } = await pool.query(
-    `UPDATE exercises SET title=$2, difficulty=$3, knowledge_ids=$4, tags=$5, category=$6,
-     leetcode=$7, pattern_justifications=$8, description=$9, steps=$10, code=$11
-     WHERE id=$1 RETURNING *`,
+    `UPDATE exercises SET title=$3, difficulty=$4, knowledge_ids=$5, tags=$6, category=$7,
+     leetcode=$8, pattern_justifications=$9, description=$10, steps=$11, code=$12
+     WHERE user_id=$1 AND id=$2 RETURNING *`,
     [
-      id, merged.title, merged.difficulty, merged.knowledge_ids, merged.tags,
+      userId, id, merged.title, merged.difficulty, merged.knowledge_ids, merged.tags,
       merged.category ?? null, merged.leetcode ?? null,
       merged.patternJustifications ? JSON.stringify(merged.patternJustifications) : null,
       merged.description, merged.steps, merged.code,
@@ -95,7 +100,10 @@ export async function updateExercise(
   return rowToMeta(rows[0])
 }
 
-export async function deleteExercise(id: string): Promise<boolean> {
-  const { rowCount } = await pool.query('DELETE FROM exercises WHERE id = $1', [id])
+export async function deleteExercise(userId: string, id: string): Promise<boolean> {
+  const { rowCount } = await pool.query(
+    'DELETE FROM exercises WHERE user_id = $1 AND id = $2',
+    [userId, id]
+  )
   return (rowCount ?? 0) > 0
 }

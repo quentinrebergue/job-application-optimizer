@@ -12,6 +12,7 @@ import {
   type EntitySectionType,
 } from '@/config'
 import type { EntityType } from '@/types'
+import { verifySession } from '@/lib/auth/dal'
 
 const VALID_TYPES = new Set<EntityType>(['experiences', 'projects', 'skills', 'education'])
 
@@ -22,6 +23,7 @@ interface Props {
 }
 
 export default async function EntityTypePage({ params }: Props) {
+  const { userId } = await verifySession()
   const { type } = await params
 
   if (!VALID_TYPES.has(type as EntityType)) {
@@ -32,7 +34,7 @@ export default async function EntityTypePage({ params }: Props) {
   const config = ENTITY_TYPE_CONFIGS.find((c) => c.id === entityType)!
 
   const [entities, sectionContent, entityContent] = await Promise.all([
-    listEntities(entityType).catch(() => []),
+    listEntities(userId, entityType).catch(() => []),
     getEntitySectionTemplate(entityType as EntitySectionType).catch(() => ''),
     getEntityTemplate(entityType as EntitySectionType).catch(() => ''),
   ])

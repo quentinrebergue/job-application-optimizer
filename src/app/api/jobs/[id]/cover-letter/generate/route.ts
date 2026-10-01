@@ -3,6 +3,7 @@ import { getJob } from '@/lib/data/jobs'
 import { listSentences, getJobCoverLetter, saveJobCoverLetter } from '@/lib/data/cover-letter'
 import type { CoverLetterSentence } from '@/types/cover-letter'
 import { COVER_LETTER_CATEGORY_LABELS } from '@/types/cover-letter'
+import { getSessionUserId } from '@/lib/auth/session'
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY
 const GEMINI_MODEL = 'gemini-2.5-flash'
@@ -23,12 +24,16 @@ export async function POST(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const userId = await getSessionUserId()
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
   const { id } = await params
   if (!GEMINI_API_KEY) {
     return NextResponse.json({ error: 'GEMINI_API_KEY not set' }, { status: 500 })
   }
 
-  const job = await getJob(id)
+  const job = await getJob(userId, id)
   if (!job) return NextResponse.json({ error: 'Job not found' }, { status: 404 })
 
   const { selected_sentence_ids, ai_context } = await req.json() as {
@@ -36,7 +41,7 @@ export async function POST(
     ai_context?: string
   }
 
-  const allSentences = await listSentences()
+  const allSentences = await listSentences(userId)
   const selected = allSentences.filter((s) => selected_sentence_ids.includes(s.id))
 
   const groupedSentences = selected.reduce<Record<string, CoverLetterSentence[]>>((acc, s) => {
@@ -80,8 +85,8 @@ Output only the cover letter text, nothing else.`
 
   const letter = await callGemini(prompt)
 
-  const current = await getJobCoverLetter(id)
-  await saveJobCoverLetter(id, {
+  const current = await getJobCoverLetter(userId, id)
+  await saveJobCoverLetter(userId, id, {
     ...current,
     selected_sentence_ids,
     generated_letter: letter.trim(),

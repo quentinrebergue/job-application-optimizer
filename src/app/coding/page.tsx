@@ -6,15 +6,17 @@ import { KnowledgeCard } from '@/components/coding/KnowledgeCard'
 import { CodingSessionConfig } from '@/components/coding/CodingSessionConfig'
 import { RoadmapView } from '@/components/coding/RoadmapView'
 import type { KnowledgeMeta } from '@/types'
+import { verifySession } from '@/lib/auth/dal'
 
 export const dynamic = 'force-dynamic'
 
 export default async function CodingPage() {
-  const [exercises, knowledgeMetas] = await Promise.all([listExercises(), listKnowledge()])
+  const { userId } = await verifySession()
+  const [exercises, knowledgeMetas] = await Promise.all([listExercises(userId), listKnowledge(userId)])
 
   // Load full knowledge items (explanation included) for KnowledgeCard expand
   const knowledgeItems = (
-    await Promise.all(knowledgeMetas.map((k) => getKnowledge(k.id)))
+    await Promise.all(knowledgeMetas.map((k) => getKnowledge(userId, k.id)))
   ).filter((k) => k !== null)
 
   // Build id → meta map for ExerciseCard tag labels

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { getTaxonomy, getTagsFromText, getNodePath } from '@/lib/data'
+import { getSessionUserId } from '@/lib/auth/session'
 
 const BodySchema = z.object({
   text: z.string().min(1),
@@ -20,6 +21,10 @@ const BodySchema = z.object({
  * No external AI call — purely deterministic.
  */
 export async function POST(request: Request) {
+  const userId = await getSessionUserId()
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
   try {
     const body = await request.json()
     const parsed = BodySchema.safeParse(body)
@@ -27,7 +32,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'text is required' }, { status: 400 })
     }
 
-    const { nodes } = await getTaxonomy()
+    const { nodes } = await getTaxonomy(userId)
     const matchedIds = getTagsFromText(parsed.data.text, nodes)
 
     const result = matchedIds.map((id) => {

@@ -2,11 +2,13 @@ import { listJobs } from '@/lib/data'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { SessionConfig } from '@/components/qa/SessionConfig'
 import { GeneralQAManager } from '@/components/qa/GeneralQAManager'
+import { verifySession } from '@/lib/auth/dal'
 
 export const dynamic = 'force-dynamic'
 
 export default async function QAPage() {
-  const jobs = await listJobs()
+  const { userId } = await verifySession()
+  const jobs = await listJobs(userId)
 
   return (
     <div className="p-4 md:p-8 max-w-3xl">

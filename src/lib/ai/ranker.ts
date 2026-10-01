@@ -11,6 +11,7 @@ function getClient(): OpenAI {
 }
 
 export async function rankEntities(
+  userId: string,
   jobDescription: string,
   entities: EntityMeta[]
 ): Promise<AIRanking[]> {
@@ -19,7 +20,7 @@ export async function rankEntities(
   // Build taxonomy-enriched tag context
   let taxonomyContext = ''
   try {
-    const { nodes } = await getTaxonomy()
+    const { nodes } = await getTaxonomy(userId)
     const allTags = [...new Set(entities.flatMap((e) => e.tags))]
     const resolvedNodeIds = resolveTagsToNodes(allTags, nodes)
     if (resolvedNodeIds.length > 0) {
