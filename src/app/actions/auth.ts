@@ -1,5 +1,6 @@
 'use server'
 
+import * as z from 'zod'
 import { pool } from '@/lib/db'
 import { redirect } from 'next/navigation'
 import { createUser, findUserByEmail } from '@/lib/data/users'
