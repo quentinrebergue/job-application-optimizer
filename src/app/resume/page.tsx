@@ -8,16 +8,18 @@ import { ENTITY_TYPE_IDS, ENTITY_SECTION_TYPES, ENTITY_TEMPLATE_FIELDS, type Ent
 import { GeneratePdfButton } from '@/components/resume/GeneratePdfButton'
 import { SectionTemplateEditor } from '@/components/resume/SectionTemplateEditor'
 import { ResumeDefaultsEditor } from '@/components/resume/ResumeDefaultsEditor'
+import { verifySession } from '@/lib/auth/dal'
 
 export const dynamic = 'force-dynamic'
 import { SentenceBankManager } from '@/components/cover-letter/SentenceBankManager'
 
 export default async function ResumePage() {
+  const { userId } = await verifySession()
   const [template, sectionTemplates, entityTemplates, ...entityLists] = await Promise.all([
     getTemplate().catch(() => null),
     getAllSectionTemplates().catch(() => ({} as Record<EntitySectionType, string>)),
     getAllEntityTemplates().catch(() => ({} as Record<EntitySectionType, string>)),
-    ...ENTITY_TYPE_IDS.map((t) => listEntities(t)),
+    ...ENTITY_TYPE_IDS.map((t) => listEntities(userId, t)),
   ])
   const [experiences, projects, skills] = entityLists as Awaited<ReturnType<typeof listEntities>>[]
   const allEntities = [...(experiences ?? []), ...(projects ?? []), ...(skills ?? [])]

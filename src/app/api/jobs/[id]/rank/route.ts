@@ -3,8 +3,13 @@ import { listEntities } from '@/lib/data'
 import { rankJobWithAI, isAIProvider, type AIProvider } from '@/lib/ai'
 import path from 'path'
 import fs from 'fs/promises'
+import { getSessionUserId } from '@/lib/auth/session'
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const userId = await getSessionUserId()
+  if (!userId) {
+    return Response.json({ error: 'Unauthorized' }, { status: 401 })
+  }
   try {
     const { id } = await params
 
@@ -15,16 +20,16 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     const provider: AIProvider = isAIProvider(requestedProvider) ? requestedProvider : 'gemini'
 
     // Get job details
-    const job = await getJob(id)
+    const job = await getJob(userId, id)
     if (!job) {
       return Response.json({ error: 'Job not found' }, { status: 404 })
     }
 
     // Get all entities
-    const experiences = await listEntities('experiences')
-    const projects = await listEntities('projects')
-    const skills = await listEntities('skills')
-    const education = await listEntities('education')
+    const experiences = await listEntities(userId, 'experiences')
+    const projects = await listEntities(userId, 'projects')
+    const skills = await listEntities(userId, 'skills')
+    const education = await listEntities(userId, 'education')
 
     // Merge job-specific ai_context with global default fallback
     let aiContext = job.resume_config.ai_context ?? ''
@@ -48,7 +53,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     analysis.job_id = id
 
     // Save results to job
-    await updateJob(id, {
+    await updateJob(userId, id, {
       ats_tags: analysis.ats_tags,
       ai_analysis: analysis,
     })
@@ -64,9 +69,13 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
 }
 
 export async function DELETE(_request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const userId = await getSessionUserId()
+  if (!userId) {
+    return Response.json({ error: 'Unauthorized' }, { status: 401 })
+  }
   try {
     const { id } = await params
-    const job = await getJob(id)
+    const job = await getJob(userId, id)
     if (!job) return Response.json({ error: 'Job not found' }, { status: 404 })
 
     // Remove ai_analysis and ats_tags by rewriting offer.json without them
@@ -84,9 +93,13 @@ export async function DELETE(_request: Request, { params }: { params: Promise<{ 
 }
 
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const userId = await getSessionUserId()
+  if (!userId) {
+    return Response.json({ error: 'Unauthorized' }, { status: 401 })
+  }
   try {
     const { id } = await params
-    const job = await getJob(id)
+    const job = await getJob(userId, id)
 
     if (!job) {
       return Response.json({ error: 'Job not found' }, { status: 404 })

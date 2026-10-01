@@ -4,8 +4,13 @@ import fs from 'fs/promises'
 import { getJob, listEntities } from '@/lib/data'
 import { getTemplate, injectEntities, saveGeneratedTex, compilePDF } from '@/lib/latex'
 import { ENTITY_TYPE_IDS } from '@/config'
+import { getSessionUserId } from '@/lib/auth/session'
 
 export async function POST(request: Request) {
+  const userId = await getSessionUserId()
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
   try {
     const body = (await request.json()) as {
       jobId?: string
@@ -20,7 +25,7 @@ export async function POST(request: Request) {
 
     // Fetch all entities first (needed for both job-based and direct entity lists)
     const allEntities = (
-      await Promise.all(ENTITY_TYPE_IDS.map((t) => listEntities(t)))
+      await Promise.all(ENTITY_TYPE_IDS.map((t) => listEntities(userId, t)))
     ).flat()
 
     let selectedEntities = allEntities
@@ -28,7 +33,7 @@ export async function POST(request: Request) {
     let resumeTitle: string | undefined
 
     // Always load job config to get profile_text and default skill_tag_overrides
-    const job = await getJob(jobId)
+    const job = await getJob(userId, jobId)
     if (!job) {
       return NextResponse.json({ error: 'Job not found' }, { status: 404 })
     }
