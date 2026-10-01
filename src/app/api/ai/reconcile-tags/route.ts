@@ -3,6 +3,7 @@ import { z } from 'zod'
 import OpenAI from 'openai'
 import { getTaxonomy, resolveTagsToNodes, getNodePath } from '@/lib/data'
 import type { TaxonomyNode } from '@/types'
+import { getSessionUserId } from '@/lib/auth/session'
 
 const BodySchema = z.object({
   tags: z.array(z.string()).min(1),
@@ -44,6 +45,10 @@ function formatTaxonomyForPrompt(nodes: TaxonomyNode[]): string {
  * }
  */
 export async function POST(request: Request) {
+  const userId = await getSessionUserId()
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
   try {
     const body = await request.json()
     const parsed = BodySchema.safeParse(body)
@@ -52,7 +57,7 @@ export async function POST(request: Request) {
     }
 
     const inputTags = [...new Set(parsed.data.tags.map((t) => t.trim()).filter(Boolean))]
-    const { nodes } = await getTaxonomy()
+    const { nodes } = await getTaxonomy(userId)
 
     // ── Step 1: exact alias matching ──────────────────────────────────────────
     type Matched = { tag: string; nodeId: string; label: string; path: string }

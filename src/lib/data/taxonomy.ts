@@ -3,16 +3,16 @@ import { randomUUID } from 'crypto'
 import type { Taxonomy, TaxonomyNode } from '@/types'
 import { purgeTagAliases } from './tag-cleanup'
 
-export async function getTaxonomy(): Promise<Taxonomy> {
-  const { rows } = await pool.query('SELECT data FROM taxonomy WHERE id = 1')
+export async function getTaxonomy(userId: string): Promise<Taxonomy> {
+  const { rows } = await pool.query('SELECT data FROM taxonomy WHERE user_id = $1', [userId])
   return rows[0]?.data ?? { version: 1, nodes: [] }
 }
 
-export async function saveTaxonomy(taxonomy: Taxonomy): Promise<void> {
+export async function saveTaxonomy(userId: string, taxonomy: Taxonomy): Promise<void> {
   await pool.query(
-    `INSERT INTO taxonomy (id, data) VALUES (1, $1)
-     ON CONFLICT (id) DO UPDATE SET data = $1`,
-    [JSON.stringify(taxonomy)]
+    `INSERT INTO taxonomy (user_id, data) VALUES ($1, $2)
+     ON CONFLICT (user_id) DO UPDATE SET data = $2`,
+    [userId, JSON.stringify(taxonomy)]
   )
 }
 // ── Tree traversal utilities ──────────────────────────────────────────────────
@@ -91,13 +91,13 @@ export function getNodePath(nodeId: string, nodes: TaxonomyNode[]): string {
 
 // ── CRUD ──────────────────────────────────────────────────────────────────────
 
-export async function createNode(opts: {
+export async function createNode(userId: string, opts: {
   label: string
   parent: string | null
   aliases?: string[]
   description?: string
 }): Promise<TaxonomyNode> {
-  const taxonomy = await getTaxonomy()
+  const taxonomy = await getTaxonomy(userId)
   if (opts.parent && !taxonomy.nodes.find((n) => n.id === opts.parent)) {
     throw new Error(`Parent node "${opts.parent}" not found`)
   }
@@ -114,24 +114,25 @@ export async function createNode(opts: {
     ...(opts.description ? { description: opts.description } : {}),
   }
   taxonomy.nodes.push(node)
-  await saveTaxonomy(taxonomy)
+  await saveTaxonomy(userId, taxonomy)
   return node
 }
 
 export async function updateNode(
+  userId: string,
   id: string,
   patch: Partial<Pick<TaxonomyNode, 'label' | 'parent' | 'aliases' | 'description'>>
 ): Promise<TaxonomyNode | null> {
-  const taxonomy = await getTaxonomy()
+  const taxonomy = await getTaxonomy(userId)
   const idx = taxonomy.nodes.findIndex((n) => n.id === id)
   if (idx === -1) return null
   taxonomy.nodes[idx] = { ...taxonomy.nodes[idx], ...patch }
-  await saveTaxonomy(taxonomy)
+  await saveTaxonomy(userId, taxonomy)
   return taxonomy.nodes[idx]
 }
 
-export async function deleteNode(id: string, cascade = false): Promise<boolean> {
-  const taxonomy = await getTaxonomy()
+export async function deleteNode(userId: string, id: string, cascade = false): Promise<boolean> {
+  const taxonomy = await getTaxonomy(userId)
   const exists = taxonomy.nodes.find((n) => n.id === id)
   if (!exists) return false
   const children = taxonomy.nodes.filter((n) => n.parent === id)
@@ -139,7 +140,6 @@ export async function deleteNode(id: string, cascade = false): Promise<boolean> 
     throw new Error(`Node "${id}" has ${children.length} child(ren). Pass cascade=true to delete them too.`)
   }
 
-  // Collect all aliases that will be removed so we can purge them from data files
   const toDeleteIds = cascade ? new Set([id, ...getDescendants(id, taxonomy.nodes)]) : new Set([id])
   const aliasesToPurge = taxonomy.nodes
     .filter((n) => toDeleteIds.has(n.id))
@@ -150,32 +150,31 @@ export async function deleteNode(id: string, cascade = false): Promise<boolean> 
   } else {
     taxonomy.nodes = taxonomy.nodes.filter((n) => n.id !== id)
   }
-  await saveTaxonomy(taxonomy)
+  await saveTaxonomy(userId, taxonomy)
   await purgeTagAliases(aliasesToPurge)
   return true
 }
 
-export async function addAlias(nodeId: string, alias: string): Promise<TaxonomyNode | null> {
-  const taxonomy = await getTaxonomy()
+export async function addAlias(userId: string, nodeId: string, alias: string): Promise<TaxonomyNode | null> {
+  const taxonomy = await getTaxonomy(userId)
   const node = taxonomy.nodes.find((n) => n.id === nodeId)
   if (!node) return null
   if (!node.aliases.includes(alias)) {
     node.aliases.push(alias)
-    await saveTaxonomy(taxonomy)
+    await saveTaxonomy(userId, taxonomy)
   }
   return node
 }
 
-export async function removeAlias(nodeId: string, alias: string): Promise<TaxonomyNode | null> {
-  const taxonomy = await getTaxonomy()
+export async function removeAlias(userId: string, nodeId: string, alias: string): Promise<TaxonomyNode | null> {
+  const taxonomy = await getTaxonomy(userId)
   const node = taxonomy.nodes.find((n) => n.id === nodeId)
   if (!node) return null
   node.aliases = node.aliases.filter((a) => a !== alias)
-  await saveTaxonomy(taxonomy)
+  await saveTaxonomy(userId, taxonomy)
   await purgeTagAliases([alias])
   return node
 }
-
 /**
  * Scan free-form text (job description, exercise statement, …) for any taxonomy aliases
  * that appear as whole words. Returns the matched node ids + all their ancestor ids,

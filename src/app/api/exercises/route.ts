@@ -1,12 +1,21 @@
 import { NextResponse } from 'next/server'
 import { listExercises, createExercise } from '@/lib/data'
+import { getSessionUserId } from '@/lib/auth/session'
 
 export async function GET() {
-  const exercises = await listExercises()
+  const userId = await getSessionUserId()
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+  const exercises = await listExercises(userId)
   return NextResponse.json(exercises)
 }
 
 export async function POST(request: Request) {
+  const userId = await getSessionUserId()
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
   try {
     const body = await request.json() as {
       title?: string
@@ -23,7 +32,7 @@ export async function POST(request: Request) {
         { status: 400 }
       )
     }
-    const exercise = await createExercise({
+    const exercise = await createExercise(userId, {
       title: body.title,
       difficulty: body.difficulty as 'easy' | 'medium' | 'hard',
       knowledge_ids: body.knowledge_ids ?? [],

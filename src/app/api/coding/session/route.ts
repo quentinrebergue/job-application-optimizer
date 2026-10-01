@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { listExercises, getExercise, getJob, getTaxonomy, tagsOverlap } from '@/lib/data'
 import type { CodingTestSession, Exercise } from '@/types'
+import { getSessionUserId } from '@/lib/auth/session'
 
 const BodySchema = z.object({
   difficulty: z.enum(['easy', 'medium', 'hard']).optional(),
@@ -10,6 +11,10 @@ const BodySchema = z.object({
 })
 
 export async function POST(req: NextRequest) {
+  const userId = await getSessionUserId()
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
   const body = await req.json().catch(() => ({}))
   const parsed = BodySchema.safeParse(body)
   if (!parsed.success) {
@@ -17,16 +22,16 @@ export async function POST(req: NextRequest) {
   }
   const { difficulty, count, jobId } = parsed.data
 
-  const all = await listExercises()
+  const all = await listExercises(userId)
 
   // Filter by difficulty
   let filtered = difficulty ? all.filter((e) => e.difficulty === difficulty) : all
 
   // Filter by job taxonomy if jobId provided
   if (jobId) {
-    const job = await getJob(jobId)
+    const job = await getJob(userId, jobId)
     if (job && job.tags.length > 0) {
-      const { nodes } = await getTaxonomy()
+      const { nodes } = await getTaxonomy(userId)
       filtered = filtered.filter(
         (ex) => ex.tags.length > 0 && tagsOverlap(ex.tags, job.tags, nodes)
       )
@@ -42,7 +47,7 @@ export async function POST(req: NextRequest) {
 
   // Load full exercise content
   const full = (
-    await Promise.all(shuffled.map((e) => getExercise(e.id)))
+    await Promise.all(shuffled.map((e) => getExercise(userId, e.id)))
   ).filter((e): e is Exercise => e !== null)
 
   const session: CodingTestSession = {

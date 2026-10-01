@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { listEntities, getEntity, listGeneralQuestions, getResumeConfig, getJob, getJobQuestions, getTaxonomy, tagsOverlap } from '@/lib/data'
 import { ENTITY_TYPE_IDS } from '@/config'
 import type { Entity, TestCard, TestConfig } from '@/types'
+import { getSessionUserId } from '@/lib/auth/session'
 
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr]
@@ -17,6 +18,10 @@ const JOB_SCOPES = new Set(['job', 'job+topics'])
 const TOPIC_SCOPES = new Set(['topics', 'job+topics'])
 
 export async function POST(request: Request) {
+  const userId = await getSessionUserId()
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
   try {
     const config = (await request.json()) as TestConfig
 
@@ -28,12 +33,12 @@ export async function POST(request: Request) {
       let allowedEntityIds: string[] | null = null
 
       if (JOB_SCOPES.has(config.scope) && config.jobId) {
-        const resumeConfig = await getResumeConfig(config.jobId)
+        const resumeConfig = await getResumeConfig(userId, config.jobId)
         allowedEntityIds = resumeConfig.selected_entity_ids
       }
 
       const allMetas = (
-        await Promise.all(ENTITY_TYPE_IDS.map((t) => listEntities(t)))
+        await Promise.all(ENTITY_TYPE_IDS.map((t) => listEntities(userId, t)))
       ).flat()
 
       const filteredMetas = allowedEntityIds
@@ -41,7 +46,7 @@ export async function POST(request: Request) {
         : allMetas
 
       const entities: (Entity | null)[] = await Promise.all(
-        filteredMetas.map((e) => getEntity(e.type, e.id))
+        filteredMetas.map((e) => getEntity(userId, e.type, e.id))
       )
 
       for (const entity of entities) {
@@ -57,7 +62,7 @@ export async function POST(request: Request) {
     }
 
     // ── 2. General flashcards with scope-aware filtering ─────────────────────
-    let generalQuestions = await listGeneralQuestions()
+    let generalQuestions = await listGeneralQuestions(userId)
 
     if (TOPIC_SCOPES.has(config.scope) && config.tags && config.tags.length > 0) {
       // explicit tag filter for 'topics' and 'job+topics'
@@ -66,9 +71,9 @@ export async function POST(request: Request) {
       if (matched.length > 0) generalQuestions = matched
     } else if (config.scope === 'job' && config.jobId) {
       // taxonomy-based auto-filter for pure 'job' scope
-      const job = await getJob(config.jobId)
+      const job = await getJob(userId, config.jobId)
       if (job && job.tags.length > 0) {
-        const { nodes } = await getTaxonomy()
+        const { nodes } = await getTaxonomy(userId)
         const matched = generalQuestions.filter(
           (q) => q.tags.length > 0 && tagsOverlap(q.tags, job.tags, nodes)
         )
@@ -87,8 +92,8 @@ export async function POST(request: Request) {
     // ── 3. Job-specific custom questions ─────────────────────────────────────
     const jobCards: TestCard[] = []
     if (JOB_SCOPES.has(config.scope) && config.jobId) {
-      const job = await getJob(config.jobId)
-      const jobQuestions = await getJobQuestions(config.jobId)
+      const job = await getJob(userId, config.jobId)
+      const jobQuestions = await getJobQuestions(userId, config.jobId)
       const source = job ? job.company : 'Job'
       for (const q of jobQuestions) {
         jobCards.push({ id: uuidv4(), question: q.question, answer: q.answer, source })
