@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, Download, Upload, Trash2, Plus } from 'lucide-react'
+import { ArrowLeft, Download, Upload, Trash2 } from 'lucide-react'
 import type { ExerciseMeta } from '@/types'
 
 export default function ProgressPage() {

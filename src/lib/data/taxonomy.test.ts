@@ -1,51 +1,16 @@
 /**
  * taxonomy.test.ts
  *
- * Tests for src/lib/data/taxonomy.ts
+ * Tests for the pure helper functions in src/lib/data/taxonomy.ts.
  *
- * Pure helper functions are tested directly.
- * CRUD operations mock fs/promises to avoid reading the real data directory.
+ * The CRUD operations (createNode, updateNode, deleteNode, addAlias,
+ * removeAlias) now go through Postgres (getTaxonomy/saveTaxonomy) and
+ * aren't covered here — that needs a real test database, not a unit
+ * test mock. Deferred.
  */
 
-import { vi, describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import type { TaxonomyNode } from '@/types'
-
-// ── In-memory fs mock ─────────────────────────────────────────────────────────
-
-const store: Map<string, string> = new Map()
-
-vi.mock('fs/promises', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('fs/promises')>()
-  const mocked = {
-    ...actual,
-    mkdir: vi.fn(async () => undefined),
-    readdir: vi.fn(async (dir: unknown) => ([] as string[])),
-    readFile: vi.fn(async (filePath: unknown) => {
-      const p = filePath as string
-      if (!store.has(p)) throw Object.assign(new Error(`ENOENT: ${p}`), { code: 'ENOENT' })
-      return store.get(p)!
-    }),
-    writeFile: vi.fn(async (filePath: unknown, content: unknown) => {
-      store.set(filePath as string, content as string)
-    }),
-  }
-  return { ...mocked, default: mocked }
-})
-
-// ── Seed helper ───────────────────────────────────────────────────────────────
-
-function seedTaxonomy(nodes: TaxonomyNode[]) {
-  // Use the actual path that taxonomy.ts will resolve via process.cwd()
-  const treePath = require('path').join(process.cwd(), 'data', 'taxonomy', 'tree.json')
-  store.set(treePath, JSON.stringify({ nodes }, null, 2))
-}
-
-function readTaxonomy(): TaxonomyNode[] {
-  const treePath = require('path').join(process.cwd(), 'data', 'taxonomy', 'tree.json')
-  return JSON.parse(store.get(treePath)!).nodes
-}
-
-// ── Import module under test AFTER mocks ──────────────────────────────────────
 
 import {
   getAncestors,
@@ -55,11 +20,6 @@ import {
   getTagsFromText,
   tagsOverlap,
   getNodePath,
-  createNode,
-  updateNode,
-  deleteNode,
-  addAlias,
-  removeAlias,
 } from './taxonomy'
 
 // ── Sample nodes ──────────────────────────────────────────────────────────────
@@ -182,91 +142,3 @@ describe('tagsOverlap', () => {
   })
 })
 
-// ── CRUD tests (mock fs) ──────────────────────────────────────────────────────
-
-beforeEach(() => {
-  store.clear()
-  vi.clearAllMocks()
-  seedTaxonomy(sampleNodes)
-})
-
-describe('createNode', () => {
-  it('adds a node to the taxonomy', async () => {
-    const node = await createNode({ label: 'FPGA', parent: 'hardware', aliases: ['fpga'] })
-    expect(node.label).toBe('FPGA')
-    expect(node.parent).toBe('hardware')
-    const saved = readTaxonomy()
-    expect(saved.some((n) => n.label === 'FPGA')).toBe(true)
-  })
-
-  it('generates a unique id from the label', async () => {
-    const node = await createNode({ label: 'Test Node', parent: null })
-    expect(node.id).toMatch(/^test-node-/)
-  })
-
-  it('throws when parent does not exist', async () => {
-    await expect(createNode({ label: 'X', parent: 'nonexistent' })).rejects.toThrow('Parent')
-  })
-})
-
-describe('updateNode', () => {
-  it('updates the label', async () => {
-    const updated = await updateNode('web', { label: 'Web Development' })
-    expect(updated?.label).toBe('Web Development')
-    expect(readTaxonomy().find((n) => n.id === 'web')?.label).toBe('Web Development')
-  })
-
-  it('returns null for unknown id', async () => {
-    expect(await updateNode('nonexistent', { label: 'X' })).toBeNull()
-  })
-})
-
-describe('deleteNode', () => {
-  it('removes a leaf node', async () => {
-    const ok = await deleteNode('stm32')
-    expect(ok).toBe(true)
-    expect(readTaxonomy().find((n) => n.id === 'stm32')).toBeUndefined()
-  })
-
-  it('throws when deleting a parent without cascade', async () => {
-    await expect(deleteNode('hardware')).rejects.toThrow('child')
-  })
-
-  it('deletes a node and descendants with cascade=true', async () => {
-    const ok = await deleteNode('hardware', true)
-    expect(ok).toBe(true)
-    const nodes = readTaxonomy()
-    expect(nodes.find((n) => n.id === 'hardware')).toBeUndefined()
-    expect(nodes.find((n) => n.id === 'mcu')).toBeUndefined()
-    expect(nodes.find((n) => n.id === 'stm32')).toBeUndefined()
-  })
-
-  it('returns false for unknown id', async () => {
-    expect(await deleteNode('nonexistent')).toBe(false)
-  })
-})
-
-describe('addAlias / removeAlias', () => {
-  it('adds an alias to a node', async () => {
-    const node = await addAlias('web', 'frontend-dev')
-    expect(node?.aliases).toContain('frontend-dev')
-    expect(readTaxonomy().find((n) => n.id === 'web')?.aliases).toContain('frontend-dev')
-  })
-
-  it('does not duplicate aliases', async () => {
-    await addAlias('web', 'web')
-    const node = readTaxonomy().find((n) => n.id === 'web')!
-    expect(node.aliases.filter((a) => a === 'web')).toHaveLength(1)
-  })
-
-  it('removes an alias from a node', async () => {
-    await addAlias('web', 'to-remove')
-    const node = await removeAlias('web', 'to-remove')
-    expect(node?.aliases).not.toContain('to-remove')
-  })
-
-  it('returns null for unknown node', async () => {
-    expect(await addAlias('nonexistent', 'x')).toBeNull()
-    expect(await removeAlias('nonexistent', 'x')).toBeNull()
-  })
-})

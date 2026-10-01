@@ -132,11 +132,15 @@ interface Props {
 export function RoadmapView({ exercises }: Props) {
   const [completed, setCompleted] = useState<Set<string>>(new Set())
   const [mounted, setMounted] = useState(false)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [saving, setSaving] = useState(false)
 
   const exMap = Object.fromEntries(exercises.map((e) => [e.id, e]))
 
   useEffect(() => {
+    // One-time mount flag + kickoff of an async fetch below — not a
+    // render-loop risk.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true)
     ;(async () => {
       try {

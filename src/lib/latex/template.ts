@@ -134,7 +134,7 @@ export async function injectEntities(
     experiences: (() => {
       const allExperiences = entities
         .filter((e) => e.type === 'experiences')
-        .sort((a, b) => parseEndDate((b as any).period).getTime() - parseEndDate((a as any).period).getTime())
+        .sort((a, b) => parseEndDate((b as { period: string }).period).getTime() - parseEndDate((a as { period: string }).period).getTime())
       if (!experienceOrder || experienceOrder.length === 0) return allExperiences
       // Sort by experienceOrder, keeping any unordered experiences (already date-sorted) at the end
       const ordered = experienceOrder
@@ -156,7 +156,7 @@ export async function injectEntities(
     skills: entities.filter((e) => e.type === 'skills'),
     education: entities
       .filter((e) => e.type === 'education')
-      .sort((a, b) => parseEndDate((b as any).period).getTime() - parseEndDate((a as any).period).getTime()),
+      .sort((a, b) => parseEndDate((b as { period: string }).period).getTime() - parseEndDate((a as { period: string }).period).getTime()),
   }
 
   const DEFAULT_PROFILE = `\\textbf{Looking for a full-time position in software engineering with a focus on low-level systems / hardware integration.}\\\\[0.3em] MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded.\\\\[0.3em]\nFluent in French and English (TOEIC 915, C1). \\textit{Interests: watchmaking, music, hiking/running, cooking.}`
