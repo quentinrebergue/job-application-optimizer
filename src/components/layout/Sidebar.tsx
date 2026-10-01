@@ -2,14 +2,15 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { FileText, Briefcase, MessageSquare, Code2, GraduationCap, Network } from 'lucide-react'
+import { FileText, Briefcase, MessageSquare, Code2, GraduationCap, Network, LogOut } from 'lucide-react'
 import { MODULE_CONFIGS } from '@/config'
+import { logout } from '@/app/actions/auth'
 
 const ICON_MAP: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
   FileText, Briefcase, MessageSquare, Code2, Network,
 }
 
-export function Sidebar() {
+export function Sidebar({ userEmail }: { userEmail: string | null }) {
   const pathname = usePathname()
 
   return (
@@ -44,7 +45,23 @@ export function Sidebar() {
       </nav>
 
       <div className="px-5 py-4 border-t border-slate-100">
-        <p className="text-xs text-slate-400">v0.1.0</p>
+        {userEmail ? (
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-xs text-slate-500 truncate">{userEmail}</p>
+            <form action={logout}>
+              <button
+                type="submit"
+                title="Se déconnecter"
+                className="shrink-0 text-slate-400 hover:text-red-500 transition-colors"
+              >
+                <LogOut size={14} />
+              </button>
+            </form>
+          </div>
+        ) : (
+          <Link href="/login" className="text-xs text-blue-600 hover:underline">Se connecter</Link>
+        )}
+        <p className="text-xs text-slate-400 mt-1">v0.1.0</p>
       </div>
     </aside>
   )
