@@ -28,6 +28,8 @@ jobs:
             context: .
           - image: resume-renderer
             context: services/resume-renderer
+          - image: db-migrator
+            context: services/db-migrator
     steps:
       - uses: actions/checkout@v4
 
@@ -66,7 +68,8 @@ jobs:
           cd k8s
           kustomize edit set image \
             "ghcr.io/quentinrebergue/job-application-optimizer=ghcr.io/quentinrebergue/job-application-optimizer:${TAG}" \
-            "ghcr.io/quentinrebergue/resume-renderer=ghcr.io/quentinrebergue/resume-renderer:${TAG}"
+            "ghcr.io/quentinrebergue/resume-renderer=ghcr.io/quentinrebergue/resume-renderer:${TAG}" \
+            "ghcr.io/quentinrebergue/db-migrator=ghcr.io/quentinrebergue/db-migrator:${TAG}"
 
       - name: Commit the new tags
         run: |
