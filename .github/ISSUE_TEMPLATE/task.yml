@@ -1,0 +1,40 @@
+name: Task
+description: A piece of work to do (feature, improvement, chore)
+title: "[Task] "
+labels: ["type: chore"]
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: What should be true when this is done, and why it matters.
+    validations:
+      required: true
+
+  - type: textarea
+    id: done-when
+    attributes:
+      label: Done when
+      description: A checklist of observable results. Someone else should be able to tell if it is finished.
+      placeholder: |
+        - [ ] The change is merged
+        - [ ] The result is verified (command, graph or test)
+        - [ ] Docs updated if needed
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context and notes
+      description: Links to related tickets, PRs, reports or docs. Constraints, risks, ideas on how to do it.
+
+  - type: dropdown
+    id: size
+    attributes:
+      label: Rough size
+      description: Helps choose what fits in a session.
+      options:
+        - Small (under an hour)
+        - Medium (a few hours)
+        - Large (split it into smaller tickets)
