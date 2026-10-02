@@ -1,0 +1,7 @@
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: workload-critical
+value: 1000000
+globalDefault: false
+description: "User-facing workloads (app, database, renderer). Under node pressure the kubelet evicts lower-priority pods such as monitoring first."
