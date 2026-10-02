@@ -1,0 +1,43 @@
+name: Incident action
+description: A follow-up item from a post-mortem
+title: "[Action] "
+labels: ["type: incident-action"]
+body:
+  - type: input
+    id: postmortem
+    attributes:
+      label: Post-mortem
+      description: Path or link to the incident report this action comes from.
+      placeholder: docs/incidents/2026-10-02-memory-pressure-during-rollout.md
+    validations:
+      required: true
+
+  - type: dropdown
+    id: action-type
+    attributes:
+      label: Type of action
+      description: See the post-mortem guide in docs/incidents/README.md.
+      options:
+        - Prevent (so it cannot happen)
+        - Detect (so we know sooner)
+        - Mitigate (so it hurts less)
+    validations:
+      required: true
+
+  - type: textarea
+    id: action
+    attributes:
+      label: Action
+      description: What exactly will be changed. One action per ticket.
+    validations:
+      required: true
+
+  - type: textarea
+    id: verification
+    attributes:
+      label: How we will know it works
+      description: The check that proves the fix. Ideally a reproduction of the incident, a test, or an alert that fires.
+      placeholder: |
+        - [ ] Reproduce the original trigger and confirm the service stays up
+    validations:
+      required: true
