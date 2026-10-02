@@ -47,8 +47,8 @@ export async function POST(request: Request) {
   if (skillTagOverrides) config.skill_tag_overrides = skillTagOverrides
 
   const payload = buildPayload({
-    templateId: template ?? DEFAULT_TEMPLATE,
-    options,
+    templateId: template ?? job?.resume_config.resume_template ?? DEFAULT_TEMPLATE,
+    options: options ?? job?.resume_config.resume_options,
     profile,
     config,
     entities,

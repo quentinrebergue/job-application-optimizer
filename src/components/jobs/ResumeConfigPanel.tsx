@@ -6,6 +6,8 @@ import { Loader2, FileDown, ChevronDown, ChevronRight, Sparkles, Plus, XCircle, 
 import type { EntityMeta, ResumeConfig, SkillMeta } from '@/types'
 import type { AIAnalysisResult, SuggestedSkill } from '@/types/job'
 import { AIRankButton } from './AIRankButton'
+import { DEFAULT_TEMPLATE_CHOICE, TemplatePicker, type TemplateChoice } from '@/components/resume/TemplatePicker'
+import { useTemplates } from '@/components/resume/useTemplates'
 
 const TYPE_LABELS: Record<string, string> = {
   experiences: 'Work Experience',
@@ -66,6 +68,11 @@ export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClea
   const profileTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const titleTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const aiContextTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+    const { templates, error: templatesError } = useTemplates()
+  const templateChoice: TemplateChoice = {
+    template: config.resume_template ?? DEFAULT_TEMPLATE_CHOICE.template,
+    options: config.resume_options ?? {},
+  }
 
   // Auto-save profile text with debounce
   useEffect(() => {
@@ -212,6 +219,10 @@ export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClea
       setSavingConfig(false)
     }
   }
+    function chooseTemplate(next: TemplateChoice) {
+    persistConfig({ ...config, resume_template: next.template, resume_options: next.options })
+  }
+
 
   function toggleEntity(id: string) {
     const isSelected = config.selected_entity_ids.includes(id)
@@ -632,6 +643,13 @@ export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClea
           {genError}
         </div>
       )}
+
+        {/* Template */}
+        <div className="mb-5 rounded-lg border border-slate-200 bg-slate-50 p-3">
+            <span className="mb-2 block text-xs font-semibold text-slate-600 uppercase tracking-wide">Template</span>
+            <TemplatePicker templates={templates} value={templateChoice} onChange={chooseTemplate} disabled={generating} />
+            {templatesError && <p className="mt-2 text-xs text-amber-700">{templatesError}</p>}
+        </div>
 
       {/* Resume fields */}
       <div className="mb-5 rounded-lg border border-slate-200 bg-slate-50 p-3 space-y-3">

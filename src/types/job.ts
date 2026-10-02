@@ -28,6 +28,10 @@ export interface ResumeConfig {
   project_order?: string[]
   /** Experience display order: array of experience IDs in desired order. Absent = sort by end date, most recent first. */
   experience_order?: string[]
+  /** Resume template chosen for this job (an id offered by the renderer service). Absent = default. */
+  resume_template?: string
+  /** Style options for that template (font size, colours...). Absent = the template's defaults. */
+  resume_options?: Record<string, string | number>
 }
 
 export interface SuggestedSkill {

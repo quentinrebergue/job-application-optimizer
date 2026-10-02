@@ -1,10 +1,12 @@
 import type { RenderPayload } from './build-payload'
+import { TemplateListSchema, type TemplateInfo } from '@/schemas/resume-template'
 
 const DEFAULT_URL = 'http://localhost:8090'
 
 // A little longer than the service's own 15 s render timeout, so the service
 // answers (504) before we give up on it.
-const DEFAULT_TIMEOUT_MS = 20_000
+const RENDER_TIMEOUT_MS = 20_000
+const LIST_TIMEOUT_MS = 5_000
 
 /**
  * A failure to get a PDF, already translated for the browser: `status` is the
@@ -31,17 +33,20 @@ export interface RendererClientOptions {
   fetchImpl?: typeof fetch
 }
 
-export async function renderPdf(payload: RenderPayload, options: RendererClientOptions = {}): Promise<ArrayBuffer> {
+/** Calls the service and turns network failures into RenderErrors. */
+async function callRenderer(
+  path: string,
+  init: RequestInit,
+  options: RendererClientOptions,
+  defaultTimeoutMs: number,
+): Promise<Response> {
   const baseUrl = options.baseUrl ?? process.env.RESUME_RENDERER_URL ?? DEFAULT_URL
   const doFetch = options.fetchImpl ?? fetch
 
-  let response: Response
   try {
-    response = await doFetch(`${baseUrl}/render`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-      signal: AbortSignal.timeout(options.timeoutMs ?? DEFAULT_TIMEOUT_MS),
+    return await doFetch(`${baseUrl}${path}`, {
+      ...init,
+      signal: AbortSignal.timeout(options.timeoutMs ?? defaultTimeoutMs),
       cache: 'no-store',
     })
   } catch (err) {
@@ -50,6 +55,19 @@ export async function renderPdf(payload: RenderPayload, options: RendererClientO
     }
     throw new RenderError('The resume renderer is not reachable.', 503, 'renderer_unreachable')
   }
+}
+
+export async function renderPdf(payload: RenderPayload, options: RendererClientOptions = {}): Promise<ArrayBuffer> {
+  const response = await callRenderer(
+    '/render',
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    },
+    options,
+    RENDER_TIMEOUT_MS,
+  )
 
   if (response.ok) {
     if (!response.headers.get('Content-Type')?.startsWith('application/pdf')) {
@@ -58,6 +76,18 @@ export async function renderPdf(payload: RenderPayload, options: RendererClientO
     return response.arrayBuffer()
   }
   throw await toRenderError(response)
+}
+
+/** The templates the service offers, with the options each one accepts. */
+export async function listTemplates(options: RendererClientOptions = {}): Promise<TemplateInfo[]> {
+  const response = await callRenderer('/templates', { method: 'GET' }, options, LIST_TIMEOUT_MS)
+  if (!response.ok) throw await toRenderError(response)
+
+  const parsed = TemplateListSchema.safeParse(await response.json().catch(() => null))
+  if (!parsed.success) {
+    throw new RenderError('The resume renderer returned an unexpected response.', 502, 'bad_response')
+  }
+  return parsed.data.templates
 }
 
 interface ServiceError {
