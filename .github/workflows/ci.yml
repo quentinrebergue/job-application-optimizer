@@ -5,7 +5,48 @@ on:
     branches: [master]
 
 jobs:
+  # Decides which of the jobs below have anything to check. A job skipped
+  # through `if:` counts as passed, so this also works with required checks.
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      app: ${{ steps.filter.outputs.app }}
+      renderer: ${{ steps.filter.outputs.renderer }}
+      migrator: ${{ steps.filter.outputs.migrator }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - id: filter
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -euo pipefail
+          files="$(git diff --name-only "$BASE" HEAD)"
+          echo "Changed files:"
+          printf '%s\n' "$files"
+
+          matches() { printf '%s\n' "$files" | grep -Eq "$1" && echo true || echo false; }
+          # Anything outside these folders and Markdown files is the app itself.
+          outside() { printf '%s\n' "$files" | grep -Evq "$1" && echo true || echo false; }
+
+          ci=$(matches '^\.github/workflows/ci\.yml$')
+          app=$(outside '^(services|k8s|docs|terraform|ansible)/|\.md$|^\.github/workflows/cd\.yml$')
+          renderer=$(matches '^services/resume-renderer/')
+          migrator=$(matches '^services/db-migrator/')
+
+          # If the CI itself changed, check everything.
+          if [ "$ci" = true ]; then app=true; renderer=true; migrator=true; fi
+
+          {
+            echo "app=$app"
+            echo "renderer=$renderer"
+            echo "migrator=$migrator"
+          } >> "$GITHUB_OUTPUT"
   test:
+    needs: changes
+    if: needs.changes.outputs.app == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -21,6 +62,8 @@ jobs:
       - run: npm test
 
   resume-renderer:
+    needs: changes
+    if: needs.changes.outputs.renderer == 'true'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -52,6 +95,8 @@ jobs:
 
       - run: go test -race -count=1 ./...
   db-migrator:
+    needs: changes
+    if: needs.changes.outputs.migrator == 'true'
     runs-on: ubuntu-latest
     defaults:
       run:
