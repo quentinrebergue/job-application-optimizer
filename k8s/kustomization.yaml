@@ -22,10 +22,10 @@ resources:
 images:
 - name: ghcr.io/quentinrebergue/db-migrator
   newName: ghcr.io/quentinrebergue/db-migrator
-  newTag: f4c1eaa
+  newTag: 3d2b22a
 - name: ghcr.io/quentinrebergue/job-application-optimizer
   newName: ghcr.io/quentinrebergue/job-application-optimizer
-  newTag: f4c1eaa
+  newTag: 3d2b22a
 - name: ghcr.io/quentinrebergue/resume-renderer
   newName: ghcr.io/quentinrebergue/resume-renderer
-  newTag: f4c1eaa
+  newTag: 3d2b22a
