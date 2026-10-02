@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: resume-renderer
+  namespace: job-optimizer
+spec:
+  podSelector:
+    matchLabels:
+      app: resume-renderer
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: job-optimizer
+      ports:
+        - protocol: TCP
+          port: 8080
+  egress: []

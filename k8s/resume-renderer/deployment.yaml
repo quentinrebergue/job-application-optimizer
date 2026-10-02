@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: resume-renderer
+  namespace: job-optimizer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: resume-renderer
+  template:
+    metadata:
+      labels:
+        app: resume-renderer
+    spec:
+      imagePullSecrets:
+        - name: ghcr-pull-secret
+      terminationGracePeriodSeconds: 30
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: resume-renderer
+          image: ghcr.io/quentinrebergue/resume-renderer:0.1.0
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            - name: RENDER_TIMEOUT
+              value: "15s"
+            - name: MAX_CONCURRENT
+              value: "4"
+            - name: SHUTDOWN_DELAY
+              value: "5s"
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            periodSeconds: 5
+            failureThreshold: 2
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir:
+            sizeLimit: 64Mi
