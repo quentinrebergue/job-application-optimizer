@@ -6,4 +6,4 @@ Resume Builder module pages.
 
 | File | Description |
 |------|-------------|
-| `page.tsx` | Server component — shows entity library stats, a quick PDF generate button (all entities), and the raw LaTeX template source. Links to the Entity Library and Job Tracker for job-specific PDFs. |
+| `page.tsx` | Server component — shows entity library stats, a quick PDF generate button (all entities), and the resume profile editor. Links to the Entity Library and Job Tracker for job-specific PDFs. |

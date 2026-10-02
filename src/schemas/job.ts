@@ -64,6 +64,8 @@ export const ResumeConfigSchema = z.object({
   entity_description_overrides: z.record(z.string(), z.string()).optional(),
   project_order: z.array(z.string()).optional(),
   experience_order: z.array(z.string()).optional(),
+  resume_template: z.string().optional(),
+  resume_options: z.record(z.string(), z.union([z.string(), z.number()])).optional(),
 })
 
 export const JobOfferSchema = z.object({

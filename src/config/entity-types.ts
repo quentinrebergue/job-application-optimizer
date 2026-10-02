@@ -10,8 +10,6 @@ export interface EntityTypeConfig {
   /** lucide-react icon name (string, resolved at render time) */
   icon: string
   color: string
-  /** Which LaTeX placeholder this type maps to */
-  latexPlaceholder: string
 }
 
 export const ENTITY_TYPE_CONFIGS: EntityTypeConfig[] = [
@@ -21,7 +19,6 @@ export const ENTITY_TYPE_CONFIGS: EntityTypeConfig[] = [
     labelSingular: 'Experience',
     icon: 'Briefcase',
     color: 'blue',
-    latexPlaceholder: '%%EXPERIENCES%%',
   },
   {
     id: 'projects',
@@ -29,7 +26,6 @@ export const ENTITY_TYPE_CONFIGS: EntityTypeConfig[] = [
     labelSingular: 'Project',
     icon: 'FolderOpen',
     color: 'purple',
-    latexPlaceholder: '%%PROJECTS%%',
   },
   {
     id: 'skills',
@@ -37,7 +33,6 @@ export const ENTITY_TYPE_CONFIGS: EntityTypeConfig[] = [
     labelSingular: 'Skill',
     icon: 'Zap',
     color: 'emerald',
-    latexPlaceholder: '%%SKILLS%%',
   },
   {
     id: 'education',
@@ -45,7 +40,6 @@ export const ENTITY_TYPE_CONFIGS: EntityTypeConfig[] = [
     labelSingular: 'Education',
     icon: 'GraduationCap',
     color: 'orange',
-    latexPlaceholder: '%%EDUCATION%%',
   },
 ]
 
