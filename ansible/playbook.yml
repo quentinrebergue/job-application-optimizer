@@ -137,13 +137,13 @@
         cmd: docker compose exec -T db psql -U app -d job_optimizer < {{ item }}
         chdir: /home/debian/app
       loop:
-        - db/migrations/001_create_jobs.sql
-        - db/migrations/002_create_entities.sql
-        - db/migrations/003_create_taxonomy.sql
-        - db/migrations/004_create_general_questions.sql
-        - db/migrations/005_create_knowledge.sql
-        - db/migrations/006_create_exercises.sql
-        - db/migrations/007_create_cover_letter.sql
+        - services/db-migrator/migrations/001_create_jobs.sql
+        - services/db-migrator/migrations/002_create_entities.sql
+        - services/db-migrator/migrations/003_create_taxonomy.sql
+        - services/db-migrator/migrations/004_create_general_questions.sql
+        - services/db-migrator/migrations/005_create_knowledge.sql
+        - services/db-migrator/migrations/006_create_exercises.sql
+        - services/db-migrator/migrations/007_create_cover_letter.sql
       changed_when: true
 
     - name: Run one-off data migration scripts
