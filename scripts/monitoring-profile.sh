@@ -35,8 +35,9 @@ apply_profile() {
   if [ "$profile" = minimal ]; then
     cmd+=(-f "$dir/values-minimal.yaml")
   fi
-  # --atomic rolls the release back if the upgrade fails or times out.
-  cmd+=(--atomic --wait --timeout 5m)
+  # Roll the release back if the upgrade fails or times out (Helm 4 option;
+  # it was called --atomic in Helm 3).
+  cmd+=(--rollback-on-failure --wait --timeout 5m)
   if [ "${DRY_RUN:-0}" = 1 ]; then
     echo "DRY_RUN=1, would run:"
     printf '  %s\n' "${cmd[*]}"
