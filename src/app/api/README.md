@@ -17,8 +17,9 @@ Next.js API route handlers. All routes return JSON. All reads are validated with
 | `knowledge/[id]/` | GET, PUT, DELETE | Get, update, or delete a knowledge item (includes explanation.md) |
 | `questions/` | GET, POST | List general Q&A questions; create question |
 | `questions/[id]/` | PUT, DELETE | Update or delete a general question |
-| `resume/sections/[type]/` | GET, PUT | Read or write a per-section LaTeX wrapper template from `data/resume/sections/{type}.tex` |
-| `resume/entity-templates/[type]/` | GET, PUT | Read or write a per-entity LaTeX template from `data/resume/entity-templates/{type}.tex` |
+| `resume/generate/` | POST | Build a payload from the user's profile and entities and render a PDF through the resume-renderer service. Body: `{ jobId?, entityIds?, template?, options? }` |
+| `resume/templates/` | GET | List the templates (and their option schemas) offered by the renderer service |
+| `resume/defaults/` | GET, PUT | Read or write the signed-in user's resume profile (name, contact, default title/profile, AI context) |
 | `ai/rank/` | POST | Call OpenAI to rank entities for a job, save to `resume-config.json`. Body: `{ jobId }`. Requires `OPENAI_API_KEY`. |
 | `ai/reconcile-tags/` | POST | Call OpenAI to reconcile free-form tags against the taxonomy tree. Body: `{ tags }`. Requires `OPENAI_API_KEY`. |
 | `taxonomy/` | GET | Return the full taxonomy tree from `data/taxonomy/tree.json` |

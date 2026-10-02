@@ -661,7 +661,7 @@ export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClea
         {/* Title */}
         <div>
           <label className="flex items-center justify-between text-sm font-medium text-slate-600 mb-1">
-            <span>Resume title <span className="text-slate-400 font-normal text-xs">(rendered in LaTeX header)</span></span>
+            <span>Resume title <span className="text-slate-400 font-normal text-xs">(shown in the resume header)</span></span>
             <button
               type="button"
               onClick={() => setTitleDraft(globalDefaults.resume_title)}
@@ -701,7 +701,7 @@ export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClea
         {/* Profile */}
         <div>
           <label className="flex items-center justify-between text-sm font-medium text-slate-600 mb-1">
-            <span>Profile <span className="text-slate-400 font-normal text-xs">(LaTeX — leave blank for default)</span></span>
+            <span>Profile <span className="text-slate-400 font-normal text-xs">(leave blank for default)</span></span>
             <button
               type="button"
               onClick={() => setProfileDraft(globalDefaults.profile_text)}

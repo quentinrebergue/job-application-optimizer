@@ -6,7 +6,6 @@ File-system database for the application. All data is stored as JSON or Markdown
 
 ```
 data/
-├── resume/          # LaTeX template
 ├── entities/        # Resume entity library
 │   ├── experiences/ # Work experience entries
 │   ├── projects/    # Project entries

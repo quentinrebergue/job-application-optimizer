@@ -3,14 +3,8 @@ import Link from 'next/link'
 import { ArrowLeft, Plus } from 'lucide-react'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { EntityCard } from '@/components/entities/EntityCard'
-import { SectionTemplateEditor } from '@/components/resume/SectionTemplateEditor'
 import { listEntities } from '@/lib/data'
-import { getEntitySectionTemplate, getEntityTemplate } from '@/lib/latex'
-import {
-  ENTITY_TYPE_CONFIGS,
-  ENTITY_TEMPLATE_FIELDS,
-  type EntitySectionType,
-} from '@/config'
+import { ENTITY_TYPE_CONFIGS } from '@/config'
 import type { EntityType } from '@/types'
 import { verifySession } from '@/lib/auth/dal'
 
@@ -33,13 +27,7 @@ export default async function EntityTypePage({ params }: Props) {
   const entityType = type as EntityType
   const config = ENTITY_TYPE_CONFIGS.find((c) => c.id === entityType)!
 
-  const [entities, sectionContent, entityContent] = await Promise.all([
-    listEntities(userId, entityType).catch(() => []),
-    getEntitySectionTemplate(entityType as EntitySectionType).catch(() => ''),
-    getEntityTemplate(entityType as EntitySectionType).catch(() => ''),
-  ])
-
-  const entityFields = ENTITY_TEMPLATE_FIELDS[entityType as EntitySectionType] ?? []
+  const entities = await listEntities(userId, entityType).catch(() => [])
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
@@ -63,17 +51,6 @@ export default async function EntityTypePage({ params }: Props) {
             Add {config.labelSingular}
           </Link>
         </PageHeader>
-      </div>
-
-      {/* Section template editor */}
-      <div className="mb-8">
-        <SectionTemplateEditor
-          type={entityType as EntitySectionType}
-          label={config.label}
-          sectionContent={sectionContent}
-          entityContent={entityContent}
-          entityFields={entityFields}
-        />
       </div>
 
       {/* Entity list */}

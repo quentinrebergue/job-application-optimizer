@@ -1,12 +1,10 @@
 import Link from 'next/link'
-import { BookOpen, Plus, Settings } from 'lucide-react'
+import { BookOpen, Plus } from 'lucide-react'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Badge } from '@/components/ui/Badge'
-import { getTemplate, getAllSectionTemplates, getAllEntityTemplates } from '@/lib/latex'
 import { listEntities } from '@/lib/data'
-import { ENTITY_TYPE_IDS, ENTITY_SECTION_TYPES, ENTITY_TEMPLATE_FIELDS, type EntitySectionType } from '@/config'
+import { ENTITY_TYPE_IDS } from '@/config'
 import { GeneratePdfButton } from '@/components/resume/GeneratePdfButton'
-import { SectionTemplateEditor } from '@/components/resume/SectionTemplateEditor'
 import { ResumeDefaultsEditor } from '@/components/resume/ResumeDefaultsEditor'
 import { verifySession } from '@/lib/auth/dal'
 
@@ -15,13 +13,8 @@ import { SentenceBankManager } from '@/components/cover-letter/SentenceBankManag
 
 export default async function ResumePage() {
   const { userId } = await verifySession()
-  const [template, sectionTemplates, entityTemplates, ...entityLists] = await Promise.all([
-    getTemplate().catch(() => null),
-    getAllSectionTemplates().catch(() => ({} as Record<EntitySectionType, string>)),
-    getAllEntityTemplates().catch(() => ({} as Record<EntitySectionType, string>)),
-    ...ENTITY_TYPE_IDS.map((t) => listEntities(userId, t)),
-  ])
-  const [experiences, projects, skills] = entityLists as Awaited<ReturnType<typeof listEntities>>[]
+  const entityLists = await Promise.all(ENTITY_TYPE_IDS.map((t) => listEntities(userId, t)))
+  const [experiences, projects, skills] = entityLists
   const allEntities = [...(experiences ?? []), ...(projects ?? []), ...(skills ?? [])]
 
   const stats = [
@@ -30,27 +23,13 @@ export default async function ResumePage() {
     { label: 'Skills', count: skills?.length ?? 0, color: 'green' as const, tab: 'skills' },
   ]
 
-  const sectionLabels: Record<EntitySectionType, string> = {
-    experiences: 'Work Experience',
-    projects: 'School Projects',
-    skills: 'Technical Expertise',
-    education: 'Education',
-  }
-
   return (
     <div className="p-4 md:p-8 max-w-4xl">
       <PageHeader
         title="Resume Builder"
-        subtitle="Manage your entity library and generate tailored LaTeX PDFs."
+        subtitle="Manage your entity library and generate tailored PDF resumes."
       >
         <div className="flex gap-2">
-          <Link
-            href="/resume/templates"
-            className="flex items-center gap-1.5 rounded-lg bg-slate-600 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 transition-colors"
-          >
-            <Settings size={16} />
-            Edit Templates
-          </Link>
           <Link
             href="/entities/new"
             className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-colors"
@@ -102,44 +81,6 @@ export default async function ResumePage() {
       {/* Cover Letter Sentence Bank */}
       <section className="mb-8">
         <SentenceBankManager />
-      </section>
-
-      {/* Per-section LaTeX templates */}
-      <section className="mb-8">
-        <h2 className="text-lg font-semibold text-slate-900 mb-1">Section Templates</h2>
-        <p className="text-sm text-slate-500 mb-4">
-          Each section type has its own LaTeX wrapper. Edit these to customise how your entities appear in the PDF.
-          Use <code className="font-mono text-xs bg-slate-100 px-1 rounded">%%ITEMS%%</code> where the entity snippets are injected.
-        </p>
-        <div className="space-y-4">
-          {ENTITY_SECTION_TYPES.map((type) => (
-            <SectionTemplateEditor
-              key={type}
-              type={type}
-              label={sectionLabels[type]}
-              sectionContent={sectionTemplates[type] ?? ''}
-              entityContent={entityTemplates[type] ?? ''}
-              entityFields={ENTITY_TEMPLATE_FIELDS[type]}
-            />
-          ))}
-        </div>
-      </section>
-
-      {/* Main LaTeX template viewer */}
-      <section>
-        <h2 className="text-lg font-semibold text-slate-900 mb-3">Full LaTeX Template</h2>
-        <p className="text-sm text-slate-500 mb-3">
-          The main document scaffold. Section blocks are injected via <code className="font-mono text-xs bg-slate-100 px-1 rounded">%%EXPERIENCES_SECTION%%</code> etc.
-        </p>
-        {template ? (
-          <pre className="rounded-xl border border-slate-200 bg-slate-900 text-slate-100 text-xs font-mono p-5 overflow-x-auto max-h-96 whitespace-pre">
-            {template}
-          </pre>
-        ) : (
-          <p className="text-sm text-red-500">
-            Template not found at <code className="font-mono">data/resume/template.tex</code>.
-          </p>
-        )}
       </section>
     </div>
   )
