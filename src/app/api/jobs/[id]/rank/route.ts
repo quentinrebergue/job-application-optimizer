@@ -1,4 +1,4 @@
-import { getJob, updateJob } from '@/lib/data'
+import { getJob, updateJob, getResumeProfile } from '@/lib/data'
 import { listEntities } from '@/lib/data'
 import { rankJobWithAI, isAIProvider, type AIProvider } from '@/lib/ai'
 import path from 'path'
@@ -31,16 +31,11 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     const skills = await listEntities(userId, 'skills')
     const education = await listEntities(userId, 'education')
 
-    // Merge job-specific ai_context with global default fallback
+    // Merge job-specific ai_context with the user's profile default
     let aiContext = job.resume_config.ai_context ?? ''
     if (!aiContext.trim()) {
-      try {
-        const defaultsPath = path.join(process.cwd(), 'data', 'resume', 'defaults.json')
-        const raw = await fs.readFile(defaultsPath, 'utf-8')
-        aiContext = JSON.parse(raw).ai_context ?? ''
-      } catch { /* no defaults file */ }
+      aiContext = (await getResumeProfile(userId)).ai_context
     }
-
     // Call AI ranking
     const analysis = await rankJobWithAI(provider, job.title, job.company, job.description, {
       experiences,
