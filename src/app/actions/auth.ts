@@ -27,7 +27,7 @@ export async function signup(_prevState: AuthFormState, formData: FormData): Pro
     await createSession(user.id)
   } catch (err) {
     const isDuplicate = err instanceof Error && 'code' in err && err.code === '23505'
-    return { message: isDuplicate ? 'Cet email est déjà utilisé.' : 'Une erreur est survenue.' }
+    return { message: isDuplicate ? 'This email is already registered.' : 'Something went wrong. Try again.' }
   }
 
   redirect('/')
@@ -70,7 +70,7 @@ export async function login(_prevState: AuthFormState, formData: FormData): Prom
   const { email, password } = validated.data
 
   if (await isRateLimited(email)) {
-    return { message: 'Trop de tentatives. Réessaie dans 15 minutes.' }
+    return { message: 'Too many attempts. Try again in 15 minutes.' }
   }
 
   const user = await findUserByEmail(email)
@@ -78,7 +78,7 @@ export async function login(_prevState: AuthFormState, formData: FormData): Prom
 
   if (!user || !valid) {
     await recordFailedAttempt(email)
-    return { message: 'Email ou mot de passe incorrect.' }
+    return { message: 'Wrong email or password.' }
   }
 
   await createSession(user.id)

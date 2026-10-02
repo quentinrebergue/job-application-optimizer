@@ -2,9 +2,6 @@ import type { Metadata, Viewport } from 'next'
 import { Instrument_Sans, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
 import 'highlight.js/styles/atom-one-dark.css'
-import { Sidebar } from '@/components/layout/Sidebar'
-import { MobileNav } from '@/components/layout/MobileNav'
-import { getCurrentUser } from '@/lib/auth/dal'
 
 // Interface font and data font (scores, dates, ids). Exposed as CSS variables,
 // which the tokens in globals.css (--font-sans, --font-mono) read.
@@ -18,34 +15,26 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  title: 'Job Application Optimizer',
-  description: 'Optimize your job applications with resume builder, job tracker, and interview training',
+  // Pages set `metadata.title`; the tab then reads "Jobs · FastResume".
+  title: { default: 'FastResume', template: '%s · FastResume' },
+  description: 'From a job offer to a tailored resume in a couple of clicks.',
 }
 
-export default async function RootLayout({
+// Only the document shell. The navigation lives in the route groups:
+// (app)/layout.tsx for signed-in pages, (public)/layout.tsx for the others.
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const user = await getCurrentUser()
-
   return (
     <html
       lang="en"
       className={`${instrumentSans.variable} ${jetBrainsMono.variable}`}
       style={{ colorScheme: 'light' }}
     >
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-      </head>
       <body className="bg-canvas font-sans text-ink antialiased">
-        <div className="flex min-h-screen">
-          <Sidebar userEmail={user?.email ?? null} />
-          <main className="flex-1 overflow-auto min-w-0 main-content">
-            {children}
-          </main>
-        </div>
-        <MobileNav />
+        {children}
       </body>
     </html>
   )

@@ -43,40 +43,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ─── Mobile / Desktop nav visibility ─────────────────────────────────────── */
-/* Using real @media instead of Tailwind responsive utilities for reliability  */
-
-/* Mobile bottom nav: visible on mobile, hidden on desktop */
-.mobile-nav {
-  display: flex;
-}
-@media (min-width: 1024px) {
-  .mobile-nav {
-    display: none;
-  }
-}
-
-/* Desktop sidebar: hidden on mobile, flex column on desktop */
-.desktop-sidebar {
-  display: none;
-}
-@media (min-width: 1024px) {
-  .desktop-sidebar {
-    display: flex;
-    flex-direction: column;
-  }
-}
-
-/* Main content: pad bottom for mobile nav, no extra padding on desktop */
-.main-content {
-  padding-bottom: 4rem; /* 64px — clears the 56px bottom nav */
-}
-@media (min-width: 1024px) {
-  .main-content {
-    padding-bottom: 0;
-  }
-}
-
 /* Touch targets on mobile — ensure 44px minimum (Apple HIG) */
 @media (max-width: 1023px) {
   .touch-target {
