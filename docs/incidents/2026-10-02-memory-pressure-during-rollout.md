@@ -148,6 +148,13 @@ Contributing factors:
   ends, and nothing frees memory by itself.
 - **No signal in Argo CD** beyond "progressing".
 
+### By luck
+
+- **PostgreSQL was also `BestEffort`** (found afterwards: its `StatefulSet` had no
+  `resources`), with the same priority as the app. The kubelet evicted the app
+  pod, but it could as well have evicted the database, a worse outage. Nothing in
+  the design prevented it. Fixed in the same series of changes (see actions).
+
 ## 7. Actions
 
 ### Immediate mitigation
@@ -172,6 +179,7 @@ The kubelet lifts the taint after a short delay and the pending pod is scheduled
 |---|---|
 | Add a `readinessProbe` (and a `livenessProbe`) to `k8s/app/deployment.yaml` | The rolling update waits for a pod that really answers before removing the old one. Also removes the brief errors on every normal deploy |
 | Add `resources` (requests and a memory limit) to `k8s/app/deployment.yaml` | The app becomes Burstable and is no longer evicted first. The limit also keeps one leaking pod from taking the node |
+| Add `resources` (requests and a memory limit) to `k8s/postgres/statefulset.yaml` | Found after the incident: the database was BestEffort too. It becomes Burstable. Applying it restarts the pod for a few seconds |
 | Use a `PriorityClass` for the app above the monitoring pods | Under pressure, the kubelet and scheduler favour the app |
 | Lower memory limits and retention for Grafana and Prometheus in `k8s/monitoring/values.yaml` | Gives about 300-400 MiB back |
 | Set `strategy.rollingUpdate` to `maxSurge: 0, maxUnavailable: 1` for the app | No double memory, at the price of a few seconds of unavailability. A conscious trade-off on a single node |
