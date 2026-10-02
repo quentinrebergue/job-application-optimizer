@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { FileText, Briefcase, MessageSquare, Code2 } from 'lucide-react'
-import { MODULE_CONFIGS } from '@/config'
+import { ENABLED_MODULES } from '@/config'
 
 const ICON_MAP: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
   FileText,
@@ -27,7 +27,7 @@ export default function DashboardPage() {
 
       {/* Module Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {MODULE_CONFIGS.map((mod) => {
+        {ENABLED_MODULES.map((mod) => {
           const Icon = ICON_MAP[mod.icon]
           const colors = COLOR_MAP[mod.color] ?? COLOR_MAP['blue']
           return (

@@ -1,22 +1,26 @@
 # src/app
 
-Next.js App Router root. Contains the global layout, the dashboard home page, feature route groups, and all API routes.
+Next.js App Router root. Contains the document layout, two route groups (their names are not part of the URL) and all API routes.
 
 ## Files
 
 | File | Description |
 |------|-------------|
-| `layout.tsx` | Root layout — wraps every page with `<Sidebar>` + `<main>`. Applies global Tailwind styles. |
-| `page.tsx` | Dashboard home page — shows module cards from `MODULE_CONFIGS`. |
+| `layout.tsx` | Root layout — `<html>`, `<body>` and fonts only, no navigation. |
+| `(app)/layout.tsx` | Shell of the signed-in app: one top bar (`AppHeader`) at every width. |
+| `(app)/page.tsx` | Dashboard home page — shows a card per enabled module (`ENABLED_MODULES`). |
+| `(public)/layout.tsx` | Shell of the pages before sign-in (`login/`, `signup/`): wordmark only, no app navigation. |
 | `globals.css` | Global styles — imports Tailwind CSS v4 with `@import "tailwindcss"`. |
 
 ## Subdirectories
 
 | Directory | Description |
 |-----------|-------------|
-| `resume/` | Resume Builder pages |
-| `entities/` | Entity Library pages (CRUD for experiences/projects/skills) |
-| `jobs/` | Job Application Tracker pages |
-| `qa/` | Q&A Flashcard Trainer pages |
-| `coding/` | Coding Interview Trainer pages |
+| `(app)/resume/` | Resume Builder pages |
+| `(app)/entities/` | Entity Library pages (CRUD for experiences/projects/skills) |
+| `(app)/jobs/` | Job Application Tracker pages |
+| `(app)/qa/` | Q&A Flashcard Trainer pages |
+| `(app)/coding/` | Coding Interview Trainer pages |
+| `(app)/taxonomy/` | Tag taxonomy page |
+| `(public)/login/`, `(public)/signup/` | Sign-in and sign-up pages |
 | `api/` | Next.js API route handlers (server-side, JSON responses) |
