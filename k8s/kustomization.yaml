@@ -19,11 +19,12 @@ resources:
 
 # The only lines the CD pipeline edits: one tag per image we build.
 images:
+- name: ghcr.io/quentinrebergue/db-migrator
+  newName: ghcr.io/quentinrebergue/db-migrator
+  newTag: 0b5686b
 - name: ghcr.io/quentinrebergue/job-application-optimizer
   newName: ghcr.io/quentinrebergue/job-application-optimizer
-  newTag: 0c9e2cc
+  newTag: 0b5686b
 - name: ghcr.io/quentinrebergue/resume-renderer
   newName: ghcr.io/quentinrebergue/resume-renderer
-  newTag: 0c9e2cc
-- name: ghcr.io/quentinrebergue/db-migrator
-  newTag: latest
+  newTag: 0b5686b
