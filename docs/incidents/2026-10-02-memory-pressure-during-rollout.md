@@ -6,21 +6,24 @@
 | **Duration** | About 5 minutes of downtime: old pod removed at 15:50:17, replacement running at 15:55:19 (CEST) |
 | **Impact** | `fastresume.tech` answered `503` (no application pod running). No data loss. |
 | **Detected by** | A person watching an Argo CD sync that "took a long time". No alert fired. |
-| **Status** | Service restored. Root-cause fixes listed below, not yet applied. Grafana is still scaled to 0 and must be restored after the fixes |
+| **Status** | Service restored by itself once the pressure fell. Fixes listed below, partly applied (probes and requests merged, not yet rolled out). The source of the memory spike is **not identified yet** |
 
 ## 1. Summary
 
 An Argo CD sync rolled out three changes at once: a new database-migration Job,
 a new `resume-renderer` pod and a new `app` pod. The cluster has a **single node
-with about 2 GiB of allocatable memory**, already about 125-130% used. During the
-rollout the kubelet's free memory fell under its 250 MiB threshold, it
+with about 2 GiB of allocatable memory** (4 GB of RAM). During the rollout the
+kubelet's available memory briefly fell under its 250 MiB threshold, it
 **evicted the new `app` pod** and put a `memory-pressure:NoSchedule` taint on the
 node. The old `app` pod had already been removed and the replacement could not be
 scheduled because of the taint, so no `app` pod was left. The migration itself
 succeeded.
 
-The trigger was the deployment. The cause is that the node has no headroom, and
-that the application has no memory requests or limits.
+The trigger was the deployment. What turned a short eviction into an outage is
+certain: the application had no memory requests (so it was the first to be
+evicted) and no readiness probe (so the old pod was removed before the new one was
+usable). What caused the memory spike itself is **not established**: a measurement
+taken afterwards shows about 1.2 GiB available, far above the threshold (section 3).
 
 ## 2. How it was detected, step by step
 
@@ -35,7 +38,7 @@ symptom or tells you where to look next.
 | 3 | Why is one pod `Pending`? | `kubectl describe pod <pending-pod>` (Events section) | `FailedScheduling: 1 node(s) had untolerated taint(s)` |
 | 4 | Which taint, and why? | `kubectl describe node <node>` (Taints, Conditions) | `node.kubernetes.io/memory-pressure:NoSchedule`, condition `MemoryPressure=True` since 15:50 |
 | 5 | Why is the other pod in `Error`? | `kubectl get pod <pod> -o jsonpath='{.status.reason}{.status.message}'` | `Evicted: The node was low on resource: memory. Threshold quantity: 250Mi, available: 228336Ki` |
-| 6 | How full is the node, and who uses it? | `kubectl top nodes`, `kubectl top pods -A --sort-by=memory` | Node at 125-130% of **allocatable** memory. Biggest consumers: Grafana 394 Mi, Prometheus 355 Mi, Argo CD application controller 263 Mi, Canal 189 Mi |
+| 6 | How full is the node, and who uses it? | `kubectl top nodes`, `kubectl top pods -A --sort-by=memory` | `kubectl top` showed 125-130% of **allocatable**, a misleading figure (see section 3). Biggest consumers: Grafana 394 Mi, Prometheus 355 Mi, Argo CD application controller 263 Mi, Canal 189 Mi |
 | 7 | Did the migration cause it? | `kubectl get events -n job-optimizer --sort-by=.lastTimestamp` | `Job db-migrator: Completed` about 7 s after start. The migration is not the problem |
 | 8 | Why was nothing there to take over? | Same events, rollout lines | Old ReplicaSet scaled to 0 in the same second the new pod's container started (the app has **no readiness probe**, so a started container counts as ready); the new pod was evicted right after |
 
@@ -59,22 +62,28 @@ Two things made the investigation slower than it should have been:
 | 15:50:17 | Old `app` pod killed: the Deployment already counted the new pod as available, since its container had started and the app has no readiness probe |
 | 15:50:20 | Replacement `app` pod created, `FailedScheduling` (taint). **No application pod left** |
 | ~15:52 | Person notices the sync is slow, starts investigating |
-| ~15:54 | Cause identified (steps 1 to 6 above), Grafana scaled to 0 |
-| 15:55:19 | Taint lifted, replacement `app` pod started. Site answers `200` again |
+| ~15:54 | Cause of the missing pod identified (steps 1 to 6 above). The planned mitigation (scale Grafana to 0) was **not** run |
+| 15:55:19 | Pressure gone on its own, kubelet lifts the taint, replacement `app` pod starts. Site answers `200` again |
 
 ### Why the node ran out of memory
 
 The node is a `d2-4` flavor: 4 GB of RAM, but only **about 1.93 GiB allocatable**
 to pods after the system reserve. Observed at the time:
 
-- Memory in use: about 2.4-2.6 GiB, which is **125-130% of allocatable**. The
-  difference is memory the kubelet and the OS use outside of pods, but it shows
-  there was no safety margin at all.
+- `kubectl top nodes` showed about 2.4-2.6 GiB, **125-130% of allocatable**. That
+  percentage is misleading: it divides the node's working set by the memory
+  *allocatable to pods*, while the kubelet evicts based on the memory *available*
+  on the node. Measured later with Grafana still running, the node had
+  **1234 MiB available** (working set 2581 MiB, usage 3203 MiB), a margin of about
+  1 GiB over the 250 MiB threshold. At the time of the eviction, available memory
+  was 228 MiB, so there was a **transient drop of roughly 1 GiB**. Its source is
+  not identified.
 - Requests were 57% and limits 83% of allocatable. These numbers look healthy,
   and that is the trap: the scheduler only reasons about **requests**, not about
   what pods really use.
-- The monitoring stack (Grafana, Prometheus, exporters) alone used more than a
-  third of the allocatable memory on a cluster that runs one small application.
+- The monitoring stack (Grafana, Prometheus, exporters) uses more than a third of
+  the allocatable memory on a cluster that runs one small application. It is not
+  proven to have caused the spike.
 
 ### Why the application was the one that died
 
@@ -90,7 +99,8 @@ A Deployment with one replica uses `RollingUpdate` with `maxSurge: 25%`
 (rounded up to 1) and `maxUnavailable: 25%` (rounded down to 0): the new pod must
 start **before** the old one stops, so for a short time the app needs **double**
 its memory. The same sync also started a Job pod and replaced the renderer the
-same way. Three memory spikes at the same moment, on a node with no margin.
+same way. Three changes at the same moment, on a node where something briefly
+took about 1 GiB.
 
 The previous deployments of the app (earlier the same day) had succeeded with the
 same strategy, which says the margin was already thin and that the renderer
@@ -98,8 +108,12 @@ same strategy, which says the margin was already thin and that the renderer
 
 ## 4. Root causes and contributing factors
 
-**Root cause:** the cluster has no memory headroom for a rolling update, and the
-critical workload is the least protected against eviction.
+**Root cause (confirmed):** the critical workload was the least protected against
+eviction (BestEffort) and the rolling update had no readiness signal, so a
+transient eviction left no pod running.
+
+**Unconfirmed cause of the spike:** see section 8. Until it is explained, adding
+headroom is a reasonable precaution, not a proven fix.
 
 Contributing factors:
 
@@ -136,11 +150,15 @@ Contributing factors:
 
 ## 7. Actions
 
-### Immediate mitigation (applied)
+### Immediate mitigation
 
-Scale Grafana to zero (about 390 MiB freed). It is a visualisation tool, nothing
-depends on it, and its state is kept on its volume. **Applied at about 15:54;
-restore it (`--replicas=1`) once the headroom fixes below are in place:**
+**What actually happened:** nothing was done. The memory pressure ended on its own
+and the kubelet lifted the taint about five minutes after the eviction
+(15:55:19), after which the pending pod was scheduled.
+
+**What was planned and not run:** scale Grafana to zero to free about 390 MiB.
+Keep it as an option for the next occurrence (it is a visualisation tool, nothing
+depends on it, and its state stays on its volume):
 
 ```bash
 kubectl scale deployment monitoring-grafana -n monitoring --replicas=0
@@ -187,8 +205,14 @@ trigger no longer causes the same failure.
 
 - The real memory footprint of one `app` pod at idle and under load, to size
   requests and limits from data instead of guessing.
-- Which of the three simultaneous changes (Job pod, renderer surge, app surge)
-  contributed the most. The logs show the sequence but not the per-pod peak.
+- **What used about 1 GiB for a few seconds at 15:50.** Candidates: the three
+  image pulls and layer extraction (page cache counts toward usage), the Argo CD
+  repo server and application controller building and diffing manifests, a
+  Prometheus compaction or scrape peak, the three new pods starting together.
+  Prometheus keeps 7 days of data: query `node_memory_MemAvailable_bytes` and
+  `container_memory_working_set_bytes` per pod between 15:45 and 15:55 to see who
+  moved. This turns a guess into a finding, and should be done before sizing the
+  node.
 - Whether the kubelet eviction threshold (250 MiB) should be adjusted on this
   flavor, or whether keeping it and adding capacity is the better answer.
 
@@ -196,10 +220,12 @@ trigger no longer causes the same failure.
 
 1. **Requests are what the scheduler sees; usage is what the kernel enforces.**
    A cluster can look 57% "full" and be out of memory.
+   **Check the quantity the system really acts on** (`memory.available`), not a
+   derived percentage: `kubectl top` read 130% while 1.2 GiB were still free.
 2. **QoS class decides who dies first.** Declare resources on the thing you
    cannot afford to lose.
-3. **A rolling update needs headroom** for one extra pod. A single-node cluster
-   with no margin cannot do a safe one.
+3. **A rolling update needs headroom** for one extra pod, and a way to keep the
+   old one until the new one is usable.
 4. **A good rollout gate is not capacity management.** The PreSync Job protected
    the schema, and nothing protected the node.
 5. **A rolling update is only as safe as its readiness probe.** Without one,
