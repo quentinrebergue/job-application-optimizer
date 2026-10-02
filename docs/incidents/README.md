@@ -50,6 +50,39 @@ When in doubt, write one. A short post-mortem is better than none.
 5. **Close:** when all actions are done or consciously dropped (with a reason),
    set the status to *Closed* and update the index below.
 
+## First commands
+
+When something is down, go from the symptom outward and stop when you can
+explain it. These are the commands that found the 2026-10-02 cause in two minutes.
+
+```bash
+# 1. Is it really down, and what does the user see?
+curl -s -o /dev/null -w "%{http_code}\n" https://fastresume.tech/login
+
+# 2. What state are the pods in?
+kubectl get pods -n job-optimizer
+
+# 3. Why is a pod not running? (read the Events section at the bottom)
+kubectl describe pod <pod> -n job-optimizer
+
+# 4. What happened recently, in order?
+kubectl get events -n job-optimizer --sort-by=.lastTimestamp
+
+# 5. Is the node itself in trouble? (look at Taints and Conditions)
+kubectl describe node <node>
+
+# 6. How full are the node and the pods?
+kubectl top nodes
+kubectl top pods -A --sort-by=memory
+
+# 7. What did a crashed or evicted pod say?
+kubectl logs <pod> -n job-optimizer --previous
+kubectl get pod <pod> -n job-optimizer -o jsonpath='{.status.reason}{" "}{.status.message}{"\n"}'
+
+# 8. What is Argo CD's view?
+kubectl get application job-optimizer -n argocd
+```
+
 ## Index
 
 | Date | Incident | Severity | Duration | Status |
