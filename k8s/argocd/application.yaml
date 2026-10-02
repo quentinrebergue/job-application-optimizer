@@ -9,9 +9,6 @@ spec:
     repoURL: git@github.com:quentinrebergue/job-application-optimizer.git
     targetRevision: master
     path: k8s
-    directory:
-      recurse: true
-      exclude: 'monitoring/**'
   destination:
     server: https://kubernetes.default.svc
     namespace: job-optimizer
