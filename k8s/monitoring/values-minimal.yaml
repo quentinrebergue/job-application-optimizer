@@ -1,0 +1,5 @@
+# Minimal profile, layered on top of values.yaml to save memory.
+# Grafana is off (about 430Mi). Prometheus keeps collecting, so the data is
+# there when the normal profile is applied again.
+grafana:
+  replicas: 0
