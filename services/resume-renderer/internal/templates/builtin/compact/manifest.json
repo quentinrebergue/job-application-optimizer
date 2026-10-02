@@ -1,0 +1,11 @@
+{
+  "id": "compact",
+  "name": "Compact",
+  "description": "Dense single column with ruled section titles, no cards.",
+  "schema_version": 1,
+  "options": {
+    "fontSize": { "type": "number", "min": 8, "max": 11, "default": 9.5 },
+    "accentColor": { "type": "color", "default": "#2b2b2b" },
+    "datePlacement": { "type": "enum", "values": ["inline", "right"], "default": "inline" }
+  }
+}
