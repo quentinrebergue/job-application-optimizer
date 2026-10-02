@@ -17,7 +17,7 @@ export function GeneratePdfButton({ entityIds }: Props) {
     const res = await fetch('/api/resume/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ jobId: '__preview__', entityIds }),
+      body: JSON.stringify({ entityIds }),
     })
     if (res.ok) {
       const blob = await res.blob()
@@ -30,7 +30,7 @@ export function GeneratePdfButton({ entityIds }: Props) {
       setStatus('idle')
     } else {
       const json = await res.json().catch(() => ({}))
-      setErrorMsg(json.error ?? 'Generation failed. Is pdflatex installed?')
+      setErrorMsg(json.error ?? 'Generation failed.')
       setStatus('error')
     }
   }

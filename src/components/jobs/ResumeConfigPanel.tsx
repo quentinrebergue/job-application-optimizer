@@ -453,7 +453,7 @@ export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClea
       URL.revokeObjectURL(url)
     } else {
       const json = await res.json().catch(() => ({}))
-      setGenError(json.error ?? 'Generation failed. Is pdflatex installed?')
+      setGenError(json.error ?? 'Generation failed.')
     }
     setGenerating(false)
   }
