@@ -51,3 +51,46 @@ jobs:
       - run: go vet ./...
 
       - run: go test -race -count=1 ./...
+  db-migrator:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: services/db-migrator
+    # A real Postgres next to the job: the tests exercise transactions, locks
+    # and rollbacks, which a fake cannot reproduce.
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_PASSWORD: test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgres://postgres:test@localhost:5432/postgres
+      TEST_DATABASE_URL: postgres://postgres:test@localhost:5432/postgres
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: services/db-migrator/go.mod
+          cache-dependency-path: services/db-migrator/go.sum
+
+      - name: gofmt
+        run: test -z "$(gofmt -l .)"
+
+      - run: go vet ./...
+
+      # Every migration must apply cleanly on an empty database, and a second
+      # run must be a no-op. This catches a broken migration before it merges.
+      - name: Apply the real migrations twice
+        run: |
+          go run .
+          go run . | grep '"applied":0'
+
+      - run: go test -race -count=1 ./...

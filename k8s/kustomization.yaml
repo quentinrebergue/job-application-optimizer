@@ -15,6 +15,7 @@ resources:
 - resume-renderer/networkpolicy.yaml
 - cert-manager/cluster-issuer.yaml
 - argocd/application.yaml
+- db-migrator/job.yaml
 
 # The only lines the CD pipeline edits: one tag per image we build.
 images:
@@ -24,3 +25,5 @@ images:
 - name: ghcr.io/quentinrebergue/resume-renderer
   newName: ghcr.io/quentinrebergue/resume-renderer
   newTag: 0c9e2cc
+- name: ghcr.io/quentinrebergue/db-migrator
+  newTag: latest
