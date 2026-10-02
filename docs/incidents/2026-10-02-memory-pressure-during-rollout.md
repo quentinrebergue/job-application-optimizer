@@ -6,7 +6,7 @@
 | **Duration** | About 5 minutes of downtime: old pod removed at 15:50:17, replacement running at 15:55:19 (CEST) |
 | **Impact** | `fastresume.tech` answered `503` (no application pod running). No data loss. |
 | **Detected by** | A person watching an Argo CD sync that "took a long time". No alert fired. |
-| **Status** | Service restored by itself once the pressure fell. Fixes listed below, partly applied (probes and requests merged, not yet rolled out). The source of the memory spike is **not identified yet** |
+| **Status** | Service restored by itself once the pressure fell. Probes and memory requests are rolled out and verified. The source of the memory spike is **not identified** (too short for the 30 s scrape interval); detection and sizing actions are open |
 
 ## 1. Summary
 
@@ -76,8 +76,8 @@ to pods after the system reserve. Observed at the time:
   on the node. Measured later with Grafana still running, the node had
   **1234 MiB available** (working set 2581 MiB, usage 3203 MiB), a margin of about
   1 GiB over the 250 MiB threshold. At the time of the eviction, available memory
-  was 228 MiB, so there was a **transient drop of roughly 1 GiB**. Its source is
-  not identified.
+  was 228 MiB, so the kubelet's signal dropped by roughly 1 GiB for a moment. Its
+  source is not identified (see "What Prometheus showed" below).
 - Requests were 57% and limits 83% of allocatable. These numbers look healthy,
   and that is the trap: the scheduler only reasons about **requests**, not about
   what pods really use.
@@ -180,7 +180,7 @@ The kubelet lifts the taint after a short delay and the pending pod is scheduled
 
 | Option | Trade-off |
 |---|---|
-| Bigger node flavor | Simplest, restores headroom. Monthly cost goes up |
+| Bigger node flavor | Simplest, restores headroom. Monthly cost goes up. Less urgent than first assumed (kernel margin was about 1.3 GiB), but the kubelet's view is thin |
 | Second node | Real rolling updates and resilience to a node failure. Doubles the compute cost and needs the app to tolerate two replicas (sessions are already stored in Postgres, so it should) |
 | Remove or externalise the monitoring stack | Frees the most memory, but loses the observability we are building |
 
@@ -201,33 +201,73 @@ rollout while loading the node, and check that the app stays up, that the alert
 fires, and that recovery is automatic. An incident is only closed when the same
 trigger no longer causes the same failure.
 
+### What Prometheus showed (investigated after the incident)
+
+Prometheus scrapes every 30 s and keeps 7 days, so the incident window could be
+replayed (15:46 to 15:58 CEST). Queries and results:
+
+| Metric | Result |
+|---|---|
+| `node_memory_MemAvailable_bytes` (kernel view) | Never below **1346 MiB** (at 15:50:30), peak 1547 MiB. Total RAM 3816 MiB |
+| `node_memory_MemFree_bytes` | Low of 149 MiB at 15:49:30, up to 393 MiB. Free memory is low by design: the kernel uses the rest as page cache |
+| Page cache (`Cached` + `Buffers`) | 1302 to 1390 MiB, of which about 700 MiB is *active* file cache |
+| Sum of pod working sets | 1634 to 1803 MiB |
+| Largest pods | Grafana 392 to 395, Prometheus 355 to 386, Argo CD application controller 159 to **264** (rose by about 105 MiB during the sync), Canal 181 to 193 |
+
+Findings:
+
+1. **No sample comes close to the kubelet's 250 MiB threshold.** The kernel's own
+   estimate never dropped under 1.3 GiB. The eviction was therefore triggered by a
+   moment shorter than the 30 s scrape interval, which Prometheus cannot show.
+2. **The two signals measure different things.** The kubelet computes
+   `memory.available` as capacity minus the *working set*, and the working set
+   includes **active file cache**. The kernel's `MemAvailable` counts reclaimable
+   cache as available. With about 1.3 GiB of cache on a 3.8 GiB node, a burst of
+   file activity can make the kubelet see far less free memory than the kernel
+   does, without any process using more memory.
+3. **Most likely trigger (hypothesis, not proven):** three image pulls and layer
+   extractions at the same instant (app, renderer, migrator), plus the Argo CD
+   controller's +105 MiB, plus three pods starting together. This fits the
+   timing but the data cannot confirm it.
+
+What this changes: the node is not "full" in the kernel's sense. The weak point is
+the kubelet's thin margin on a small node combined with a workload that was the
+first to be evicted. That makes the already-applied fixes (requests, probes) the
+right first move, and makes a bigger node less urgent than first thought.
+
 ## 8. What I would also check (not verified yet)
 
 - The real memory footprint of one `app` pod at idle and under load, to size
   requests and limits from data instead of guessing.
-- **What used about 1 GiB for a few seconds at 15:50.** Candidates: the three
-  image pulls and layer extraction (page cache counts toward usage), the Argo CD
-  repo server and application controller building and diffing manifests, a
-  Prometheus compaction or scrape peak, the three new pods starting together.
-  Prometheus keeps 7 days of data: query `node_memory_MemAvailable_bytes` and
-  `container_memory_working_set_bytes` per pod between 15:45 and 15:55 to see who
-  moved. This turns a guess into a finding, and should be done before sizing the
-  node.
+- **Confirm the hypothesis by reproducing it.** Trigger a sync that changes all
+  three images while sampling the kubelet's own signal at 1 s (for example
+  `kubectl get --raw /api/v1/nodes/<node>/proxy/stats/summary` in a loop), and see
+  whether `memory.availableBytes` dips. If it does, test again with the three
+  pulls staggered. A deliberate reproduction is also the verification step of the
+  action plan.
+- Whether Prometheus should scrape the kubelet and node at a shorter interval
+  during deployments, or whether an alert on the kubelet's `MemoryPressure`
+  condition (`kube_node_status_condition`) is the right detector, since a 30 s
+  scrape cannot see a spike this short.
 - Whether the kubelet eviction threshold (250 MiB) should be adjusted on this
   flavor, or whether keeping it and adding capacity is the better answer.
 
 ## 9. Lessons
 
-1. **Requests are what the scheduler sees; usage is what the kernel enforces.**
+1. **Two tools can disagree about the same resource.** The kernel said 1.3 GiB
+   available while the kubelet said 228 MiB, because they count page cache
+   differently. Know which signal triggers the action you are investigating, and
+   look at that one.
+2. **Requests are what the scheduler sees; usage is what the kernel enforces.**
    A cluster can look 57% "full" and be out of memory.
    **Check the quantity the system really acts on** (`memory.available`), not a
    derived percentage: `kubectl top` read 130% while 1.2 GiB were still free.
-2. **QoS class decides who dies first.** Declare resources on the thing you
+3. **QoS class decides who dies first.** Declare resources on the thing you
    cannot afford to lose.
-3. **A rolling update needs headroom** for one extra pod, and a way to keep the
+4. **A rolling update needs headroom** for one extra pod, and a way to keep the
    old one until the new one is usable.
-4. **A good rollout gate is not capacity management.** The PreSync Job protected
+5. **A good rollout gate is not capacity management.** The PreSync Job protected
    the schema, and nothing protected the node.
-5. **A rolling update is only as safe as its readiness probe.** Without one,
+6. **A rolling update is only as safe as its readiness probe.** Without one,
    "ready" means "the process started", and the old pod is thrown away too early.
-6. **If a human is the alert, you do not have an alert.**
+7. **If a human is the alert, you do not have an alert.**
