@@ -5,6 +5,7 @@
   "schema_version": 1,
   "options": {
     "fontSize": { "type": "number", "min": 8, "max": 12, "default": 10.5 },
-    "accentColor": { "type": "color", "default": "#1a73e8" }
+    "accentColor": { "type": "color", "default": "#1a73e8" },
+    "datePlacement": { "type": "enum", "values": ["inline", "right"], "default": "inline" }
   }
 }

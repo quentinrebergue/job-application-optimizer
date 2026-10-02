@@ -21,12 +21,20 @@
 
 #let href(url) = if url.starts-with("http") { url } else { "https://" + url }
 
-#let heading-line(left, right) = grid(
-  columns: (1fr, auto),
-  column-gutter: 1em,
-  left,
-  text(size: 0.9em, fill: muted)[#right],
-)
+// Dates sit right after the title by default ("inline"): a date pushed to the
+// far right can be split from its job by ATS parsers that group text by position.
+#let heading-line(left, right) = if opts.datePlacement == "right" {
+  grid(
+    columns: (1fr, auto),
+    column-gutter: 1em,
+    left,
+    text(size: 0.9em, fill: muted)[#right],
+  )
+} else if right == "" {
+  left
+} else {
+  [#left #text(fill: muted)[| #right]]
+}
 
 #let section(title, items, render) = {
   if items.len() > 0 [
