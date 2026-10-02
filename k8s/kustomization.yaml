@@ -2,23 +2,25 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - namespace.yaml
-  - app/deployment.yaml
-  - app/service.yaml
-  - app/ingress.yaml
-  - postgres/statefulset.yaml
-  - postgres/service.yaml
-  - postgres/backup-pvc.yaml
-  - postgres/backup-cronjob.yaml
-  - resume-renderer/deployment.yaml
-  - resume-renderer/service.yaml
-  - resume-renderer/networkpolicy.yaml
-  - cert-manager/cluster-issuer.yaml
-  - argocd/application.yaml
+- namespace.yaml
+- app/deployment.yaml
+- app/service.yaml
+- app/ingress.yaml
+- postgres/statefulset.yaml
+- postgres/service.yaml
+- postgres/backup-pvc.yaml
+- postgres/backup-cronjob.yaml
+- resume-renderer/deployment.yaml
+- resume-renderer/service.yaml
+- resume-renderer/networkpolicy.yaml
+- cert-manager/cluster-issuer.yaml
+- argocd/application.yaml
 
 # The only lines the CD pipeline edits: one tag per image we build.
 images:
-  - name: ghcr.io/quentinrebergue/job-application-optimizer
-    newTag: latest
-  - name: ghcr.io/quentinrebergue/resume-renderer
-    newTag: 0.1.0
+- name: ghcr.io/quentinrebergue/job-application-optimizer
+  newName: ghcr.io/quentinrebergue/job-application-optimizer
+  newTag: 0c9e2cc
+- name: ghcr.io/quentinrebergue/resume-renderer
+  newName: ghcr.io/quentinrebergue/resume-renderer
+  newTag: 0c9e2cc
