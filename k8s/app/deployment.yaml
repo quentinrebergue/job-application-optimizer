@@ -33,3 +33,22 @@ spec:
           envFrom:
             - secretRef:
                 name: app-secrets
+          readinessProbe:
+            httpGet:
+              path: /login
+              port: 3000
+            periodSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /login
+              port: 3000
+            initialDelaySeconds: 20
+            periodSeconds: 15
+            failureThreshold: 4
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              memory: 384Mi
