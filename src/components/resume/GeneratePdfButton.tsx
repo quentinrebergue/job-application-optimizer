@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import { FileDown, Loader2 } from 'lucide-react'
+import { DEFAULT_TEMPLATE_CHOICE, TemplatePicker, type TemplateChoice } from './TemplatePicker'
+import { useTemplates } from './useTemplates'
 
 interface Props {
   entityIds: string[]
@@ -10,6 +12,8 @@ interface Props {
 export function GeneratePdfButton({ entityIds }: Props) {
   const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle')
   const [errorMsg, setErrorMsg] = useState('')
+  const [choice, setChoice] = useState<TemplateChoice>(DEFAULT_TEMPLATE_CHOICE)
+  const { templates, error: templatesError } = useTemplates()
 
   async function generate() {
     setStatus('loading')
@@ -17,7 +21,7 @@ export function GeneratePdfButton({ entityIds }: Props) {
     const res = await fetch('/api/resume/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ jobId: '__preview__', entityIds }),
+      body: JSON.stringify({ entityIds, template: choice.template, options: choice.options }),
     })
     if (res.ok) {
       const blob = await res.blob()
@@ -30,13 +34,15 @@ export function GeneratePdfButton({ entityIds }: Props) {
       setStatus('idle')
     } else {
       const json = await res.json().catch(() => ({}))
-      setErrorMsg(json.error ?? 'Generation failed. Is pdflatex installed?')
+      setErrorMsg(json.error ?? 'Generation failed.')
       setStatus('error')
     }
   }
 
   return (
-    <div>
+    <div className="space-y-3">
+      <TemplatePicker templates={templates} value={choice} onChange={setChoice} disabled={status === 'loading'} />
+      {templatesError && <p className="text-sm text-amber-700">{templatesError}</p>}
       <button
         onClick={generate}
         disabled={status === 'loading' || entityIds.length === 0}

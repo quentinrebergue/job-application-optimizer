@@ -6,6 +6,8 @@ import { Loader2, FileDown, ChevronDown, ChevronRight, Sparkles, Plus, XCircle, 
 import type { EntityMeta, ResumeConfig, SkillMeta } from '@/types'
 import type { AIAnalysisResult, SuggestedSkill } from '@/types/job'
 import { AIRankButton } from './AIRankButton'
+import { DEFAULT_TEMPLATE_CHOICE, TemplatePicker, type TemplateChoice } from '@/components/resume/TemplatePicker'
+import { useTemplates } from '@/components/resume/useTemplates'
 
 const TYPE_LABELS: Record<string, string> = {
   experiences: 'Work Experience',
@@ -66,6 +68,11 @@ export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClea
   const profileTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const titleTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const aiContextTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+    const { templates, error: templatesError } = useTemplates()
+  const templateChoice: TemplateChoice = {
+    template: config.resume_template ?? DEFAULT_TEMPLATE_CHOICE.template,
+    options: config.resume_options ?? {},
+  }
 
   // Auto-save profile text with debounce
   useEffect(() => {
@@ -212,6 +219,10 @@ export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClea
       setSavingConfig(false)
     }
   }
+    function chooseTemplate(next: TemplateChoice) {
+    persistConfig({ ...config, resume_template: next.template, resume_options: next.options })
+  }
+
 
   function toggleEntity(id: string) {
     const isSelected = config.selected_entity_ids.includes(id)
@@ -453,7 +464,7 @@ export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClea
       URL.revokeObjectURL(url)
     } else {
       const json = await res.json().catch(() => ({}))
-      setGenError(json.error ?? 'Generation failed. Is pdflatex installed?')
+      setGenError(json.error ?? 'Generation failed.')
     }
     setGenerating(false)
   }
@@ -633,6 +644,13 @@ export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClea
         </div>
       )}
 
+        {/* Template */}
+        <div className="mb-5 rounded-lg border border-slate-200 bg-slate-50 p-3">
+            <span className="mb-2 block text-xs font-semibold text-slate-600 uppercase tracking-wide">Template</span>
+            <TemplatePicker templates={templates} value={templateChoice} onChange={chooseTemplate} disabled={generating} />
+            {templatesError && <p className="mt-2 text-xs text-amber-700">{templatesError}</p>}
+        </div>
+
       {/* Resume fields */}
       <div className="mb-5 rounded-lg border border-slate-200 bg-slate-50 p-3 space-y-3">
         <div className="flex items-center justify-between">
@@ -643,7 +661,7 @@ export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClea
         {/* Title */}
         <div>
           <label className="flex items-center justify-between text-sm font-medium text-slate-600 mb-1">
-            <span>Resume title <span className="text-slate-400 font-normal text-xs">(rendered in LaTeX header)</span></span>
+            <span>Resume title <span className="text-slate-400 font-normal text-xs">(shown in the resume header)</span></span>
             <button
               type="button"
               onClick={() => setTitleDraft(globalDefaults.resume_title)}
@@ -683,7 +701,7 @@ export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClea
         {/* Profile */}
         <div>
           <label className="flex items-center justify-between text-sm font-medium text-slate-600 mb-1">
-            <span>Profile <span className="text-slate-400 font-normal text-xs">(LaTeX — leave blank for default)</span></span>
+            <span>Profile <span className="text-slate-400 font-normal text-xs">(leave blank for default)</span></span>
             <button
               type="button"
               onClick={() => setProfileDraft(globalDefaults.profile_text)}

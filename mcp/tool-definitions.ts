@@ -68,12 +68,12 @@ export const TOOL_DEFINITIONS = [
   },
   {
     name: 'set_job_profile',
-    description: "Set the profile/summary section text (LaTeX) for a specific job's resume. Leave empty to revert to the default profile.",
+    description: "Set the profile/summary section text for a specific job's resume. Leave empty to revert to the default profile.",
     inputSchema: {
       type: 'object',
       properties: {
         id: { type: 'string', description: 'Job ID — e.g. "job-abc12345" (from list_jobs)' },
-        profile_text: { type: 'string', description: 'LaTeX profile text. Use empty string to reset to default.' },
+        profile_text: { type: 'string', description: 'Profile text. Use empty string to reset to default.' },
       },
       required: ['id', 'profile_text'],
     },

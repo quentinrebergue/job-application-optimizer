@@ -23,15 +23,6 @@ FROM base AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
-ENV PDFLATEX_PATH=/usr/bin/pdflatex
-
-# LaTeX toolchain for resume PDF generation (src/lib/latex/compiler.ts)
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    texlive-latex-base \
-    texlive-latex-recommended \
-    texlive-latex-extra \
-    texlive-fonts-recommended \
-    && rm -rf /var/lib/apt/lists/*
 
 RUN groupadd --system --gid 1001 nodejs \
     && useradd --system --uid 1001 --gid nodejs nextjs
