@@ -32,7 +32,7 @@ jobs:
           outside() { printf '%s\n' "$files" | grep -Evq "$1" && echo true || echo false; }
 
           ci=$(matches '^\.github/workflows/ci\.yml$')
-          app=$(outside '^(services|k8s|docs|terraform|ansible)/|\.md$|^\.github/workflows/cd\.yml$')
+          app=$(outside '^(services|k8s|docs|terraform|ansible|scripts)/|\.md$|^\.github/(workflows/cd\.yml|ISSUE_TEMPLATE/)')
           renderer=$(matches '^services/resume-renderer/')
           migrator=$(matches '^services/db-migrator/')
 
