@@ -45,8 +45,9 @@ When in doubt, write one. A short post-mortem is better than none.
    `YYYY-MM-DD-short-slug.md`, fill it in from the logs.
 3. **Review:** reread it as someone who was not there. Does the timeline explain
    the impact? Is the root cause something you can change?
-4. **Track the actions:** open an issue for each action item and link it in the
-   table. Update the status here as they are done.
+4. **Track the actions:** open an **Incident action** ticket for each action item
+   (New issue → Incident action), link it in the report's table, and keep the
+   status up to date. See [`CONTRIBUTING.md`](../../CONTRIBUTING.md).
 5. **Close:** when all actions are done or consciously dropped (with a reason),
    set the status to *Closed* and update the index below.
 
