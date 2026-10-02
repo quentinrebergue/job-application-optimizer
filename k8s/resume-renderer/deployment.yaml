@@ -13,6 +13,7 @@ spec:
       labels:
         app: resume-renderer
     spec:
+      priorityClassName: workload-critical
       imagePullSecrets:
         - name: ghcr-pull-secret
       terminationGracePeriodSeconds: 30
