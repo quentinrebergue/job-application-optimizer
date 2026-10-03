@@ -16,7 +16,7 @@ export function AppHeader({ userEmail }: { userEmail: string | null }) {
 
   return (
     <header className="sticky top-0 z-40 border-b-2 border-ink bg-canvas">
-      <div className="flex h-16 items-center gap-3 px-3 sm:gap-4 sm:px-4 md:gap-6 md:px-8">
+      <div className="mx-auto flex h-16 w-full max-w-7xl items-center gap-3 px-3 sm:gap-4 sm:px-4 md:gap-6 md:px-8">
         <Wordmark />
 
         <nav aria-label="Main" className="flex items-center gap-1.5 sm:gap-2">

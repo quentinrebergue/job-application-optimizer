@@ -36,7 +36,7 @@ export function JobsClient({ initialJobs, initialFilter }: Props) {
     : initialJobs.filter((j) => j.status === tab)
 
   return (
-    <div className="p-4 md:p-8 max-w-5xl">
+    <div className="mx-auto w-full max-w-7xl p-4 md:p-8">
       <PageHeader
         title="Job Tracker"
         subtitle="Track your applications from saved to offer."
@@ -85,7 +85,7 @@ export function JobsClient({ initialJobs, initialFilter }: Props) {
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filtered.map((j) => (
             <JobCard key={j.id} job={j} />
           ))}

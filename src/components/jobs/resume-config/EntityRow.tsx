@@ -4,7 +4,7 @@ import { ChevronDown } from 'lucide-react'
 import type { EntityMeta } from '@/types'
 import { cn } from '@/lib/cn'
 import { Badge } from '@/components/ui/Badge'
-import { Button } from '@/components/ui/Button'
+import { IconButton } from '@/components/ui/IconButton'
 import { entityLabel, entitySubLabel } from './logic'
 
 export interface RowState {
@@ -35,7 +35,7 @@ interface Props {
 export function EntityRow({ entity, state, onToggle, onExpand, children }: Props) {
   const name = entityLabel(entity)
   const checkboxId = `include-${entity.id}`
-  const editLabel = entity.type === 'skills' ? 'Choose tags' : 'Edit description'
+  const editLabel = entity.type === 'skills' ? 'Choose the tags' : 'Edit the description'
 
   return (
     <li
@@ -44,13 +44,13 @@ export function EntityRow({ entity, state, onToggle, onExpand, children }: Props
         state.selected ? 'bg-surface shadow-hard' : 'bg-canvas',
       )}
     >
-      <div className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-2 p-3 sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:items-center">
+      <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-x-3 p-3">
         <input
           id={checkboxId}
           type="checkbox"
           checked={state.selected}
           onChange={onToggle}
-          className="mt-0.5 size-5 cursor-pointer self-start accent-ink sm:self-center"
+          className="mt-0.5 size-5 cursor-pointer accent-ink"
         />
         <div className="flex min-w-0 flex-col gap-1">
           <label htmlFor={checkboxId} className="cursor-pointer font-extrabold leading-tight">{name}</label>
@@ -64,16 +64,14 @@ export function EntityRow({ entity, state, onToggle, onExpand, children }: Props
           )}
         </div>
         {onExpand && (
-          <Button
-            variant="secondary"
-            size="sm"
+          <IconButton
+            aria-label={`${editLabel} of ${name}`}
             aria-expanded={state.expanded}
             onClick={onExpand}
-            className="col-start-2 justify-self-start sm:col-start-3"
+            className="size-9 border-ink bg-surface hover:bg-canvas"
           >
-            {editLabel}
-            <ChevronDown size={14} aria-hidden="true" className={cn('transition-transform', state.expanded && 'rotate-180')} />
-          </Button>
+            <ChevronDown size={18} aria-hidden="true" className={cn('transition-transform', state.expanded && 'rotate-180')} />
+          </IconButton>
         )}
       </div>
       {state.expanded && (

@@ -33,7 +33,7 @@ function NewJobForm() {
   }
 
   return (
-    <div className="max-w-2xl p-4 md:p-8">
+    <div className="mx-auto w-full max-w-2xl p-4 md:p-8">
       <PageHeader
         title="Add job"
         subtitle={hasImport ? 'Imported from LinkedIn. Review and save.' : 'Paste the offer, save, then generate the resume.'}

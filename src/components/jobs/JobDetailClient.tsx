@@ -98,11 +98,13 @@ export function JobDetailClient({ initialJob, initialTab }: Props) {
       onChange={changeTab}
     />
   )
-  // On desktop both columns show; below, only the selected tab.
-  const shownBelowDesktop = (panel: JobTab) => cn(tab === panel ? 'block' : 'hidden', 'lg:block')
+  // On desktop both columns show; below, only the selected tab. The offer card is a
+  // flex column on desktop (pinned title, scrolling body), so it asks for lg:flex.
+  const shownBelowDesktop = (panel: JobTab, desktop: 'lg:block' | 'lg:flex' = 'lg:block') =>
+    cn(tab === panel ? 'block' : 'hidden', desktop)
 
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-8">
+    <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 p-4 md:p-8">
       <header className="flex flex-col gap-4 border-b-2 border-ink pb-6">
         <Link href="/jobs" className="self-start text-sm font-semibold text-ink-muted underline-offset-4 hover:text-ink hover:underline">
           ← All jobs
@@ -135,7 +137,7 @@ export function JobDetailClient({ initialJob, initialTab }: Props) {
           title="Offer"
           tabs={tabs}
           scrollBody
-          className={cn(shownBelowDesktop('offer'), 'lg:sticky lg:top-20 lg:max-h-[calc(100dvh-6rem)]')}
+          className={cn(shownBelowDesktop('offer', 'lg:flex'), 'lg:sticky lg:top-20 lg:max-h-[calc(100dvh-6rem)]')}
         >
           <JobOfferEditor job={job} onSaved={setJob} onDelete={handleDelete} deleting={busy} onSaveStateChange={setOfferSave} />
         </PanelCard>
@@ -177,7 +179,7 @@ function PanelCard({ title, tabs, scrollBody, className, children }: {
   children: React.ReactNode
 }) {
   return (
-    <section aria-label={title} className={cn('rounded-control border-2 border-ink bg-panel shadow-hard', scrollBody && 'lg:flex lg:flex-col', className)}>
+    <section aria-label={title} className={cn('rounded-control border-2 border-ink bg-panel shadow-hard', scrollBody && 'lg:flex-col', className)}>
       <div className="lg:hidden">{tabs}</div>
       <h2 className="hidden shrink-0 border-b-2 border-ink px-5 py-3 text-xl font-extrabold tracking-tight lg:block">{title}</h2>
       {/* The gutter is reserved so the width (and the auto-grown text) does not jump when a scrollbar appears. */}

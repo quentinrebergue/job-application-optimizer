@@ -26,7 +26,7 @@ Feature components for the Job Tracker module.
 | `ContentFields.tsx` | "Header" section: resume title and profile, with "Use my default". |
 | `EntitySection.tsx` | One type of entries with its rows and editors; for experiences and projects a "Reorder" mode (with "Order by AI score") instead of arrows on every row. |
 | `ReorderList.tsx` | Numbered list of the included entries with labelled Up / Down buttons. |
-| `EntityRow.tsx` | Include checkbox, title, where and when, "Recommended" and match; an "Edit description" / "Choose tags" button opens the editor and the AI's reason. Stacks on phones. |
+| `EntityRow.tsx` | Include checkbox, title, where and when, "Recommended" and match; a bordered arrow button (named "Edit the description of …" / "Choose the tags of …") opens the editor and the AI's reason. |
 | `DescriptionEditor.tsx` | Description for this resume only, saved on blur. |
 | `SkillTagPicker.tsx` | Tags printed for a skill (toggles), add a tag to the library, AI-suggested tags. |
 | `SuggestedSkills.tsx` | Skills the AI suggests adding to the library. |
