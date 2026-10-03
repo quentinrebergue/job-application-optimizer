@@ -3,23 +3,31 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { ENABLED_MODULES } from '@/config'
-import { Wordmark } from './Wordmark'
-import { LogoutButton } from './LogoutButton'
 import { buttonClasses } from '@/components/ui/Button'
-import { isActiveModule } from './nav'
 import { cn } from '@/lib/cn'
 import { focusRing } from '@/components/ui/styles'
+import { AccountMenu } from './AccountMenu'
+import { Wordmark } from './Wordmark'
+import { isActiveModule } from './nav'
 
-// The app's only navigation, at every width: name, module links, account.
+/**
+ * The app's only navigation, at every width: name, sections, account.
+ * Sections are places, not actions: plain text, the current one in extra-bold
+ * ink, the others regular and muted. Same size as the wordmark so their text
+ * sits on one line; a full-height stroke separates the name from the sections.
+ */
 export function AppHeader({ userEmail }: { userEmail: string | null }) {
   const pathname = usePathname()
 
   return (
     <header className="sticky top-0 z-40 border-b-2 border-ink bg-canvas">
-      <div className="mx-auto flex h-16 w-full max-w-7xl items-center gap-3 px-3 sm:gap-4 sm:px-4 md:gap-6 md:px-8">
-        <Wordmark />
+      <div className="mx-auto flex h-16 w-full max-w-7xl items-center gap-4 px-3 sm:gap-6 sm:px-4 md:px-8">
+        {/* The name sits in its own cell, closed by a full-height stroke: it is not a section. */}
+        <div className="flex self-stretch items-center border-r-2 border-ink pr-4 sm:pr-6">
+          <Wordmark />
+        </div>
 
-        <nav aria-label="Main" className="flex items-center gap-1.5 sm:gap-2">
+        <nav aria-label="Main" className="flex items-center gap-1 sm:gap-2">
           {ENABLED_MODULES.map((mod) => {
             const isActive = isActiveModule(pathname, mod)
             return (
@@ -28,11 +36,9 @@ export function AppHeader({ userEmail }: { userEmail: string | null }) {
                 href={mod.href}
                 aria-current={isActive ? 'page' : undefined}
                 className={cn(
-                  'rounded-control border-2 border-ink px-2.5 py-1 text-sm sm:px-3 transition-[translate,box-shadow] duration-100',
+                  'rounded-control px-2 py-1 text-base transition-colors sm:px-3',
                   focusRing,
-                  isActive
-                    ? 'bg-accent font-semibold text-ink shadow-hard'
-                    : 'bg-surface text-ink hover:translate-x-press hover:translate-y-press motion-reduce:hover:translate-x-0 motion-reduce:hover:translate-y-0',
+                  isActive ? 'font-extrabold text-ink' : 'font-normal text-ink-muted hover:text-ink',
                 )}
               >
                 {mod.label}
@@ -41,14 +47,9 @@ export function AppHeader({ userEmail }: { userEmail: string | null }) {
           })}
         </nav>
 
-        <div className="ml-auto flex min-w-0 items-center gap-4 pr-1">
+        <div className="ml-auto flex items-center pr-1">
           {userEmail ? (
-            <>
-              <span className="hidden truncate text-xs text-ink-muted lg:inline" title={userEmail}>
-                {userEmail}
-              </span>
-              <LogoutButton />
-            </>
+            <AccountMenu email={userEmail} />
           ) : (
             <Link href="/login" className={buttonClasses({ variant: 'secondary', size: 'sm' })}>Log in</Link>
           )}
