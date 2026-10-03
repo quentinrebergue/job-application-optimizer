@@ -31,8 +31,7 @@ export function DescriptionEditor({ value, original, isCustom, onCommit }: Props
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           onBlur={() => { if (draft !== value) onCommit(draft) }}
-          rows={4}
-          className="resize-y"
+          autoGrow
         />
       </Field>
       {isCustom && (

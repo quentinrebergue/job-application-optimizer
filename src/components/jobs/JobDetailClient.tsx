@@ -14,6 +14,7 @@ import type { ApplicationStatus, JobOffer } from '@/types'
 import type { AIAnalysisResult } from '@/types/job'
 import { CoverLetterPanel } from './CoverLetterPanel'
 import { JobOfferEditor } from './JobOfferEditor'
+import type { SaveState } from './useJobAutosave'
 import { ResumeConfigPanel } from './ResumeConfigPanel'
 import { StatusSelect } from './StatusSelect'
 
@@ -39,6 +40,13 @@ export function JobDetailClient({ initialJob, initialTab }: Props) {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [aiAnalysis, setAiAnalysis] = useState<AIAnalysisResult | null>(initialJob.ai_analysis ?? null)
+  // One save indicator for the offer and the resume, both saved automatically.
+  const [offerSave, setOfferSave] = useState<SaveState>('idle')
+  const [resumeSaving, setResumeSaving] = useState(false)
+  const [savedSomething, setSavedSomething] = useState(false)
+  const saving = offerSave === 'saving' || resumeSaving
+  if (saving && !savedSomething) setSavedSomething(true)
+  const saveLabel = saving ? 'Saving…' : savedSomething && offerSave !== 'error' ? 'All changes saved' : ''
 
   function changeTab(next: JobTab) {
     setTab(next)
@@ -108,7 +116,8 @@ export function JobDetailClient({ initialJob, initialTab }: Props) {
               {job.location && <> · {job.location}</>}
             </p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
+            <p aria-live="polite" className="text-sm text-ink-muted empty:hidden">{saveLabel}</p>
             {!FEATURES.coverLetter && (
               <span className="hidden rounded-control border-2 border-dashed border-ink px-2 py-1 text-xs font-semibold text-ink-muted lg:inline">
                 Cover letter · Soon
@@ -121,8 +130,13 @@ export function JobDetailClient({ initialJob, initialTab }: Props) {
       </header>
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:items-start">
-        <PanelCard title="Offer" tabs={tabs} className={shownBelowDesktop('offer')}>
-          <JobOfferEditor job={job} onSaved={setJob} onDelete={handleDelete} deleting={busy} />
+        {/* On desktop the offer follows the scroll, at most one screen high: the resume is usually much longer. */}
+        <PanelCard
+          title="Offer"
+          tabs={tabs}
+          className={cn(shownBelowDesktop('offer'), 'lg:sticky lg:top-20 lg:max-h-[calc(100dvh-6rem)] lg:overflow-y-auto')}
+        >
+          <JobOfferEditor job={job} onSaved={setJob} onDelete={handleDelete} deleting={busy} onSaveStateChange={setOfferSave} />
         </PanelCard>
 
         <PanelCard title="Resume" tabs={tabs} className={shownBelowDesktop('resume')}>
@@ -132,6 +146,7 @@ export function JobDetailClient({ initialJob, initialTab }: Props) {
             onRankingComplete={(result) => { setAiAnalysis(result); setJob((prev) => ({ ...prev, ai_analysis: result })) }}
             onClearAi={handleClearAi}
             hasAiData={!!aiAnalysis}
+            onSavingChange={setResumeSaving}
           />
         </PanelCard>
 
@@ -146,13 +161,14 @@ export function JobDetailClient({ initialJob, initialTab }: Props) {
 }
 
 /**
- * A big white card for one part of the page. Its top edge is the tab bar below
+ * A big card for one part of the page, in the light `panel` tint so the white
+ * fields and cards inside stand out. Its top edge is the tab bar below
  * desktop, and a title strip on desktop where both cards are side by side.
- * No overflow-hidden: it would stop the resume's download bar from sticking.
+ * No overflow-hidden on the resume card: it would stop the download button from floating.
  */
 function PanelCard({ title, tabs, className, children }: { title: string; tabs: React.ReactNode; className?: string; children: React.ReactNode }) {
   return (
-    <section aria-label={title} className={cn('rounded-control border-2 border-ink bg-surface shadow-hard', className)}>
+    <section aria-label={title} className={cn('rounded-control border-2 border-ink bg-panel shadow-hard', className)}>
       <div className="lg:hidden">{tabs}</div>
       <h2 className="hidden border-b-2 border-ink px-5 py-3 text-xl font-extrabold tracking-tight lg:block">{title}</h2>
       <div className="p-4 md:p-6">{children}</div>

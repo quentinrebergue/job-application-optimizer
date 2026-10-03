@@ -22,6 +22,7 @@
 @theme static {
   --color-canvas: #ffe9c7;          /* page background (warm peach) */
   --color-surface: #ffffff;         /* cards, controls, dialogs */
+  --color-panel: #fff6e6;           /* large panels holding white controls and cards */
   --color-ink: #1a1514;             /* text, strokes, shadows */
   --color-ink-muted: #4a413c;       /* secondary text (8.4:1 on canvas) */
   --color-line: #ebd7b5;            /* thin dividers in dense content, muted fills */

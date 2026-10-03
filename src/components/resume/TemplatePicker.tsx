@@ -18,8 +18,8 @@ interface Props {
   disabled?: boolean
 }
 
-const FIELD = cn(controlClasses, 'mt-1 h-9 w-auto')
-const LABEL = 'text-xs font-semibold text-ink'
+const CONTROL = cn(controlClasses, 'h-10')
+const LABEL = 'flex flex-col gap-1 text-xs font-semibold text-ink'
 
 // "datePlacement" -> "Date placement"
 function labelFor(name: string): string {
@@ -40,15 +40,16 @@ export function TemplatePicker({ templates, value, onChange, disabled }: Props) 
     onChange({ template: current.id, options: { ...value.options, [name]: option } })
   }
 
+  // A grid of equal fields: the template first, then its options.
   return (
-    <div className="flex flex-wrap items-end gap-4">
+    <div className="grid gap-4 sm:grid-cols-2">
       <label className={LABEL}>
         Template
         <select
           value={current.id}
           disabled={disabled}
           onChange={(e) => onChange({ template: e.target.value, options: {} })}
-          className={FIELD}
+          className={CONTROL}
         >
           {templates.map((t) => (
             <option key={t.id} value={t.id}>
@@ -64,12 +65,7 @@ export function TemplatePicker({ templates, value, onChange, disabled }: Props) 
           <label key={name} className={LABEL}>
             {labelFor(name)}
             {spec.type === 'enum' && (
-              <select
-                value={String(shown)}
-                disabled={disabled}
-                onChange={(e) => setOption(name, e.target.value)}
-                className={FIELD}
-              >
+              <select value={String(shown)} disabled={disabled} onChange={(e) => setOption(name, e.target.value)} className={CONTROL}>
                 {spec.values?.map((v) => (
                   <option key={v} value={v}>
                     {v}
@@ -78,7 +74,7 @@ export function TemplatePicker({ templates, value, onChange, disabled }: Props) 
               </select>
             )}
             {spec.type === 'number' && (
-              <span className="mt-1 flex h-9 items-center gap-2">
+              <span className={cn(CONTROL, 'flex items-center gap-3')}>
                 <input
                   type="range"
                   min={spec.min}
@@ -87,19 +83,22 @@ export function TemplatePicker({ templates, value, onChange, disabled }: Props) 
                   value={Number(shown)}
                   disabled={disabled}
                   onChange={(e) => setOption(name, e.target.valueAsNumber)}
-                  className="w-28 accent-ink"
+                  className="min-w-0 flex-1 accent-ink"
                 />
-                <span className="w-9 text-right font-normal tabular-nums">{Number(shown)}</span>
+                <span className="w-8 text-right font-normal tabular-nums">{Number(shown)}</span>
               </span>
             )}
             {spec.type === 'color' && (
-              <input
-                type="color"
-                value={String(shown)}
-                disabled={disabled}
-                onChange={(e) => setOption(name, e.target.value)}
-                className="mt-1 block h-9 w-12 cursor-pointer rounded-control border-2 border-ink bg-surface"
-              />
+              <span className={cn(CONTROL, 'flex items-center gap-3')}>
+                <input
+                  type="color"
+                  value={String(shown)}
+                  disabled={disabled}
+                  onChange={(e) => setOption(name, e.target.value)}
+                  className="h-6 w-10 cursor-pointer rounded-xs border-2 border-ink bg-surface p-0"
+                />
+                <span className="font-normal uppercase tabular-nums">{String(shown)}</span>
+              </span>
             )}
           </label>
         )

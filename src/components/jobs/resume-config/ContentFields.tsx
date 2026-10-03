@@ -47,8 +47,7 @@ export function ContentFields({ drafts, defaults, saved, onChange }: Props) {
           <Textarea
             value={drafts.profile_text}
             onChange={(e) => onChange('profile_text', e.target.value)}
-            rows={4}
-            className="resize-y"
+            autoGrow
             placeholder="Engineering student with experience in systems programming and embedded Linux."
           />
         </Field>

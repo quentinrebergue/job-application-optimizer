@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { formatDate } from '@/lib/format'
 import Link from 'next/link'
 import type { SkillMeta } from '@/types'
@@ -22,6 +22,8 @@ interface Props {
   onRankingComplete?: (result: AIAnalysisResult) => void
   onClearAi?: () => void
   hasAiData?: boolean
+  /** The page shows one save indicator for the offer and the resume */
+  onSavingChange?: (saving: boolean) => void
 }
 
 /** Downloads the PDF built from the job's resume config. */
@@ -76,8 +78,9 @@ function Step({ number, title, action, children }: { number: number; title: stri
 }
 
 /** "Resume for this job" in three steps: tailor with AI, choose the content, pick a template and download. */
-export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClearAi, hasAiData }: Props) {
+export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClearAi, hasAiData, onSavingChange }: Props) {
   const panel = useResumeConfig(jobId, aiAnalysis)
+  useEffect(() => { onSavingChange?.(panel.saving) }, [panel.saving, onSavingChange])
   const pdf = usePdf(jobId)
   const { templates, error: templatesError } = useTemplates()
   const { entities, config, drafts, defaults } = panel
@@ -110,7 +113,7 @@ export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClea
         </div>
       </Step>
 
-      <Step number={2} title="Content" action={<Button variant="ghost" size="sm" onClick={panel.reset}>Reset selection</Button>}>
+      <Step number={2} title="Content">
         <ContentFields
           drafts={{ resume_title: drafts.resume_title, profile_text: drafts.profile_text }}
           defaults={{ resume_title: defaults.resume_title, profile_text: defaults.profile_text }}
@@ -132,6 +135,15 @@ export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClea
             <Link href="/entities/new" className="font-semibold text-accent-strong underline underline-offset-4">Add an entry</Link>.
           </p>
         )}
+        <div className="border-t-2 border-dashed border-ink pt-4">
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => { if (confirm('Start again from your defaults? The selection and the custom texts of this resume are cleared.')) panel.reset() }}
+          >
+            Start again from my defaults
+          </Button>
+        </div>
       </Step>
 
       <Step number={3} title="Template">
@@ -144,27 +156,19 @@ export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClea
         {templatesError && <Alert variant="info">{templatesError}</Alert>}
       </Step>
 
-      {/* Stays at the bottom of the screen while the list scrolls (QA-11). */}
-      <div className="sticky bottom-4 z-30 flex flex-col gap-2">
-        {pdf.error && <Alert>{pdf.error}</Alert>}
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-control border-2 border-ink bg-surface p-3 shadow-hard">
-          <p className="text-sm" aria-live="polite">
-            <span className="font-semibold tabular-nums">
-              {selectedCount === 0 ? 'Everything' : `${selectedCount} of ${entities.length}`}
-            </span>{' '}
-            in the resume
-            {panel.saving && <span className="text-ink-muted"> · Saving…</span>}
-          </p>
-          <Button
-            onClick={() => pdf.generate(
-              selectedCount > 0 ? config.selected_entity_ids : entities.map((e) => e.id),
-              config.skill_tag_overrides,
-            )}
-            disabled={pdf.generating}
-          >
-            {pdf.generating ? 'Generating…' : 'Download PDF'}
-          </Button>
-        </div>
+      {/* Floats at the bottom of the screen while the list scrolls (QA-11). */}
+      <div className="sticky bottom-4 z-30 flex flex-col items-end gap-2">
+        {pdf.error && <Alert className="self-stretch">{pdf.error}</Alert>}
+        <Button
+          onClick={() => pdf.generate(
+            selectedCount > 0 ? config.selected_entity_ids : entities.map((e) => e.id),
+            config.skill_tag_overrides,
+          )}
+          disabled={pdf.generating}
+          className="h-12 px-6 text-base"
+        >
+          {pdf.generating ? 'Generating…' : 'Download PDF'}
+        </Button>
       </div>
     </div>
   )

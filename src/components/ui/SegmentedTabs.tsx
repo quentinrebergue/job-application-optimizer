@@ -15,6 +15,7 @@ interface Props<T extends string> {
 /**
  * Equal, joined segments that form the top edge of a card: the selected one is
  * filled red. The state is announced (aria-pressed), not only shown by colour.
+ * A note ("Soon") goes on its own small line, so narrow segments stay tidy.
  */
 export function SegmentedTabs<T extends string>({ label, items, value, onChange, className }: Props<T>) {
   return (
@@ -29,17 +30,17 @@ export function SegmentedTabs<T extends string>({ label, items, value, onChange,
             disabled={item.disabled}
             onClick={() => onChange(item.value)}
             className={cn(
-              'flex min-h-12 flex-1 items-center justify-center gap-1.5 px-2 text-sm font-semibold transition-colors',
+              'flex min-h-12 flex-1 flex-col items-center justify-center px-2 py-1 text-sm font-semibold leading-tight transition-colors',
               'focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-ink',
               i > 0 && 'border-l-2 border-ink',
               i === 0 && 'rounded-tl-[calc(var(--radius-control)-2px)]',
               i === items.length - 1 && 'rounded-tr-[calc(var(--radius-control)-2px)]',
               selected ? 'bg-accent text-ink' : 'bg-surface text-ink hover:bg-canvas',
-              'disabled:cursor-not-allowed disabled:text-ink-muted disabled:hover:bg-surface',
+              'disabled:cursor-not-allowed disabled:bg-line disabled:text-ink-muted disabled:hover:bg-line',
             )}
           >
             {item.label}
-            {item.note && <span className="text-xs font-normal">· {item.note}</span>}
+            {item.note && <span className="text-xs font-normal">{item.note}</span>}
           </button>
         )
       })}

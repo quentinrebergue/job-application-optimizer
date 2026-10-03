@@ -1,5 +1,6 @@
 'use client'
 
+import { useLayoutEffect, useRef } from 'react'
 import { cn } from '@/lib/cn'
 import { useField } from './Field'
 
@@ -26,8 +27,29 @@ export function Input({ className, ...props }: React.ComponentProps<'input'>) {
   return <input className={cn(controlClasses, 'h-10', className)} {...useFieldProps(props)} />
 }
 
-export function Textarea({ className, ...props }: React.ComponentProps<'textarea'>) {
-  return <textarea className={cn(controlClasses, 'min-h-24 py-2 leading-relaxed', className)} {...useFieldProps(props)} />
+interface TextareaProps extends React.ComponentProps<'textarea'> {
+  /** Grows with its content instead of scrolling inside */
+  autoGrow?: boolean
+}
+
+export function Textarea({ className, autoGrow, ...props }: TextareaProps) {
+  const ref = useRef<HTMLTextAreaElement>(null)
+
+  // Recompute the height whenever the text changes (typing or a new value).
+  useLayoutEffect(() => {
+    const el = ref.current
+    if (!autoGrow || !el) return
+    el.style.height = 'auto'
+    el.style.height = `${el.scrollHeight + 4}px` // + the 2px borders
+  }, [autoGrow, props.value])
+
+  return (
+    <textarea
+      ref={ref}
+      className={cn(controlClasses, 'min-h-24 py-2 leading-relaxed', autoGrow && 'resize-none overflow-hidden', className)}
+      {...useFieldProps(props)}
+    />
+  )
 }
 
 export function Select({ className, ...props }: React.ComponentProps<'select'>) {

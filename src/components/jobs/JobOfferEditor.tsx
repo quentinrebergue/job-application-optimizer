@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect } from 'react'
 import type { JobOffer } from '@/types'
 import { Alert } from '@/components/ui/Alert'
 import { Button } from '@/components/ui/Button'
@@ -7,25 +8,26 @@ import { Field } from '@/components/ui/Field'
 import { Input, Textarea } from '@/components/ui/Input'
 import { useJobAutosave, type SaveState } from './useJobAutosave'
 
-const STATE_LABEL: Record<SaveState, string> = { idle: '', saving: 'Saving…', saved: 'Saved', error: 'Not saved' }
-
 interface Props {
   job: JobOffer
   onSaved: (job: JobOffer) => void
   onDelete: () => void
   deleting: boolean
+  /** The page shows one save indicator for the offer and the resume */
+  onSaveStateChange?: (state: SaveState) => void
 }
 
 /** The job offer, always editable: every field saves itself. */
-export function JobOfferEditor({ job, onSaved, onDelete, deleting }: Props) {
+export function JobOfferEditor({ job, onSaved, onDelete, deleting, onSaveStateChange }: Props) {
   const { drafts, errors, state, failure, edit } = useJobAutosave(job, onSaved)
+  useEffect(() => { onSaveStateChange?.(state) }, [state, onSaveStateChange])
 
   return (
     <div className="flex flex-col gap-4">
-      <p aria-live="polite" className="min-h-5 self-end text-sm text-ink-muted">{STATE_LABEL[state]}</p>
       {failure && <Alert>Offer not saved: {failure}</Alert>}
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      {/* One field per row in the narrow desktop column, two side by side elsewhere. */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
         <Field label="Job title" error={errors.title}>
           <Input value={drafts.title} onChange={(e) => edit('title', e.target.value)} required />
         </Field>
@@ -46,7 +48,7 @@ export function JobOfferEditor({ job, onSaved, onDelete, deleting }: Props) {
       )}
 
       <Field label="Description" hint="The full text of the offer. The AI reads it to pick your best entries.">
-        <Textarea value={drafts.description} onChange={(e) => edit('description', e.target.value)} rows={14} className="resize-y" />
+        <Textarea value={drafts.description} onChange={(e) => edit('description', e.target.value)} autoGrow />
       </Field>
 
       <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-control border-2 border-dashed border-ink p-3">

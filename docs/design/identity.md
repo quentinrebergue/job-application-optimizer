@@ -48,6 +48,7 @@ Each colour has a role. Colour never decorates.
 |---|---|---|
 | `canvas` | `#FFE9C7` | Page background (warm peach) |
 | `surface` | `#FFFFFF` | Cards, controls, dialogs, neutral badges |
+| `panel` | `#FFF6E6` | Large panels (the offer and resume of a job): light enough to read as white, dark enough for white fields and cards inside to stand out |
 | `ink` | `#1A1514` | Text, strokes, shadows |
 | `ink-muted` | `#4A413C` | Secondary text, captions |
 | `line` | `#EBD7B5` | Thin dividers in dense content, muted fills |
