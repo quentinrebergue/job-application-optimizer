@@ -8,5 +8,5 @@ Reusable React components. Organised by feature area and a shared `ui/` primitiv
 |-----------|-------------|
 | `layout/` | App-shell components (Sidebar) |
 | `ui/` | Generic UI primitives — Badge, PageHeader |
-| `entities/` | Entity library components — EntityCard, EntityForm, QuestionEditor |
-| `resume/` | Resume builder components — GeneratePdfButton |
+| `entities/` | The library: LibraryPanel, EntityCard, EntityForm, EntityEditor, entry fields |
+| `resume/` | The profile editor and the template picker |

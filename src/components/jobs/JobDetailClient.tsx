@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Alert } from '@/components/ui/Alert'
+import { ConfirmDrawer } from '@/components/ui/ConfirmDrawer'
 import { SegmentedTabs } from '@/components/ui/SegmentedTabs'
 import { FEATURES } from '@/config'
 import { cn } from '@/lib/cn'
@@ -17,6 +18,7 @@ import { JobOfferEditor } from './JobOfferEditor'
 import type { SaveState } from './useJobAutosave'
 import { ResumeConfigPanel } from './ResumeConfigPanel'
 import { StatusSelect } from './StatusSelect'
+import { page } from '@/components/ui/styles'
 
 interface Props {
   initialJob: JobOffer
@@ -38,6 +40,7 @@ export function JobDetailClient({ initialJob, initialTab }: Props) {
   const [job, setJob] = useState<JobOffer>(initialJob)
   const [tab, setTab] = useState<JobTab>(initialTab)
   const [busy, setBusy] = useState(false)
+  const [confirmDelete, setConfirmDelete] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [aiAnalysis, setAiAnalysis] = useState<AIAnalysisResult | null>(initialJob.ai_analysis ?? null)
   // One "Saving…" indicator for the offer and the resume, both saved automatically.
@@ -63,7 +66,6 @@ export function JobDetailClient({ initialJob, initialTab }: Props) {
   }
 
   async function handleDelete() {
-    if (!confirm('Delete this job? This cannot be undone.')) return
     setBusy(true)
     setError(null)
     try {
@@ -101,7 +103,7 @@ export function JobDetailClient({ initialJob, initialTab }: Props) {
     cn(tab === panel ? 'block' : 'hidden', desktop)
 
   return (
-    <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 p-4 md:p-8">
+    <div className={cn(page, 'flex flex-col gap-6')}>
       {/* Back link and status on one row, then the title and its details. */}
       <header className="flex flex-col gap-3 lg:border-b-2 lg:border-ink lg:pb-6">
         <div className="flex items-center justify-between gap-3">
@@ -133,7 +135,7 @@ export function JobDetailClient({ initialJob, initialTab }: Props) {
           scrollBody
           className={cn(shownBelowDesktop('offer', 'lg:flex'), 'lg:sticky lg:top-20 lg:max-h-[calc(100dvh-6rem)]')}
         >
-          <JobOfferEditor job={job} onSaved={setJob} onDelete={handleDelete} deleting={busy} onSaveStateChange={setOfferSave} />
+          <JobOfferEditor job={job} onSaved={setJob} onDelete={() => setConfirmDelete(true)} deleting={busy} onSaveStateChange={setOfferSave} />
         </PanelCard>
 
         <PanelCard
@@ -165,6 +167,15 @@ export function JobDetailClient({ initialJob, initialTab }: Props) {
           </PanelCard>
         )}
       </div>
+
+      <ConfirmDrawer
+        open={confirmDelete}
+        onOpenChange={setConfirmDelete}
+        title="Delete this job?"
+        description="The offer, its resume settings and its AI ranking are deleted. This cannot be undone."
+        confirmLabel="Delete job"
+        onConfirm={handleDelete}
+      />
     </div>
   )
 }

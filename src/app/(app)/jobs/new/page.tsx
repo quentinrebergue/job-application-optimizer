@@ -7,6 +7,7 @@ import { Alert } from '@/components/ui/Alert'
 import { JobForm } from '@/components/jobs/JobForm'
 import { fetchJson } from '@/lib/http'
 import type { JobOffer } from '@/types'
+import { page } from '@/components/ui/styles'
 
 function NewJobForm() {
   const router = useRouter()
@@ -33,7 +34,7 @@ function NewJobForm() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-2xl p-4 md:p-8">
+    <div className={page}>
       <PageHeader
         title="Add job"
         subtitle={hasImport ? 'Imported from LinkedIn. Review and save.' : 'Paste the offer, save, then generate the resume.'}

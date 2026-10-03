@@ -7,10 +7,11 @@ import type { StatusFilter } from '@/lib/job-filter'
 import { Plus } from 'lucide-react'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { JobCard } from '@/components/jobs/JobCard'
-import { StatusFilterBar } from './StatusFilterBar'
+import { FilterBar } from '@/components/ui/FilterBar'
 import { buttonClasses } from '@/components/ui/Button'
 import type { JobOffer } from '@/types'
 import { APPLICATION_STATUSES, APPLICATION_STATUS_LABELS, FEATURES } from '@/config'
+import { page } from '@/components/ui/styles'
 
 const TABS: { label: string; value: StatusFilter }[] = [
   { label: 'All', value: 'all' },
@@ -36,7 +37,7 @@ export function JobsClient({ initialJobs, initialFilter }: Props) {
     : initialJobs.filter((j) => j.status === tab)
 
   return (
-    <div className="mx-auto w-full max-w-7xl p-4 md:p-8">
+    <div className={page}>
       <PageHeader
         title="Job Tracker"
         subtitle="Track your applications from saved to offer."
@@ -59,7 +60,8 @@ export function JobsClient({ initialJobs, initialFilter }: Props) {
       </PageHeader>
 
       <div className="mb-6">
-        <StatusFilterBar
+        <FilterBar
+          label="Filter by status"
           options={TABS.map((t) => ({
             ...t,
             count: t.value === 'all' ? initialJobs.length : initialJobs.filter((j) => j.status === t.value).length,

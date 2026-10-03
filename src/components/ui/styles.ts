@@ -1,5 +1,11 @@
 // Class strings shared by several primitives (neo-brutalism, see docs/design/identity.md).
 
+/** The one page width (also the top bar's), centred on wide screens. */
+export const pageWidth = 'mx-auto w-full max-w-7xl'
+
+/** A page's container: the page width and its padding. */
+export const page = 'mx-auto w-full max-w-7xl p-4 md:p-8'
+
 /** Visible keyboard focus, never shown on mouse click. */
 export const focusRing =
   'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-strong'

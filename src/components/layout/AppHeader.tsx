@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 import { ENABLED_MODULES } from '@/config'
 import { buttonClasses } from '@/components/ui/Button'
 import { cn } from '@/lib/cn'
-import { focusRing } from '@/components/ui/styles'
+import { focusRing, pageWidth } from '@/components/ui/styles'
 import { AccountMenu } from './AccountMenu'
 import { Wordmark } from './Wordmark'
 import { isActiveModule } from './nav'
@@ -21,7 +21,7 @@ export function AppHeader({ userEmail }: { userEmail: string | null }) {
 
   return (
     <header className="sticky top-0 z-40 border-b-2 border-ink bg-canvas">
-      <div className="mx-auto flex h-16 w-full max-w-7xl items-center gap-4 px-3 sm:gap-6 sm:px-4 md:px-8">
+      <div className={cn(pageWidth, 'flex h-16 items-center gap-4 px-3 sm:gap-6 sm:px-4 md:px-8')}>
         {/* The name sits in its own cell, closed by a full-height stroke: it is not a section. */}
         <div className="flex self-stretch items-center border-r-2 border-ink pr-4 sm:pr-6">
           <Wordmark />

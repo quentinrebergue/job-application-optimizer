@@ -51,8 +51,7 @@ export function JobOfferEditor({ job, onSaved, onDelete, deleting, onSaveStateCh
         <Textarea value={drafts.description} onChange={(e) => edit('description', e.target.value)} autoGrow />
       </Field>
 
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-control border-2 border-dashed border-ink p-3">
-        <p className="text-sm text-ink-muted">Delete this job and its resume settings.</p>
+      <div className="mt-2 flex justify-end">
         <Button variant="danger" size="sm" onClick={onDelete} disabled={deleting}>
           {deleting ? 'Deleting…' : 'Delete job'}
         </Button>

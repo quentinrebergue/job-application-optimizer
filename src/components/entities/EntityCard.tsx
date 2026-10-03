@@ -1,54 +1,28 @@
 'use client'
 
 import Link from 'next/link'
-import { Badge } from '@/components/ui/Badge'
 import type { EntityMeta } from '@/types'
+import { Badge } from '@/components/ui/Badge'
+import { cardClasses } from '@/components/ui/Card'
+import { entityChips, entitySubtitle, entityTitle } from './entity-fields'
 
-function entityTitle(e: EntityMeta): string {
-  if (e.type === 'skills') return e.name
-  if (e.type === 'education') return e.degree
-  return e.title
-}
+const MAX_TAGS = 3
 
-function entitySubtitle(e: EntityMeta): string {
-  if (e.type === 'experiences') return e.company
-  if (e.type === 'projects') return e.tech.join(', ')
-  if (e.type === 'education') return e.institution
-  return e.level
-}
-
-const TYPE_LABELS: Record<string, string> = {
-  experiences: 'Experience',
-  projects: 'Project',
-  skills: 'Skill',
-  education: 'Education',
-}
-
+/** A library entry in a list (one kind at a time, so no kind badge): title (two lines at most), where/when, a few chips (a project's technologies). */
 export function EntityCard({ entity }: { entity: EntityMeta }) {
+  const title = entityTitle(entity)
+  const subtitle = entitySubtitle(entity)
+  const chips = entityChips(entity)
+  const extra = chips.length - MAX_TAGS
+
   return (
-    <Link
-      href={`/entities/${entity.type}/${entity.id}`}
-      className="group block rounded-xl border border-slate-200 bg-white p-4 transition-all hover:border-slate-400 hover:shadow-sm"
-    >
-      <div className="flex items-start justify-between gap-2 mb-2">
-        <span className="font-semibold text-slate-900 group-hover:text-blue-600 transition-colors leading-tight">
-          {entityTitle(entity)}
-        </span>
-        <Badge label={TYPE_LABELS[entity.type]} />
-      </div>
-
-      {entitySubtitle(entity) && (
-        <p className="text-sm text-slate-500 mb-2">{entitySubtitle(entity)}</p>
-      )}
-
-      {entity.tags.length > 0 && (
-        <div className="flex flex-wrap gap-1 mt-2">
-          {entity.tags.slice(0, 4).map((tag) => (
-            <Badge key={tag} label={tag} variant="muted" />
-          ))}
-          {entity.tags.length > 4 && (
-            <span className="text-xs text-slate-400">+{entity.tags.length - 4}</span>
-          )}
+    <Link href={`/entities/${entity.type}/${entity.id}`} className={cardClasses({ interactive: true, className: 'flex h-full flex-col gap-1' })}>
+      <span title={title} className="line-clamp-2 font-extrabold leading-tight">{title}</span>
+      {subtitle && <p className="truncate text-sm text-ink-muted">{subtitle}</p>}
+      {chips.length > 0 && (
+        <div className="mt-auto flex flex-wrap items-center gap-1.5 pt-2">
+          {chips.slice(0, MAX_TAGS).map((chip) => <Badge key={chip} label={chip} variant="muted" />)}
+          {extra > 0 && <span className="text-xs tabular-nums text-ink-muted">+{extra}</span>}
         </div>
       )}
     </Link>
