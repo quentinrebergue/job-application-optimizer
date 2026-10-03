@@ -3,200 +3,199 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, ExternalLink, Trash2 } from 'lucide-react'
-import { PageHeader } from '@/components/ui/PageHeader'
-import { JobForm } from '@/components/jobs/JobForm'
-import { StatusBadge } from '@/components/jobs/JobCard'
-import { ResumeConfigPanel } from '@/components/jobs/ResumeConfigPanel'
-import { CoverLetterPanel } from '@/components/jobs/CoverLetterPanel'
-import { QuestionEditor } from '@/components/entities/QuestionEditor'
-import type { ApplicationStatus, JobOffer, EntityQuestion } from '@/types'
+import { Alert } from '@/components/ui/Alert'
+import { SegmentedTabs } from '@/components/ui/SegmentedTabs'
+import { FEATURES } from '@/config'
+import { cn } from '@/lib/cn'
+import { formatDate } from '@/lib/format'
+import { fetchJson } from '@/lib/http'
+import type { JobTab } from '@/lib/job-filter'
+import type { ApplicationStatus, JobOffer } from '@/types'
 import type { AIAnalysisResult } from '@/types/job'
-import { APPLICATION_STATUS_LABELS } from '@/config'
-
-const STATUS_PIPELINE: ApplicationStatus[] = ['saved', 'applied', 'interview', 'offer', 'rejected']
+import { CoverLetterPanel } from './CoverLetterPanel'
+import { JobOfferEditor } from './JobOfferEditor'
+import type { SaveState } from './useJobAutosave'
+import { ResumeConfigPanel } from './ResumeConfigPanel'
+import { StatusSelect } from './StatusSelect'
 
 interface Props {
   initialJob: JobOffer
-  initialQuestions: EntityQuestion[]
+  initialTab: JobTab
 }
 
-export function JobDetailClient({ initialJob, initialQuestions }: Props) {
+function message(err: unknown): string {
+  return err instanceof Error ? err.message : 'Something went wrong. Try again.'
+}
+
+/**
+ * Job page. Phone and tablet: a header, then tabs (Offer, Resume, Cover letter).
+ * Desktop: the offer and the resume side by side; the tabs are not needed.
+ */
+export function JobDetailClient({ initialJob, initialTab }: Props) {
   const router = useRouter()
   const id = initialJob.id
 
   const [job, setJob] = useState<JobOffer>(initialJob)
-  const [editing, setEditing] = useState(false)
-  const [saving, setSaving] = useState(false)
+  const [tab, setTab] = useState<JobTab>(initialTab)
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [aiAnalysis, setAiAnalysis] = useState<AIAnalysisResult | null>(initialJob.ai_analysis ?? null)
-  const [questions, setQuestions] = useState<EntityQuestion[]>(initialQuestions)
-  const [savingQ, setSavingQ] = useState(false)
-  const [resumeOpen, setResumeOpen] = useState(false)
-  const [coverLetterOpen, setCoverLetterOpen] = useState(false)
-  const [qaOpen, setQaOpen] = useState(false)
+  // One "Saving…" indicator for the offer and the resume, both saved automatically.
+  const [offerSave, setOfferSave] = useState<SaveState>('idle')
+  const [resumeSaving, setResumeSaving] = useState(false)
+  const saving = offerSave === 'saving' || resumeSaving
 
-  async function handleSaveQuestions(updated: EntityQuestion[]) {
-    setQuestions(updated)
-    setSavingQ(true)
-    await fetch(`/api/jobs/${id}/questions`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updated),
-    })
-    setSavingQ(false)
-  }
-
-  async function handleSaveMeta(data: Omit<JobOffer, 'id' | 'date_added'>) {
-    setSaving(true)
-    const res = await fetch(`/api/jobs/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    })
-    setSaving(false)
-    if (res.ok) {
-      setJob(await res.json())
-      setEditing(false)
-    }
+  function changeTab(next: JobTab) {
+    setTab(next)
+    router.replace(next === 'offer' ? `/jobs/${id}` : `/jobs/${id}?tab=${next}`, { scroll: false })
   }
 
   async function handleStatusChange(status: ApplicationStatus) {
-    const res = await fetch(`/api/jobs/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status }),
-    })
-    if (res.ok) setJob(await res.json())
+    setBusy(true)
+    setError(null)
+    try {
+      setJob(await fetchJson<JobOffer>(`/api/jobs/${id}`, { method: 'PUT', json: { status } }))
+    } catch (err) {
+      setError(`Status not changed: ${message(err)}`)
+    } finally {
+      setBusy(false)
+    }
   }
 
   async function handleDelete() {
     if (!confirm('Delete this job? This cannot be undone.')) return
-    await fetch(`/api/jobs/${id}`, { method: 'DELETE' })
-    router.push('/jobs')
+    setBusy(true)
+    setError(null)
+    try {
+      await fetchJson(`/api/jobs/${id}`, { method: 'DELETE' })
+      router.push('/jobs')
+    } catch (err) {
+      setError(`Job not deleted: ${message(err)}`)
+      setBusy(false)
+    }
   }
 
-  return (
-    <div className="p-4 md:p-8 max-w-4xl">
-      <Link href="/jobs" className="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-900 mb-6 transition-colors">
-        <ArrowLeft size={14} /> Job Tracker
-      </Link>
+  async function handleClearAi() {
+    try {
+      await fetchJson(`/api/jobs/${id}/rank`, { method: 'DELETE' })
+      setAiAnalysis(null)
+      setJob((prev) => ({ ...prev, ai_analysis: undefined, ats_tags: [] }))
+    } catch (err) {
+      setError(`AI analysis not cleared: ${message(err)}`)
+    }
+  }
 
-      <PageHeader title={`${job.company} — ${job.title}`}>
-        <StatusBadge status={job.status} />
-        <button onClick={() => setEditing((v) => !v)} className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors">
-          {editing ? 'Cancel' : 'Edit'}
-        </button>
-        <button onClick={handleDelete} className="rounded-lg border border-red-200 px-3 py-1.5 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors flex items-center gap-1">
-          <Trash2 size={14} /> Delete
-        </button>
-      </PageHeader>
-
-      <section className="mb-8">
-        {editing ? (
-          <JobForm initial={job} saving={saving} onSave={handleSaveMeta} onCancel={() => setEditing(false)} />
-        ) : (
-          <JobMetaView job={job} onStatusChange={handleStatusChange} />
-        )}
-      </section>
-
-      {/* Resume Config */}
-      <section className="mb-8">
-        <button onClick={() => setResumeOpen((v) => !v)} className="w-full flex items-center justify-between text-left group">
-          <h2 className="text-lg font-semibold text-slate-900">Resume for this Job</h2>
-          <span className="text-slate-400 group-hover:text-slate-600 transition-colors text-base font-bold">{resumeOpen ? '−' : '+'}</span>
-        </button>
-        {resumeOpen && (
-          <div className="mt-4">
-            {aiAnalysis && (
-              <div className="mb-6 border border-slate-200 rounded-lg">
-                {/* AIRankResults removed for now — add back if needed */}
-              </div>
-            )}
-            <ResumeConfigPanel
-              jobId={id}
-              aiAnalysis={aiAnalysis}
-              onRankingComplete={(result) => { setAiAnalysis(result); setJob((prev) => ({ ...prev, ai_analysis: result })) }}
-              onClearAi={async () => {
-                await fetch(`/api/jobs/${id}/rank`, { method: 'DELETE' })
-                setAiAnalysis(null)
-                setJob((prev) => ({ ...prev, ai_analysis: undefined, ats_tags: [] }))
-              }}
-              hasAiData={!!aiAnalysis}
-            />
-          </div>
-        )}
-      </section>
-
-      {/* Cover Letter */}
-      <section className="mb-8">
-        <button onClick={() => setCoverLetterOpen((v) => !v)} className="w-full flex items-center justify-between text-left group">
-          <h2 className="text-lg font-semibold text-slate-900">Cover Letter</h2>
-          <span className="text-slate-400 group-hover:text-slate-600 transition-colors text-base font-bold">{coverLetterOpen ? '−' : '+'}</span>
-        </button>
-        {coverLetterOpen && <div className="mt-4"><CoverLetterPanel jobId={id} /></div>}
-      </section>
-
-      {/* Q&A */}
-      <section>
-        <button onClick={() => setQaOpen((v) => !v)} className="w-full flex items-center justify-between text-left group">
-          <h2 className="text-lg font-semibold text-slate-900">
-            Interview Q&amp;A <span className="text-sm font-normal text-slate-400">({questions.length})</span>
-          </h2>
-          <span className="text-slate-400 group-hover:text-slate-600 transition-colors text-base font-bold">{qaOpen ? '−' : '+'}</span>
-        </button>
-        {qaOpen && (
-          <div className="mt-4">
-            <p className="text-sm text-slate-500 mb-4">Questions specific to this job — they appear in the Q&amp;A trainer alongside your general flashcards.</p>
-            <QuestionEditor questions={questions} onChange={handleSaveQuestions} saving={savingQ} />
-          </div>
-        )}
-      </section>
-    </div>
+  const coverLetterTab = { value: 'cover-letter' as const, label: 'Cover letter', disabled: !FEATURES.coverLetter, note: FEATURES.coverLetter ? undefined : 'Soon' }
+  // Below desktop, the segments on top of the card switch between the panels.
+  const tabs = (
+    <SegmentedTabs
+      label="Job sections"
+      items={[{ value: 'offer', label: 'Offer' }, { value: 'resume', label: 'Resume' }, coverLetterTab]}
+      value={tab}
+      onChange={changeTab}
+    />
   )
-}
+  // On desktop both columns show; below, only the selected tab. The offer card is a
+  // flex column on desktop (pinned title, scrolling body), so it asks for lg:flex.
+  const shownBelowDesktop = (panel: JobTab, desktop: 'lg:block' | 'lg:flex' = 'lg:block') =>
+    cn(tab === panel ? 'block' : 'hidden', desktop)
 
-function JobMetaView({ job, onStatusChange }: { job: JobOffer; onStatusChange: (s: ApplicationStatus) => void }) {
   return (
-    <div className="space-y-5">
-      <div>
-        <p className="text-sm font-medium text-slate-500 mb-2">Status</p>
-        <div className="flex flex-wrap gap-2">
-          {STATUS_PIPELINE.map((s) => (
-            <button key={s} onClick={() => onStatusChange(s)} className={['rounded-full px-4 py-1 text-xs font-semibold border transition-colors', job.status === s ? 'bg-blue-600 text-white border-blue-600' : 'border-slate-300 text-slate-600 hover:bg-slate-100'].join(' ')}>
-              {APPLICATION_STATUS_LABELS[s]}
-            </button>
-          ))}
+    <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 p-4 md:p-8">
+      {/* Back link and status on one row, then the title and its details. */}
+      <header className="flex flex-col gap-3 lg:border-b-2 lg:border-ink lg:pb-6">
+        <div className="flex items-center justify-between gap-3">
+          <Link href="/jobs" className="text-sm font-semibold text-ink-muted underline-offset-4 hover:text-ink hover:underline">
+            ← All jobs
+          </Link>
+          <div className="flex items-center gap-3">
+            {/* Only while saving: a permanent "saved" message is noise. Failures show an alert. */}
+            <p aria-live="polite" className="text-sm text-ink-muted">{saving ? 'Saving…' : ''}</p>
+            <StatusSelect value={job.status} onChange={handleStatusChange} disabled={busy} />
+          </div>
         </div>
+        <div className="min-w-0">
+          <h1 className="text-2xl font-extrabold leading-tight tracking-tight sm:text-3xl">{job.title}</h1>
+          <p className="mt-1 font-semibold">{job.company}</p>
+          <p className="text-sm text-ink-muted">
+            Added <span className="tabular-nums">{formatDate(job.date_added)}</span>
+            {job.location && <> · {job.location}</>}
+          </p>
+        </div>
+        {error && <Alert>{error}</Alert>}
+      </header>
+
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:items-start">
+        {/* On desktop the offer follows the scroll, at most one screen high: the resume is usually much longer. */}
+        <PanelCard
+          title="Offer"
+          tabs={tabs}
+          scrollBody
+          className={cn(shownBelowDesktop('offer', 'lg:flex'), 'lg:sticky lg:top-20 lg:max-h-[calc(100dvh-6rem)]')}
+        >
+          <JobOfferEditor job={job} onSaved={setJob} onDelete={handleDelete} deleting={busy} onSaveStateChange={setOfferSave} />
+        </PanelCard>
+
+        <PanelCard
+          title="Resume"
+          tabs={tabs}
+          desktopHeader={
+            <SegmentedTabs
+              label="Resume sections"
+              items={[{ value: 'resume', label: 'Resume' }, coverLetterTab]}
+              value="resume"
+              onChange={changeTab}
+            />
+          }
+          className={shownBelowDesktop('resume')}
+        >
+          <ResumeConfigPanel
+            jobId={id}
+            aiAnalysis={aiAnalysis}
+            onRankingComplete={(result) => { setAiAnalysis(result); setJob((prev) => ({ ...prev, ai_analysis: result })) }}
+            onClearAi={handleClearAi}
+            hasAiData={!!aiAnalysis}
+            onSavingChange={setResumeSaving}
+          />
+        </PanelCard>
+
+        {FEATURES.coverLetter && tab === 'cover-letter' && (
+          <PanelCard title="Cover letter" tabs={tabs} className="lg:col-span-2">
+            <CoverLetterPanel jobId={id} />
+          </PanelCard>
+        )}
       </div>
-      <dl className="space-y-3">
-        <MetaRow label="Added" value={new Date(job.date_added).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })} />
-        {job.location && <MetaRow label="Location" value={job.location} />}
-        {job.url && (
-          <div className="grid grid-cols-3 gap-2">
-            <dt className="text-sm font-medium text-slate-500">URL</dt>
-            <dd className="col-span-2">
-              <a href={job.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-sm text-blue-600 hover:underline">
-                {job.url} <ExternalLink size={12} />
-              </a>
-            </dd>
-          </div>
-        )}
-        {job.description && (
-          <div>
-            <dt className="text-sm font-medium text-slate-500 mb-1">Description</dt>
-            <dd className="rounded-lg bg-slate-50 border border-slate-200 p-4 text-sm text-slate-700 whitespace-pre-wrap max-h-48 overflow-y-auto">{job.description}</dd>
-          </div>
-        )}
-      </dl>
     </div>
   )
 }
 
-function MetaRow({ label, value }: { label: string; value: string }) {
+/**
+ * A big card for one part of the page, in the light `panel` tint so the white
+ * fields and cards inside stand out. Its top edge is the tab bar below desktop,
+ * and a title strip on desktop where both cards are side by side.
+ * `scrollBody`: on desktop the title stays put and only the body scrolls (the
+ * card itself is limited in height by its className).
+ * No overflow on the resume card: it would stop the download button from floating.
+ */
+function PanelCard({ title, tabs, desktopHeader, scrollBody, className, children }: {
+  title: string
+  tabs: React.ReactNode
+  /** Replaces the title strip on desktop (e.g. Resume | Cover letter · Soon) */
+  desktopHeader?: React.ReactNode
+  scrollBody?: boolean
+  className?: string
+  children: React.ReactNode
+}) {
   return (
-    <div className="grid grid-cols-3 gap-2">
-      <dt className="text-sm font-medium text-slate-500">{label}</dt>
-      <dd className="col-span-2 text-sm text-slate-900">{value}</dd>
-    </div>
+    <section aria-label={title} className={cn('rounded-control border-2 border-ink bg-panel shadow-hard', scrollBody && 'lg:flex-col', className)}>
+      <div className="lg:hidden">{tabs}</div>
+      {desktopHeader ? (
+        <div className="hidden shrink-0 lg:block">{desktopHeader}</div>
+      ) : (
+        <h2 className="hidden shrink-0 border-b-2 border-ink px-5 py-3 text-xl font-extrabold tracking-tight lg:block">{title}</h2>
+      )}
+      {/* The gutter is reserved so the width (and the auto-grown text) does not jump when a scrollbar appears. */}
+      <div className={cn('p-4 md:p-6', scrollBody && 'lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:[scrollbar-gutter:stable]')}>{children}</div>
+    </section>
   )
 }

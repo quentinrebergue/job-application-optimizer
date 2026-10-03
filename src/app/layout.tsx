@@ -1,12 +1,11 @@
 import type { Metadata, Viewport } from 'next'
-import { Instrument_Sans, JetBrains_Mono } from 'next/font/google'
+import { DM_Sans } from 'next/font/google'
 import './globals.css'
 import 'highlight.js/styles/atom-one-dark.css'
 
-// Interface font and data font (scores, dates, ids). Exposed as CSS variables,
-// which the tokens in globals.css (--font-sans, --font-mono) read.
-const instrumentSans = Instrument_Sans({ subsets: ['latin'], variable: '--font-instrument-sans' })
-const jetBrainsMono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-jetbrains-mono' })
+// The only interface font (#90), variable so every weight is real, not faked.
+// Exposed as a CSS variable that the --font-sans token in globals.css reads.
+const dmSans = DM_Sans({ subsets: ['latin'], variable: '--font-dm-sans' })
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -30,7 +29,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${instrumentSans.variable} ${jetBrainsMono.variable}`}
+      className={dmSans.variable}
       style={{ colorScheme: 'light' }}
     >
       <body className="bg-canvas font-sans text-ink antialiased">

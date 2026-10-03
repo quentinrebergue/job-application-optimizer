@@ -1,5 +1,6 @@
 'use client'
 
+import { useLayoutEffect, useRef } from 'react'
 import { cn } from '@/lib/cn'
 import { useField } from './Field'
 
@@ -26,8 +27,41 @@ export function Input({ className, ...props }: React.ComponentProps<'input'>) {
   return <input className={cn(controlClasses, 'h-10', className)} {...useFieldProps(props)} />
 }
 
-export function Textarea({ className, ...props }: React.ComponentProps<'textarea'>) {
-  return <textarea className={cn(controlClasses, 'min-h-24 py-2 leading-relaxed', className)} {...useFieldProps(props)} />
+interface TextareaProps extends React.ComponentProps<'textarea'> {
+  /** Grows with its content instead of scrolling inside */
+  autoGrow?: boolean
+}
+
+export function Textarea({ className, autoGrow, ...props }: TextareaProps) {
+  const ref = useRef<HTMLTextAreaElement>(null)
+
+  // Fit the height to the text when it changes, and when the width changes
+  // (a narrower window wraps the text onto more lines).
+  useLayoutEffect(() => {
+    const el = ref.current
+    if (!autoGrow || !el) return
+    const fit = () => {
+      el.style.height = 'auto'
+      el.style.height = `${el.scrollHeight + 4}px` // + the 2px borders
+    }
+    fit()
+    let width = el.clientWidth
+    const observer = new ResizeObserver(() => {
+      if (el.clientWidth === width) return // our own height change, not a new width
+      width = el.clientWidth
+      fit()
+    })
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [autoGrow, props.value])
+
+  return (
+    <textarea
+      ref={ref}
+      className={cn(controlClasses, 'min-h-24 py-2 leading-relaxed', autoGrow && 'resize-none overflow-hidden', className)}
+      {...useFieldProps(props)}
+    />
+  )
 }
 
 export function Select({ className, ...props }: React.ComponentProps<'select'>) {

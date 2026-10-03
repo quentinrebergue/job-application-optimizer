@@ -6,8 +6,12 @@ import { focusRing } from './styles'
 export interface TabItem<T extends string> {
   value: T
   label: string
-  /** Shown after the label, in the data font */
+  /** Shown after the label, in tabular figures */
   count?: number
+  /** Greyed out and not selectable, e.g. a feature that is not ready */
+  disabled?: boolean
+  /** Short note after the label, e.g. "Soon" */
+  note?: string
 }
 
 interface TabsProps<T extends string> {
@@ -33,19 +37,21 @@ export function Tabs<T extends string>({ label, items, value, onChange, classNam
             key={item.value}
             type="button"
             aria-pressed={selected}
+            disabled={item.disabled}
             onClick={() => onChange(item.value)}
             className={cn(
-              'rounded-control border-2 px-3 py-1.5 text-sm transition-colors',
+              'rounded-control border-2 px-3 py-1.5 text-sm transition-colors disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:border-transparent',
               focusRing,
               selected
-                ? 'border-ink bg-surface font-bold text-ink shadow-hard'
+                ? 'border-ink bg-surface font-semibold text-ink shadow-hard'
                 : 'border-transparent text-ink-muted hover:border-ink hover:text-ink',
             )}
           >
             {item.label}
             {item.count !== undefined && (
-              <span className="ml-1.5 font-mono text-xs font-normal">{item.count}</span>
+              <span className="ml-1.5 text-xs font-normal tabular-nums">{item.count}</span>
             )}
+            {item.note && <span className="ml-1.5 text-xs font-normal">· {item.note}</span>}
           </button>
         )
       })}

@@ -2,7 +2,7 @@
 
 The look and feel of the app, decided once so that every screen follows it. If a
 choice is not here, ask whether it serves the promise below; if not, leave it
-out. Tickets: #59 (first brief), #85 (choice of direction), #87 (this version).
+out. Tickets: #59 (first brief), #85 (choice of direction), #87 (this version), #90 (fonts).
 
 ## Promise and personality
 
@@ -48,18 +48,21 @@ Each colour has a role. Colour never decorates.
 |---|---|---|
 | `canvas` | `#FFE9C7` | Page background (warm peach) |
 | `surface` | `#FFFFFF` | Cards, controls, dialogs, neutral badges |
+| `panel` | `#FFF6E6` | Large panels (the offer and resume of a job): light enough to read as white, dark enough for white fields and cards inside to stand out |
 | `ink` | `#1A1514` | Text, strokes, shadows |
 | `ink-muted` | `#4A413C` | Secondary text, captions |
 | `line` | `#EBD7B5` | Thin dividers in dense content, muted fills |
 | `accent` | `#FF4D50` | **The main action**: primary button fill, active navigation item. Always with ink text |
 | `accent-strong` | `#C4122F` | Red text and links on light backgrounds, focus ring |
+| `ai` | `#A388EE` | **AI actions only** ("Rank with AI"): a violet button with ink text, so the AI step is recognisable next to the red main action |
 | `info` | `#5294FF` | Status fill: in progress (applied) |
 | `warning` | `#FACC00` | Status fill: needs attention (interview) |
 | `success` | `#05E17A` | Status fill: done, positive (offer) |
 | `danger` | `#B00020` | Errors (text) and destructive buttons (white text) |
 
-- **One action colour.** On a screen, red marks the next click. Blue, yellow and
-  green only describe a state (a status badge), never an action or a decoration.
+- **One action colour.** On a screen, red marks the next click; violet marks the
+  one AI action. Blue, yellow and green only describe a state (a status badge),
+  never an action or a decoration.
 - Status fills always carry ink text and a 2px ink stroke.
 
 **Contrast (measured, WCAG ratio; normal text needs 4.5):**
@@ -71,6 +74,7 @@ Each colour has a role. Colour never decorates.
 | ink-muted / canvas | 8.4 |
 | ink-muted / line | 7.1 |
 | ink / accent | 5.5 |
+| ink / ai | 6.3 |
 | ink / info | 6.1 |
 | ink / warning | 11.8 |
 | ink / success | 10.4 |
@@ -84,10 +88,20 @@ values, not touching components.
 
 ## Typography
 
-| Role | Font | Notes |
-|---|---|---|
-| Interface | **Instrument Sans** | Regular and semibold for text, **extra-bold** for page titles and card titles |
-| Data and small labels | **JetBrains Mono** | Scores, dates, counts, ids, section labels in capitals. Never for paragraphs |
+**One family: DM Sans** (#90), the font of neobrutalism.dev: built for
+interfaces, very legible in form fields, with real weights up to 1000 (no
+browser-faked bold). Loaded once with `next/font`, as a variable font.
+
+| Role | Weight | Utility | Used for |
+|---|---|---|---|
+| Text | 400 | `font-normal` | Paragraphs, form fields, secondary text |
+| Labels | 600 | `font-semibold` | Buttons, field labels, badges, active tabs, small capital labels (`eyebrow`) |
+| Titles | 800 | `font-extrabold` | Page, section and card titles, the wordmark |
+
+- No other weight, no italic.
+- Dates, counts and scores use **tabular figures** (`tabular-nums`), so numbers line
+  up without a monospace font.
+- Monospace (the system one, nothing to download) is only for code blocks.
 
 ## What we do not do
 
@@ -98,7 +112,7 @@ values, not touching components.
 - No decorative icons: an icon appears only when it carries a meaning the text
   does not, and always with an accessible label.
 - No sparkle or magic-wand imagery for AI features; they are named for what they
-  do ("Generate resume"), not for the technology.
+  do ("Rank with AI"), and recognised by their violet, not by an icon.
 - No continuous animations (marquees, looping effects).
 - No playful styling in the generated PDF.
 

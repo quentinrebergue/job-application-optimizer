@@ -9,6 +9,7 @@ import { Field } from '@/components/ui/Field'
 import { Input, Select, Textarea } from '@/components/ui/Input'
 import { Tabs } from '@/components/ui/Tabs'
 import { Modal } from '@/components/ui/Modal'
+import { eyebrow } from '@/components/ui/styles'
 
 const BUTTON_VARIANTS: ButtonVariant[] = ['primary', 'secondary', 'ghost', 'danger']
 const BUTTON_SIZES: ButtonSize[] = ['md', 'sm']
@@ -17,7 +18,7 @@ const BADGE_VARIANTS: BadgeVariant[] = ['neutral', 'muted', 'accent', 'info', 's
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="flex flex-col gap-4 border-b-2 border-ink pb-8">
-      <h2 className="font-mono text-xs uppercase tracking-wider text-ink-muted">{title}</h2>
+      <h2 className={eyebrow}>{title}</h2>
       {children}
     </section>
   )
@@ -53,11 +54,11 @@ export function UiCatalogue() {
       <Section title="Card">
         <div className="grid gap-4 sm:grid-cols-2">
           <Card>
-            <p className="font-semibold">Static card</p>
+            <p className="font-extrabold">Static card</p>
             <p className="text-sm text-ink-muted">White sticker, ink stroke, hard shadow.</p>
           </Card>
           <a href="#" className={cardClasses({ interactive: true })}>
-            <p className="font-semibold">Interactive card</p>
+            <p className="font-extrabold">Interactive card</p>
             <p className="text-sm text-ink-muted">Moves onto its shadow on hover, focus ring on keyboard.</p>
           </a>
         </div>
