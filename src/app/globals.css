@@ -14,22 +14,28 @@
   --font-mono: var(--font-jetbrains-mono), ui-monospace, 'Cascadia Code', monospace;
 }
 
-/* `static` always emits every variable, even those no class uses yet. */
+/* `static` always emits every variable, even those no class uses yet.
+   Full neo-brutalism (#87): 2px ink strokes, hard offset shadows, flat colours. */
 @theme static {
-  --color-canvas: #faf7f2;          /* page background */
-  --color-surface: #ffffff;         /* cards, fields, panels */
-  --color-ink: #1a1514;             /* main text */
-  --color-ink-muted: #6b6560;       /* secondary text, captions */
-  --color-line: #e5dfd6;            /* borders and dividers */
-  --color-accent: #f71735;          /* large display text, underlines, icons (3.8:1, not for small text) */
-  --color-accent-strong: #d60f2c;   /* buttons and small red text (5.0:1) */
+  --color-canvas: #ffe9c7;          /* page background (warm peach) */
+  --color-surface: #ffffff;         /* cards, controls, dialogs */
+  --color-ink: #1a1514;             /* text, strokes, shadows */
+  --color-ink-muted: #4a413c;       /* secondary text (8.4:1 on canvas) */
+  --color-line: #ebd7b5;            /* thin dividers in dense content, muted fills */
+  --color-accent: #ff4d50;          /* the main action, always with ink text (5.5:1) */
+  --color-accent-strong: #c4122f;   /* red text and links, focus ring (5.1:1 on canvas) */
 
-  /* Functional colours: they carry a meaning, they are never decoration. */
-  --color-success: #1f7a4d;
-  --color-warning: #8a5a00;
-  --color-danger: #b00020;
+  /* Status fills, with ink text: they describe a state, never decorate. */
+  --color-info: #5294ff;            /* in progress */
+  --color-warning: #facc00;         /* needs attention */
+  --color-success: #05e17a;         /* done, positive */
+  --color-danger: #b00020;          /* errors (text), destructive buttons (white text) */
 
-  --radius-control: 0.375rem;       /* controls and cards: small, flat */
+  --radius-control: 0.3125rem;      /* 5px: controls, cards, badges */
+
+  /* Hard offset shadow and the distance an element moves onto it when pressed. */
+  --shadow-hard: 4px 4px 0 0 var(--color-ink);
+  --spacing-press: 4px;
 }
 
 :root {

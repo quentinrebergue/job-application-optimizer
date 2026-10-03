@@ -8,7 +8,7 @@ export default function PublicLayout({
 }) {
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="border-b border-line px-4 py-4 md:px-8">
+      <header className="border-b-2 border-ink px-4 py-4 md:px-8">
         <Wordmark />
       </header>
       <main className="flex flex-1 flex-col">{children}</main>

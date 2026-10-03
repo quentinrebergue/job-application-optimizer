@@ -1,13 +1,14 @@
 import { cn } from '@/lib/cn'
 
-// Variants carry a meaning; there is no colour per category.
+// Flat fills with ink text and an ink stroke. Colours describe a state, never a category.
 const variants = {
-  neutral: 'border-line bg-surface text-ink',
-  muted: 'border-transparent bg-line/60 text-ink-muted',
-  accent: 'border-accent/40 bg-accent/10 text-accent-strong',
-  success: 'border-success/30 bg-success/10 text-success',
-  warning: 'border-warning/30 bg-warning/10 text-warning',
-  danger: 'border-danger/30 bg-danger/10 text-danger',
+  neutral: 'bg-surface text-ink',
+  muted: 'bg-line text-ink',
+  accent: 'bg-accent text-ink',
+  info: 'bg-info text-ink',
+  success: 'bg-success text-ink',
+  warning: 'bg-warning text-ink',
+  danger: 'bg-danger text-white',
 } as const
 
 export type BadgeVariant = keyof typeof variants
@@ -21,7 +22,7 @@ export function Badge({ label, variant = 'neutral', className, ...props }: Badge
   return (
     <span
       className={cn(
-        'inline-flex shrink-0 items-center rounded-control border px-2 py-0.5 text-xs font-medium',
+        'inline-flex shrink-0 items-center rounded-control border-2 border-ink px-2 py-0.5 text-xs font-semibold',
         variants[variant],
         className,
       )}

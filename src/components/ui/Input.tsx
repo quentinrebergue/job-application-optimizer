@@ -3,11 +3,10 @@
 import { cn } from '@/lib/cn'
 import { useField } from './Field'
 
-// Controls stay white (surface) on the cream page so it is clear where to type.
+// White controls with the ink stroke; the hard shadow appears while typing.
 export const controlClasses = cn(
-  'w-full rounded-control border border-line bg-surface px-3 text-sm text-ink placeholder:text-ink-muted',
-  'transition-colors hover:border-ink-muted',
-  'focus-visible:border-accent-strong focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-accent-strong/30',
+  'w-full rounded-control border-2 border-ink bg-surface px-3 text-sm text-ink placeholder:text-ink-muted',
+  'transition-shadow focus-visible:shadow-hard focus-visible:outline-none',
   'aria-invalid:border-danger disabled:opacity-50',
 )
 

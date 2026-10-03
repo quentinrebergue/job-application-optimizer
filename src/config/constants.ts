@@ -18,10 +18,10 @@ export const APPLICATION_STATUS_LABELS: Record<string, string> = {
   rejected: 'Rejected',
 }
 
-/** Badge variant per status (see src/components/ui/Badge.tsx): in progress in red, closed ones muted. */
-export const APPLICATION_STATUS_BADGES: Record<string, 'neutral' | 'muted' | 'accent' | 'success' | 'warning'> = {
+/** Badge variant per status (see src/components/ui/Badge.tsx): blue in progress, yellow needs attention, green done, closed ones muted. */
+export const APPLICATION_STATUS_BADGES: Record<string, 'neutral' | 'muted' | 'info' | 'success' | 'warning'> = {
   saved: 'neutral',
-  applied: 'accent',
+  applied: 'info',
   interview: 'warning',
   offer: 'success',
   rejected: 'muted',

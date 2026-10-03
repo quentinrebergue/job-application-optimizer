@@ -12,11 +12,11 @@ import { Modal } from '@/components/ui/Modal'
 
 const BUTTON_VARIANTS: ButtonVariant[] = ['primary', 'secondary', 'ghost', 'danger']
 const BUTTON_SIZES: ButtonSize[] = ['md', 'sm']
-const BADGE_VARIANTS: BadgeVariant[] = ['neutral', 'muted', 'accent', 'success', 'warning', 'danger']
+const BADGE_VARIANTS: BadgeVariant[] = ['neutral', 'muted', 'accent', 'info', 'success', 'warning', 'danger']
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="flex flex-col gap-4 border-b border-line pb-8">
+    <section className="flex flex-col gap-4 border-b-2 border-ink pb-8">
       <h2 className="font-mono text-xs uppercase tracking-wider text-ink-muted">{title}</h2>
       {children}
     </section>
@@ -54,11 +54,11 @@ export function UiCatalogue() {
         <div className="grid gap-4 sm:grid-cols-2">
           <Card>
             <p className="font-semibold">Static card</p>
-            <p className="text-sm text-ink-muted">Same colour as the page, hairline border.</p>
+            <p className="text-sm text-ink-muted">White sticker, ink stroke, hard shadow.</p>
           </Card>
           <a href="#" className={cardClasses({ interactive: true })}>
             <p className="font-semibold">Interactive card</p>
-            <p className="text-sm text-ink-muted">Border darkens on hover, focus ring on keyboard.</p>
+            <p className="text-sm text-ink-muted">Moves onto its shadow on hover, focus ring on keyboard.</p>
           </a>
         </div>
       </Section>
