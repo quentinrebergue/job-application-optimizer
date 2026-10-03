@@ -1,10 +1,11 @@
 'use client'
 
-import { Suspense } from 'react'
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { PageHeader } from '@/components/ui/PageHeader'
+import { Alert } from '@/components/ui/Alert'
 import { JobForm } from '@/components/jobs/JobForm'
+import { fetchJson } from '@/lib/http'
 import type { JobOffer } from '@/types'
 
 function NewJobForm() {
@@ -23,37 +24,32 @@ function NewJobForm() {
 
   async function handleSave(data: Omit<JobOffer, 'id' | 'date_added'>) {
     setSaving(true)
-    const res = await fetch('/api/jobs', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    })
-    setSaving(false)
-    if (res.ok) {
-      const job: JobOffer = await res.json()
+    try {
+      const job = await fetchJson<JobOffer>('/api/jobs', { method: 'POST', json: data })
       router.push(`/jobs/${job.id}`)
+    } finally {
+      setSaving(false)
     }
   }
 
   return (
-    <div className="p-4 md:p-8 max-w-2xl">
+    <div className="max-w-2xl p-4 md:p-8">
       <PageHeader
-        title="Add Job"
-        subtitle={hasImport ? 'Imported from LinkedIn — review and save.' : 'Track a new job application.'}
+        title="Add job"
+        subtitle={hasImport ? 'Imported from LinkedIn. Review and save.' : 'Paste the offer, save, then generate the resume.'}
       />
       {hasImport && (
-        <div className="mb-6 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
-          ✓ Job details imported from LinkedIn. Review the description below and save.
-        </div>
+        <Alert variant="success" className="mb-6">Job details imported. Check the description, then save.</Alert>
       )}
-      <JobForm initial={initial} saving={saving} onSave={handleSave} onCancel={() => router.back()} />
+      {/* Cancel goes to the list: opened in a new tab, there is no history to go back to. */}
+      <JobForm initial={initial} saving={saving} onSave={handleSave} onCancel={() => router.push('/jobs')} />
     </div>
   )
 }
 
 export default function NewJobPage() {
   return (
-    <Suspense fallback={<div className="p-4 md:p-8 text-sm text-slate-400">Loading…</div>}>
+    <Suspense fallback={<p className="p-4 text-sm text-ink-muted md:p-8">Loading…</p>}>
       <NewJobForm />
     </Suspense>
   )

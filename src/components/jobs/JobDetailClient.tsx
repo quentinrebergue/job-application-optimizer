@@ -3,22 +3,27 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, ExternalLink, Trash2 } from 'lucide-react'
 import { PageHeader } from '@/components/ui/PageHeader'
+import { Alert } from '@/components/ui/Alert'
+import { Button } from '@/components/ui/Button'
+import { Disclosure } from '@/components/ui/Disclosure'
 import { JobForm } from '@/components/jobs/JobForm'
+import { JobMeta } from '@/components/jobs/JobMeta'
 import { StatusBadge } from '@/components/jobs/JobCard'
 import { ResumeConfigPanel } from '@/components/jobs/ResumeConfigPanel'
 import { CoverLetterPanel } from '@/components/jobs/CoverLetterPanel'
 import { QuestionEditor } from '@/components/entities/QuestionEditor'
+import { fetchJson } from '@/lib/http'
 import type { ApplicationStatus, JobOffer, EntityQuestion } from '@/types'
 import type { AIAnalysisResult } from '@/types/job'
-import { APPLICATION_STATUS_LABELS } from '@/config'
-
-const STATUS_PIPELINE: ApplicationStatus[] = ['saved', 'applied', 'interview', 'offer', 'rejected']
 
 interface Props {
   initialJob: JobOffer
   initialQuestions: EntityQuestion[]
+}
+
+function message(err: unknown): string {
+  return err instanceof Error ? err.message : 'Something went wrong. Try again.'
 }
 
 export function JobDetailClient({ initialJob, initialQuestions }: Props) {
@@ -28,175 +33,117 @@ export function JobDetailClient({ initialJob, initialQuestions }: Props) {
   const [job, setJob] = useState<JobOffer>(initialJob)
   const [editing, setEditing] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [aiAnalysis, setAiAnalysis] = useState<AIAnalysisResult | null>(initialJob.ai_analysis ?? null)
   const [questions, setQuestions] = useState<EntityQuestion[]>(initialQuestions)
   const [savingQ, setSavingQ] = useState(false)
-  const [resumeOpen, setResumeOpen] = useState(false)
-  const [coverLetterOpen, setCoverLetterOpen] = useState(false)
-  const [qaOpen, setQaOpen] = useState(false)
+
+  // Failures are shown above the page and leave the screen as it was (#77).
 
   async function handleSaveQuestions(updated: EntityQuestion[]) {
+    const previous = questions
     setQuestions(updated)
     setSavingQ(true)
-    await fetch(`/api/jobs/${id}/questions`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updated),
-    })
-    setSavingQ(false)
+    setError(null)
+    try {
+      await fetchJson(`/api/jobs/${id}/questions`, { method: 'PUT', json: updated })
+    } catch (err) {
+      setQuestions(previous)
+      setError(`Questions not saved: ${message(err)}`)
+    } finally {
+      setSavingQ(false)
+    }
   }
 
+  // JobForm shows the error itself, so this one rethrows.
   async function handleSaveMeta(data: Omit<JobOffer, 'id' | 'date_added'>) {
     setSaving(true)
-    const res = await fetch(`/api/jobs/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    })
-    setSaving(false)
-    if (res.ok) {
-      setJob(await res.json())
+    try {
+      setJob(await fetchJson<JobOffer>(`/api/jobs/${id}`, { method: 'PUT', json: data }))
       setEditing(false)
+    } finally {
+      setSaving(false)
     }
   }
 
   async function handleStatusChange(status: ApplicationStatus) {
-    const res = await fetch(`/api/jobs/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status }),
-    })
-    if (res.ok) setJob(await res.json())
+    if (status === job.status) return
+    setBusy(true)
+    setError(null)
+    try {
+      setJob(await fetchJson<JobOffer>(`/api/jobs/${id}`, { method: 'PUT', json: { status } }))
+    } catch (err) {
+      setError(`Status not changed: ${message(err)}`)
+    } finally {
+      setBusy(false)
+    }
   }
 
   async function handleDelete() {
     if (!confirm('Delete this job? This cannot be undone.')) return
-    await fetch(`/api/jobs/${id}`, { method: 'DELETE' })
-    router.push('/jobs')
+    setBusy(true)
+    setError(null)
+    try {
+      await fetchJson(`/api/jobs/${id}`, { method: 'DELETE' })
+      router.push('/jobs')
+    } catch (err) {
+      setError(`Job not deleted: ${message(err)}`)
+      setBusy(false)
+    }
+  }
+
+  async function handleClearAi() {
+    try {
+      await fetchJson(`/api/jobs/${id}/rank`, { method: 'DELETE' })
+      setAiAnalysis(null)
+      setJob((prev) => ({ ...prev, ai_analysis: undefined, ats_tags: [] }))
+    } catch (err) {
+      setError(`AI analysis not cleared: ${message(err)}`)
+    }
   }
 
   return (
-    <div className="p-4 md:p-8 max-w-4xl">
-      <Link href="/jobs" className="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-900 mb-6 transition-colors">
-        <ArrowLeft size={14} /> Job Tracker
-      </Link>
+    <div className="flex max-w-4xl flex-col gap-8 p-4 md:p-8">
+      <div>
+        <Link href="/jobs" className="mb-4 inline-block text-sm font-semibold text-ink-muted underline-offset-4 hover:text-ink hover:underline">
+          ← All jobs
+        </Link>
+        <PageHeader title={job.title} subtitle={job.company}>
+          <StatusBadge status={job.status} />
+          <Button variant="secondary" size="sm" onClick={() => setEditing((v) => !v)}>
+            {editing ? 'Cancel edit' : 'Edit'}
+          </Button>
+          <Button variant="danger" size="sm" onClick={handleDelete} disabled={busy}>Delete</Button>
+        </PageHeader>
+        {error && <Alert className="-mt-4 mb-2">{error}</Alert>}
 
-      <PageHeader title={`${job.company} — ${job.title}`}>
-        <StatusBadge status={job.status} />
-        <button onClick={() => setEditing((v) => !v)} className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors">
-          {editing ? 'Cancel' : 'Edit'}
-        </button>
-        <button onClick={handleDelete} className="rounded-lg border border-red-200 px-3 py-1.5 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors flex items-center gap-1">
-          <Trash2 size={14} /> Delete
-        </button>
-      </PageHeader>
-
-      <section className="mb-8">
         {editing ? (
           <JobForm initial={job} saving={saving} onSave={handleSaveMeta} onCancel={() => setEditing(false)} />
         ) : (
-          <JobMetaView job={job} onStatusChange={handleStatusChange} />
+          <JobMeta job={job} onStatusChange={handleStatusChange} statusDisabled={busy} />
         )}
-      </section>
-
-      {/* Resume Config */}
-      <section className="mb-8">
-        <button onClick={() => setResumeOpen((v) => !v)} className="w-full flex items-center justify-between text-left group">
-          <h2 className="text-lg font-semibold text-slate-900">Resume for this Job</h2>
-          <span className="text-slate-400 group-hover:text-slate-600 transition-colors text-base font-bold">{resumeOpen ? '−' : '+'}</span>
-        </button>
-        {resumeOpen && (
-          <div className="mt-4">
-            {aiAnalysis && (
-              <div className="mb-6 border border-slate-200 rounded-lg">
-                {/* AIRankResults removed for now — add back if needed */}
-              </div>
-            )}
-            <ResumeConfigPanel
-              jobId={id}
-              aiAnalysis={aiAnalysis}
-              onRankingComplete={(result) => { setAiAnalysis(result); setJob((prev) => ({ ...prev, ai_analysis: result })) }}
-              onClearAi={async () => {
-                await fetch(`/api/jobs/${id}/rank`, { method: 'DELETE' })
-                setAiAnalysis(null)
-                setJob((prev) => ({ ...prev, ai_analysis: undefined, ats_tags: [] }))
-              }}
-              hasAiData={!!aiAnalysis}
-            />
-          </div>
-        )}
-      </section>
-
-      {/* Cover Letter */}
-      <section className="mb-8">
-        <button onClick={() => setCoverLetterOpen((v) => !v)} className="w-full flex items-center justify-between text-left group">
-          <h2 className="text-lg font-semibold text-slate-900">Cover Letter</h2>
-          <span className="text-slate-400 group-hover:text-slate-600 transition-colors text-base font-bold">{coverLetterOpen ? '−' : '+'}</span>
-        </button>
-        {coverLetterOpen && <div className="mt-4"><CoverLetterPanel jobId={id} /></div>}
-      </section>
-
-      {/* Q&A */}
-      <section>
-        <button onClick={() => setQaOpen((v) => !v)} className="w-full flex items-center justify-between text-left group">
-          <h2 className="text-lg font-semibold text-slate-900">
-            Interview Q&amp;A <span className="text-sm font-normal text-slate-400">({questions.length})</span>
-          </h2>
-          <span className="text-slate-400 group-hover:text-slate-600 transition-colors text-base font-bold">{qaOpen ? '−' : '+'}</span>
-        </button>
-        {qaOpen && (
-          <div className="mt-4">
-            <p className="text-sm text-slate-500 mb-4">Questions specific to this job — they appear in the Q&amp;A trainer alongside your general flashcards.</p>
-            <QuestionEditor questions={questions} onChange={handleSaveQuestions} saving={savingQ} />
-          </div>
-        )}
-      </section>
-    </div>
-  )
-}
-
-function JobMetaView({ job, onStatusChange }: { job: JobOffer; onStatusChange: (s: ApplicationStatus) => void }) {
-  return (
-    <div className="space-y-5">
-      <div>
-        <p className="text-sm font-medium text-slate-500 mb-2">Status</p>
-        <div className="flex flex-wrap gap-2">
-          {STATUS_PIPELINE.map((s) => (
-            <button key={s} onClick={() => onStatusChange(s)} className={['rounded-full px-4 py-1 text-xs font-semibold border transition-colors', job.status === s ? 'bg-blue-600 text-white border-blue-600' : 'border-slate-300 text-slate-600 hover:bg-slate-100'].join(' ')}>
-              {APPLICATION_STATUS_LABELS[s]}
-            </button>
-          ))}
-        </div>
       </div>
-      <dl className="space-y-3">
-        <MetaRow label="Added" value={new Date(job.date_added).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })} />
-        {job.location && <MetaRow label="Location" value={job.location} />}
-        {job.url && (
-          <div className="grid grid-cols-3 gap-2">
-            <dt className="text-sm font-medium text-slate-500">URL</dt>
-            <dd className="col-span-2">
-              <a href={job.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-sm text-blue-600 hover:underline">
-                {job.url} <ExternalLink size={12} />
-              </a>
-            </dd>
-          </div>
-        )}
-        {job.description && (
-          <div>
-            <dt className="text-sm font-medium text-slate-500 mb-1">Description</dt>
-            <dd className="rounded-lg bg-slate-50 border border-slate-200 p-4 text-sm text-slate-700 whitespace-pre-wrap max-h-48 overflow-y-auto">{job.description}</dd>
-          </div>
-        )}
-      </dl>
-    </div>
-  )
-}
 
-function MetaRow({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="grid grid-cols-3 gap-2">
-      <dt className="text-sm font-medium text-slate-500">{label}</dt>
-      <dd className="col-span-2 text-sm text-slate-900">{value}</dd>
+      {/* The core of the app: open by default (QA-11). */}
+      <Disclosure title="Resume for this job" defaultOpen>
+        <ResumeConfigPanel
+          jobId={id}
+          aiAnalysis={aiAnalysis}
+          onRankingComplete={(result) => { setAiAnalysis(result); setJob((prev) => ({ ...prev, ai_analysis: result })) }}
+          onClearAi={handleClearAi}
+          hasAiData={!!aiAnalysis}
+        />
+      </Disclosure>
+
+      <Disclosure title="Cover letter">
+        <CoverLetterPanel jobId={id} />
+      </Disclosure>
+
+      <Disclosure title="Interview Q&A" meta={String(questions.length)}>
+        <p className="mb-4 text-sm text-ink-muted">Questions specific to this job.</p>
+        <QuestionEditor questions={questions} onChange={handleSaveQuestions} saving={savingQ} />
+      </Disclosure>
     </div>
   )
 }

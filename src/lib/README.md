@@ -15,3 +15,7 @@ Server-side business logic. All functions are barrel-exported from `index.ts`. T
 | File | Description |
 |------|-------------|
 | `index.ts` | Barrel export — re-exports `data` and `ai` modules |
+| `cn.ts` | `cn()` — joins class names (clsx + tailwind-merge aware of the design tokens). Client-safe. |
+| `format.ts` | `formatDate(iso, style)` — dates in UTC so server and browser render the same text. Client-safe. |
+| `http.ts` | `fetchJson(url, { json })` — client fetch that throws `HttpError` (with the server's message) when the response is not ok. |
+| `job-filter.ts` | `parseStatusFilter()` — the `?status=` filter of `/jobs`. |

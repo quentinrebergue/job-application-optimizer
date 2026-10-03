@@ -5,6 +5,7 @@ import type { JobOffer } from '@/types'
 import { APPLICATION_STATUS_LABELS, APPLICATION_STATUS_BADGES } from '@/config'
 import { Badge } from '@/components/ui/Badge'
 import { cardClasses } from '@/components/ui/Card'
+import { formatDate } from '@/lib/format'
 
 export function StatusBadge({ status }: { status: string }) {
   return (
@@ -27,7 +28,7 @@ export function JobCard({ job }: { job: JobOffer }) {
       <p className="mb-1 text-sm text-ink-muted">{job.company}</p>
       {job.location && <p className="mb-2 text-xs text-ink-muted">{job.location}</p>}
       <p className="mt-3 font-mono text-xs text-ink-muted">
-        {new Date(job.date_added).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+        {formatDate(job.date_added)}
       </p>
     </Link>
   )

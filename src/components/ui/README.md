@@ -14,6 +14,8 @@ is shown with its variants on `/ui` (development only).
 | `Field.tsx` | `<Field label hint? error?>` — label, control and message tied together (`htmlFor`, `aria-describedby`, `aria-invalid`, error announced with `role="alert"`). |
 | `Input.tsx` | `Input`, `Textarea`, `Select` — white controls with ink stroke, hard shadow while focused; inside a `<Field>` they pick up its ids automatically. |
 | `Tabs.tsx` | `<Tabs label items value onChange>` — row of exclusive filters; the selected one is a white bordered block with a hard shadow and is announced (`aria-pressed`); optional count in the data font. |
+| `Alert.tsx` | `<Alert variant?>` — message block: `danger` (announced at once, `role="alert"`), `success`, `info` (`role="status"`). |
+| `Disclosure.tsx` | `<Disclosure title meta? defaultOpen?>` — section that opens and closes; the button sits inside the heading and announces `aria-expanded`; children mount only when open. |
 | `Modal.tsx` | `<Modal open onClose title>` — native `<dialog>` (top layer, inert page behind, focus moved in, Escape and backdrop click close it), named close button. |
 | `PageHeader.tsx` | `<PageHeader title subtitle? children?>` — page heading with an action slot; actions wrap under the title on phones. |
 | `MarkdownContent.tsx` | Renders markdown with the prose styles. |

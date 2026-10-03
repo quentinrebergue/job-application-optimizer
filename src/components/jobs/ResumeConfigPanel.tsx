@@ -593,7 +593,7 @@ export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClea
   return (
     <div>
       {/* Toolbar */}
-      <div className="flex items-center justify-between mb-3">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
         <div className="flex items-center gap-2">
           <span className="text-sm text-slate-500">
             {selectedCount === 0
@@ -602,7 +602,7 @@ export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClea
           </span>
           {savingConfig && <span className="text-xs text-slate-400 italic">Saving…</span>}
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {onRankingComplete && (
             <AIRankButton
               jobId={jobId}

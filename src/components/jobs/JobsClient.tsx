@@ -2,25 +2,34 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import type { StatusFilter } from '@/lib/job-filter'
 import { Plus } from 'lucide-react'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { JobCard } from '@/components/jobs/JobCard'
 import { Tabs } from '@/components/ui/Tabs'
 import { buttonClasses } from '@/components/ui/Button'
-import type { ApplicationStatus, JobOffer } from '@/types'
+import type { JobOffer } from '@/types'
 import { APPLICATION_STATUSES, APPLICATION_STATUS_LABELS, FEATURES } from '@/config'
 
-const TABS: { label: string; value: ApplicationStatus | 'all' }[] = [
+const TABS: { label: string; value: StatusFilter }[] = [
   { label: 'All', value: 'all' },
   ...APPLICATION_STATUSES.map((s) => ({ label: APPLICATION_STATUS_LABELS[s], value: s })),
 ]
 
 interface Props {
   initialJobs: JobOffer[]
+  initialFilter: StatusFilter
 }
 
-export function JobsClient({ initialJobs }: Props) {
-  const [tab, setTab] = useState<ApplicationStatus | 'all'>('all')
+export function JobsClient({ initialJobs, initialFilter }: Props) {
+  const router = useRouter()
+  const [tab, setTab] = useState<StatusFilter>(initialFilter)
+
+  function changeFilter(value: StatusFilter) {
+    setTab(value)
+    router.replace(value === 'all' ? '/jobs' : `/jobs?status=${value}`, { scroll: false })
+  }
 
   const filtered = tab === 'all'
     ? initialJobs
@@ -56,18 +65,24 @@ export function JobsClient({ initialJobs }: Props) {
           count: t.value === 'all' ? initialJobs.length : initialJobs.filter((j) => j.status === t.value).length,
         }))}
         value={tab}
-        onChange={setTab}
+        onChange={changeFilter}
         className="mb-6"
       />
 
       {/* Content */}
       {filtered.length === 0 ? (
         <div className="rounded-control border-2 border-dashed border-ink p-10 text-center">
-          <p className="mb-3 text-ink-muted">No jobs here yet.</p>
-          <Link href="/jobs/new" className={buttonClasses()}>
-            <Plus size={15} aria-hidden="true" />
-            Add your first job
-          </Link>
+          {tab === 'all' ? (
+            <>
+              <p className="mb-4 text-ink-muted">No jobs yet.</p>
+              <Link href="/jobs/new" className={buttonClasses()}>
+                <Plus size={15} aria-hidden="true" />
+                Add your first job
+              </Link>
+            </>
+          ) : (
+            <p className="text-ink-muted">No {APPLICATION_STATUS_LABELS[tab].toLowerCase()} jobs.</p>
+          )}
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
