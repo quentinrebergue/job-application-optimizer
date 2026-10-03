@@ -18,9 +18,9 @@ export default async function ResumePage() {
   const allEntities = [...(experiences ?? []), ...(projects ?? []), ...(skills ?? [])]
 
   const stats = [
-    { label: 'Experiences', count: experiences?.length ?? 0, color: 'blue' as const, tab: 'experiences' },
-    { label: 'Projects', count: projects?.length ?? 0, color: 'purple' as const, tab: 'projects' },
-    { label: 'Skills', count: skills?.length ?? 0, color: 'green' as const, tab: 'skills' },
+    { label: 'Experiences', count: experiences?.length ?? 0, tab: 'experiences' },
+    { label: 'Projects', count: projects?.length ?? 0, tab: 'projects' },
+    { label: 'Skills', count: skills?.length ?? 0, tab: 'skills' },
   ]
 
   return (
@@ -62,7 +62,7 @@ export default async function ResumePage() {
               className="rounded-xl border border-slate-200 bg-white p-5 text-center hover:border-blue-300 hover:shadow-sm transition-all"
             >
               <p className="text-3xl font-bold text-slate-900">{s.count}</p>
-              <Badge label={s.label} variant={s.color} />
+              <Badge label={s.label} />
             </Link>
           ))}
         </div>

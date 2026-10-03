@@ -73,7 +73,7 @@ export function EntityDetailClient({ initialEntity }: Props) {
       </Link>
 
       <PageHeader title={title}>
-        <Badge label={TYPE_LABELS[entityType]} variant="blue" />
+        <Badge label={TYPE_LABELS[entityType]} />
         <button onClick={() => setEditing((v) => !v)} className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors">
           {editing ? 'Cancel Edit' : 'Edit'}
         </button>
@@ -121,7 +121,7 @@ function EntityMetaView({ entity }: { entity: Entity }) {
           <dd className="col-span-2 text-sm text-slate-900">
             {Array.isArray(row.value) ? (
               <div className="flex flex-wrap gap-1">
-                {row.value.length > 0 ? row.value.map((v) => <Badge key={v} label={v} variant="slate" />) : <span className="text-slate-400 italic">—</span>}
+                {row.value.length > 0 ? row.value.map((v) => <Badge key={v} label={v} variant="muted" />) : <span className="text-slate-400 italic">—</span>}
               </div>
             ) : (row.value || <span className="text-slate-400 italic">—</span>)}
           </dd>

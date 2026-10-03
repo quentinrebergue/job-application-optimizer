@@ -17,13 +17,6 @@ function entitySubtitle(e: EntityMeta): string {
   return e.level
 }
 
-const TYPE_COLORS: Record<string, 'blue' | 'purple' | 'green' | 'orange'> = {
-  experiences: 'blue',
-  projects: 'purple',
-  skills: 'green',
-  education: 'orange',
-}
-
 const TYPE_LABELS: Record<string, string> = {
   experiences: 'Experience',
   projects: 'Project',
@@ -32,8 +25,6 @@ const TYPE_LABELS: Record<string, string> = {
 }
 
 export function EntityCard({ entity }: { entity: EntityMeta }) {
-  const color = TYPE_COLORS[entity.type]
-
   return (
     <Link
       href={`/entities/${entity.type}/${entity.id}`}
@@ -43,7 +34,7 @@ export function EntityCard({ entity }: { entity: EntityMeta }) {
         <span className="font-semibold text-slate-900 group-hover:text-blue-600 transition-colors leading-tight">
           {entityTitle(entity)}
         </span>
-        <Badge label={TYPE_LABELS[entity.type]} variant={color} />
+        <Badge label={TYPE_LABELS[entity.type]} />
       </div>
 
       {entitySubtitle(entity) && (
@@ -53,7 +44,7 @@ export function EntityCard({ entity }: { entity: EntityMeta }) {
       {entity.tags.length > 0 && (
         <div className="flex flex-wrap gap-1 mt-2">
           {entity.tags.slice(0, 4).map((tag) => (
-            <Badge key={tag} label={tag} variant="slate" />
+            <Badge key={tag} label={tag} variant="muted" />
           ))}
           {entity.tags.length > 4 && (
             <span className="text-xs text-slate-400">+{entity.tags.length - 4}</span>
