@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { Plus } from 'lucide-react'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { JobCard } from '@/components/jobs/JobCard'
+import { Tabs } from '@/components/ui/Tabs'
+import { buttonClasses } from '@/components/ui/Button'
 import type { ApplicationStatus, JobOffer } from '@/types'
 import { APPLICATION_STATUSES, APPLICATION_STATUS_LABELS, FEATURES } from '@/config'
 
@@ -33,53 +35,37 @@ export function JobsClient({ initialJobs }: Props) {
         {FEATURES.linkedinImport && (
           <Link
             href="/jobs/bookmarklet"
-            className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors"
+            className={buttonClasses({ variant: 'secondary' })}
           >
             LinkedIn Import
           </Link>
         )}
         <Link
           href="/jobs/new"
-          className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-colors"
+          className={buttonClasses()}
         >
-          <Plus size={16} />
+          <Plus size={16} aria-hidden="true" />
           Add Job
         </Link>
       </PageHeader>
 
-      {/* Status tabs */}
-      <div className="flex flex-wrap gap-1 mb-6 border-b border-slate-200">
-        {TABS.map((t) => {
-          const count = t.value === 'all'
-            ? initialJobs.length
-            : initialJobs.filter((j) => j.status === t.value).length
-          return (
-            <button
-              key={t.value}
-              onClick={() => setTab(t.value)}
-              className={[
-                'px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors',
-                tab === t.value
-                  ? 'border-blue-600 text-blue-600'
-                  : 'border-transparent text-slate-500 hover:text-slate-900',
-              ].join(' ')}
-            >
-              {t.label}
-              <span className="ml-1.5 text-xs text-slate-400">({count})</span>
-            </button>
-          )
-        })}
-      </div>
+      <Tabs
+        label="Filter by status"
+        items={TABS.map((t) => ({
+          ...t,
+          count: t.value === 'all' ? initialJobs.length : initialJobs.filter((j) => j.status === t.value).length,
+        }))}
+        value={tab}
+        onChange={setTab}
+        className="mb-6"
+      />
 
       {/* Content */}
       {filtered.length === 0 ? (
-        <div className="rounded-xl border-2 border-dashed border-slate-200 p-10 text-center">
-          <p className="text-slate-500 mb-3">No jobs here yet.</p>
-          <Link
-            href="/jobs/new"
-            className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-colors"
-          >
-            <Plus size={15} />
+        <div className="rounded-control border border-dashed border-line p-10 text-center">
+          <p className="mb-3 text-ink-muted">No jobs here yet.</p>
+          <Link href="/jobs/new" className={buttonClasses()}>
+            <Plus size={15} aria-hidden="true" />
             Add your first job
           </Link>
         </div>

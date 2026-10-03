@@ -1,42 +1,58 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useId, useRef } from 'react'
 import { X } from 'lucide-react'
+import { cn } from '@/lib/cn'
+import { focusRing } from './styles'
 
 interface Props {
   open: boolean
   onClose: () => void
-  title?: string
+  title: string
   children: React.ReactNode
+  className?: string
 }
 
-export function Modal({ open, onClose, title, children }: Props) {
-  useEffect(() => {
-    if (!open) return
-    function onKeyDown(e: KeyboardEvent) {
-      if (e.key === 'Escape') onClose()
-    }
-    window.addEventListener('keydown', onKeyDown)
-    return () => window.removeEventListener('keydown', onKeyDown)
-  }, [open, onClose])
+/**
+ * Built on the native <dialog>: showModal() puts it above everything (top layer),
+ * makes the page behind inert, moves focus in and closes on Escape.
+ */
+export function Modal({ open, onClose, title, children, className }: Props) {
+  const ref = useRef<HTMLDialogElement>(null)
+  const titleId = useId()
 
-  if (!open) return null
+  useEffect(() => {
+    const dialog = ref.current
+    if (!dialog) return
+    if (open && !dialog.open) dialog.showModal()
+    if (!open && dialog.open) dialog.close()
+  }, [open])
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative flex max-h-[90vh] w-full max-w-5xl flex-col rounded-xl bg-white shadow-xl">
-        <div className="flex items-center justify-between border-b border-slate-200 px-5 py-3 shrink-0">
-          {title && <h3 className="text-sm font-semibold text-slate-900">{title}</h3>}
-          <button
-            onClick={onClose}
-            className="ml-auto rounded p-1.5 text-slate-500 transition-colors hover:bg-slate-100"
-          >
-            <X size={16} />
-          </button>
-        </div>
-        <div className="flex-1 overflow-auto">{children}</div>
+    <dialog
+      ref={ref}
+      aria-labelledby={titleId}
+      onClose={onClose}
+      // A click on the dialog element itself (not its content) is a click on the backdrop.
+      onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
+      className={cn(
+        'm-auto max-h-[90vh] w-[calc(100%-2rem)] max-w-5xl flex-col rounded-control border border-line bg-surface p-0 text-ink open:flex',
+        'backdrop:bg-ink/50',
+        className,
+      )}
+    >
+      <div className="flex shrink-0 items-center justify-between gap-4 border-b border-line px-5 py-3">
+        <h2 id={titleId} className="text-sm font-semibold">{title}</h2>
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close"
+          className={cn('rounded-control p-1.5 text-ink-muted transition-colors hover:bg-line/50 hover:text-ink', focusRing)}
+        >
+          <X size={16} aria-hidden="true" />
+        </button>
       </div>
-    </div>
+      <div className="flex-1 overflow-auto">{children}</div>
+    </dialog>
   )
 }

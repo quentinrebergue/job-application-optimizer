@@ -17,7 +17,7 @@ export function FlashCard({ card, revealed, onReveal, onGotIt, onPracticeMore }:
     <div className="w-full max-w-2xl">
       {/* Source badge */}
       <div className="flex justify-center mb-4">
-        <Badge label={card.source} variant="blue" />
+        <Badge label={card.source} />
       </div>
 
       {/* Card */}

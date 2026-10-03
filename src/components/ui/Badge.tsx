@@ -1,21 +1,31 @@
-interface BadgeProps {
+import { cn } from '@/lib/cn'
+
+// Variants carry a meaning; there is no colour per category.
+const variants = {
+  neutral: 'border-line bg-surface text-ink',
+  muted: 'border-transparent bg-line/60 text-ink-muted',
+  accent: 'border-accent/40 bg-accent/10 text-accent-strong',
+  success: 'border-success/30 bg-success/10 text-success',
+  warning: 'border-warning/30 bg-warning/10 text-warning',
+  danger: 'border-danger/30 bg-danger/10 text-danger',
+} as const
+
+export type BadgeVariant = keyof typeof variants
+
+interface BadgeProps extends React.ComponentProps<'span'> {
   label: string
-  variant?: 'blue' | 'purple' | 'green' | 'orange' | 'slate' | 'red'
+  variant?: BadgeVariant
 }
 
-const COLORS: Record<string, string> = {
-  blue: 'bg-blue-100 text-blue-700',
-  purple: 'bg-purple-100 text-purple-700',
-  green: 'bg-emerald-100 text-emerald-700',
-  orange: 'bg-orange-100 text-orange-700',
-  slate: 'bg-slate-100 text-slate-700',
-  red: 'bg-red-100 text-red-700',
-}
-
-export function Badge({ label, variant = 'slate' }: BadgeProps) {
+export function Badge({ label, variant = 'neutral', className, ...props }: BadgeProps) {
   return (
     <span
-      className={`inline-flex items-center rounded px-2 py-0.5 text-xs font-medium ${COLORS[variant]}`}
+      className={cn(
+        'inline-flex shrink-0 items-center rounded-control border px-2 py-0.5 text-xs font-medium',
+        variants[variant],
+        className,
+      )}
+      {...props}
     >
       {label}
     </span>
