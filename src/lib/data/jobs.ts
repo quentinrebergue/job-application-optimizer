@@ -63,12 +63,13 @@ export async function createJob(
   data: Omit<JobOffer, 'id' | 'date_added'>
 ): Promise<JobOffer> {
   const id = `job-${uuidv4().slice(0, 8)}`
+  // tags and ats_tags are NOT NULL: an omitted list must be [] (undefined is sent as NULL, #97).
   const { rows } = await pool.query(
     `INSERT INTO jobs (id, user_id, company, title, description, location, url, status, tags, ats_tags)
      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
      RETURNING *`,
     [id, userId, data.company, data.title, data.description, data.location ?? null, data.url ?? null,
-     data.status, data.tags, data.ats_tags ?? []]
+     data.status, data.tags ?? [], data.ats_tags ?? []]
   )
   return rowToJobOffer(rows[0])
 }
