@@ -6,8 +6,8 @@ import Link from 'next/link'
 import type { SkillMeta } from '@/types'
 import type { AIAnalysisResult } from '@/types/job'
 import { Alert } from '@/components/ui/Alert'
-import { Button, buttonClasses } from '@/components/ui/Button'
-import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerTitle } from '@/components/ui/Drawer'
+import { Button } from '@/components/ui/Button'
+import { ConfirmDrawer } from '@/components/ui/ConfirmDrawer'
 import { DEFAULT_TEMPLATE_CHOICE, TemplatePicker, effectiveOptions, type TemplateChoice } from '@/components/resume/TemplatePicker'
 import { useTemplates } from '@/components/resume/useTemplates'
 import { useAiRanking } from './useAiRanking'
@@ -88,7 +88,6 @@ export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClea
   }
 
   function reset() {
-    setConfirmReset(false)
     panel.reset()
     if (hasAiData) onClearAi?.()
   }
@@ -172,19 +171,14 @@ export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClea
         </div>
       </div>
 
-      <Drawer open={confirmReset} onOpenChange={setConfirmReset}>
-        <DrawerContent>
-          <DrawerTitle>Reset to your defaults?</DrawerTitle>
-          <DrawerDescription>
-            The selection, the custom title, profile and descriptions, and the AI ranking of this resume are cleared.
-            Your library and your defaults are not changed.
-          </DrawerDescription>
-          <DrawerFooter>
-            <DrawerClose className={buttonClasses({ variant: 'secondary' })}>Cancel</DrawerClose>
-            <Button variant="danger" onClick={reset}>Reset</Button>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
+      <ConfirmDrawer
+        open={confirmReset}
+        onOpenChange={setConfirmReset}
+        title="Reset to your defaults?"
+        description="The selection, the custom title, profile and descriptions, and the AI ranking of this resume are cleared. Your library and your defaults are not changed."
+        confirmLabel="Reset"
+        onConfirm={reset}
+      />
     </div>
   )
 }

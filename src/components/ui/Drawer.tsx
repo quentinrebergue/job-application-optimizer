@@ -25,7 +25,7 @@ export function DrawerContent({ className, children, ...props }: React.Component
       <DrawerPrimitive.Viewport className="pointer-events-none fixed inset-0 z-50 flex items-end justify-center">
         <DrawerPrimitive.Popup
           className={cn(
-            'pointer-events-auto flex w-full max-w-lg flex-col gap-4 rounded-t-control border-2 border-b-0 border-ink bg-surface p-6 text-ink outline-none',
+            'pointer-events-auto w-full rounded-t-control border-2 border-b-0 border-ink bg-surface p-6 text-ink outline-none',
             'pb-[max(1.5rem,env(safe-area-inset-bottom))]',
             // Follows the finger while swiping, slides in and out otherwise.
             'translate-y-(--drawer-swipe-movement-y,0px) transition-transform duration-300',
@@ -34,8 +34,11 @@ export function DrawerContent({ className, children, ...props }: React.Component
           )}
           {...props}
         >
-          <div aria-hidden="true" className="mx-auto h-1.5 w-16 shrink-0 rounded-full bg-ink" />
-          {children}
+          {/* Full width; the content stays in a readable centred column. */}
+          <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
+            <div aria-hidden="true" className="mx-auto h-1.5 w-16 shrink-0 rounded-full bg-ink" />
+            {children}
+          </div>
         </DrawerPrimitive.Popup>
       </DrawerPrimitive.Viewport>
     </DrawerPrimitive.Portal>

@@ -68,7 +68,7 @@ export function SegmentedTabs<T extends string>({ label, items, value, onChange,
             {/* One run of text: on one line where it fits, wrapping cleanly in a narrow segment. */}
             <span className="text-center">
               {item.label}
-              {item.count !== undefined && <span className="font-normal tabular-nums"> {item.count}</span>}
+              {item.count !== undefined && <span className="tabular-nums"> {item.count}</span>}
               {item.note && <span className="font-normal"> ({item.note})</span>}
             </span>
           </button>

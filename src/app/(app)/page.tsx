@@ -1,55 +1,51 @@
 import Link from 'next/link'
-import { FileText, Briefcase, MessageSquare, Code2 } from 'lucide-react'
-import { ENABLED_MODULES } from '@/config'
+import { cardClasses } from '@/components/ui/Card'
+import { PageHeader } from '@/components/ui/PageHeader'
+import { ENTITY_TYPE_IDS } from '@/config'
+import { listEntities, listJobs } from '@/lib/data'
+import { verifySession } from '@/lib/auth/dal'
+import { page } from '@/components/ui/styles'
 
-const ICON_MAP: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
-  FileText,
-  Briefcase,
-  MessageSquare,
-  Code2,
-}
+export const dynamic = 'force-dynamic'
 
-const COLOR_MAP: Record<string, { icon: string }> = {
-  blue:    { icon: 'text-blue-600 bg-blue-50' },
-  purple:  { icon: 'text-purple-600 bg-purple-50' },
-  emerald: { icon: 'text-emerald-600 bg-emerald-50' },
-  orange:  { icon: 'text-orange-500 bg-orange-50' },
-}
+/** Home: the two parts of the app, with where you stand in each. */
+export default async function HomePage() {
+  const { userId } = await verifySession()
+  const [jobs, lists] = await Promise.all([
+    listJobs(userId),
+    Promise.all(ENTITY_TYPE_IDS.map((t) => listEntities(userId, t))),
+  ])
+  const entries = lists.flat().length
+  const inProgress = jobs.filter((j) => j.status === 'applied' || j.status === 'interview').length
 
-export default function DashboardPage() {
+  const cards = [
+    {
+      href: '/jobs',
+      title: 'Jobs',
+      text: 'Add an offer, then get a resume tailored to it.',
+      stats: [`${jobs.length} ${jobs.length === 1 ? 'job' : 'jobs'}`, `${inProgress} in progress`],
+    },
+    {
+      href: '/resume',
+      title: 'Resume',
+      text: 'Your profile and the library every resume is built from.',
+      stats: [`${entries} ${entries === 1 ? 'entry' : 'entries'}`],
+    },
+  ]
+
   return (
-    <div className="p-4 md:p-8 max-w-4xl">
-      {/* Header */}
-      <div className="mb-10">
-        <h1 className="text-3xl font-bold text-slate-900 tracking-tight mb-1">Dashboard</h1>
-        <p className="text-slate-500">Your all-in-one graduate job preparation hub.</p>
-      </div>
-
-      {/* Module Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {ENABLED_MODULES.map((mod) => {
-          const Icon = ICON_MAP[mod.icon]
-          const colors = COLOR_MAP[mod.color] ?? COLOR_MAP['blue']
-          return (
-            <Link
-              key={mod.id}
-              href={mod.href}
-              className="group block rounded-xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md hover:border-slate-300 transition-all"
-            >
-              <div className="flex items-start gap-4">
-                <div className={`rounded-xl p-2.5 shrink-0 ${colors.icon}`}>
-                  {Icon && <Icon size={20} />}
-                </div>
-                <div>
-                  <h2 className="font-semibold text-slate-900 group-hover:text-blue-600 transition-colors">
-                    {mod.label}
-                  </h2>
-                  <p className="text-slate-500 text-sm mt-1 leading-relaxed">{mod.description}</p>
-                </div>
-              </div>
-            </Link>
-          )
-        })}
+    <div className={page}>
+      <PageHeader title="FastResume" subtitle="From a job offer to a tailored resume in a few clicks." />
+      <div className="grid gap-6 sm:grid-cols-2">
+        {cards.map((card) => (
+          <Link key={card.href} href={card.href} className={cardClasses({ interactive: true, className: 'flex flex-col gap-3 p-6' })}>
+            <span className="text-2xl font-extrabold tracking-tight">{card.title}</span>
+            <span className="text-ink-muted">{card.text}</span>
+            <span className="mt-auto flex flex-wrap gap-x-4 gap-y-1 pt-2 text-sm font-semibold tabular-nums">
+              {card.stats.map((s) => <span key={s}>{s}</span>)}
+            </span>
+          </Link>
+        ))}
       </div>
     </div>
   )

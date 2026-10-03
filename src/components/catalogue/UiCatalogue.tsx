@@ -10,6 +10,8 @@ import { Input, Select, Textarea } from '@/components/ui/Input'
 import { Tabs } from '@/components/ui/Tabs'
 import { Modal } from '@/components/ui/Modal'
 import { eyebrow } from '@/components/ui/styles'
+import { page } from '@/components/ui/styles'
+import { cn } from '@/lib/cn'
 
 const BUTTON_VARIANTS: ButtonVariant[] = ['primary', 'secondary', 'ghost', 'danger']
 const BUTTON_SIZES: ButtonSize[] = ['md', 'sm']
@@ -29,7 +31,7 @@ export function UiCatalogue() {
   const [modalOpen, setModalOpen] = useState(false)
 
   return (
-    <div className="flex max-w-4xl flex-col gap-8 p-4 md:p-8">
+    <div className={cn(page, 'flex flex-col gap-8')}>
       <PageHeader title="UI catalogue" subtitle="Every primitive in src/components/ui and its variants. Development only." />
 
       <Section title="Button">

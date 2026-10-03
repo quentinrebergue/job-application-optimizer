@@ -1,11 +1,11 @@
 # src/components/resume
 
-Resume builder feature components.
+The profile of the Resume page (`/resume`) and the template choice of the job page.
 
 ## Files
 
 | File | Description |
 |------|-------------|
-| `GeneratePdfButton.tsx` | Client button that POSTs to `/api/resume/generate` with a list of entity IDs and reports the result. |
-| `TemplatePicker.tsx` | Controlled template select with controls generated from the template's option schema (slider, colour, enum). |
-| `useTemplates.ts` | Hook that loads the available templates from `/api/resume/templates`. |
+| `ResumeDefaultsEditor.tsx` | The profile (contact details, default title and profile), each field saved by itself; every save sends the whole profile, as the API replaces it (the AI context, no longer edited, is sent back unchanged). |
+| `TemplatePicker.tsx` | Template select and the options its manifest declares (colour, Small / Medium / Large for numbers, select for enums); options fixed by the app (`FIXED_TEMPLATE_OPTIONS`) are not offered; `effectiveOptions()` adds them for rendering. |
+| `useTemplates.ts` | Loads the available templates from `/api/resume/templates`. |

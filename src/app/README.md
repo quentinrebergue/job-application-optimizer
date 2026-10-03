@@ -16,8 +16,8 @@ Next.js App Router root. Contains the document layout, two route groups (their n
 
 | Directory | Description |
 |-----------|-------------|
-| `(app)/resume/` | Resume Builder pages |
-| `(app)/entities/` | Entity Library pages (CRUD for experiences/projects/skills) |
+| `(app)/resume/` | Resume page: the profile and the library (`?tab=` kind) |
+| `(app)/entities/` | Entry page and new entry; `/entities` and `/entities/[type]` redirect to the library in `/resume` |
 | `(app)/jobs/` | Job Application Tracker pages |
 | `(app)/qa/` | Q&A Flashcard Trainer pages |
 | `(app)/coding/` | Coding Interview Trainer pages |
