@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { FileDown, Loader2 } from 'lucide-react'
-import { DEFAULT_TEMPLATE_CHOICE, TemplatePicker, type TemplateChoice } from './TemplatePicker'
+import { DEFAULT_TEMPLATE_CHOICE, TemplatePicker, effectiveOptions, type TemplateChoice } from './TemplatePicker'
 import { useTemplates } from './useTemplates'
 
 interface Props {
@@ -21,7 +21,7 @@ export function GeneratePdfButton({ entityIds }: Props) {
     const res = await fetch('/api/resume/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ entityIds, template: choice.template, options: choice.options }),
+      body: JSON.stringify({ entityIds, template: choice.template, options: effectiveOptions(templates.find((t) => t.id === choice.template), choice.options) }),
     })
     if (res.ok) {
       const blob = await res.blob()

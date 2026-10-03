@@ -13,6 +13,8 @@ const variants = {
   secondary: cn(stroke, pressable, 'bg-surface text-ink'),
   ghost: 'rounded-control border-2 border-transparent text-ink-muted hover:text-ink hover:underline underline-offset-4',
   danger: cn(stroke, pressable, 'bg-danger text-white'),
+  /** The AI action (rank with AI) */
+  ai: cn(stroke, pressable, 'bg-ai text-ink'),
 } as const
 
 const sizes = {

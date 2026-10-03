@@ -34,6 +34,7 @@ interface Props {
  */
 export function EntityRow({ entity, state, onToggle, onExpand, children }: Props) {
   const name = entityLabel(entity)
+  const sub = entitySubLabel(entity)
   const checkboxId = `include-${entity.id}`
   const editLabel = entity.type === 'skills' ? 'Choose the tags' : 'Edit the description'
 
@@ -53,8 +54,8 @@ export function EntityRow({ entity, state, onToggle, onExpand, children }: Props
           className="mt-0.5 size-5 cursor-pointer accent-ink"
         />
         <div className="flex min-w-0 flex-col gap-1">
-          <label htmlFor={checkboxId} className="cursor-pointer font-extrabold leading-tight">{name}</label>
-          <p className="truncate text-xs text-ink-muted">{entitySubLabel(entity)}</p>
+          <label htmlFor={checkboxId} title={name} className="cursor-pointer truncate font-extrabold leading-tight">{name}</label>
+          {sub && <p className="truncate text-xs text-ink-muted">{sub}</p>}
           {(state.recommended || state.score !== null || state.tagCount) && (
             <div className="flex flex-wrap items-center gap-2">
               {state.recommended && <Badge label="Recommended" variant="accent" />}

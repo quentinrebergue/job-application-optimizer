@@ -28,6 +28,7 @@
   --color-line: #ebd7b5;            /* thin dividers in dense content, muted fills */
   --color-accent: #ff4d50;          /* the main action, always with ink text (5.5:1) */
   --color-accent-strong: #c4122f;   /* red text and links, focus ring (5.1:1 on canvas) */
+  --color-ai: #a388ee;              /* AI actions only (rank with AI), always with ink text (6.3:1) */
 
   /* Status fills, with ink text: they describe a state, never decorate. */
   --color-info: #5294ff;            /* in progress */
@@ -70,21 +71,27 @@ body {
   }
 }
 
-/* Improve button touch responsiveness on all devices */
-button {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  user-select: none;
-  cursor: pointer;
-}
+/* Button defaults, in the base layer so utilities (cursor-not-allowed on a
+   disabled button, for instance) can override them. */
+@layer base {
+  button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: pointer;
+  }
 
-/* Ensure links are keyboard/touch accessible */
-a[role="button"],
-button {
-  -webkit-tap-highlight-color: transparent;
+  button:disabled {
+    cursor: not-allowed;
+  }
+
+  a[role="button"],
+  button {
+    -webkit-tap-highlight-color: transparent;
+  }
 }
 
 

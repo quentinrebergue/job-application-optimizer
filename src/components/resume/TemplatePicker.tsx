@@ -2,6 +2,7 @@
 
 import type { TemplateInfo, TemplateOption } from '@/schemas/resume-template'
 import { SegmentedTabs } from '@/components/ui/SegmentedTabs'
+import { FIXED_TEMPLATE_OPTIONS } from '@/config'
 import { cn } from '@/lib/cn'
 import { controlClasses } from '@/components/ui/Input'
 
@@ -11,6 +12,19 @@ export interface TemplateChoice {
 }
 
 export const DEFAULT_TEMPLATE_CHOICE: TemplateChoice = { template: 'classic', options: {} }
+
+/** The options to render with: the chosen ones, plus the app's fixed ones the template declares. */
+export function effectiveOptions(template: TemplateInfo | undefined, options: TemplateChoice['options']): TemplateChoice['options'] {
+  const fixed = Object.fromEntries(
+    Object.entries(FIXED_TEMPLATE_OPTIONS).filter(([name]) => template?.options[name] !== undefined),
+  )
+  return { ...options, ...fixed }
+}
+
+/** Options kept when switching template: those the new one also declares (e.g. the accent colour). */
+function carriedOptions(next: TemplateInfo | undefined, options: TemplateChoice['options']): TemplateChoice['options'] {
+  return Object.fromEntries(Object.entries(options).filter(([name]) => next?.options[name] !== undefined))
+}
 
 interface Props {
   templates: TemplateInfo[]
@@ -67,7 +81,7 @@ export function TemplatePicker({ templates, value, onChange, disabled }: Props) 
         <select
           value={current.id}
           disabled={disabled}
-          onChange={(e) => onChange({ template: e.target.value, options: {} })}
+          onChange={(e) => onChange({ template: e.target.value, options: carriedOptions(templates.find((t) => t.id === e.target.value), value.options) })}
           className={CONTROL}
         >
           {templates.map((t) => (
@@ -78,7 +92,8 @@ export function TemplatePicker({ templates, value, onChange, disabled }: Props) 
         </select>
       </label>
 
-      {Object.entries(current.options).map(([name, spec]) => {
+      {/* Options the app fixes (FIXED_TEMPLATE_OPTIONS) are not offered. */}
+      {Object.entries(current.options).filter(([name]) => FIXED_TEMPLATE_OPTIONS[name] === undefined).map(([name, spec]) => {
         const shown = value.options[name] ?? spec.default
         // A label around a group of buttons would click the first one; the steps name themselves.
         const Wrapper = spec.type === 'number' ? 'div' : 'label'

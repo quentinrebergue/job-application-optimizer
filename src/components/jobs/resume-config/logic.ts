@@ -29,12 +29,12 @@ export function entityLabel(e: EntityMeta): string {
   return e.title
 }
 
-/** Second line of an entry: where and when. */
+/** Second line of an entry: where and when (nothing for a skill: its level is not useful here). */
 export function entitySubLabel(e: EntityMeta): string {
   const parts = e.type === 'experiences' ? [e.company, e.period]
     : e.type === 'projects' ? [e.tech.slice(0, 3).join(', ')]
     : e.type === 'education' ? [e.institution, e.period]
-    : [e.level]
+    : []
   return parts.filter(Boolean).join(' · ')
 }
 
@@ -81,15 +81,17 @@ function rankingScore(id: string, config: ResumeConfig): number {
   return config.ai_rankings.find((r) => r.entity_id === id)?.score ?? -1
 }
 
-/** Sorts by a custom order; items missing from it fall back to `fallback`. */
+/** Items in the custom order first, in that order; the others after, sorted by `fallback`. */
 function byCustomOrder(order: string[] | undefined, fallback: (a: EntityMeta, b: EntityMeta) => number) {
   if (!order || order.length === 0) return fallback
   const index = new Map(order.map((id, i) => [id, i]))
   return (a: EntityMeta, b: EntityMeta) => {
     const ia = index.get(a.id)
     const ib = index.get(b.id)
-    if (ia === undefined || ib === undefined) return fallback(a, b)
-    return ia - ib
+    if (ia !== undefined && ib !== undefined) return ia - ib
+    if (ia !== undefined) return -1
+    if (ib !== undefined) return 1
+    return fallback(a, b)
   }
 }
 
@@ -116,7 +118,11 @@ export function groupEntities(entities: EntityMeta[], config: ResumeConfig, ai?:
 
 const ORDER_KEY = { experiences: 'experience_order', projects: 'project_order' } as const
 
-/** Selects or unselects an entity, keeping the experience and project orders in step. */
+/**
+ * Selects or unselects an entity. An unselected experience or project keeps its
+ * place in the order, so it does not jump in the list (the PDF only prints the
+ * selected ones); a newly selected one not yet in the order goes last.
+ */
 export function toggleEntity(config: ResumeConfig, entity: EntityMeta): ResumeConfig {
   const selected = config.selected_entity_ids.includes(entity.id)
   const next: ResumeConfig = {
@@ -125,21 +131,28 @@ export function toggleEntity(config: ResumeConfig, entity: EntityMeta): ResumeCo
       ? config.selected_entity_ids.filter((id) => id !== entity.id)
       : [...config.selected_entity_ids, entity.id],
   }
-  if (entity.type === 'experiences' || entity.type === 'projects') {
+  if (!selected && (entity.type === 'experiences' || entity.type === 'projects')) {
     const key = ORDER_KEY[entity.type]
     const order = config[key] ?? []
-    next[key] = selected ? order.filter((id) => id !== entity.id) : [...order, entity.id]
+    if (!order.includes(entity.id)) next[key] = [...order, entity.id]
   }
   return next
 }
 
-/** Moves an experience or project one step up or down in its custom order. */
+/**
+ * Moves a selected experience or project one step up or down among the selected
+ * ones: it swaps places with the previous or next selected entry of the order.
+ */
 export function moveEntity(config: ResumeConfig, type: 'experiences' | 'projects', id: string, direction: 'up' | 'down'): ResumeConfig {
   const key = ORDER_KEY[type]
   const order = config[key] ?? []
   const index = order.indexOf(id)
-  const target = direction === 'up' ? index - 1 : index + 1
-  if (index === -1 || target < 0 || target >= order.length) return config
+  if (index === -1) return config
+  const isSelected = (other: string) => config.selected_entity_ids.includes(other)
+  let target = index
+  do target += direction === 'up' ? -1 : 1
+  while (target >= 0 && target < order.length && !isSelected(order[target]))
+  if (target < 0 || target >= order.length) return config
   const next = [...order]
   ;[next[index], next[target]] = [next[target], next[index]]
   return { ...config, [key]: next }

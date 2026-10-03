@@ -40,13 +40,10 @@ export function JobDetailClient({ initialJob, initialTab }: Props) {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [aiAnalysis, setAiAnalysis] = useState<AIAnalysisResult | null>(initialJob.ai_analysis ?? null)
-  // One save indicator for the offer and the resume, both saved automatically.
+  // One "Saving…" indicator for the offer and the resume, both saved automatically.
   const [offerSave, setOfferSave] = useState<SaveState>('idle')
   const [resumeSaving, setResumeSaving] = useState(false)
-  const [savedSomething, setSavedSomething] = useState(false)
   const saving = offerSave === 'saving' || resumeSaving
-  if (saving && !savedSomething) setSavedSomething(true)
-  const saveLabel = saving ? 'Saving…' : savedSomething && offerSave !== 'error' ? 'All changes saved' : ''
 
   function changeTab(next: JobTab) {
     setTab(next)
@@ -105,28 +102,25 @@ export function JobDetailClient({ initialJob, initialTab }: Props) {
 
   return (
     <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 p-4 md:p-8">
-      <header className="flex flex-col gap-4 border-b-2 border-ink pb-6">
-        <Link href="/jobs" className="self-start text-sm font-semibold text-ink-muted underline-offset-4 hover:text-ink hover:underline">
-          ← All jobs
-        </Link>
-        <div className="flex flex-wrap items-start justify-between gap-4">
-          <div className="min-w-0">
-            <h1 className="text-3xl font-extrabold tracking-tight">{job.title}</h1>
-            <p className="mt-1 text-ink-muted">
-              <span className="font-semibold text-ink">{job.company}</span>
-              {' · '}Added <span className="tabular-nums">{formatDate(job.date_added)}</span>
-              {job.location && <> · {job.location}</>}
-            </p>
-          </div>
-          <div className="flex flex-wrap items-center gap-3">
-            <p aria-live="polite" className="text-sm text-ink-muted empty:hidden">{saveLabel}</p>
-            {!FEATURES.coverLetter && (
-              <span className="hidden rounded-control border-2 border-dashed border-ink px-2 py-1 text-xs font-semibold text-ink-muted lg:inline">
-                Cover letter · Soon
-              </span>
-            )}
+      {/* Back link and status on one row, then the title and its details. */}
+      <header className="flex flex-col gap-3 lg:border-b-2 lg:border-ink lg:pb-6">
+        <div className="flex items-center justify-between gap-3">
+          <Link href="/jobs" className="text-sm font-semibold text-ink-muted underline-offset-4 hover:text-ink hover:underline">
+            ← All jobs
+          </Link>
+          <div className="flex items-center gap-3">
+            {/* Only while saving: a permanent "saved" message is noise. Failures show an alert. */}
+            <p aria-live="polite" className="text-sm text-ink-muted">{saving ? 'Saving…' : ''}</p>
             <StatusSelect value={job.status} onChange={handleStatusChange} disabled={busy} />
           </div>
+        </div>
+        <div className="min-w-0">
+          <h1 className="text-2xl font-extrabold leading-tight tracking-tight sm:text-3xl">{job.title}</h1>
+          <p className="mt-1 font-semibold">{job.company}</p>
+          <p className="text-sm text-ink-muted">
+            Added <span className="tabular-nums">{formatDate(job.date_added)}</span>
+            {job.location && <> · {job.location}</>}
+          </p>
         </div>
         {error && <Alert>{error}</Alert>}
       </header>
@@ -142,7 +136,19 @@ export function JobDetailClient({ initialJob, initialTab }: Props) {
           <JobOfferEditor job={job} onSaved={setJob} onDelete={handleDelete} deleting={busy} onSaveStateChange={setOfferSave} />
         </PanelCard>
 
-        <PanelCard title="Resume" tabs={tabs} className={shownBelowDesktop('resume')}>
+        <PanelCard
+          title="Resume"
+          tabs={tabs}
+          desktopHeader={
+            <SegmentedTabs
+              label="Resume sections"
+              items={[{ value: 'resume', label: 'Resume' }, coverLetterTab]}
+              value="resume"
+              onChange={changeTab}
+            />
+          }
+          className={shownBelowDesktop('resume')}
+        >
           <ResumeConfigPanel
             jobId={id}
             aiAnalysis={aiAnalysis}
@@ -171,9 +177,11 @@ export function JobDetailClient({ initialJob, initialTab }: Props) {
  * card itself is limited in height by its className).
  * No overflow on the resume card: it would stop the download button from floating.
  */
-function PanelCard({ title, tabs, scrollBody, className, children }: {
+function PanelCard({ title, tabs, desktopHeader, scrollBody, className, children }: {
   title: string
   tabs: React.ReactNode
+  /** Replaces the title strip on desktop (e.g. Resume | Cover letter · Soon) */
+  desktopHeader?: React.ReactNode
   scrollBody?: boolean
   className?: string
   children: React.ReactNode
@@ -181,7 +189,11 @@ function PanelCard({ title, tabs, scrollBody, className, children }: {
   return (
     <section aria-label={title} className={cn('rounded-control border-2 border-ink bg-panel shadow-hard', scrollBody && 'lg:flex-col', className)}>
       <div className="lg:hidden">{tabs}</div>
-      <h2 className="hidden shrink-0 border-b-2 border-ink px-5 py-3 text-xl font-extrabold tracking-tight lg:block">{title}</h2>
+      {desktopHeader ? (
+        <div className="hidden shrink-0 lg:block">{desktopHeader}</div>
+      ) : (
+        <h2 className="hidden shrink-0 border-b-2 border-ink px-5 py-3 text-xl font-extrabold tracking-tight lg:block">{title}</h2>
+      )}
       {/* The gutter is reserved so the width (and the auto-grown text) does not jump when a scrollbar appears. */}
       <div className={cn('p-4 md:p-6', scrollBody && 'lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:[scrollbar-gutter:stable]')}>{children}</div>
     </section>

@@ -20,7 +20,7 @@ const cfg = (patch: Partial<ResumeConfig> = {}): ResumeConfig => ({ ...EMPTY_CON
 describe('entitySubLabel', () => {
   it('shows where and when', () => {
     expect(entitySubLabel(exp('a', '2024 – Present'))).toBe('Co · 2024 – Present')
-    expect(entitySubLabel(skill('s', []))).toBe('advanced')
+    expect(entitySubLabel(skill('s', []))).toBe('')
   })
 })
 
@@ -58,14 +58,22 @@ describe('groupEntities', () => {
 })
 
 describe('toggleEntity', () => {
-  it('adds and removes an experience in both the selection and its order', () => {
+  it('adds an experience to the selection and the order, and keeps its place when it is unselected', () => {
     const e = exp('a', '2024')
     const on = toggleEntity(cfg(), e)
     expect(on.selected_entity_ids).toEqual(['a'])
     expect(on.experience_order).toEqual(['a'])
     const off = toggleEntity(on, e)
     expect(off.selected_entity_ids).toEqual([])
-    expect(off.experience_order).toEqual([])
+    expect(off.experience_order).toEqual(['a'])
+    expect(toggleEntity(off, e).experience_order).toEqual(['a'])
+  })
+
+  it('does not move an entry in the list when it is unselected', () => {
+    const entities = [exp('a', '2024 – Present'), exp('b', '2022 – 2023'), exp('c', '2019 – 2021')]
+    const config = cfg({ selected_entity_ids: ['a', 'b', 'c'], experience_order: ['c', 'a', 'b'] })
+    const off = toggleEntity(config, entities[1])
+    expect(groupEntities(entities, off).experiences.map((e) => e.id)).toEqual(['c', 'a', 'b'])
   })
 
   it('does not touch the orders for a skill', () => {
@@ -77,11 +85,16 @@ describe('toggleEntity', () => {
 
 describe('moveEntity', () => {
   it('swaps with the neighbour and stops at the ends', () => {
-    const config = cfg({ project_order: ['a', 'b', 'c'] })
+    const config = cfg({ selected_entity_ids: ['a', 'b', 'c'], project_order: ['a', 'b', 'c'] })
     expect(moveEntity(config, 'projects', 'b', 'up').project_order).toEqual(['b', 'a', 'c'])
     expect(moveEntity(config, 'projects', 'b', 'down').project_order).toEqual(['a', 'c', 'b'])
     expect(moveEntity(config, 'projects', 'a', 'up')).toBe(config)
     expect(moveEntity(config, 'projects', 'c', 'down')).toBe(config)
+  })
+
+  it('skips unselected entries, so one click always moves among the printed ones', () => {
+    const config = cfg({ selected_entity_ids: ['a', 'c'], project_order: ['a', 'b', 'c'] })
+    expect(moveEntity(config, 'projects', 'c', 'up').project_order).toEqual(['c', 'b', 'a'])
   })
 })
 

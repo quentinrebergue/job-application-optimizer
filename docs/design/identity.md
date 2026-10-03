@@ -54,13 +54,15 @@ Each colour has a role. Colour never decorates.
 | `line` | `#EBD7B5` | Thin dividers in dense content, muted fills |
 | `accent` | `#FF4D50` | **The main action**: primary button fill, active navigation item. Always with ink text |
 | `accent-strong` | `#C4122F` | Red text and links on light backgrounds, focus ring |
+| `ai` | `#A388EE` | **AI actions only** ("Rank with AI"): a violet button with ink text, so the AI step is recognisable next to the red main action |
 | `info` | `#5294FF` | Status fill: in progress (applied) |
 | `warning` | `#FACC00` | Status fill: needs attention (interview) |
 | `success` | `#05E17A` | Status fill: done, positive (offer) |
 | `danger` | `#B00020` | Errors (text) and destructive buttons (white text) |
 
-- **One action colour.** On a screen, red marks the next click. Blue, yellow and
-  green only describe a state (a status badge), never an action or a decoration.
+- **One action colour.** On a screen, red marks the next click; violet marks the
+  one AI action. Blue, yellow and green only describe a state (a status badge),
+  never an action or a decoration.
 - Status fills always carry ink text and a 2px ink stroke.
 
 **Contrast (measured, WCAG ratio; normal text needs 4.5):**
@@ -72,6 +74,7 @@ Each colour has a role. Colour never decorates.
 | ink-muted / canvas | 8.4 |
 | ink-muted / line | 7.1 |
 | ink / accent | 5.5 |
+| ink / ai | 6.3 |
 | ink / info | 6.1 |
 | ink / warning | 11.8 |
 | ink / success | 10.4 |
@@ -109,7 +112,7 @@ browser-faked bold). Loaded once with `next/font`, as a variable font.
 - No decorative icons: an icon appears only when it carries a meaning the text
   does not, and always with an accessible label.
 - No sparkle or magic-wand imagery for AI features; they are named for what they
-  do ("Generate resume"), not for the technology.
+  do ("Rank with AI"), and recognised by their violet, not by an icon.
 - No continuous animations (marquees, looping effects).
 - No playful styling in the generated PDF.
 

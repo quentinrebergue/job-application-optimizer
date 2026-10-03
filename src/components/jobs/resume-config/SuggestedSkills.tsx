@@ -29,7 +29,7 @@ export function SuggestedSkills({ suggestions, entities, busy, onAdd }: Props) {
             <li key={s.name} className="flex flex-wrap items-start gap-3 rounded-control border-2 border-dashed border-ink bg-surface p-3">
               <div className="min-w-0 flex-1">
                 <p className="font-semibold">{s.name}</p>
-                <p className="text-xs text-ink-muted">{s.category} · {s.level}</p>
+                <p className="text-xs text-ink-muted">{s.category}</p>
                 {s.tags.length > 0 && (
                   <div className="mt-2 flex flex-wrap gap-1.5">
                     {s.tags.map((t) => <Badge key={t} label={t} variant="muted" />)}
