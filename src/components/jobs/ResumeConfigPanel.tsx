@@ -1,12 +1,12 @@
 'use client'
 
 import { useState } from 'react'
+import { formatDate } from '@/lib/format'
 import Link from 'next/link'
 import type { SkillMeta } from '@/types'
 import type { AIAnalysisResult } from '@/types/job'
 import { Alert } from '@/components/ui/Alert'
 import { Button } from '@/components/ui/Button'
-import { eyebrow } from '@/components/ui/styles'
 import { DEFAULT_TEMPLATE_CHOICE, TemplatePicker, type TemplateChoice } from '@/components/resume/TemplatePicker'
 import { useTemplates } from '@/components/resume/useTemplates'
 import { AIRankButton } from './AIRankButton'
@@ -58,7 +58,24 @@ function usePdf(jobId: string) {
   return { generating, error, generate }
 }
 
-/** "Resume for this job": what goes into the PDF, then one click to download it. */
+function Step({ number, title, action, children }: { number: number; title: string; action?: React.ReactNode; children: React.ReactNode }) {
+  return (
+    <section aria-labelledby={`step-${number}`} className="flex flex-col gap-5">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h3 id={`step-${number}`} className="flex items-center gap-3 text-xl font-extrabold tracking-tight">
+          <span aria-hidden="true" className="flex size-8 items-center justify-center rounded-control border-2 border-ink bg-ink text-base text-surface">
+            {number}
+          </span>
+          {title}
+        </h3>
+        {action}
+      </div>
+      {children}
+    </section>
+  )
+}
+
+/** "Resume for this job" in three steps: tailor with AI, choose the content, pick a template and download. */
 export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClearAi, hasAiData }: Props) {
   const panel = useResumeConfig(jobId, aiAnalysis)
   const pdf = usePdf(jobId)
@@ -76,21 +93,49 @@ export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClea
   }
 
   return (
-    <div className="flex flex-col gap-8">
-      <div className="flex flex-wrap items-center gap-3">
-        {onRankingComplete && <AIRankButton jobId={jobId} onRankingComplete={onRankingComplete} />}
-        <div className="flex flex-wrap gap-2">
-          {hasAiData && onClearAi && (
-            <Button variant="ghost" size="sm" onClick={onClearAi}>Clear AI analysis</Button>
-          )}
-          <Button variant="ghost" size="sm" onClick={panel.reset}>Reset selection</Button>
-        </div>
-      </div>
-
+    <div className="flex flex-col gap-10">
+      <h2 className="text-2xl font-extrabold tracking-tight">Resume</h2>
       {panel.error && <Alert>{panel.error}</Alert>}
 
-      <div className="flex flex-col gap-3">
-        <p className={eyebrow}>Template</p>
+      <Step number={1} title="Tailor with AI">
+        <p className="text-sm text-ink-muted">
+          {hasAiData && aiAnalysis
+            ? <>Ranked on <span className="tabular-nums">{formatDate(aiAnalysis.analyzed_at)}</span>: your entries are scored and the best ones selected.</>
+            : 'The AI reads the offer, scores every entry of your library and selects the best ones.'}
+        </p>
+        <div className="flex flex-wrap items-start gap-3">
+          {onRankingComplete && (
+            <AIRankButton jobId={jobId} label={hasAiData ? 'Rank again' : 'Rank with AI'} onRankingComplete={onRankingComplete} />
+          )}
+          {hasAiData && onClearAi && <Button variant="ghost" onClick={onClearAi}>Clear ranking</Button>}
+        </div>
+      </Step>
+
+      <Step number={2} title="Content" action={<Button variant="ghost" size="sm" onClick={panel.reset}>Reset selection</Button>}>
+        <ContentFields
+          drafts={{ resume_title: drafts.resume_title, profile_text: drafts.profile_text }}
+          defaults={{ resume_title: defaults.resume_title, profile_text: defaults.profile_text }}
+          saved={{ resume_title: config.resume_title, profile_text: config.profile_text }}
+          onChange={panel.editText}
+        />
+        {TYPE_ORDER.map((type) => (
+          <EntitySection key={type} type={type} group={groups[type]} panel={panel} ai={aiAnalysis} libraryTags={libraryTags} />
+        ))}
+        <SuggestedSkills
+          suggestions={aiAnalysis?.suggested_new_skills ?? []}
+          entities={entities}
+          busy={panel.busy}
+          onAdd={panel.addSuggestedSkill}
+        />
+        {entities.length === 0 && (
+          <p className="text-sm text-ink-muted">
+            Your library is empty.{' '}
+            <Link href="/entities/new" className="font-semibold text-accent-strong underline underline-offset-4">Add an entry</Link>.
+          </p>
+        )}
+      </Step>
+
+      <Step number={3} title="Template">
         <TemplatePicker
           templates={templates}
           value={templateChoice}
@@ -98,34 +143,7 @@ export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClea
           disabled={pdf.generating}
         />
         {templatesError && <Alert variant="info">{templatesError}</Alert>}
-      </div>
-
-      <ContentFields
-        drafts={drafts}
-        defaults={defaults}
-        saved={{ resume_title: config.resume_title, profile_text: config.profile_text, ai_context: config.ai_context }}
-        aiTitle={aiAnalysis?.recommended_title}
-        aiProfile={aiAnalysis?.recommended_profile}
-        onChange={panel.editText}
-      />
-
-      {TYPE_ORDER.map((type) => (
-        <EntitySection key={type} type={type} group={groups[type]} panel={panel} ai={aiAnalysis} libraryTags={libraryTags} />
-      ))}
-
-      <SuggestedSkills
-        suggestions={aiAnalysis?.suggested_new_skills ?? []}
-        entities={entities}
-        busy={panel.busy}
-        onAdd={panel.addSuggestedSkill}
-      />
-
-      {entities.length === 0 && (
-        <p className="text-sm text-ink-muted">
-          Your library is empty.{' '}
-          <Link href="/entities/new" className="font-semibold text-accent-strong underline underline-offset-4">Add an entry</Link>.
-        </p>
-      )}
+      </Step>
 
       {/* Stays at the bottom of the screen while the list scrolls (QA-11). */}
       <div className="sticky bottom-4 z-30 flex flex-col gap-2">

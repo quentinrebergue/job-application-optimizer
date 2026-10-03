@@ -21,7 +21,7 @@ export function SuggestedSkills({ suggestions, entities, busy, onAdd }: Props) {
 
   return (
     <section aria-labelledby="suggested-skills" className="flex flex-col gap-3">
-      <h3 id="suggested-skills" className="text-lg font-extrabold">Skills to add to your library</h3>
+      <h4 id="suggested-skills" className="text-lg font-extrabold">Skills to add to your library</h4>
       <ul className="flex flex-col gap-3">
         {suggestions.map((s) => {
           const exists = has(s.name)

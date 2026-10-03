@@ -8,6 +8,10 @@ export interface TabItem<T extends string> {
   label: string
   /** Shown after the label, in tabular figures */
   count?: number
+  /** Greyed out and not selectable, e.g. a feature that is not ready */
+  disabled?: boolean
+  /** Short note after the label, e.g. "Soon" */
+  note?: string
 }
 
 interface TabsProps<T extends string> {
@@ -33,9 +37,10 @@ export function Tabs<T extends string>({ label, items, value, onChange, classNam
             key={item.value}
             type="button"
             aria-pressed={selected}
+            disabled={item.disabled}
             onClick={() => onChange(item.value)}
             className={cn(
-              'rounded-control border-2 px-3 py-1.5 text-sm transition-colors',
+              'rounded-control border-2 px-3 py-1.5 text-sm transition-colors disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:border-transparent',
               focusRing,
               selected
                 ? 'border-ink bg-surface font-semibold text-ink shadow-hard'
@@ -46,6 +51,7 @@ export function Tabs<T extends string>({ label, items, value, onChange, classNam
             {item.count !== undefined && (
               <span className="ml-1.5 text-xs font-normal tabular-nums">{item.count}</span>
             )}
+            {item.note && <span className="ml-1.5 text-xs font-normal">· {item.note}</span>}
           </button>
         )
       })}

@@ -59,8 +59,6 @@ export function useResumeConfig(jobId: string, aiAnalysis?: AIAnalysisResult | n
           profile_text: cfg.profile_text || defs.profile_text || '',
           ai_context: cfg.ai_context || defs.ai_context || '',
         })
-        // Open the entries that come with an AI description suggestion.
-        setExpanded(new Set(Object.keys(aiAnalysis?.recommended_entity_descriptions ?? {})))
       })
       .catch((err) => { if (!cancelled) setError(`Resume settings not loaded: ${message(err)}`) })
       .finally(() => { if (!cancelled) setLoading(false) })

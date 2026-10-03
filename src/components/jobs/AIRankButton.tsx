@@ -3,27 +3,29 @@
 import { useState } from 'react'
 import type { AIAnalysisResult } from '@/types/job'
 import { Button } from '@/components/ui/Button'
-import { Tabs } from '@/components/ui/Tabs'
 import { fetchJson } from '@/lib/http'
 
-type AIProvider = 'claude' | 'gemini'
+// One AI for everyone; it moves to the OVH AI Endpoints with #44. Until then the
+// interface keeps the provider it used by default.
+const PROVIDER = 'claude'
 
 interface AIRankButtonProps {
   jobId: string
+  /** Label of the button, e.g. "Rank again" once a ranking exists */
+  label?: string
   onRankingComplete?: (result: AIAnalysisResult) => void
 }
 
-/** Asks the AI to rank the library against this job, with a choice of provider. */
-export function AIRankButton({ jobId, onRankingComplete }: AIRankButtonProps) {
+/** Asks the AI to score the library against this job. */
+export function AIRankButton({ jobId, label = 'Rank with AI', onRankingComplete }: AIRankButtonProps) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [provider, setProvider] = useState<AIProvider>('claude')
 
   async function handleRank() {
     setLoading(true)
     setError(null)
     try {
-      const result = await fetchJson<AIAnalysisResult>(`/api/jobs/${jobId}/rank`, { method: 'POST', json: { provider } })
+      const result = await fetchJson<AIAnalysisResult>(`/api/jobs/${jobId}/rank`, { method: 'POST', json: { provider: PROVIDER } })
       onRankingComplete?.(result)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Ranking failed. Try again.')
@@ -33,19 +35,11 @@ export function AIRankButton({ jobId, onRankingComplete }: AIRankButtonProps) {
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-2">
-      <fieldset disabled={loading}>
-        <Tabs
-          label="AI provider"
-          items={[{ value: 'claude', label: 'Claude' }, { value: 'gemini', label: 'Gemini' }]}
-          value={provider}
-          onChange={setProvider}
-        />
-      </fieldset>
-      <Button variant="secondary" size="sm" onClick={handleRank} disabled={loading}>
-        {loading ? 'Ranking…' : 'Rank with AI'}
-      </Button>
-      {error && <p role="alert" className="w-full text-xs font-semibold text-danger">{error}</p>}
+    <div className="flex flex-col gap-2">
+      <div>
+        <Button onClick={handleRank} disabled={loading}>{loading ? 'Ranking…' : label}</Button>
+      </div>
+      {error && <p role="alert" className="text-xs font-semibold text-danger">{error}</p>}
     </div>
   )
 }

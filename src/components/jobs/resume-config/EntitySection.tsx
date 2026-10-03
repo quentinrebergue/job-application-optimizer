@@ -57,7 +57,7 @@ export function EntitySection({ type, group, panel, ai, libraryTags }: Props) {
   return (
     <section aria-labelledby={`section-${type}`} className="flex flex-col gap-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h3 id={`section-${type}`} className="text-lg font-extrabold">{TYPE_LABELS[type]}</h3>
+        <h4 id={`section-${type}`} className="text-lg font-extrabold">{TYPE_LABELS[type]}</h4>
         {hasScores && (
           <Button variant="secondary" size="sm" onClick={() => update((c) => applyAiOrder(c, entities, type))}>
             Order by AI score
@@ -92,7 +92,6 @@ function editorFor(entity: EntityMeta, panel: Panel, ai: AIAnalysisResult | null
   if (entity.type === 'experiences' || entity.type === 'projects') {
     const original = entity.description
     const custom = config.entity_description_overrides?.[entity.id]
-    const recommended = ai?.recommended_experience_ids?.includes(entity.id) || ai?.recommended_project_ids?.includes(entity.id)
     const value = custom ?? original
     return (
       <DescriptionEditor
@@ -100,7 +99,6 @@ function editorFor(entity: EntityMeta, panel: Panel, ai: AIAnalysisResult | null
         value={value}
         original={original}
         isCustom={!!custom}
-        aiSuggestion={recommended ? ai?.recommended_entity_descriptions?.[entity.id] : undefined}
         onCommit={(text) => update((c) => setDescription(c, entity.id, text, original))}
       />
     )

@@ -1,16 +1,16 @@
-import { getJob, getJobQuestions } from '@/lib/data'
+import { getJob } from '@/lib/data'
 import { notFound } from 'next/navigation'
 import { JobDetailClient } from '@/components/jobs/JobDetailClient'
+import { parseJobTab } from '@/lib/job-filter'
 import { verifySession } from '@/lib/auth/dal'
-
-type Props = { params: Promise<{ id: string }> }
 
 export const dynamic = 'force-dynamic'
 
-export default async function JobDetailPage({ params }: Props) {
+// The selected tab (phone and tablet) lives in the URL: ?tab=resume.
+export default async function JobDetailPage({ params, searchParams }: PageProps<'/jobs/[id]'>) {
   const { userId } = await verifySession()
-  const { id } = await params
-  const [job, questions] = await Promise.all([getJob(userId, id), getJobQuestions(userId, id)])
+  const [{ id }, { tab }] = await Promise.all([params, searchParams])
+  const job = await getJob(userId, id)
   if (!job) notFound()
-  return <JobDetailClient initialJob={job} initialQuestions={questions} />
+  return <JobDetailClient initialJob={job} initialTab={parseJobTab(tab)} />
 }

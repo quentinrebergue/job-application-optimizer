@@ -3,72 +3,49 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { PageHeader } from '@/components/ui/PageHeader'
 import { Alert } from '@/components/ui/Alert'
-import { Button } from '@/components/ui/Button'
-import { Disclosure } from '@/components/ui/Disclosure'
-import { JobForm } from '@/components/jobs/JobForm'
-import { JobMeta } from '@/components/jobs/JobMeta'
-import { StatusBadge } from '@/components/jobs/JobCard'
-import { ResumeConfigPanel } from '@/components/jobs/ResumeConfigPanel'
-import { CoverLetterPanel } from '@/components/jobs/CoverLetterPanel'
-import { QuestionEditor } from '@/components/entities/QuestionEditor'
+import { Tabs } from '@/components/ui/Tabs'
+import { FEATURES } from '@/config'
+import { cn } from '@/lib/cn'
+import { formatDate } from '@/lib/format'
 import { fetchJson } from '@/lib/http'
-import type { ApplicationStatus, JobOffer, EntityQuestion } from '@/types'
+import type { JobTab } from '@/lib/job-filter'
+import type { ApplicationStatus, JobOffer } from '@/types'
 import type { AIAnalysisResult } from '@/types/job'
+import { CoverLetterPanel } from './CoverLetterPanel'
+import { JobOfferEditor } from './JobOfferEditor'
+import { ResumeConfigPanel } from './ResumeConfigPanel'
+import { StatusSelect } from './StatusSelect'
 
 interface Props {
   initialJob: JobOffer
-  initialQuestions: EntityQuestion[]
+  initialTab: JobTab
 }
 
 function message(err: unknown): string {
   return err instanceof Error ? err.message : 'Something went wrong. Try again.'
 }
 
-export function JobDetailClient({ initialJob, initialQuestions }: Props) {
+/**
+ * Job page. Phone and tablet: a header, then tabs (Offer, Resume, Cover letter).
+ * Desktop: the offer and the resume side by side; the tabs are not needed.
+ */
+export function JobDetailClient({ initialJob, initialTab }: Props) {
   const router = useRouter()
   const id = initialJob.id
 
   const [job, setJob] = useState<JobOffer>(initialJob)
-  const [editing, setEditing] = useState(false)
-  const [saving, setSaving] = useState(false)
+  const [tab, setTab] = useState<JobTab>(initialTab)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [aiAnalysis, setAiAnalysis] = useState<AIAnalysisResult | null>(initialJob.ai_analysis ?? null)
-  const [questions, setQuestions] = useState<EntityQuestion[]>(initialQuestions)
-  const [savingQ, setSavingQ] = useState(false)
 
-  // Failures are shown above the page and leave the screen as it was (#77).
-
-  async function handleSaveQuestions(updated: EntityQuestion[]) {
-    const previous = questions
-    setQuestions(updated)
-    setSavingQ(true)
-    setError(null)
-    try {
-      await fetchJson(`/api/jobs/${id}/questions`, { method: 'PUT', json: updated })
-    } catch (err) {
-      setQuestions(previous)
-      setError(`Questions not saved: ${message(err)}`)
-    } finally {
-      setSavingQ(false)
-    }
-  }
-
-  // JobForm shows the error itself, so this one rethrows.
-  async function handleSaveMeta(data: Omit<JobOffer, 'id' | 'date_added'>) {
-    setSaving(true)
-    try {
-      setJob(await fetchJson<JobOffer>(`/api/jobs/${id}`, { method: 'PUT', json: data }))
-      setEditing(false)
-    } finally {
-      setSaving(false)
-    }
+  function changeTab(next: JobTab) {
+    setTab(next)
+    router.replace(next === 'offer' ? `/jobs/${id}` : `/jobs/${id}?tab=${next}`, { scroll: false })
   }
 
   async function handleStatusChange(status: ApplicationStatus) {
-    if (status === job.status) return
     setBusy(true)
     setError(null)
     try {
@@ -103,47 +80,65 @@ export function JobDetailClient({ initialJob, initialQuestions }: Props) {
     }
   }
 
+  const coverLetterTab = { value: 'cover-letter' as const, label: 'Cover letter', disabled: !FEATURES.coverLetter, note: FEATURES.coverLetter ? undefined : 'Soon' }
+  // On desktop both columns show; below, only the selected tab.
+  const shownBelowDesktop = (panel: JobTab) => cn(tab === panel ? 'block' : 'hidden', 'lg:block')
+
   return (
-    <div className="flex max-w-4xl flex-col gap-8 p-4 md:p-8">
-      <div>
-        <Link href="/jobs" className="mb-4 inline-block text-sm font-semibold text-ink-muted underline-offset-4 hover:text-ink hover:underline">
+    <div className="flex flex-col gap-6 p-4 md:p-8">
+      <header className="flex flex-col gap-4 border-b-2 border-ink pb-6">
+        <Link href="/jobs" className="self-start text-sm font-semibold text-ink-muted underline-offset-4 hover:text-ink hover:underline">
           ← All jobs
         </Link>
-        <PageHeader title={job.title} subtitle={job.company}>
-          <StatusBadge status={job.status} />
-          <Button variant="secondary" size="sm" onClick={() => setEditing((v) => !v)}>
-            {editing ? 'Cancel edit' : 'Edit'}
-          </Button>
-          <Button variant="danger" size="sm" onClick={handleDelete} disabled={busy}>Delete</Button>
-        </PageHeader>
-        {error && <Alert className="-mt-4 mb-2">{error}</Alert>}
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div className="min-w-0">
+            <h1 className="text-3xl font-extrabold tracking-tight">{job.title}</h1>
+            <p className="mt-1 text-ink-muted">
+              <span className="font-semibold text-ink">{job.company}</span>
+              {' · '}Added <span className="tabular-nums">{formatDate(job.date_added)}</span>
+              {job.location && <> · {job.location}</>}
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
+            {!FEATURES.coverLetter && (
+              <span className="hidden rounded-control border-2 border-dashed border-ink px-2 py-1 text-xs font-semibold text-ink-muted lg:inline">
+                Cover letter · Soon
+              </span>
+            )}
+            <StatusSelect value={job.status} onChange={handleStatusChange} disabled={busy} />
+          </div>
+        </div>
+        {error && <Alert>{error}</Alert>}
+        <Tabs
+          label="Job sections"
+          className="lg:hidden"
+          items={[{ value: 'offer', label: 'Offer' }, { value: 'resume', label: 'Resume' }, coverLetterTab]}
+          value={tab}
+          onChange={changeTab}
+        />
+      </header>
 
-        {editing ? (
-          <JobForm initial={job} saving={saving} onSave={handleSaveMeta} onCancel={() => setEditing(false)} />
-        ) : (
-          <JobMeta job={job} onStatusChange={handleStatusChange} statusDisabled={busy} />
+      <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:items-start">
+        <section aria-label="Offer" className={shownBelowDesktop('offer')}>
+          <JobOfferEditor job={job} onSaved={setJob} onDelete={handleDelete} deleting={busy} />
+        </section>
+
+        <section aria-label="Resume" className={shownBelowDesktop('resume')}>
+          <ResumeConfigPanel
+            jobId={id}
+            aiAnalysis={aiAnalysis}
+            onRankingComplete={(result) => { setAiAnalysis(result); setJob((prev) => ({ ...prev, ai_analysis: result })) }}
+            onClearAi={handleClearAi}
+            hasAiData={!!aiAnalysis}
+          />
+        </section>
+
+        {FEATURES.coverLetter && tab === 'cover-letter' && (
+          <section aria-label="Cover letter" className="lg:col-span-2">
+            <CoverLetterPanel jobId={id} />
+          </section>
         )}
       </div>
-
-      {/* The core of the app: open by default (QA-11). */}
-      <Disclosure title="Resume for this job" defaultOpen>
-        <ResumeConfigPanel
-          jobId={id}
-          aiAnalysis={aiAnalysis}
-          onRankingComplete={(result) => { setAiAnalysis(result); setJob((prev) => ({ ...prev, ai_analysis: result })) }}
-          onClearAi={handleClearAi}
-          hasAiData={!!aiAnalysis}
-        />
-      </Disclosure>
-
-      <Disclosure title="Cover letter">
-        <CoverLetterPanel jobId={id} />
-      </Disclosure>
-
-      <Disclosure title="Interview Q&A" meta={String(questions.length)}>
-        <p className="mb-4 text-sm text-ink-muted">Questions specific to this job.</p>
-        <QuestionEditor questions={questions} onChange={handleSaveQuestions} saving={savingQ} />
-      </Disclosure>
     </div>
   )
 }
