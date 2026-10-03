@@ -7,7 +7,7 @@ import type { StatusFilter } from '@/lib/job-filter'
 import { Plus } from 'lucide-react'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { JobCard } from '@/components/jobs/JobCard'
-import { Tabs } from '@/components/ui/Tabs'
+import { StatusFilterBar } from './StatusFilterBar'
 import { buttonClasses } from '@/components/ui/Button'
 import type { JobOffer } from '@/types'
 import { APPLICATION_STATUSES, APPLICATION_STATUS_LABELS, FEATURES } from '@/config'
@@ -58,16 +58,16 @@ export function JobsClient({ initialJobs, initialFilter }: Props) {
         </Link>
       </PageHeader>
 
-      <Tabs
-        label="Filter by status"
-        items={TABS.map((t) => ({
-          ...t,
-          count: t.value === 'all' ? initialJobs.length : initialJobs.filter((j) => j.status === t.value).length,
-        }))}
-        value={tab}
-        onChange={changeFilter}
-        className="mb-6"
-      />
+      <div className="mb-6">
+        <StatusFilterBar
+          options={TABS.map((t) => ({
+            ...t,
+            count: t.value === 'all' ? initialJobs.length : initialJobs.filter((j) => j.status === t.value).length,
+          }))}
+          value={tab}
+          onChange={changeFilter}
+        />
+      </div>
 
       {/* Content */}
       {filtered.length === 0 ? (

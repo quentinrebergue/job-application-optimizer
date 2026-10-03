@@ -29,11 +29,13 @@ export function entityLabel(e: EntityMeta): string {
   return e.title
 }
 
+/** Second line of an entry: where and when. */
 export function entitySubLabel(e: EntityMeta): string {
-  if (e.type === 'experiences') return e.company
-  if (e.type === 'projects') return e.tech.slice(0, 3).join(', ')
-  if (e.type === 'education') return e.institution
-  return e.level
+  const parts = e.type === 'experiences' ? [e.company, e.period]
+    : e.type === 'projects' ? [e.tech.slice(0, 3).join(', ')]
+    : e.type === 'education' ? [e.institution, e.period]
+    : [e.level]
+  return parts.filter(Boolean).join(' · ')
 }
 
 // ─── Dates ───────────────────────────────────────────────────────────────────

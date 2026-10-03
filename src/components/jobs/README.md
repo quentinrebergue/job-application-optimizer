@@ -6,8 +6,9 @@ Feature components for the Job Tracker module.
 
 | File | Description |
 |------|-------------|
-| `JobCard.tsx` | Clickable job card (`cardClasses`) with title, company, location, status badge and date. Also exports `StatusBadge` (status → `Badge` variant from `APPLICATION_STATUS_BADGES`). |
-| `JobsClient.tsx` | Jobs list: status filter (`Tabs`, kept in the URL as `?status=`), empty state per filter, grid of `JobCard`. |
+| `JobCard.tsx` | Clickable job card: title (two lines at most, full title on hover), company, date; same height for every card in a row. Also exports `StatusBadge` (fixed width, status → `Badge` variant from `APPLICATION_STATUS_BADGES`). |
+| `JobsClient.tsx` | Jobs list: status filter (`StatusFilterBar`, kept in the URL as `?status=`), empty state per filter, grid of `JobCard`. |
+| `StatusFilterBar.tsx` | The status filter: a standalone `SegmentedTabs` bar with counts from 640px, a `SelectMenu` on phones. |
 | `JobForm.tsx` | Form for creating a job (`/jobs/new`), built from `Field`/`Input`/`Select`/`Textarea`; `onSave` throws to report a failure, shown in an `Alert`. |
 | `JobDetailClient.tsx` | Job page: header (title, company, date, location, `StatusSelect`), then the offer and the resume as two white cards: side by side on desktop with a title strip, one at a time below desktop with `SegmentedTabs` (Offer / Resume / Cover letter · Soon, `FEATURES.coverLetter`) as the top of the card, kept in `?tab=`. |
 | `JobOfferEditor.tsx` | The offer, always editable (title, company, location, link, description), each field saved 0.8 s after typing via `useJobAutosave`; delete zone at the bottom. |
@@ -23,8 +24,9 @@ Feature components for the Job Tracker module.
 | `logic.ts` | Pure functions: grouping and sorting (end date, custom order, AI score), toggling, moving, AI order, tag and description overrides, reset, and the config shown on opening (`initialConfig`). Tested in `logic.test.ts`. |
 | `useResumeConfig.ts` | Loads library, config and defaults; every change is applied to the latest config and saved; text fields save 0.8 s after typing. Opening the panel never writes. The AI context is no longer edited here; its saved value is kept and still used by the ranking. |
 | `ContentFields.tsx` | "Header" section: resume title and profile, with "Use my default". |
-| `EntitySection.tsx` | One type of entries with its rows and editors; "Order by AI score". |
-| `EntityRow.tsx` | Include checkbox, recommended badge, AI match and reason, move up/down, expand. |
+| `EntitySection.tsx` | One type of entries with its rows and editors; for experiences and projects a "Reorder" mode (with "Order by AI score") instead of arrows on every row. |
+| `ReorderList.tsx` | Numbered list of the included entries with labelled Up / Down buttons. |
+| `EntityRow.tsx` | Include checkbox, title, where and when, "Recommended" and match; an "Edit description" / "Choose tags" button opens the editor and the AI's reason. Stacks on phones. |
 | `DescriptionEditor.tsx` | Description for this resume only, saved on blur. |
 | `SkillTagPicker.tsx` | Tags printed for a skill (toggles), add a tag to the library, AI-suggested tags. |
 | `SuggestedSkills.tsx` | Skills the AI suggests adding to the library. |

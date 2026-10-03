@@ -35,12 +35,24 @@ interface TextareaProps extends React.ComponentProps<'textarea'> {
 export function Textarea({ className, autoGrow, ...props }: TextareaProps) {
   const ref = useRef<HTMLTextAreaElement>(null)
 
-  // Recompute the height whenever the text changes (typing or a new value).
+  // Fit the height to the text when it changes, and when the width changes
+  // (a narrower window wraps the text onto more lines).
   useLayoutEffect(() => {
     const el = ref.current
     if (!autoGrow || !el) return
-    el.style.height = 'auto'
-    el.style.height = `${el.scrollHeight + 4}px` // + the 2px borders
+    const fit = () => {
+      el.style.height = 'auto'
+      el.style.height = `${el.scrollHeight + 4}px` // + the 2px borders
+    }
+    fit()
+    let width = el.clientWidth
+    const observer = new ResizeObserver(() => {
+      if (el.clientWidth === width) return // our own height change, not a new width
+      width = el.clientWidth
+      fit()
+    })
+    observer.observe(el)
+    return () => observer.disconnect()
   }, [autoGrow, props.value])
 
   return (

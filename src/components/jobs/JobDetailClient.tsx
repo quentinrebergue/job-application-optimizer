@@ -134,7 +134,8 @@ export function JobDetailClient({ initialJob, initialTab }: Props) {
         <PanelCard
           title="Offer"
           tabs={tabs}
-          className={cn(shownBelowDesktop('offer'), 'lg:sticky lg:top-20 lg:max-h-[calc(100dvh-6rem)] lg:overflow-y-auto')}
+          scrollBody
+          className={cn(shownBelowDesktop('offer'), 'lg:sticky lg:top-20 lg:max-h-[calc(100dvh-6rem)]')}
         >
           <JobOfferEditor job={job} onSaved={setJob} onDelete={handleDelete} deleting={busy} onSaveStateChange={setOfferSave} />
         </PanelCard>
@@ -162,16 +163,25 @@ export function JobDetailClient({ initialJob, initialTab }: Props) {
 
 /**
  * A big card for one part of the page, in the light `panel` tint so the white
- * fields and cards inside stand out. Its top edge is the tab bar below
- * desktop, and a title strip on desktop where both cards are side by side.
- * No overflow-hidden on the resume card: it would stop the download button from floating.
+ * fields and cards inside stand out. Its top edge is the tab bar below desktop,
+ * and a title strip on desktop where both cards are side by side.
+ * `scrollBody`: on desktop the title stays put and only the body scrolls (the
+ * card itself is limited in height by its className).
+ * No overflow on the resume card: it would stop the download button from floating.
  */
-function PanelCard({ title, tabs, className, children }: { title: string; tabs: React.ReactNode; className?: string; children: React.ReactNode }) {
+function PanelCard({ title, tabs, scrollBody, className, children }: {
+  title: string
+  tabs: React.ReactNode
+  scrollBody?: boolean
+  className?: string
+  children: React.ReactNode
+}) {
   return (
-    <section aria-label={title} className={cn('rounded-control border-2 border-ink bg-panel shadow-hard', className)}>
+    <section aria-label={title} className={cn('rounded-control border-2 border-ink bg-panel shadow-hard', scrollBody && 'lg:flex lg:flex-col', className)}>
       <div className="lg:hidden">{tabs}</div>
-      <h2 className="hidden border-b-2 border-ink px-5 py-3 text-xl font-extrabold tracking-tight lg:block">{title}</h2>
-      <div className="p-4 md:p-6">{children}</div>
+      <h2 className="hidden shrink-0 border-b-2 border-ink px-5 py-3 text-xl font-extrabold tracking-tight lg:block">{title}</h2>
+      {/* The gutter is reserved so the width (and the auto-grown text) does not jump when a scrollbar appears. */}
+      <div className={cn('p-4 md:p-6', scrollBody && 'lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:[scrollbar-gutter:stable]')}>{children}</div>
     </section>
   )
 }

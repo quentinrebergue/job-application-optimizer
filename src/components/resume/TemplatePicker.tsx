@@ -1,6 +1,7 @@
 'use client'
 
-import type { TemplateInfo } from '@/schemas/resume-template'
+import type { TemplateInfo, TemplateOption } from '@/schemas/resume-template'
+import { SegmentedTabs } from '@/components/ui/SegmentedTabs'
 import { cn } from '@/lib/cn'
 import { controlClasses } from '@/components/ui/Input'
 
@@ -28,8 +29,26 @@ function labelFor(name: string): string {
 }
 
 /**
+ * A number option (font size, margin…) as three named steps instead of a
+ * slider: the template's minimum, default and maximum.
+ */
+function sizeSteps(spec: TemplateOption): { label: string; value: number }[] {
+  const def = Number(spec.default)
+  return [
+    { label: 'Small', value: spec.min ?? def },
+    { label: 'Medium', value: def },
+    { label: 'Large', value: spec.max ?? def },
+  ]
+}
+
+/** The step shown as selected: the closest to the saved value. */
+function nearestStep(spec: TemplateOption, value: number): number {
+  return sizeSteps(spec).reduce((best, step) => (Math.abs(step.value - value) < Math.abs(best - value) ? step.value : best), Number(spec.default))
+}
+
+/**
  * Template choice plus one control per option the template declares in its
- * manifest: a slider for numbers, a colour input, a select for enums. Nothing
+ * manifest: three steps for numbers, a colour input, a select for enums. Nothing
  * here is specific to a template, a new template shows up with its own options.
  */
 export function TemplatePicker({ templates, value, onChange, disabled }: Props) {
@@ -61,9 +80,11 @@ export function TemplatePicker({ templates, value, onChange, disabled }: Props) 
 
       {Object.entries(current.options).map(([name, spec]) => {
         const shown = value.options[name] ?? spec.default
+        // A label around a group of buttons would click the first one; the steps name themselves.
+        const Wrapper = spec.type === 'number' ? 'div' : 'label'
         return (
-          <label key={name} className={LABEL}>
-            {labelFor(name)}
+          <Wrapper key={name} className={LABEL}>
+            <span>{labelFor(name)}</span>
             {spec.type === 'enum' && (
               <select value={String(shown)} disabled={disabled} onChange={(e) => setOption(name, e.target.value)} className={CONTROL}>
                 {spec.values?.map((v) => (
@@ -74,19 +95,15 @@ export function TemplatePicker({ templates, value, onChange, disabled }: Props) 
               </select>
             )}
             {spec.type === 'number' && (
-              <span className={cn(CONTROL, 'flex items-center gap-3')}>
-                <input
-                  type="range"
-                  min={spec.min}
-                  max={spec.max}
-                  step={0.5}
-                  value={Number(shown)}
-                  disabled={disabled}
-                  onChange={(e) => setOption(name, e.target.valueAsNumber)}
-                  className="min-w-0 flex-1 accent-ink"
-                />
-                <span className="w-8 text-right font-normal tabular-nums">{Number(shown)}</span>
-              </span>
+              <SegmentedTabs
+                label={labelFor(name)}
+                variant="standalone"
+                size="sm"
+                className="h-10"
+                items={sizeSteps(spec).map((step) => ({ value: String(step.value), label: step.label }))}
+                value={String(nearestStep(spec, Number(shown)))}
+                onChange={(v) => { if (!disabled) setOption(name, Number(v)) }}
+              />
             )}
             {spec.type === 'color' && (
               <span className={cn(CONTROL, 'flex items-center gap-3')}>
@@ -100,7 +117,7 @@ export function TemplatePicker({ templates, value, onChange, disabled }: Props) 
                 <span className="font-normal uppercase tabular-nums">{String(shown)}</span>
               </span>
             )}
-          </label>
+          </Wrapper>
         )
       })}
     </div>

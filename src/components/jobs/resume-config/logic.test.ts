@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import type { EntityMeta, ResumeConfig } from '@/types'
 import type { AIAnalysisResult } from '@/types/job'
 import {
-  EMPTY_CONFIG, applyAiOrder, groupEntities, initialConfig, moveEntity, parseEndDate,
+  EMPTY_CONFIG, applyAiOrder, entitySubLabel, groupEntities, initialConfig, moveEntity, parseEndDate,
   resetConfig, setDescription, toggleEntity, toggleSkillTag,
 } from './logic'
 
@@ -16,6 +16,13 @@ const edu = (id: string, period: string): EntityMeta =>
   ({ id, type: 'education', degree: id, institution: 'U', period, tags: [] }) as EntityMeta
 
 const cfg = (patch: Partial<ResumeConfig> = {}): ResumeConfig => ({ ...EMPTY_CONFIG, ...patch })
+
+describe('entitySubLabel', () => {
+  it('shows where and when', () => {
+    expect(entitySubLabel(exp('a', '2024 – Present'))).toBe('Co · 2024 – Present')
+    expect(entitySubLabel(skill('s', []))).toBe('advanced')
+  })
+})
 
 describe('parseEndDate', () => {
   it('reads the end of the usual period formats', () => {
