@@ -24,7 +24,8 @@ a color; a primitive never knows about jobs or resumes.
 
 - Colors, fonts, radius and spacing are defined once in `@theme` with
   **semantic** names (`canvas`, `surface`, `ink`, `ink-muted`, `line`, `accent`,
-  `accent-strong`, `success`, `warning`, `danger`). Tailwind v4 turns them into
+  `accent-strong`, `info`, `success`, `warning`, `danger`), plus the
+  neo-brutalist `shadow-hard` and `press` offset. Tailwind v4 turns them into
   utilities: `bg-canvas`, `text-ink`, `border-line`, `bg-accent-strong`.
 - Components use **only** these utilities. No `slate-*`, `blue-*`, `gray-*`, no
   hex values, no arbitrary colors (`bg-[#fff]`). Today there are about 965 such
@@ -56,10 +57,10 @@ An example of the intended shape (illustrative):
 
 ```tsx
 const variants = {
-  primary: 'bg-accent-strong text-white hover:bg-accent',
-  secondary: 'border border-line bg-surface text-ink hover:bg-canvas',
-  ghost: 'text-ink hover:bg-line/40',
-  danger: 'bg-danger text-white',
+  primary: cn(stroke, pressable, 'bg-accent text-ink'),
+  secondary: cn(stroke, pressable, 'bg-surface text-ink'),
+  ghost: 'text-ink-muted hover:text-ink hover:underline',
+  danger: cn(stroke, pressable, 'bg-danger text-white'),
 } as const
 
 export function Button({ variant = 'primary', className, ...props }: ButtonProps) {

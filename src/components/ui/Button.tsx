@@ -1,17 +1,18 @@
 import { cn } from '@/lib/cn'
-import { focusRing } from './styles'
+import { focusRing, pressable, stroke } from './styles'
 
 const base = cn(
-  'inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-control font-medium transition-colors',
+  'inline-flex items-center justify-center gap-1.5 whitespace-nowrap font-semibold',
   'disabled:pointer-events-none disabled:opacity-50',
   focusRing,
 )
 
+// Red is the main action, with ink text (white on red is below 4.5:1).
 const variants = {
-  primary: 'bg-accent-strong text-white hover:bg-accent',
-  secondary: 'border border-line bg-surface text-ink hover:border-ink-muted',
-  ghost: 'text-ink-muted hover:bg-line/50 hover:text-ink',
-  danger: 'bg-danger text-white hover:bg-danger/90',
+  primary: cn(stroke, pressable, 'bg-accent text-ink'),
+  secondary: cn(stroke, pressable, 'bg-surface text-ink'),
+  ghost: 'rounded-control border-2 border-transparent text-ink-muted hover:text-ink hover:underline underline-offset-4',
+  danger: cn(stroke, pressable, 'bg-danger text-white'),
 } as const
 
 const sizes = {

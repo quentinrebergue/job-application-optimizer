@@ -62,7 +62,7 @@ export function JobsClient({ initialJobs }: Props) {
 
       {/* Content */}
       {filtered.length === 0 ? (
-        <div className="rounded-control border border-dashed border-line p-10 text-center">
+        <div className="rounded-control border-2 border-dashed border-ink p-10 text-center">
           <p className="mb-3 text-ink-muted">No jobs here yet.</p>
           <Link href="/jobs/new" className={buttonClasses()}>
             <Plus size={15} aria-hidden="true" />

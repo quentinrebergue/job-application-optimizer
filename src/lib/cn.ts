@@ -7,6 +7,8 @@ const twMerge = extendTailwindMerge({
   extend: {
     theme: {
       radius: ['control'],
+      shadow: ['hard'],
+      spacing: ['press'],
     },
   },
 })

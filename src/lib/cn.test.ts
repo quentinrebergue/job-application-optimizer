@@ -6,6 +6,7 @@ describe('cn', () => {
     expect(cn('bg-canvas text-ink', 'bg-accent-strong')).toBe('text-ink bg-accent-strong')
     expect(cn('text-sm text-ink', 'text-ink-muted')).toBe('text-sm text-ink-muted')
     expect(cn('rounded-control', 'rounded-none')).toBe('rounded-none')
+    expect(cn('shadow-hard', 'hover:shadow-none', 'shadow-none')).toBe('hover:shadow-none shadow-none')
   })
 
   it('drops falsy values', () => {

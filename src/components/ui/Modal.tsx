@@ -36,18 +36,18 @@ export function Modal({ open, onClose, title, children, className }: Props) {
       // A click on the dialog element itself (not its content) is a click on the backdrop.
       onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
       className={cn(
-        'm-auto max-h-[90vh] w-[calc(100%-2rem)] max-w-5xl flex-col rounded-control border border-line bg-surface p-0 text-ink open:flex',
-        'backdrop:bg-ink/50',
+        'm-auto max-h-[90vh] w-[calc(100%-2rem)] max-w-5xl flex-col rounded-control border-2 border-ink bg-surface p-0 text-ink shadow-hard open:flex',
+        'backdrop:bg-ink/60',
         className,
       )}
     >
-      <div className="flex shrink-0 items-center justify-between gap-4 border-b border-line px-5 py-3">
-        <h2 id={titleId} className="text-sm font-semibold">{title}</h2>
+      <div className="flex shrink-0 items-center justify-between gap-4 border-b-2 border-ink px-5 py-3">
+        <h2 id={titleId} className="font-extrabold">{title}</h2>
         <button
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className={cn('rounded-control p-1.5 text-ink-muted transition-colors hover:bg-line/50 hover:text-ink', focusRing)}
+          className={cn('rounded-control border-2 border-transparent p-1 text-ink transition-colors hover:border-ink', focusRing)}
         >
           <X size={16} aria-hidden="true" />
         </button>

@@ -25,7 +25,7 @@ interface TabsProps<T extends string> {
  */
 export function Tabs<T extends string>({ label, items, value, onChange, className }: TabsProps<T>) {
   return (
-    <div role="group" aria-label={label} className={cn('flex flex-wrap gap-x-5 border-b border-line', className)}>
+    <div role="group" aria-label={label} className={cn('flex flex-wrap gap-2', className)}>
       {items.map((item) => {
         const selected = item.value === value
         return (
@@ -35,14 +35,16 @@ export function Tabs<T extends string>({ label, items, value, onChange, classNam
             aria-pressed={selected}
             onClick={() => onChange(item.value)}
             className={cn(
-              '-mb-px border-b-2 py-2 text-sm transition-colors',
+              'rounded-control border-2 px-3 py-1.5 text-sm transition-colors',
               focusRing,
-              selected ? 'border-accent font-semibold text-ink' : 'border-transparent text-ink-muted hover:text-ink',
+              selected
+                ? 'border-ink bg-surface font-bold text-ink shadow-hard'
+                : 'border-transparent text-ink-muted hover:border-ink hover:text-ink',
             )}
           >
             {item.label}
             {item.count !== undefined && (
-              <span className="ml-1.5 font-mono text-xs font-normal text-ink-muted">{item.count}</span>
+              <span className="ml-1.5 font-mono text-xs font-normal">{item.count}</span>
             )}
           </button>
         )

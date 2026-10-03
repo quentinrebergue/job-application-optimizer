@@ -1,87 +1,106 @@
 # Identity
 
 The look and feel of the app, decided once so that every screen follows it. If a
-choice is not here, ask whether it serves the three words below; if not, leave it
-out. Tickets: #59 (this brief), #60 (tokens).
+choice is not here, ask whether it serves the promise below; if not, leave it
+out. Tickets: #59 (first brief), #85 (choice of direction), #87 (this version).
 
-## Personality
+## Promise and personality
 
-**Simple, direct, technical.** The app does one thing: from a job offer to a
-tailored resume in a couple of clicks. The interface says what it does in few
-words, shows data plainly, and puts the one important action in red.
+**Fast, direct, confident.** FastResume does one thing: one click to import a
+job offer, one to generate the tailored resume, one to download it. The
+interface makes the next click obvious.
 
-## What we take from the references
+The style is **neo-brutalism**: thick ink strokes, hard shadows, flat saturated
+colours, bold type. Every element looks like a sticker on the page, and anything
+clickable looks clickable. It reads as honest and a bit playful, the opposite of
+the smooth blue SaaS look of most resume tools.
 
-Seven interfaces were collected (screenshots stay on the owner's machine, they
-are third-party work). The pattern they share, and that we keep:
+The interface is expressive; **the generated resume is not**. The PDF keeps a
+sober, classic layout: it is what recruiters see.
 
-| Idea | Seen in | We use it as |
-|---|---|---|
-| Warm off-white canvas instead of pure white | Harvest, Zapier, MotherDuck | Page background |
-| Near-black "ink" and **one** vivid accent | Replay, Zapier, Pietra | Text in ink, everything important in red |
-| Headline split in ink and accent | Replay | Page titles may highlight their key words in red |
-| Monospace for data and labels | MotherDuck | Scores, dates, ids, small labels |
-| Flat surfaces, hairline borders | Zelt, Replay | Borders instead of shadows |
+## How we chose it
+
+Three directions were built side by side on the same elements (#85): the
+previous flat hairline style, a tempered neo-brutalism (thick strokes and
+shadows on actions only) and full neo-brutalism. The owner chose **full
+neo-brutalism**. References: Gumroad's 2021–2022 redesign, FigJam, and the
+components of [neobrutalism.dev](https://www.neobrutalism.dev/docs/) (MIT), whose
+recipe we adapt.
+
+## Shape
+
+| Element | Rule |
+|---|---|
+| Stroke | **2px ink** on cards, buttons, controls, badges, navigation items, dialogs |
+| Shadow | **hard and offset**: `4px 4px 0 0 ink`, never blurred (`shadow-hard`) |
+| Press | a clickable element moves onto its shadow on hover (`translate` by 4px, shadow removed); off with `prefers-reduced-motion` |
+| Corners | **5px** (`rounded-control`); no pills, no large radius |
+| Dividers | thin `line` colour, only inside dense content (tables, lists in a panel) |
+
+Dense screens (the resume configuration panel) keep their content readable:
+thick strokes frame the blocks and the controls, not every row.
 
 ## Color
 
-One accent, everything else neutral. We do not need a secondary color: the
-neutrals play that role (roughly 60% canvas, 30% surfaces and text, 10% accent).
+Each colour has a role. Colour never decorates.
 
 | Token | Value | Use |
 |---|---|---|
-| `canvas` | `#FAF7F2` | Page background |
-| `surface` | `#FFFFFF` | Cards, fields, panels |
-| `ink` | `#1A1514` | Main text |
-| `ink-muted` | `#6B6560` | Secondary text, captions |
-| `line` | `#E5DFD6` | Borders and dividers |
-| `accent` | `#F71735` | Large display text, underlines, icons, highlights |
-| `accent-strong` | `#D60F2C` | Buttons and any small red text |
+| `canvas` | `#FFE9C7` | Page background (warm peach) |
+| `surface` | `#FFFFFF` | Cards, controls, dialogs, neutral badges |
+| `ink` | `#1A1514` | Text, strokes, shadows |
+| `ink-muted` | `#4A413C` | Secondary text, captions |
+| `line` | `#EBD7B5` | Thin dividers in dense content, muted fills |
+| `accent` | `#FF4D50` | **The main action**: primary button fill, active navigation item. Always with ink text |
+| `accent-strong` | `#C4122F` | Red text and links on light backgrounds, focus ring |
+| `info` | `#5294FF` | Status fill: in progress (applied) |
+| `warning` | `#FACC00` | Status fill: needs attention (interview) |
+| `success` | `#05E17A` | Status fill: done, positive (offer) |
+| `danger` | `#B00020` | Errors (text) and destructive buttons (white text) |
 
-Functional colors (success, warning, danger) exist only to carry meaning in
-status messages and are defined as tokens too; they are never decoration.
+- **One action colour.** On a screen, red marks the next click. Blue, yellow and
+  green only describe a state (a status badge), never an action or a decoration.
+- Status fills always carry ink text and a 2px ink stroke.
 
-**Contrast (measured, WCAG ratio):** ink on canvas 16.9, muted on canvas 5.4,
-`accent-strong` on canvas about 5.0, `accent` on canvas 3.8. Normal text needs
-4.5, so the lighter `accent` is for large or decorative uses only, and buttons
-use `accent-strong` with white text.
+**Contrast (measured, WCAG ratio; normal text needs 4.5):**
 
-Dark mode: not now. Tokens are semantic, so adding it later means defining a
-second set of values, not touching components.
+| Text / background | Ratio |
+|---|---|
+| ink / canvas | 15.3 |
+| ink / surface | 18.1 |
+| ink-muted / canvas | 8.4 |
+| ink-muted / line | 7.1 |
+| ink / accent | 5.5 |
+| ink / info | 6.1 |
+| ink / warning | 11.8 |
+| ink / success | 10.4 |
+| accent-strong / canvas | 5.1 |
+| danger / canvas | 6.2 |
+| white / danger | 7.3 |
+| white / accent | 3.3 (**not allowed**: red buttons use ink text) |
+
+Dark mode: not now. Tokens are semantic, so adding it later means a second set of
+values, not touching components.
 
 ## Typography
 
-A direction chosen from the references: one clear sans for almost everything, and
-a monospace for data. Both come from Google Fonts through `next/font`, so they
-are optimised and self-hosted at build time.
-
 | Role | Font | Notes |
 |---|---|---|
-| Interface and headings | **Instrument Sans** | Regular and semibold. Replaces Inter, which is the default of generated interfaces |
-| Data and small labels | **JetBrains Mono** | Scores, dates, ids, keyboard hints. Never for paragraphs |
-
-## Shape and density
-
-- Flat. Depth comes from the canvas/surface contrast and a 1px `line` border, not
-  from shadows.
-- Small radius (about 4 to 6 px) on controls and cards. No large rounded corners.
-- Compact and information-first: this is a working tool, not a landing page.
-  Comfortable spacing, but no decorative empty areas.
+| Interface | **Instrument Sans** | Regular and semibold for text, **extra-bold** for page titles and card titles |
+| Data and small labels | **JetBrains Mono** | Scores, dates, counts, ids, section labels in capitals. Never for paragraphs |
 
 ## What we do not do
 
-Proposed by the maintainer from what is absent in the references, to be edited
-freely.
-
-- No gradients.
-- No drop shadows (a focus ring is not a shadow).
-- No second brand color.
+- No blurred or soft shadows; no gradients.
+- No colour used as decoration, no second action colour.
+- No large rounded corners or pill shapes.
 - No emoji in the interface.
 - No decorative icons: an icon appears only when it carries a meaning the text
   does not, and always with an accessible label.
 - No sparkle or magic-wand imagery for AI features; they are named for what they
-  do ("Recommend experiences"), not for the technology.
-- No Inter, no default slate and blue palette.
+  do ("Generate resume"), not for the technology.
+- No continuous animations (marquees, looping effects).
+- No playful styling in the generated PDF.
 
 ## Voice
 

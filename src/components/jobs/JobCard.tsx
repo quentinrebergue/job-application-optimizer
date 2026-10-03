@@ -17,9 +17,9 @@ export function StatusBadge({ status }: { status: string }) {
 
 export function JobCard({ job }: { job: JobOffer }) {
   return (
-    <Link href={`/jobs/${job.id}`} className={cardClasses({ interactive: true, className: 'group' })}>
+    <Link href={`/jobs/${job.id}`} className={cardClasses({ interactive: true })}>
       <div className="mb-1 flex items-start justify-between gap-2">
-        <span className="font-semibold leading-tight text-ink transition-colors group-hover:text-accent-strong">
+        <span className="font-extrabold leading-tight text-ink">
           {job.title}
         </span>
         <StatusBadge status={job.status} />
