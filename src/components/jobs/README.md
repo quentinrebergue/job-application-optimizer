@@ -9,10 +9,10 @@ Feature components for the Job Tracker module.
 | `JobCard.tsx` | Clickable job card (`cardClasses`) with title, company, location, status badge and date. Also exports `StatusBadge` (status → `Badge` variant from `APPLICATION_STATUS_BADGES`). |
 | `JobsClient.tsx` | Jobs list: status filter (`Tabs`, kept in the URL as `?status=`), empty state per filter, grid of `JobCard`. |
 | `JobForm.tsx` | Form for creating a job (`/jobs/new`), built from `Field`/`Input`/`Select`/`Textarea`; `onSave` throws to report a failure, shown in an `Alert`. |
-| `JobDetailClient.tsx` | Job page: header (title, company, date, location, `StatusSelect`), then on phone and tablet tabs Offer / Resume / Cover letter (Soon, `FEATURES.coverLetter`), kept in `?tab=`; on desktop the offer and the resume side by side. |
+| `JobDetailClient.tsx` | Job page: header (title, company, date, location, `StatusSelect`), then the offer and the resume as two white cards: side by side on desktop with a title strip, one at a time below desktop with `SegmentedTabs` (Offer / Resume / Cover letter · Soon, `FEATURES.coverLetter`) as the top of the card, kept in `?tab=`. |
 | `JobOfferEditor.tsx` | The offer, always editable (title, company, location, link, description), each field saved 0.8 s after typing via `useJobAutosave`; delete zone at the bottom. |
 | `useJobAutosave.ts` | Per-field debounced save of a job; required fields are not saved empty; "Saving…" / "Saved" state. |
-| `StatusSelect.tsx` | The status as a clickable badge (native select with the badge fills). |
+| `StatusSelect.tsx` | The status as a badge-coloured `SelectMenu` that opens the list of statuses. |
 | `ResumeConfigPanel.tsx` | "Resume" in three steps: 1 Tailor with AI (rank, clear), 2 Content (header, library by type, suggested skills), 3 Template; a sticky bar with the selection count and **Download PDF**. Composes `resume-config/`. |
 | `AIRankButton.tsx` | "Rank with AI" (POST `/api/jobs/[id]/rank`); one provider, moving to OVH AI Endpoints with #44. |
 

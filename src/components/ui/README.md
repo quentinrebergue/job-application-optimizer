@@ -13,6 +13,8 @@ is shown with its variants on `/ui` (development only).
 | `Badge.tsx` | `<Badge label variant?>` — flat fills by meaning, ink stroke: `neutral`, `muted`, `accent`, `info`, `success`, `warning`, `danger`. |
 | `Field.tsx` | `<Field label hint? error?>` — label, control and message tied together (`htmlFor`, `aria-describedby`, `aria-invalid`, error announced with `role="alert"`). |
 | `Input.tsx` | `Input`, `Textarea`, `Select` — white controls with ink stroke, hard shadow while focused; inside a `<Field>` they pick up its ids automatically. |
+| `SegmentedTabs.tsx` | `<SegmentedTabs label items value onChange>` — equal joined segments forming the top edge of a card; the selected one is filled red (`aria-pressed`); disabled items with a note ("Soon"). |
+| `SelectMenu.tsx` | `SelectMenu`, `SelectMenuTrigger`, `SelectMenuValue`, `SelectMenuContent`, `SelectMenuItem` — select with a styled list, on Base UI (keyboard and screen readers handled), adapted from neobrutalism.dev. Use the native `Select` for plain form fields. |
 | `Tabs.tsx` | `<Tabs label items value onChange>` — row of exclusive filters; the selected one is a white bordered block with a hard shadow and is announced (`aria-pressed`); optional count in tabular figures. |
 | `Alert.tsx` | `<Alert variant?>` — message block: `danger` (announced at once, `role="alert"`), `success`, `info` (`role="status"`). |
 | `Disclosure.tsx` | `<Disclosure title meta? defaultOpen?>` — section that opens and closes; the button sits inside the heading and announces `aria-expanded`; children mount only when open. |

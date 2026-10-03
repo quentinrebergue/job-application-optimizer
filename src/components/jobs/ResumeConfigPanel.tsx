@@ -94,7 +94,6 @@ export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClea
 
   return (
     <div className="flex flex-col gap-10">
-      <h2 className="text-2xl font-extrabold tracking-tight">Resume</h2>
       {panel.error && <Alert>{panel.error}</Alert>}
 
       <Step number={1} title="Tailor with AI">

@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Alert } from '@/components/ui/Alert'
-import { Tabs } from '@/components/ui/Tabs'
+import { SegmentedTabs } from '@/components/ui/SegmentedTabs'
 import { FEATURES } from '@/config'
 import { cn } from '@/lib/cn'
 import { formatDate } from '@/lib/format'
@@ -81,6 +81,15 @@ export function JobDetailClient({ initialJob, initialTab }: Props) {
   }
 
   const coverLetterTab = { value: 'cover-letter' as const, label: 'Cover letter', disabled: !FEATURES.coverLetter, note: FEATURES.coverLetter ? undefined : 'Soon' }
+  // Below desktop, the segments on top of the card switch between the panels.
+  const tabs = (
+    <SegmentedTabs
+      label="Job sections"
+      items={[{ value: 'offer', label: 'Offer' }, { value: 'resume', label: 'Resume' }, coverLetterTab]}
+      value={tab}
+      onChange={changeTab}
+    />
+  )
   // On desktop both columns show; below, only the selected tab.
   const shownBelowDesktop = (panel: JobTab) => cn(tab === panel ? 'block' : 'hidden', 'lg:block')
 
@@ -109,21 +118,14 @@ export function JobDetailClient({ initialJob, initialTab }: Props) {
           </div>
         </div>
         {error && <Alert>{error}</Alert>}
-        <Tabs
-          label="Job sections"
-          className="lg:hidden"
-          items={[{ value: 'offer', label: 'Offer' }, { value: 'resume', label: 'Resume' }, coverLetterTab]}
-          value={tab}
-          onChange={changeTab}
-        />
       </header>
 
-      <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:items-start">
-        <section aria-label="Offer" className={shownBelowDesktop('offer')}>
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:items-start">
+        <PanelCard title="Offer" tabs={tabs} className={shownBelowDesktop('offer')}>
           <JobOfferEditor job={job} onSaved={setJob} onDelete={handleDelete} deleting={busy} />
-        </section>
+        </PanelCard>
 
-        <section aria-label="Resume" className={shownBelowDesktop('resume')}>
+        <PanelCard title="Resume" tabs={tabs} className={shownBelowDesktop('resume')}>
           <ResumeConfigPanel
             jobId={id}
             aiAnalysis={aiAnalysis}
@@ -131,14 +133,29 @@ export function JobDetailClient({ initialJob, initialTab }: Props) {
             onClearAi={handleClearAi}
             hasAiData={!!aiAnalysis}
           />
-        </section>
+        </PanelCard>
 
         {FEATURES.coverLetter && tab === 'cover-letter' && (
-          <section aria-label="Cover letter" className="lg:col-span-2">
+          <PanelCard title="Cover letter" tabs={tabs} className="lg:col-span-2">
             <CoverLetterPanel jobId={id} />
-          </section>
+          </PanelCard>
         )}
       </div>
     </div>
+  )
+}
+
+/**
+ * A big white card for one part of the page. Its top edge is the tab bar below
+ * desktop, and a title strip on desktop where both cards are side by side.
+ * No overflow-hidden: it would stop the resume's download bar from sticking.
+ */
+function PanelCard({ title, tabs, className, children }: { title: string; tabs: React.ReactNode; className?: string; children: React.ReactNode }) {
+  return (
+    <section aria-label={title} className={cn('rounded-control border-2 border-ink bg-surface shadow-hard', className)}>
+      <div className="lg:hidden">{tabs}</div>
+      <h2 className="hidden border-b-2 border-ink px-5 py-3 text-xl font-extrabold tracking-tight lg:block">{title}</h2>
+      <div className="p-4 md:p-6">{children}</div>
+    </section>
   )
 }

@@ -22,10 +22,7 @@ export function JobOfferEditor({ job, onSaved, onDelete, deleting }: Props) {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between gap-3">
-        <h2 className="text-2xl font-extrabold tracking-tight">Offer</h2>
-        <p aria-live="polite" className="text-sm text-ink-muted">{STATE_LABEL[state]}</p>
-      </div>
+      <p aria-live="polite" className="min-h-5 self-end text-sm text-ink-muted">{STATE_LABEL[state]}</p>
       {failure && <Alert>Offer not saved: {failure}</Alert>}
 
       <div className="grid gap-4 sm:grid-cols-2">
