@@ -6,7 +6,8 @@ import Link from 'next/link'
 import type { SkillMeta } from '@/types'
 import type { AIAnalysisResult } from '@/types/job'
 import { Alert } from '@/components/ui/Alert'
-import { Button } from '@/components/ui/Button'
+import { Button, buttonClasses } from '@/components/ui/Button'
+import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerTitle } from '@/components/ui/Drawer'
 import { DEFAULT_TEMPLATE_CHOICE, TemplatePicker, effectiveOptions, type TemplateChoice } from '@/components/resume/TemplatePicker'
 import { useTemplates } from '@/components/resume/useTemplates'
 import { useAiRanking } from './useAiRanking'
@@ -71,6 +72,7 @@ export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClea
   const panel = useResumeConfig(jobId, aiAnalysis)
   const pdf = usePdf(jobId)
   const ai = useAiRanking(jobId, onRankingComplete)
+  const [confirmReset, setConfirmReset] = useState(false)
   const { templates, error: templatesError } = useTemplates()
   const { entities, config, drafts, defaults } = panel
   useEffect(() => { onSavingChange?.(panel.saving) }, [panel.saving, onSavingChange])
@@ -85,8 +87,8 @@ export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClea
     options: config.resume_options ?? {},
   }
 
-  function startAgain() {
-    if (!confirm('Reset to your defaults? The selection, the custom texts and the AI ranking of this resume are cleared.')) return
+  function reset() {
+    setConfirmReset(false)
     panel.reset()
     if (hasAiData) onClearAi?.()
   }
@@ -146,7 +148,7 @@ export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClea
         {pdf.error && <Alert className="self-stretch">{pdf.error}</Alert>}
         {/* Three actions of the same size; shorter labels on phones so they fit on one row. */}
         <div className="flex flex-wrap justify-end gap-2 sm:gap-3">
-          <Button variant="secondary" onClick={startAgain} aria-label="Reset to defaults" className={ACTION}>
+          <Button variant="secondary" onClick={() => setConfirmReset(true)} aria-label="Reset to defaults" className={ACTION}>
             <span className="sm:hidden">Reset</span>
             <span className="hidden sm:inline">Reset to defaults</span>
           </Button>
@@ -157,13 +159,32 @@ export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClea
             className={ACTION}
             title={hasAiData && aiAnalysis ? `Last ranked on ${formatDate(aiAnalysis.analyzed_at)}` : undefined}
           >
-            {ai.ranking ? 'Ranking…' : hasAiData ? 'Rank again' : 'Rank with AI'}
+            {ai.ranking ? 'Ranking…' : hasAiData ? (
+              <>
+                <span className="sm:hidden">AI rank</span>
+                <span className="hidden sm:inline">Rank again with AI</span>
+              </>
+            ) : 'Rank with AI'}
           </Button>
           <Button onClick={download} disabled={pdf.generating} className={ACTION}>
             {pdf.generating ? 'Generating…' : 'Download PDF'}
           </Button>
         </div>
       </div>
+
+      <Drawer open={confirmReset} onOpenChange={setConfirmReset}>
+        <DrawerContent>
+          <DrawerTitle>Reset to your defaults?</DrawerTitle>
+          <DrawerDescription>
+            The selection, the custom title, profile and descriptions, and the AI ranking of this resume are cleared.
+            Your library and your defaults are not changed.
+          </DrawerDescription>
+          <DrawerFooter>
+            <DrawerClose className={buttonClasses({ variant: 'secondary' })}>Cancel</DrawerClose>
+            <Button variant="danger" onClick={reset}>Reset</Button>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
     </div>
   )
 }
