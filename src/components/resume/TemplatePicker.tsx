@@ -1,6 +1,8 @@
 'use client'
 
 import type { TemplateInfo } from '@/schemas/resume-template'
+import { cn } from '@/lib/cn'
+import { controlClasses } from '@/components/ui/Input'
 
 export interface TemplateChoice {
   template: string
@@ -16,8 +18,8 @@ interface Props {
   disabled?: boolean
 }
 
-const FIELD =
-  'mt-1 block rounded border border-slate-300 bg-white px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
+const FIELD = cn(controlClasses, 'mt-1 h-9 w-auto')
+const LABEL = 'text-xs font-semibold text-ink'
 
 // "datePlacement" -> "Date placement"
 function labelFor(name: string): string {
@@ -40,7 +42,7 @@ export function TemplatePicker({ templates, value, onChange, disabled }: Props) 
 
   return (
     <div className="flex flex-wrap items-end gap-4">
-      <label className="text-xs font-medium text-slate-600">
+      <label className={LABEL}>
         Template
         <select
           value={current.id}
@@ -59,7 +61,7 @@ export function TemplatePicker({ templates, value, onChange, disabled }: Props) 
       {Object.entries(current.options).map(([name, spec]) => {
         const shown = value.options[name] ?? spec.default
         return (
-          <label key={name} className="text-xs font-medium text-slate-600">
+          <label key={name} className={LABEL}>
             {labelFor(name)}
             {spec.type === 'enum' && (
               <select
@@ -76,7 +78,7 @@ export function TemplatePicker({ templates, value, onChange, disabled }: Props) 
               </select>
             )}
             {spec.type === 'number' && (
-              <span className="mt-1 flex items-center gap-2">
+              <span className="mt-1 flex h-9 items-center gap-2">
                 <input
                   type="range"
                   min={spec.min}
@@ -85,9 +87,9 @@ export function TemplatePicker({ templates, value, onChange, disabled }: Props) 
                   value={Number(shown)}
                   disabled={disabled}
                   onChange={(e) => setOption(name, e.target.valueAsNumber)}
-                  className="w-28"
+                  className="w-28 accent-ink"
                 />
-                <span className="w-9 text-right tabular-nums text-slate-700">{Number(shown)}</span>
+                <span className="w-9 text-right font-normal tabular-nums">{Number(shown)}</span>
               </span>
             )}
             {spec.type === 'color' && (
@@ -96,7 +98,7 @@ export function TemplatePicker({ templates, value, onChange, disabled }: Props) 
                 value={String(shown)}
                 disabled={disabled}
                 onChange={(e) => setOption(name, e.target.value)}
-                className="mt-1 block h-8 w-12 cursor-pointer rounded border border-slate-300 bg-white"
+                className="mt-1 block h-9 w-12 cursor-pointer rounded-control border-2 border-ink bg-surface"
               />
             )}
           </label>

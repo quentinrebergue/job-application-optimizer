@@ -26,14 +26,11 @@
   "src/components/entities/EntityDetailClient.tsx": 17,
   "src/components/entities/EntityForm.tsx": 17,
   "src/components/entities/QuestionEditor.tsx": 26,
-  "src/components/jobs/AIRankButton.tsx": 9,
   "src/components/jobs/CoverLetterPanel.tsx": 51,
-  "src/components/jobs/ResumeConfigPanel.tsx": 163,
   "src/components/qa/FlashCard.tsx": 14,
   "src/components/qa/GeneralQAManager.tsx": 37,
   "src/components/qa/SessionConfig.tsx": 37,
   "src/components/resume/GeneratePdfButton.tsx": 4,
   "src/components/resume/ResumeDefaultsEditor.tsx": 23,
-  "src/components/resume/TemplatePicker.tsx": 6,
   "src/components/taxonomy/TaxonomyClient.tsx": 51
 }

@@ -7,11 +7,14 @@
    role so that restyling the app means editing this block.
    Decisions and contrast measurements: docs/design/identity.md */
 
-/* Fonts are loaded in app/layout.tsx; `inline` makes the utilities read the
-   variables next/font sets on <html>. */
+/* One interface font, DM Sans, loaded in app/layout.tsx (#90); `inline` makes the
+   utilities read the variable next/font sets on <html>. Three weights only:
+   400 text and fields (font-normal), 600 labels and buttons (font-semibold),
+   800 titles (font-extrabold). Data uses tabular figures (tabular-nums).
+   Monospace is the system one, for code blocks only: nothing to download. */
 @theme inline {
-  --font-sans: var(--font-instrument-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains-mono), ui-monospace, 'Cascadia Code', monospace;
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
 }
 
 /* `static` always emits every variable, even those no class uses yet.

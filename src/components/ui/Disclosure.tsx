@@ -6,7 +6,7 @@ import { focusRing } from './styles'
 
 interface DisclosureProps {
   title: string
-  /** Shown after the title, in the data font (e.g. a count) */
+  /** Shown after the title, in tabular figures (e.g. a count) */
   meta?: string
   defaultOpen?: boolean
   className?: string
@@ -33,11 +33,11 @@ export function Disclosure({ title, meta, defaultOpen = false, className, childr
         >
           <span className="text-xl font-extrabold tracking-tight">
             {title}
-            {meta && <span className="ml-2 font-mono text-sm font-normal text-ink-muted">{meta}</span>}
+            {meta && <span className="ml-2 text-sm font-normal tabular-nums text-ink-muted">{meta}</span>}
           </span>
           <span
             aria-hidden="true"
-            className="flex size-8 shrink-0 items-center justify-center rounded-control border-2 border-ink bg-surface font-mono text-lg font-bold"
+            className="flex size-8 shrink-0 items-center justify-center rounded-control border-2 border-ink bg-surface text-lg font-semibold"
           >
             {open ? '−' : '+'}
           </span>

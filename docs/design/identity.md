@@ -2,7 +2,7 @@
 
 The look and feel of the app, decided once so that every screen follows it. If a
 choice is not here, ask whether it serves the promise below; if not, leave it
-out. Tickets: #59 (first brief), #85 (choice of direction), #87 (this version).
+out. Tickets: #59 (first brief), #85 (choice of direction), #87 (this version), #90 (fonts).
 
 ## Promise and personality
 
@@ -84,10 +84,20 @@ values, not touching components.
 
 ## Typography
 
-| Role | Font | Notes |
-|---|---|---|
-| Interface | **Instrument Sans** | Regular and semibold for text, **extra-bold** for page titles and card titles |
-| Data and small labels | **JetBrains Mono** | Scores, dates, counts, ids, section labels in capitals. Never for paragraphs |
+**One family: DM Sans** (#90), the font of neobrutalism.dev: built for
+interfaces, very legible in form fields, with real weights up to 1000 (no
+browser-faked bold). Loaded once with `next/font`, as a variable font.
+
+| Role | Weight | Utility | Used for |
+|---|---|---|---|
+| Text | 400 | `font-normal` | Paragraphs, form fields, secondary text |
+| Labels | 600 | `font-semibold` | Buttons, field labels, badges, active tabs, small capital labels (`eyebrow`) |
+| Titles | 800 | `font-extrabold` | Page, section and card titles, the wordmark |
+
+- No other weight, no italic.
+- Dates, counts and scores use **tabular figures** (`tabular-nums`), so numbers line
+  up without a monospace font.
+- Monospace (the system one, nothing to download) is only for code blocks.
 
 ## What we do not do
 

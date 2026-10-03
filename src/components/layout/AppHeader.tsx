@@ -31,7 +31,7 @@ export function AppHeader({ userEmail }: { userEmail: string | null }) {
                   'rounded-control border-2 border-ink px-2.5 py-1 text-sm sm:px-3 transition-[translate,box-shadow] duration-100',
                   focusRing,
                   isActive
-                    ? 'bg-accent font-bold text-ink shadow-hard'
+                    ? 'bg-accent font-semibold text-ink shadow-hard'
                     : 'bg-surface text-ink hover:translate-x-press hover:translate-y-press motion-reduce:hover:translate-x-0 motion-reduce:hover:translate-y-0',
                 )}
               >
@@ -44,7 +44,7 @@ export function AppHeader({ userEmail }: { userEmail: string | null }) {
         <div className="ml-auto flex min-w-0 items-center gap-4 pr-1">
           {userEmail ? (
             <>
-              <span className="hidden truncate font-mono text-xs text-ink-muted lg:inline" title={userEmail}>
+              <span className="hidden truncate text-xs text-ink-muted lg:inline" title={userEmail}>
                 {userEmail}
               </span>
               <LogoutButton />

@@ -4,6 +4,7 @@ import type { ApplicationStatus, JobOffer } from '@/types'
 import { APPLICATION_STATUSES, APPLICATION_STATUS_LABELS } from '@/config'
 import { Tabs } from '@/components/ui/Tabs'
 import { formatDate } from '@/lib/format'
+import { eyebrow } from '@/components/ui/styles'
 
 interface Props {
   job: JobOffer
@@ -16,7 +17,7 @@ export function JobMeta({ job, onStatusChange, statusDisabled }: Props) {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
-        <p className="font-mono text-xs uppercase tracking-wider text-ink-muted">Status</p>
+        <p className={eyebrow}>Status</p>
         <fieldset disabled={statusDisabled} className="disabled:opacity-60">
           <Tabs
             label="Application status"
@@ -29,7 +30,7 @@ export function JobMeta({ job, onStatusChange, statusDisabled }: Props) {
 
       <dl className="grid gap-x-6 gap-y-3 text-sm sm:grid-cols-[8rem_1fr]">
         <dt className="font-semibold text-ink-muted">Added</dt>
-        <dd className="font-mono">{formatDate(job.date_added, 'long')}</dd>
+        <dd className="tabular-nums">{formatDate(job.date_added, 'long')}</dd>
         {job.location && (
           <>
             <dt className="font-semibold text-ink-muted">Location</dt>
@@ -55,7 +56,7 @@ export function JobMeta({ job, onStatusChange, statusDisabled }: Props) {
 
       {job.description && (
         <div className="flex flex-col gap-2">
-          <p className="font-mono text-xs uppercase tracking-wider text-ink-muted">Description</p>
+          <p className={eyebrow}>Description</p>
           <div className="max-h-64 overflow-y-auto whitespace-pre-wrap rounded-control border-2 border-ink bg-surface p-4 text-sm leading-relaxed">
             {job.description}
           </div>

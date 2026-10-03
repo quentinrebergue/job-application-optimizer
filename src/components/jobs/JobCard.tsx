@@ -27,7 +27,7 @@ export function JobCard({ job }: { job: JobOffer }) {
       </div>
       <p className="mb-1 text-sm text-ink-muted">{job.company}</p>
       {job.location && <p className="mb-2 text-xs text-ink-muted">{job.location}</p>}
-      <p className="mt-3 font-mono text-xs text-ink-muted">
+      <p className="mt-3 text-xs tabular-nums text-ink-muted">
         {formatDate(job.date_added)}
       </p>
     </Link>

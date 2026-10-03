@@ -4,6 +4,9 @@
 export const focusRing =
   'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-strong'
 
+/** Small capital label above a group ("STATUS", "DESCRIPTION"). */
+export const eyebrow = 'text-xs font-semibold uppercase tracking-wider text-ink-muted'
+
 /** 2px ink stroke and small radius: the outline of every sticker-like element. */
 export const stroke = 'rounded-control border-2 border-ink'
 
