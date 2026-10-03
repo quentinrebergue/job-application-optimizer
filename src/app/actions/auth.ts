@@ -9,9 +9,16 @@ import { createSession, deleteSession } from '@/lib/auth/session'
 import { SignupSchema, LoginSchema } from '@/lib/validation/auth-schemas'
 import { safePath } from '@/lib/auth/return-to'
 
+// `email` is sent back on failure so the form can show it again: React 19 resets
+// uncontrolled fields after an action (#68). The password is never sent back.
 export type AuthFormState =
-  | { errors?: { email?: string[]; password?: string[] }; message?: string }
+  | { errors?: { email?: string[]; password?: string[] }; message?: string; email?: string }
   | undefined
+
+function submittedEmail(formData: FormData): string {
+  const email = formData.get('email')
+  return typeof email === 'string' ? email : ''
+}
 
 export async function signup(_prevState: AuthFormState, formData: FormData): Promise<AuthFormState> {
   const validated = SignupSchema.safeParse({
@@ -19,7 +26,7 @@ export async function signup(_prevState: AuthFormState, formData: FormData): Pro
     password: formData.get('password'),
   })
   if (!validated.success) {
-    return { errors: z.flattenError(validated.error).fieldErrors }
+    return { errors: z.flattenError(validated.error).fieldErrors, email: submittedEmail(formData) }
   }
 
   const { email, password } = validated.data
@@ -28,7 +35,7 @@ export async function signup(_prevState: AuthFormState, formData: FormData): Pro
     await createSession(user.id)
   } catch (err) {
     const isDuplicate = err instanceof Error && 'code' in err && err.code === '23505'
-    return { message: isDuplicate ? 'This email is already registered.' : 'Something went wrong. Try again.' }
+    return { message: isDuplicate ? 'This email is already registered.' : 'Something went wrong. Try again.', email }
   }
 
   // The form posts the page to return to; checked again here, it comes from the client.
@@ -66,13 +73,13 @@ export async function login(_prevState: AuthFormState, formData: FormData): Prom
     password: formData.get('password'),
   })
   if (!validated.success) {
-    return { errors: z.flattenError(validated.error).fieldErrors }
+    return { errors: z.flattenError(validated.error).fieldErrors, email: submittedEmail(formData) }
   }
 
   const { email, password } = validated.data
 
   if (await isRateLimited(email)) {
-    return { message: 'Too many attempts. Try again in 15 minutes.' }
+    return { message: 'Too many attempts. Try again in 15 minutes.', email }
   }
 
   const user = await findUserByEmail(email)
@@ -80,7 +87,7 @@ export async function login(_prevState: AuthFormState, formData: FormData): Prom
 
   if (!user || !valid) {
     await recordFailedAttempt(email)
-    return { message: 'Wrong email or password.' }
+    return { message: 'Wrong email or password.', email }
   }
 
   await createSession(user.id)
