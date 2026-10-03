@@ -7,6 +7,7 @@ import { createUser, findUserByEmail } from '@/lib/data/users'
 import { verifyPassword } from '@/lib/auth/password'
 import { createSession, deleteSession } from '@/lib/auth/session'
 import { SignupSchema, LoginSchema } from '@/lib/validation/auth-schemas'
+import { safePath } from '@/lib/auth/return-to'
 
 export type AuthFormState =
   | { errors?: { email?: string[]; password?: string[] }; message?: string }
@@ -30,7 +31,8 @@ export async function signup(_prevState: AuthFormState, formData: FormData): Pro
     return { message: isDuplicate ? 'This email is already registered.' : 'Something went wrong. Try again.' }
   }
 
-  redirect('/')
+  // The form posts the page to return to; checked again here, it comes from the client.
+  redirect(safePath(formData.get('returnTo')))
 }
 
 const MAX_ATTEMPTS = 5
@@ -82,7 +84,7 @@ export async function login(_prevState: AuthFormState, formData: FormData): Prom
   }
 
   await createSession(user.id)
-  redirect('/')
+  redirect(safePath(formData.get('returnTo')))
 }
 
 export async function logout(): Promise<void> {
