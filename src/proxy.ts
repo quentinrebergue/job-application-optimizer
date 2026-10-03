@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { loginUrlFor, returnToFrom } from '@/lib/auth/return-to'
 
 const PUBLIC_PATHS = ['/login', '/signup']
 
@@ -16,12 +17,14 @@ export function proxy(request: NextRequest) {
     return NextResponse.next()
   }
 
+  // Keep the requested page (and its query, e.g. a job imported by the
+  // bookmarklet) so the user lands back on it after logging in.
   if (!isPublicPath && !hasSessionCookie) {
-    return NextResponse.redirect(new URL('/login', request.url))
+    return NextResponse.redirect(new URL(loginUrlFor(pathname, request.nextUrl.searchParams), request.url))
   }
 
   if (isPublicPath && hasSessionCookie) {
-    return NextResponse.redirect(new URL('/', request.url))
+    return NextResponse.redirect(new URL(returnToFrom(request.nextUrl.searchParams), request.url))
   }
 
   return NextResponse.next()
