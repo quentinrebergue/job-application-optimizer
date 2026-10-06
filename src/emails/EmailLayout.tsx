@@ -1,4 +1,4 @@
-import { Body, Container, Head, Html, Link, Preview, Section, Text } from '@react-email/components'
+import { Body, Container, Head, Html, Link, Preview, Section, Text } from 'react-email'
 import type { CSSProperties, ReactNode } from 'react'
 import { emailTheme as t } from './theme'
 
