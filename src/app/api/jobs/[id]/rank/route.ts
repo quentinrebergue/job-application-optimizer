@@ -4,11 +4,20 @@ import { rankJobWithAI, isAIProvider, type AIProvider } from '@/lib/ai'
 import path from 'path'
 import fs from 'fs/promises'
 import { getSessionUserId } from '@/lib/auth/session'
+import { findUserById } from '@/lib/data/users'
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const userId = await getSessionUserId()
   if (!userId) {
     return Response.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+  // The AI costs money: only confirmed accounts use it (#125).
+  const user = await findUserById(userId)
+  if (!user?.emailVerified) {
+    return Response.json(
+      { error: 'Confirm your email address to use the AI ranking: open the link we sent you, or send a new one from the banner at the top.' },
+      { status: 403 },
+    )
   }
   try {
     const { id } = await params

@@ -5,6 +5,8 @@ export interface User {
   id: string
   email: string
   createdAt: string
+  /** False until the user opens the link of the confirmation mail */
+  emailVerified: boolean
 }
 
 interface UserRow {
@@ -12,6 +14,7 @@ interface UserRow {
   email: string
   password_hash: string
   created_at: Date
+  email_verified_at: Date | null
 }
 
 function rowToUser(row: UserRow): User {
@@ -19,6 +22,7 @@ function rowToUser(row: UserRow): User {
     id: row.id,
     email: row.email,
     createdAt: row.created_at.toISOString(),
+    emailVerified: row.email_verified_at !== null,
   }
 }
 
@@ -48,4 +52,12 @@ export async function findUserById(id: string): Promise<User | null> {
   )
   const row = result.rows[0]
   return row ? rowToUser(row) : null
+}
+
+/** Marks the address as confirmed (keeps the first confirmation date). */
+export async function markEmailVerified(id: string): Promise<void> {
+  await pool.query(
+    'UPDATE users SET email_verified_at = now() WHERE id = $1 AND email_verified_at IS NULL',
+    [id]
+  )
 }
