@@ -9,7 +9,5 @@ npm-debug.log*
 .env*
 !.env.example
 README.md
-AI_RANK_FEATURE.md
 coverage
 data
-mcp

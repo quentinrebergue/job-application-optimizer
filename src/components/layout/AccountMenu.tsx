@@ -4,7 +4,7 @@ import { useTransition } from 'react'
 import { Menu } from '@base-ui/react/menu'
 import { logout } from '@/app/actions/auth'
 import { cn } from '@/lib/cn'
-import { focusRing } from '@/components/ui/styles'
+import { focusRing, pressable } from '@/components/ui/styles'
 
 /**
  * The account: a square with the user's initial that opens a small menu with
@@ -20,10 +20,9 @@ export function AccountMenu({ email }: { email: string }) {
       <Menu.Trigger
         aria-label={`Account (${email})`}
         className={cn(
-          'flex size-9 items-center justify-center rounded-control border-2 border-ink bg-surface text-base font-extrabold text-ink shadow-hard',
-          'transition-[translate,box-shadow] duration-100 hover:translate-x-press hover:translate-y-press hover:shadow-none',
+          'flex size-9 items-center justify-center rounded-control border-2 border-ink bg-surface text-base font-extrabold text-ink',
+          pressable,
           'data-popup-open:translate-x-press data-popup-open:translate-y-press data-popup-open:shadow-none',
-          'motion-reduce:transition-none',
           focusRing,
         )}
       >
