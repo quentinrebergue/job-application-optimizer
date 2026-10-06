@@ -31,6 +31,8 @@ spec:
               value: "postgres://app:$(POSTGRES_PASSWORD)@postgres:5432/job_optimizer"
             - name: RESUME_RENDERER_URL
               value: "http://resume-renderer"
+            - name: APP_URL
+              value: "https://fastresume.tech"
           envFrom:
             - secretRef:
                 name: app-secrets
