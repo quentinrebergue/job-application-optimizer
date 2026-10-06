@@ -1,7 +1,7 @@
 /**
  * file-length.test.ts
  *
- * Enforces a 400-line limit on all TypeScript source files in src/ and mcp/.
+ * Enforces a 400-line limit on all TypeScript source files (.ts and .tsx) in src/.
  * This keeps files focused and forces logic to be split into multiple units.
  */
 
@@ -18,19 +18,14 @@ function collectTsFiles(dir: string, files: string[] = []): string[] {
     const full = path.join(dir, entry.name)
     if (entry.isDirectory()) {
       collectTsFiles(full, files)
-    } else if (entry.isFile() && entry.name.endsWith('.ts') && !entry.name.endsWith('.d.ts')) {
+    } else if (entry.isFile() && /\.tsx?$/.test(entry.name) && !entry.name.endsWith('.d.ts')) {
       files.push(full)
     }
   }
   return files
 }
 
-const SEARCH_DIRS = [
-  path.join(ROOT, 'src'),
-  path.join(ROOT, 'mcp'),
-]
-
-const allFiles = SEARCH_DIRS.flatMap((d) => collectTsFiles(d))
+const allFiles = collectTsFiles(path.join(ROOT, 'src'))
 
 describe('file length limit (max 400 lines)', () => {
   for (const file of allFiles) {

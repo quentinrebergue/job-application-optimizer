@@ -6,14 +6,12 @@ import Link from 'next/link'
 import { Alert } from '@/components/ui/Alert'
 import { ConfirmDrawer } from '@/components/ui/ConfirmDrawer'
 import { SegmentedTabs } from '@/components/ui/SegmentedTabs'
-import { FEATURES } from '@/config'
 import { cn } from '@/lib/cn'
 import { formatDate } from '@/lib/format'
 import { fetchJson } from '@/lib/http'
 import type { JobTab } from '@/lib/job-filter'
 import type { ApplicationStatus, JobOffer } from '@/types'
 import type { AIAnalysisResult } from '@/types/job'
-import { CoverLetterPanel } from './CoverLetterPanel'
 import { JobOfferEditor } from './JobOfferEditor'
 import type { SaveState } from './useJobAutosave'
 import { ResumeConfigPanel } from './ResumeConfigPanel'
@@ -87,7 +85,8 @@ export function JobDetailClient({ initialJob, initialTab }: Props) {
     }
   }
 
-  const coverLetterTab = { value: 'cover-letter' as const, label: 'Cover letter', disabled: !FEATURES.coverLetter, note: FEATURES.coverLetter ? undefined : 'Soon' }
+  // Announced, not built yet: shown greyed out so users know it is coming.
+  const coverLetterTab = { value: 'cover-letter' as const, label: 'Cover letter', disabled: true, note: 'Soon' }
   // Below desktop, the segments on top of the card switch between the panels.
   const tabs = (
     <SegmentedTabs
@@ -160,12 +159,6 @@ export function JobDetailClient({ initialJob, initialTab }: Props) {
             onSavingChange={setResumeSaving}
           />
         </PanelCard>
-
-        {FEATURES.coverLetter && tab === 'cover-letter' && (
-          <PanelCard title="Cover letter" tabs={tabs} className="lg:col-span-2">
-            <CoverLetterPanel jobId={id} />
-          </PanelCard>
-        )}
       </div>
 
       <ConfirmDrawer

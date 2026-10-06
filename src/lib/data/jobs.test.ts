@@ -8,7 +8,7 @@ const { createJob } = await import('./jobs')
 const ROW = {
   id: 'job-1', user_id: 'u1', company: 'Acme', title: 'Engineer', description: 'Build', location: null, url: null,
   status: 'saved', tags: [], ats_tags: [], ai_analysis: null, date_added: new Date('2026-10-03T00:00:00Z'),
-  resume_config: null, questions: null, cover_letter: null,
+  resume_config: null,
 }
 
 beforeEach(() => {

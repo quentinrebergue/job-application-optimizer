@@ -1,4 +1,4 @@
-import { APPLICATION_STATUSES, FEATURES } from '@/config'
+import { APPLICATION_STATUSES } from '@/config'
 import type { ApplicationStatus } from '@/types'
 
 export type StatusFilter = ApplicationStatus | 'all'
@@ -12,9 +12,8 @@ export function parseStatusFilter(value: string | string[] | undefined): StatusF
 
 export type JobTab = 'offer' | 'resume' | 'cover-letter'
 
-/** The `tab` query parameter of a job page; anything unknown or switched off opens the offer. */
+/** The `tab` query parameter of a job page; anything unknown opens the offer (the cover letter is not built yet). */
 export function parseJobTab(value: string | string[] | undefined): JobTab {
   if (value === 'resume') return 'resume'
-  if (value === 'cover-letter' && FEATURES.coverLetter) return 'cover-letter'
   return 'offer'
 }

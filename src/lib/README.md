@@ -8,7 +8,7 @@ Server-side business logic. All functions are barrel-exported from `index.ts`. T
 |-----------|-------------|
 | `data/` | Read/write JSON and Markdown files in the `/data/` directory with Zod validation |
 | `resume/` | Builds the render payload from entities and the user profile, and calls the resume-renderer service (Go + Typst) |
-| `ai/` | OpenAI-powered entity ranking for job-specific resume tailoring |
+| `ai/` | AI ranking of the library against a job offer |
 
 ## Files
 

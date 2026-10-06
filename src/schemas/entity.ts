@@ -1,11 +1,5 @@
 import { z } from 'zod'
 
-export const EntityQuestionSchema = z.object({
-  id: z.string(),
-  question: z.string(),
-  answer: z.string(),
-})
-
 export const ExperienceMetaSchema = z.object({
   id: z.string(),
   type: z.literal('experiences'),

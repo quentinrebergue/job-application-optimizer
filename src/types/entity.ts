@@ -2,12 +2,6 @@
 
 export type EntityType = 'experiences' | 'projects' | 'skills' | 'education'
 
-export interface EntityQuestion {
-  id: string
-  question: string
-  answer: string
-}
-
 export interface ExperienceMeta {
   id: string
   type: 'experiences'
@@ -20,10 +14,6 @@ export interface ExperienceMeta {
   latex_snippet?: string
 }
 
-export interface Experience extends ExperienceMeta {
-  questions: EntityQuestion[]
-}
-
 export interface ProjectMeta {
   id: string
   type: 'projects'
@@ -32,10 +22,6 @@ export interface ProjectMeta {
   description: string
   tags: string[]
   latex_snippet?: string
-}
-
-export interface Project extends ProjectMeta {
-  questions: EntityQuestion[]
 }
 
 export interface SkillMeta {
@@ -48,10 +34,6 @@ export interface SkillMeta {
   latex_snippet?: string
 }
 
-export interface Skill extends SkillMeta {
-  questions: EntityQuestion[]
-}
-
 export interface EducationMeta {
   id: string
   type: 'education'
@@ -62,9 +44,4 @@ export interface EducationMeta {
   latex_snippet?: string
 }
 
-export interface Education extends EducationMeta {
-  questions: EntityQuestion[]
-}
-
 export type EntityMeta = ExperienceMeta | ProjectMeta | SkillMeta | EducationMeta
-export type Entity = Experience | Project | Skill | Education

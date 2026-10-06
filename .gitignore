@@ -52,3 +52,6 @@ terraform/kubeconfig.yaml
 
 # ansible
 ansible/inventory.ini
+
+# Local preview config of Claude Code
+.claude/launch.json

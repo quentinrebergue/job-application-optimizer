@@ -2,13 +2,13 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { ENABLED_MODULES } from '@/config'
+import { SECTIONS } from '@/config'
 import { buttonClasses } from '@/components/ui/Button'
 import { cn } from '@/lib/cn'
 import { focusRing, pageWidth } from '@/components/ui/styles'
 import { AccountMenu } from './AccountMenu'
 import { Wordmark } from './Wordmark'
-import { isActiveModule } from './nav'
+import { isActiveSection } from './nav'
 
 /**
  * The app's only navigation, at every width: name, sections, account.
@@ -28,12 +28,12 @@ export function AppHeader({ userEmail }: { userEmail: string | null }) {
         </div>
 
         <nav aria-label="Main" className="flex items-center gap-1 sm:gap-2">
-          {ENABLED_MODULES.map((mod) => {
-            const isActive = isActiveModule(pathname, mod)
+          {SECTIONS.map((section) => {
+            const isActive = isActiveSection(pathname, section)
             return (
               <Link
-                key={mod.id}
-                href={mod.href}
+                key={section.id}
+                href={section.href}
                 aria-current={isActive ? 'page' : undefined}
                 className={cn(
                   'rounded-control px-2 py-1 text-base transition-colors sm:px-3',
@@ -41,7 +41,7 @@ export function AppHeader({ userEmail }: { userEmail: string | null }) {
                   isActive ? 'font-extrabold text-ink' : 'font-normal text-ink-muted hover:text-ink',
                 )}
               >
-                {mod.label}
+                {section.label}
               </Link>
             )
           })}

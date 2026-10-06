@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
-import type { Entity, EntityMeta, EntityType } from '@/types'
+import type { EntityMeta, EntityType } from '@/types'
 import { Alert } from '@/components/ui/Alert'
 import { Button } from '@/components/ui/Button'
 import { useFieldAutosave, type SaveState } from '@/hooks/useFieldAutosave'
@@ -10,7 +10,7 @@ import { EntityFields } from './EntityFields'
 import { ENTITY_FIELDS, fieldUpdate, toValues } from './entity-fields'
 
 interface Props {
-  entity: Entity
+  entity: EntityMeta
   onSaved: (entity: EntityMeta) => void
   onDelete: () => void
   deleting: boolean
