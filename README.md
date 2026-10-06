@@ -1,3 +1,11 @@
+# FastResume
+
+**One job. One resume. Three clicks.**
+
+A free, open-source app that tailors your resume to each job offer: import the offer, let the AI pick your best experiences, download the PDF. What it promises and will never do: [docs/charter.md](docs/charter.md).
+
+> This README is being rewritten (#107). The development notes below are the original ones.
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started

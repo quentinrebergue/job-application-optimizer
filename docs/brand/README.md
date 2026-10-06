@@ -13,6 +13,10 @@ An F whose stem ends in a lightning bolt (fast + resume), on a red sticker with 
 
 Colours are the tokens of `src/app/globals.css`: ink `#1a1514`, accent `#ff4d50`, surface `#ffffff`. In the app the mark is drawn by `src/components/layout/Logo.tsx` with the same geometry and the token classes.
 
+## Slogan
+
+The slogan is in `docs/charter.md`; the other ideas of the brainstorm, and why they were not kept, are in `slogans.md`.
+
 ## App icons
 
 `src/app/icon.svg`, `src/app/favicon.ico` (16, 32, 48 px) and `src/app/apple-icon.png` (180 px) are generated from `logo.svg`. After changing the logo:
