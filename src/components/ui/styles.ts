@@ -16,6 +16,16 @@ export const eyebrow = 'text-xs font-semibold uppercase tracking-wider text-ink-
 /** 2px ink stroke and small radius: the outline of every sticker-like element. */
 export const stroke = 'rounded-control border-2 border-ink'
 
-/** Hard shadow; on hover the element moves onto it. Motion off with prefers-reduced-motion. */
-export const pressable =
-  'shadow-hard transition-[translate,box-shadow] duration-100 hover:translate-x-press hover:translate-y-press hover:shadow-none motion-reduce:transition-none motion-reduce:hover:translate-x-0 motion-reduce:hover:translate-y-0'
+/**
+ * Hard shadow; on hover the element moves onto it. `hover:` only applies where
+ * a pointer can hover, so on a phone the same press comes from `active:` (the
+ * tap); after a hover, the click keeps it pressed without moving again.
+ * Motion off with prefers-reduced-motion.
+ */
+export const pressable = [
+  'shadow-hard transition-[translate,box-shadow] duration-100',
+  'hover:translate-x-press hover:translate-y-press hover:shadow-none',
+  'active:translate-x-press active:translate-y-press active:shadow-none',
+  'motion-reduce:transition-none motion-reduce:hover:translate-x-0 motion-reduce:hover:translate-y-0',
+  'motion-reduce:active:translate-x-0 motion-reduce:active:translate-y-0',
+].join(' ')
