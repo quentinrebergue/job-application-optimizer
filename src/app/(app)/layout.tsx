@@ -1,4 +1,5 @@
 import { AppHeader } from '@/components/layout/AppHeader'
+import { VerifyEmailBanner } from '@/components/layout/VerifyEmailBanner'
 import { getCurrentUser } from '@/lib/auth/dal'
 
 // Shell of the signed-in app: one top bar at every width, then the page.
@@ -18,6 +19,7 @@ export default async function AppLayout({
         Skip to content
       </a>
       <AppHeader userEmail={user?.email ?? null} />
+      {user && !user.emailVerified && <VerifyEmailBanner email={user.email} />}
       <main id="main" className="min-w-0">
         {children}
       </main>

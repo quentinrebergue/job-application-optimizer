@@ -3,12 +3,18 @@ import type { NextRequest } from 'next/server'
 import { loginUrlFor, returnToFrom } from '@/lib/auth/return-to'
 
 const PUBLIC_PATHS = ['/login', '/signup']
+// Open whether signed in or not: the mail link may be opened in another browser.
+const OPEN_PATHS = ['/verify-email']
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
   const isApiRoute = pathname.startsWith('/api/')
   const isPublicPath = PUBLIC_PATHS.includes(pathname)
   const hasSessionCookie = request.cookies.has('session')
+
+  if (OPEN_PATHS.some((path) => pathname === path || pathname.startsWith(path + '/'))) {
+    return NextResponse.next()
+  }
 
   if (isApiRoute) {
     if (!hasSessionCookie) {

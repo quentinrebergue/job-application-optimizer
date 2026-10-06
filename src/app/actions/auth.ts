@@ -3,7 +3,8 @@
 import * as z from 'zod'
 import { pool } from '@/lib/db'
 import { redirect } from 'next/navigation'
-import { createUser, findUserByEmail } from '@/lib/data/users'
+import { createUser, findUserByEmail, type User } from '@/lib/data/users'
+import { sendVerificationEmail } from '@/lib/auth/email-verification'
 import { verifyPassword } from '@/lib/auth/password'
 import { createSession, deleteSession } from '@/lib/auth/session'
 import { SignupSchema, LoginSchema } from '@/lib/validation/auth-schemas'
@@ -30,12 +31,20 @@ export async function signup(_prevState: AuthFormState, formData: FormData): Pro
   }
 
   const { email, password } = validated.data
+  let user: User
   try {
-    const user = await createUser(email, password)
+    user = await createUser(email, password)
     await createSession(user.id)
   } catch (err) {
     const isDuplicate = err instanceof Error && 'code' in err && err.code === '23505'
     return { message: isDuplicate ? 'This email is already registered.' : 'Something went wrong. Try again.', email }
+  }
+
+  // The account exists even if the mail fails: the banner offers to resend it.
+  try {
+    await sendVerificationEmail(user)
+  } catch (err) {
+    console.error('verification mail not sent at sign-up', err)
   }
 
   // The form posts the page to return to; checked again here, it comes from the client.
