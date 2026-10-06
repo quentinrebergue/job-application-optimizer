@@ -1,4 +1,4 @@
-import { Button, Heading, Link, Text } from '@react-email/components'
+import { Button, Heading, Link, Text } from 'react-email'
 import { EmailLayout, mailStyles as s } from './EmailLayout'
 
 export const VERIFY_EMAIL_SUBJECT = 'Confirm your email address'
