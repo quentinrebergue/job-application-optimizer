@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="2 2 56 56">
+  <!-- FastResume mark: an F whose stem ends in a lightning bolt, on a red sticker with a hard shadow. -->
+  <rect x="10" y="10" width="48" height="48" rx="5" fill="#1a1514"/>
+  <rect x="4" y="4" width="48" height="48" rx="5" fill="#ff4d50" stroke="#1a1514" stroke-width="4"/>
+  <path d="M21 8.5 H43 L41 15.5 H29 L27.5 21.5 H39 L37.3 28.5 L17 49.5 L21.6 32.5 H14.2 Z" fill="#1a1514"/>
+</svg>
