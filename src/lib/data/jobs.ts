@@ -1,6 +1,5 @@
 import { v4 as uuidv4 } from 'uuid'
 import type { JobOffer, JobWithConfig, ResumeConfig } from '@/types'
-import type { EntityQuestion } from '@/types'
 import { pool } from '@/lib/db'
 
 const DEFAULT_RESUME_CONFIG: ResumeConfig = {
@@ -22,7 +21,6 @@ interface JobRow {
   ats_tags: string[] | null
   ai_analysis: JobOffer['ai_analysis'] | null
   resume_config: ResumeConfig | null
-  questions: EntityQuestion[] | null
 }
 
 function rowToJobOffer(row: JobRow): JobOffer {
@@ -113,20 +111,5 @@ export async function saveResumeConfig(userId: string, id: string, config: Resum
   await pool.query(
     'UPDATE jobs SET resume_config = $3 WHERE user_id = $1 AND id = $2',
     [userId, id, JSON.stringify(config)]
-  )
-}
-
-export async function getJobQuestions(userId: string, id: string): Promise<EntityQuestion[]> {
-  const { rows } = await pool.query(
-    'SELECT questions FROM jobs WHERE user_id = $1 AND id = $2',
-    [userId, id]
-  )
-  return rows[0]?.questions ?? []
-}
-
-export async function saveJobQuestions(userId: string, id: string, questions: EntityQuestion[]): Promise<void> {
-  await pool.query(
-    'UPDATE jobs SET questions = $3 WHERE user_id = $1 AND id = $2',
-    [userId, id, JSON.stringify(questions)]
   )
 }

@@ -10,7 +10,7 @@ import { JobCard } from '@/components/jobs/JobCard'
 import { FilterBar } from '@/components/ui/FilterBar'
 import { buttonClasses } from '@/components/ui/Button'
 import type { JobOffer } from '@/types'
-import { APPLICATION_STATUSES, APPLICATION_STATUS_LABELS, FEATURES } from '@/config'
+import { APPLICATION_STATUSES, APPLICATION_STATUS_LABELS } from '@/config'
 import { page } from '@/components/ui/styles'
 
 const TABS: { label: string; value: StatusFilter }[] = [
@@ -42,14 +42,6 @@ export function JobsClient({ initialJobs, initialFilter }: Props) {
         title="Job Tracker"
         subtitle="Track your applications from saved to offer."
       >
-        {FEATURES.linkedinImport && (
-          <Link
-            href="/jobs/bookmarklet"
-            className={buttonClasses({ variant: 'secondary' })}
-          >
-            LinkedIn Import
-          </Link>
-        )}
         <Link
           href="/jobs/new"
           className={buttonClasses()}

@@ -3,8 +3,6 @@ import type { AIAnalysisResult } from '@/types/job'
 import { rankJobWithGemini } from './gemini'
 import { rankJobWithClaude } from './claude'
 
-export { rankEntities } from './ranker'
-
 export type AIProvider = 'gemini' | 'claude'
 
 export const AI_PROVIDERS: AIProvider[] = ['gemini', 'claude']

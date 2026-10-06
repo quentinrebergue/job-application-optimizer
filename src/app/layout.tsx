@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { DM_Sans } from 'next/font/google'
 import './globals.css'
-import 'highlight.js/styles/atom-one-dark.css'
 
 // The only interface font (#90), variable so every weight is real, not faked.
 // Exposed as a CSS variable that the --font-sans token in globals.css reads.

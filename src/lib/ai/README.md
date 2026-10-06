@@ -1,14 +1,11 @@
 # src/lib/ai
 
-AI-powered entity ranking for job-specific resume tailoring. Makes a single OpenAI API call (gpt-4o-mini) to score each entity against a job description, then caches the result in `data/jobs/{jobId}/resume-config.json`.
+AI ranking of the library against a job offer (used by `api/jobs/[id]/rank`). To be replaced by the AI gateway service on OVHcloud AI Endpoints (#44).
 
 ## Files
 
 | File | Description |
 |------|-------------|
-| `index.ts` | Barrel export |
-| `ranker.ts` | `rankEntities(jobDescription, entities)` — calls OpenAI, returns `AIRanking[]` sorted by score descending |
-
-## Requirements
-
-Set `OPENAI_API_KEY` in `.env.local`. Without it, the `/api/ai/rank` route will return a 500 error.
+| `index.ts` | `rankJobWithAI(provider, …)`: dispatches to a provider; `AIProvider`, `isAIProvider` |
+| `ranking-prompt.ts` | `buildRankingPrompt`, `parseRankingResponse`: the same prompt and parsing for every provider |
+| `claude.ts`, `gemini.ts` | One call per provider |

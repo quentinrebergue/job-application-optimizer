@@ -1,14 +1,14 @@
 # src/schemas
 
-Zod validation schemas that mirror each TypeScript type. Used by the data access layer to validate every JSON file read from disk — malformed files return `null` instead of crashing. All schemas are barrel-exported from `index.ts`.
+Zod schemas that mirror the TypeScript types; the API routes validate request bodies with them. All schemas are barrel-exported from `index.ts`.
 
 ## Files
 
 | File | Description |
 |------|-------------|
 | `index.ts` | Barrel export — re-exports all schemas |
-| `entity.ts` | `EntityQuestionSchema`, `ExperienceMetaSchema`, `ProjectMetaSchema`, `SkillMetaSchema`, `EntityMetaSchema` (discriminated union on `type`) |
-| `job.ts` | `ApplicationStatusSchema`, `AIRankingSchema`, `ResumeConfigSchema`, `JobOfferSchema` |
-| `exercise.ts` | `ExerciseMetaSchema` |
-| `knowledge.ts` | `KnowledgeMetaSchema` |
-| `general-question.ts` | `GeneralQuestionSchema` |
+| `entity.ts` | `ExperienceMetaSchema`, `ProjectMetaSchema`, `SkillMetaSchema`, `EducationMetaSchema`, `EntityMetaSchema` (discriminated union on `type`) |
+| `job.ts` | `ApplicationStatusSchema`, `AIRankingSchema`, `AIAnalysisResultSchema`, `ResumeConfigSchema`, `JobOfferSchema` |
+| `resume-profile.ts` | `ResumeProfileSchema` |
+| `resume-generate.ts` | `GenerateResumeSchema` (body of `api/resume/generate`) |
+| `resume-template.ts` | `TemplateInfoSchema`, `TemplateListSchema` (templates of the renderer service) |

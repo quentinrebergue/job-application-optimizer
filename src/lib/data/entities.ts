@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid'
-import type { EntityType, EntityMeta, Entity, EntityQuestion } from '@/types'
+import type { EntityType, EntityMeta } from '@/types'
 import { pool } from '@/lib/db'
 
 interface EntityRow {
@@ -8,7 +8,6 @@ interface EntityRow {
   tags: string[]
   latex_snippet: string
   data: Record<string, unknown>
-  questions: EntityQuestion[] | null
 }
 
 function rowToEntityMeta(row: EntityRow): EntityMeta {
@@ -29,21 +28,13 @@ export async function listEntities(userId: string, type: EntityType): Promise<En
   return rows.map(rowToEntityMeta)
 }
 
-export async function getEntityQuestions(userId: string, type: EntityType, id: string): Promise<EntityQuestion[]> {
-  const { rows } = await pool.query(
-    'SELECT questions FROM entities WHERE user_id = $1 AND type = $2 AND id = $3',
-    [userId, type, id]
-  )
-  return rows[0]?.questions ?? []
-}
-
-export async function getEntity(userId: string, type: EntityType, id: string): Promise<Entity | null> {
+export async function getEntity(userId: string, type: EntityType, id: string): Promise<EntityMeta | null> {
   const { rows } = await pool.query(
     'SELECT * FROM entities WHERE user_id = $1 AND type = $2 AND id = $3',
     [userId, type, id]
   )
   if (rows.length === 0) return null
-  return { ...rowToEntityMeta(rows[0]), questions: rows[0].questions ?? [] } as Entity
+  return rowToEntityMeta(rows[0])
 }
 
 export async function createEntity(
@@ -54,8 +45,8 @@ export async function createEntity(
   const id = `${type.slice(0, 4)}-${uuidv4().slice(0, 8)}`
   const { tags, latex_snippet, ...rest } = data
   const { rows } = await pool.query(
-    `INSERT INTO entities (id, user_id, type, tags, latex_snippet, data, questions)
-     VALUES ($1,$2,$3,$4,$5,$6,'[]') RETURNING *`,
+    `INSERT INTO entities (id, user_id, type, tags, latex_snippet, data)
+     VALUES ($1,$2,$3,$4,$5,$6) RETURNING *`,
     [id, userId, type, tags ?? [], latex_snippet ?? '', JSON.stringify(rest)]
   )
   return rowToEntityMeta(rows[0])
@@ -80,13 +71,6 @@ export async function updateEntity(
     [userId, type, id, tags ?? [], latex_snippet ?? '', JSON.stringify(rest)]
   )
   return rowToEntityMeta(rows[0])
-}
-
-export async function saveEntityQuestions(userId: string, type: EntityType, id: string, questions: EntityQuestion[]): Promise<void> {
-  await pool.query(
-    'UPDATE entities SET questions=$4 WHERE user_id=$1 AND type=$2 AND id=$3',
-    [userId, type, id, JSON.stringify(questions)]
-  )
 }
 
 export async function deleteEntity(userId: string, type: EntityType, id: string): Promise<boolean> {

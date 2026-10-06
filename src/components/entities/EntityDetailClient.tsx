@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import type { Entity, EntityType } from '@/types'
+import type { EntityMeta, EntityType } from '@/types'
 import { Alert } from '@/components/ui/Alert'
 import { ConfirmDrawer } from '@/components/ui/ConfirmDrawer'
 import { eyebrow } from '@/components/ui/styles'
@@ -15,15 +15,12 @@ import { libraryHref } from '@/lib/entity-filter'
 import { page } from '@/components/ui/styles'
 import { cn } from '@/lib/cn'
 
-interface Props { initialEntity: Entity }
+interface Props { initialEntity: EntityMeta }
 
-/**
- * A library entry. Its interview questions belong to the Q&A trainer, which is
- * switched off for now (#79): they are kept in the data but not shown here.
- */
+/** A library entry: its fields, saved as you type, and its deletion. */
 export function EntityDetailClient({ initialEntity }: Props) {
   const router = useRouter()
-  const [entity, setEntity] = useState<Entity>(initialEntity)
+  const [entity, setEntity] = useState<EntityMeta>(initialEntity)
   const [deleting, setDeleting] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [error, setError] = useState<string | null>(null)

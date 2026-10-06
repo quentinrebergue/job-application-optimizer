@@ -8,7 +8,7 @@ Next.js App Router root. Contains the document layout, two route groups (their n
 |------|-------------|
 | `layout.tsx` | Root layout — `<html>`, `<body>` and fonts only, no navigation. |
 | `(app)/layout.tsx` | Shell of the signed-in app: one top bar (`AppHeader`) at every width. |
-| `(app)/page.tsx` | Dashboard home page — shows a card per enabled module (`ENABLED_MODULES`). |
+| `(app)/page.tsx` | Home page: a card per section (Jobs, Resume) with real counts. |
 | `(public)/layout.tsx` | Shell of the pages before sign-in (`login/`, `signup/`): wordmark only, no app navigation. |
 | `globals.css` | Global styles — imports Tailwind CSS v4 with `@import "tailwindcss"`. |
 
@@ -19,8 +19,6 @@ Next.js App Router root. Contains the document layout, two route groups (their n
 | `(app)/resume/` | Resume page: the profile and the library (`?tab=` kind) |
 | `(app)/entities/` | Entry page and new entry; `/entities` and `/entities/[type]` redirect to the library in `/resume` |
 | `(app)/jobs/` | Job Application Tracker pages |
-| `(app)/qa/` | Q&A Flashcard Trainer pages |
-| `(app)/coding/` | Coding Interview Trainer pages |
-| `(app)/taxonomy/` | Tag taxonomy page |
+| `(app)/ui/` | Catalogue of the UI components (for development) |
 | `(public)/login/`, `(public)/signup/` | Sign-in and sign-up pages |
 | `api/` | Next.js API route handlers (server-side, JSON responses) |

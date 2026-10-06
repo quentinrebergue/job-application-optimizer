@@ -1,7 +1,5 @@
 // All magic values in one place. Never hardcode these elsewhere.
 
-export const DEFAULT_QUESTION_COUNT = 20
-
 export const APPLICATION_STATUSES = [
   'saved',
   'applied',
@@ -25,16 +23,4 @@ export const APPLICATION_STATUS_BADGES: Record<string, 'neutral' | 'muted' | 'in
   interview: 'warning',
   offer: 'success',
   rejected: 'muted',
-}
-
-export const DIFFICULTY_LABELS: Record<string, string> = {
-  easy: 'Easy',
-  medium: 'Medium',
-  hard: 'Hard',
-}
-
-export const DIFFICULTY_COLORS: Record<string, string> = {
-  easy: 'bg-green-100 text-green-700',
-  medium: 'bg-yellow-100 text-yellow-700',
-  hard: 'bg-red-100 text-red-700',
 }

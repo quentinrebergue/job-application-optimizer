@@ -12,7 +12,7 @@ describe('parseStatusFilter', () => {
 })
 
 describe('parseJobTab', () => {
-  it('opens the offer unless the resume is asked for (cover letter is off)', () => {
+  it('opens the offer unless the resume is asked for (cover letter not built yet)', () => {
     expect(parseJobTab('resume')).toBe('resume')
     for (const value of [undefined, 'offer', 'cover-letter', 'nope']) expect(parseJobTab(value)).toBe('offer')
   })

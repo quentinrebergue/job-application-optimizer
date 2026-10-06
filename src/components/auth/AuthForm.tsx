@@ -3,6 +3,7 @@
 import { useActionState } from 'react'
 import Link from 'next/link'
 import { login, signup } from '@/app/actions/auth'
+import { Alert } from '@/components/ui/Alert'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { Field } from '@/components/ui/Field'
@@ -64,9 +65,7 @@ export function AuthForm({ mode, returnTo, query }: AuthFormProps) {
             <Input name="password" type="password" autoComplete={config.passwordAutoComplete} required />
           </Field>
           {state?.message && (
-            <p role="alert" className="rounded-control border-2 border-ink bg-danger px-3 py-2 text-sm font-semibold text-white">
-              {state.message}
-            </p>
+            <Alert>{state.message}</Alert>
           )}
           <Button type="submit" disabled={pending} className="mt-2 w-full">
             {pending ? config.pending : config.submit}
