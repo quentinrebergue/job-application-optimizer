@@ -3,8 +3,19 @@ kind: Deployment
 metadata:
   name: resume-renderer
   namespace: job-optimizer
+  annotations:
+    # Second wave: Argo CD waits for the app (wave 0) to be healthy first, so the
+    # two rollouts never run side by side on the single node (memory, see #171).
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   replicas: 1
+  # The old pod stops before the new one starts: no surge pod. PDF rendering
+  # is down for a few seconds during a rollout, the site is not.
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
   selector:
     matchLabels:
       app: resume-renderer
