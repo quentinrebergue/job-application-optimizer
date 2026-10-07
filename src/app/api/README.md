@@ -1,11 +1,13 @@
 # src/app/api
 
-Next.js API route handlers. All routes return JSON, need a signed-in user, and only see that user's data. Request bodies are validated with Zod.
+Next.js API route handlers. All routes return JSON, need a signed-in user, and only see that user's data (except the two probes `healthz/` and `livez/`). Request bodies are validated with Zod.
 
 ## Routes
 
 | Route | Methods | Description |
 |-------|---------|-------------|
+| `healthz/` | GET | Public. 200 when the database answers, 503 otherwise. Readiness probe and external uptime check |
+| `livez/` | GET | Public. 200 while the process answers, no dependency. Liveness probe |
 | `entities/` | GET, POST | List the library entries (optional `?type=` filter); create an entry |
 | `entities/[type]/[id]/` | GET, PUT, DELETE | Get, update, or delete one entry |
 | `jobs/` | GET, POST | List jobs; create a job |
