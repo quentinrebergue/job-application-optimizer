@@ -18,7 +18,8 @@ spec:
         - name: ghcr-pull-secret
       containers:
         - name: app
-          image: ghcr.io/quentinrebergue/job-application-optimizer:latest
+          # The tag is set by k8s/kustomization.yaml (CD writes it): this one does not exist on purpose.
+          image: ghcr.io/quentinrebergue/job-application-optimizer:set-by-kustomize
           ports:
             - containerPort: 3000
           env:

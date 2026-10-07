@@ -25,7 +25,8 @@ spec:
           type: RuntimeDefault
       containers:
         - name: resume-renderer
-          image: ghcr.io/quentinrebergue/resume-renderer:0.1.0
+          # The tag is set by k8s/kustomization.yaml (CD writes it): this one does not exist on purpose.
+          image: ghcr.io/quentinrebergue/resume-renderer:set-by-kustomize
           ports:
             - name: http
               containerPort: 8080
