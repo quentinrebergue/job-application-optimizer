@@ -9,16 +9,19 @@ FROM base AS deps
 WORKDIR /app
 # match the npm version the lockfile was generated with (avoids npm ci
 # resolution mismatches on optional/platform-specific dependencies)
-RUN npm install -g npm@11
+RUN npm install -g npm@11.21.0
 COPY package.json package-lock.json ./
 RUN npm ci
 
 # ---- builder: compile the Next.js app ----
-FROM base AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+# Starts from deps rather than copying node_modules over: a copy would be a
+# second ~590 MB layer, written to the CI layer cache on every build (#166).
+FROM deps AS builder
+ENV NEXT_TELEMETRY_DISABLED=1
 COPY . .
-RUN npm run build
+# .next/cache only speeds up the next build on the same machine; in this layer
+# it is never reused (code changes rebuild it) but it would be cached and exported.
+RUN npm run build && rm -rf .next/cache
 
 # ---- runner: minimal runtime image ----
 FROM base AS runner
@@ -33,10 +36,6 @@ RUN groupadd --system --gid 1001 nodejs \
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-
-# data/ is mounted as a volume at runtime (see docker-compose.yml); this
-# creates the mount point with the right ownership before switching user.
-RUN mkdir -p /app/data && chown nextjs:nodejs /app/data
 
 USER nextjs
 

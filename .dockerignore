@@ -1,6 +1,10 @@
+# Only what `next build` needs goes into the build context. Everything else
+# makes the context bigger, can bust the COPY . . layer for nothing, and some
+# of it must never be copied into an image (local Terraform state and vars).
 node_modules
 .next
 .git
+.github
 .vscode
 .claude
 *.tsbuildinfo
@@ -8,6 +12,19 @@ npm-debug.log*
 .DS_Store
 .env*
 !.env.example
-README.md
 coverage
 data
+
+# Other parts of the repository, built or applied separately
+services
+k8s
+terraform
+ansible
+scripts
+docs
+
+# Documentation and local tooling files
+**/*.md
+Dockerfile
+docker-compose.yml
+.dockerignore
