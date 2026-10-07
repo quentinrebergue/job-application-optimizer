@@ -9,6 +9,8 @@ metadata:
     argocd.argoproj.io/sync-wave: "1"
 spec:
   replicas: 1
+  # Old ReplicaSets kept for a rollback (the default is 10, a long list in Argo CD).
+  revisionHistoryLimit: 3
   # The old pod stops before the new one starts: no surge pod. PDF rendering
   # is down for a few seconds during a rollout, the site is not.
   strategy:
