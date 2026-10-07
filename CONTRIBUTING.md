@@ -51,6 +51,15 @@ is closed.
 Merging to `master` builds the images and commits their new tags to
 `k8s/kustomization.yaml` (see `.github/workflows/cd.yml`). Argo CD then shows
 the diff, and the sync is manual. Database migrations run as a PreSync hook.
+
+An image is rebuilt when its files changed **since its last deploy** (the commit
+of its tag in `kustomization.yaml`), not only in the last push: a CD run that
+failed or was cancelled is caught up by the next one, and a tag is never moved
+back to an older commit. To rebuild and deploy every image, run the CD by hand
+(Actions → CD → Run workflow). Changing only the image of the migrator (a
+PreSync hook) does not make Argo CD OutOfSync: sync anyway, the hook runs on
+every sync.
+
 The monitoring stack is not managed by Argo CD: use
 `scripts/monitoring-profile.sh`.
 
