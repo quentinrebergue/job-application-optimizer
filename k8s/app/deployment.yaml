@@ -5,6 +5,8 @@ metadata:
   namespace: job-optimizer
 spec:
   replicas: 1
+  # Old ReplicaSets kept for a rollback (the default is 10, a long list in Argo CD).
+  revisionHistoryLimit: 3
   selector:
     matchLabels:
       app: job-optimizer
