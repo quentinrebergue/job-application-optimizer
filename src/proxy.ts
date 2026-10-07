@@ -3,8 +3,9 @@ import type { NextRequest } from 'next/server'
 import { loginUrlFor, returnToFrom } from '@/lib/auth/return-to'
 
 const PUBLIC_PATHS = ['/login', '/signup', '/forgot-password']
-// Open whether signed in or not: the mail link may be opened in another browser.
-const OPEN_PATHS = ['/verify-email', '/reset-password']
+// Open whether signed in or not: the mail link may be opened in another browser,
+// and the probes (Kubernetes, uptime check) have no session.
+const OPEN_PATHS = ['/verify-email', '/reset-password', '/api/healthz', '/api/livez']
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
