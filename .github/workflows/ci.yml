@@ -8,13 +8,13 @@ jobs:
   # Decides which of the jobs below have anything to check. A job skipped
   # through `if:` counts as passed, so this also works with required checks.
   changes:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       app: ${{ steps.filter.outputs.app }}
       renderer: ${{ steps.filter.outputs.renderer }}
       migrator: ${{ steps.filter.outputs.migrator }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           fetch-depth: 0
 
@@ -47,11 +47,11 @@ jobs:
   test:
     needs: changes
     if: needs.changes.outputs.app == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22
 
@@ -64,14 +64,14 @@ jobs:
   resume-renderer:
     needs: changes
     if: needs.changes.outputs.renderer == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     defaults:
       run:
         working-directory: services/resume-renderer
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5.6.0
         with:
           go-version-file: services/resume-renderer/go.mod
           cache-dependency-path: services/resume-renderer/go.sum
@@ -97,7 +97,7 @@ jobs:
   db-migrator:
     needs: changes
     if: needs.changes.outputs.migrator == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     defaults:
       run:
         working-directory: services/db-migrator
@@ -119,9 +119,9 @@ jobs:
       DATABASE_URL: postgres://postgres:test@localhost:5432/postgres
       TEST_DATABASE_URL: postgres://postgres:test@localhost:5432/postgres
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5.6.0
         with:
           go-version-file: services/db-migrator/go.mod
           cache-dependency-path: services/db-migrator/go.sum

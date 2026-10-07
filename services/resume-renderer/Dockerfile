@@ -4,13 +4,13 @@
 # being compiled under emulation:
 #   docker buildx build --platform linux/amd64 -t resume-renderer:dev --load .
 
-ARG GO_VERSION=1.27
-ARG ALPINE_VERSION=3.22
+# Base images pinned to an exact version and digest (#143): every build uses the
+# same bytes. Dependabot opens a PR when a new version is out.
 ARG TYPST_VERSION=0.15.1
 
 # ---- build: compile the Go service (static binary) ----
 # Runs on the machine doing the build and cross-compiles for the target.
-FROM --platform=$BUILDPLATFORM golang:${GO_VERSION}-alpine AS build
+FROM --platform=$BUILDPLATFORM golang:1.27.1-alpine@sha256:8a5910f31396cd4d89662f56c68b3ae31d374308270a1c3bd96672ee5ed43414 AS build
 ARG TARGETOS
 ARG TARGETARCH
 WORKDIR /src
@@ -21,7 +21,7 @@ RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} \
     go build -trimpath -ldflags="-s -w" -o /out/resume-renderer .
 
 # ---- typst: download a pinned release and verify its checksum ----
-FROM alpine:${ALPINE_VERSION} AS typst
+FROM alpine:3.22.6@sha256:5291449c3df73caf6ed85e649dec1b9e818b39a5d8c871e97afc13e9cd5e8fa8 AS typst
 ARG TYPST_VERSION
 ARG TARGETARCH
 ARG TYPST_SHA256_AMD64=a6d077d0a95eed5a2eba715b2dae06be954f624ccbf85758a03f389ded33118c
@@ -39,7 +39,7 @@ RUN apk add --no-cache xz \
     && install -m 0755 "/tmp/typst-${arch}-unknown-linux-musl/typst" /usr/local/bin/typst
 
 # ---- runtime: Alpine + Typst + fonts + the service, nothing else ----
-FROM alpine:${ALPINE_VERSION}
+FROM alpine:3.22.6@sha256:5291449c3df73caf6ed85e649dec1b9e818b39a5d8c871e97afc13e9cd5e8fa8
 RUN apk add --no-cache font-liberation \
     && addgroup -S -g 10001 app \
     && adduser -S -u 10001 -G app app

@@ -1,0 +1,46 @@
+# Dependabot keeps the pinned versions up to date (#143): one PR per update,
+# tested by CI like any other change. Minor and patch updates are grouped per
+# ecosystem to keep the number of PRs low; major versions come one by one.
+version: 2
+updates:
+  # Base images of the Dockerfiles (pinned by version and digest)
+  - package-ecosystem: docker
+    directories:
+      - /
+      - /services/db-migrator
+      - /services/resume-renderer
+    schedule:
+      interval: weekly
+    groups:
+      docker-minor-and-patch:
+        update-types: [minor, patch]
+
+  # Actions of the workflows (pinned by commit SHA)
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions-minor-and-patch:
+        update-types: [minor, patch]
+
+  # The app's npm dependencies
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      npm-minor-and-patch:
+        update-types: [minor, patch]
+
+  # Go modules of the services
+  - package-ecosystem: gomod
+    directories:
+      - /services/db-migrator
+      - /services/resume-renderer
+    schedule:
+      interval: weekly
+    groups:
+      go-minor-and-patch:
+        update-types: [minor, patch]
