@@ -6,17 +6,25 @@ on:
     paths-ignore:
       - 'k8s/**'
       - '**.md'
+  # Manual run from the Actions tab: rebuilds and deploys every image.
+  workflow_dispatch:
 
 permissions:
   contents: read
 
-# Two merges in a row must not build and push at the same time.
+# Runs go one after the other. GitHub keeps one running and one pending run:
+# a newer merge replaces the pending one, which is safe because each run
+# rebuilds whatever changed since the last deploy (see "changes"), not only
+# what its own push changed.
 concurrency:
   group: cd
   cancel-in-progress: false
 
 jobs:
   # Decides which images need rebuilding, as a JSON list for the build matrix.
+  # An image is rebuilt when its files changed since the commit of the tag it
+  # has in k8s/kustomization.yaml, i.e. since its last successful deploy. A run
+  # that failed or was cancelled is therefore caught up by the next one.
   changes:
     runs-on: ubuntu-24.04
     outputs:
@@ -28,45 +36,60 @@ jobs:
 
       - id: filter
         env:
-          BEFORE: ${{ github.event.before }}
+          EVENT: ${{ github.event_name }}
         run: |
           set -euo pipefail
-          # Without a usable base commit (first push, force push) build everything.
-          if [ -z "$BEFORE" ] \
-            || [ "$BEFORE" = "0000000000000000000000000000000000000000" ] \
-            || ! git cat-file -e "$BEFORE^{commit}" 2>/dev/null; then
-            echo "No usable base commit, building everything"
-            files="__all__"
-          else
-            files="$(git diff --name-only "$BEFORE" "$GITHUB_SHA")"
-          fi
-          echo "Changed files:"
-          printf '%s\n' "$files"
-
           items=""
           add() { items="${items:+$items,}$1"; }
-          matches() { printf '%s\n' "$files" | grep -Eq "$1"; }
-          # Anything outside these folders, Markdown files and .github is the app image.
-          outside() { printf '%s\n' "$files" | grep -Evq "$1"; }
 
-          if [ "$files" = "__all__" ]; then
-            add '{"image":"job-application-optimizer","context":"."}'
-            add '{"image":"resume-renderer","context":"services/resume-renderer"}'
-            add '{"image":"db-migrator","context":"services/db-migrator"}'
-          else
-            if [ -n "$files" ] && outside '^(services|k8s|docs|terraform|ansible|scripts)/|\.md$|^\.github/'; then
-              add '{"image":"job-application-optimizer","context":"."}'
+          # The deployed tags are read from the latest master (a run that ended
+          # after this push may have written new ones).
+          deployed_tag() {
+            git show origin/master:k8s/kustomization.yaml \
+              | yq ".images[] | select(.name == \"ghcr.io/quentinrebergue/$1\") | .newTag"
+          }
+
+          # Files changed between the deployed tag of an image and this commit.
+          # __all__: no known commit to compare with (first deploy, rewritten history) or manual run.
+          # __newer__: a commit newer than this one is already deployed: never go back.
+          changed_since_deploy() {
+            local tag
+            tag="$(deployed_tag "$1")"
+            if [ "$EVENT" = "workflow_dispatch" ] || [ -z "$tag" ] || ! git cat-file -e "$tag^{commit}" 2>/dev/null; then
+              echo "__all__"
+            elif ! git merge-base --is-ancestor "$tag" "$GITHUB_SHA"; then
+              echo "__newer__"
+            else
+              git diff --name-only "$tag" "$GITHUB_SHA"
             fi
-            if matches '^services/resume-renderer/'; then
-              add '{"image":"resume-renderer","context":"services/resume-renderer"}'
+          }
+
+          check() { # image, context, pattern of its files ("app" = everything outside the other folders)
+            local files
+            files="$(changed_since_deploy "$1")"
+            if [ "$files" = "__newer__" ]; then
+              echo "$1: a newer commit is already deployed, skipped"
+            elif [ "$files" = "__all__" ]; then
+              echo "$1: rebuild (no deployed commit to compare with, or manual run)"
+              add "{\"image\":\"$1\",\"context\":\"$2\"}"
+            elif [ "$3" = "app" ] && printf '%s\n' "$files" | grep -Evq '^(services|k8s|docs|terraform|ansible|scripts)/|\.md$|^\.github/|^$'; then
+              echo "$1: rebuild, changed since its deploy:"; printf '%s\n' "$files" | sed 's/^/  /'
+              add "{\"image\":\"$1\",\"context\":\"$2\"}"
+            elif [ "$3" != "app" ] && printf '%s\n' "$files" | grep -Eq "$3"; then
+              echo "$1: rebuild, changed since its deploy:"; printf '%s\n' "$files" | grep -E "$3" | sed 's/^/  /'
+              add "{\"image\":\"$1\",\"context\":\"$2\"}"
+            else
+              echo "$1: up to date"
             fi
-            if matches '^services/db-migrator/'; then
-              add '{"image":"db-migrator","context":"services/db-migrator"}'
-            fi
-          fi
+          }
+
+          check job-application-optimizer . app
+          check resume-renderer services/resume-renderer '^services/resume-renderer/'
+          check db-migrator services/db-migrator '^services/db-migrator/'
 
           echo "images=[$items]" >> "$GITHUB_OUTPUT"
           echo "Images to build: [$items]"
+
   build:
     needs: changes
     # An empty matrix is an error, so skip the job when there is nothing to build.
@@ -108,28 +131,55 @@ jobs:
     permissions:
       contents: write
     steps:
+      # The latest master, not the commit that started this run: another run may
+      # have written its own tags in the meantime.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: master
+          fetch-depth: 0
 
-      - name: Point the manifests at the new images
+      - name: Point the manifests at the new images and push
         env:
           IMAGES: ${{ needs.changes.outputs.images }}
         run: |
           set -euo pipefail
           TAG="${GITHUB_SHA::7}"
-          args=()
-          for image in $(echo "$IMAGES" | jq -r '.[].image'); do
-            args+=("ghcr.io/quentinrebergue/${image}=ghcr.io/quentinrebergue/${image}:${TAG}")
-          done
-          cd k8s
-          kustomize edit set image "${args[@]}"
-
-      - name: Commit the new tags
-        run: |
-          set -euo pipefail
-          git diff --quiet && exit 0
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add k8s/kustomization.yaml
-          git commit -m "Deploy ${GITHUB_SHA::7} [skip ci]"
-          git pull --rebase origin master
-          git push origin HEAD:master
+
+          # Set only the tags of the images this run built, on top of the
+          # latest master. If master moves before the push, start again from it
+          # (the edit is re-applied, so there is nothing to merge).
+          for attempt in 1 2 3; do
+            git fetch origin master
+            git reset --hard origin/master
+            args=()
+            for image in $(echo "$IMAGES" | jq -r '.[].image'); do
+              current="$(yq ".images[] | select(.name == \"ghcr.io/quentinrebergue/${image}\") | .newTag" k8s/kustomization.yaml)"
+              # Never replace a tag with an older commit.
+              if [ -n "$current" ] && git cat-file -e "$current^{commit}" 2>/dev/null \
+                && ! git merge-base --is-ancestor "$current" "$GITHUB_SHA"; then
+                echo "${image}: ${current} is newer than ${TAG}, kept"
+                continue
+              fi
+              args+=("ghcr.io/quentinrebergue/${image}=ghcr.io/quentinrebergue/${image}:${TAG}")
+            done
+            if [ "${#args[@]}" -eq 0 ]; then
+              echo "Nothing to update"
+              exit 0
+            fi
+            (cd k8s && kustomize edit set image "${args[@]}")
+            if git diff --quiet; then
+              echo "Tags already up to date"
+              exit 0
+            fi
+            git add k8s/kustomization.yaml
+            git commit -m "Deploy ${TAG} [skip ci]"
+            if git push origin HEAD:master; then
+              exit 0
+            fi
+            echo "master moved during the deploy, retrying ($attempt/3)"
+            sleep $((attempt * 5))
+          done
+          echo "Could not push the new tags after 3 attempts" >&2
+          exit 1
