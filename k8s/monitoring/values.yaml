@@ -1,8 +1,46 @@
 alertmanager:
   enabled: false
 
+# OVH runs the control plane: etcd, the scheduler, the controller manager and
+# kube-proxy have no scrape target here (checked in Prometheus /targets), so
+# their scrapes and rules are off.
+kubeEtcd:
+  enabled: false
+kubeScheduler:
+  enabled: false
+kubeControllerManager:
+  enabled: false
+kubeProxy:
+  enabled: false
+
+# The API server alone is 71 % of the series (34k of 48k on 2026-10-07), almost
+# all of it latency histograms and per-resource detail nobody reads here (8.5k
+# remain once the buckets are gone). Keep a short list instead of dropping
+# what we know of: the request rate by code and the in-flight requests. A new
+# API server version cannot add series by itself.
+kubeApiServer:
+  serviceMonitor:
+    metricRelabelings:
+      - action: keep
+        regex: apiserver_request_total|apiserver_current_inflight_requests|go_goroutines
+        sourceLabels: [__name__]
+
+defaultRules:
+  rules:
+    etcd: false
+    kubeSchedulerAlerting: false
+    kubeSchedulerRecording: false
+    kubeControllerManager: false
+    kubeProxy: false
+    kubeApiserverAvailability: false
+    kubeApiserverBurnrate: false
+    kubeApiserverHistogram: false
+    kubeApiserverSlos: false
+
 prometheus:
   prometheusSpec:
+    # One sample a minute instead of every 30 s: half the samples to write and compact.
+    scrapeInterval: 60s
     resources:
       requests:
         cpu: 100m
