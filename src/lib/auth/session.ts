@@ -45,3 +45,8 @@ export async function deleteSession(): Promise<void> {
   }
   cookieStore.delete(SESSION_COOKIE)
 }
+
+/** Signs the user out everywhere (after a password reset). */
+export async function deleteAllSessions(userId: string): Promise<void> {
+  await pool.query('DELETE FROM sessions WHERE user_id = $1', [userId])
+}

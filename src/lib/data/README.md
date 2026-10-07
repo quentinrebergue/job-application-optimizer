@@ -10,4 +10,5 @@ Data access layer on Postgres (`@/lib/db`). Every query is scoped to the signed-
 | `entities.ts` | `listEntities`, `getEntity`, `createEntity`, `updateEntity`, `deleteEntity` |
 | `jobs.ts` | `listJobs`, `getJob`, `createJob`, `updateJob`, `deleteJob`, `getResumeConfig`, `saveResumeConfig` |
 | `resume-profile.ts` | `getResumeProfile`, `saveResumeProfile` |
-| `users.ts` | `createUser`, `findUserByEmail`, `findUserById` |
+| `users.ts` | `createUser`, `findUserByEmail`, `findUserById`, `markEmailVerified`, `updatePassword` |
+| `email-tokens.ts` | Single-use tokens sent by mail (only their SHA-256 is stored): `createEmailToken`, `consumeEmailToken`, `peekEmailToken` (check without using), `invalidateEmailTokens`, `countRecentTokens` |

@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 const query = vi.fn()
 vi.mock('@/lib/db', () => ({ pool: { query: (...args: unknown[]) => query(...args) } }))
 
-const { createEmailToken, consumeEmailToken, hashToken } = await import('./email-tokens')
+const { createEmailToken, consumeEmailToken, peekEmailToken, hashToken } = await import('./email-tokens')
 
 beforeEach(() => {
   query.mockReset()
@@ -35,5 +35,18 @@ describe('consumeEmailToken', () => {
 
     query.mockResolvedValueOnce({ rows: [] }).mockResolvedValueOnce({ rows: [{ used_at: null }] })
     expect(await consumeEmailToken('t', 'verify')).toEqual({ failure: 'expired' })
+  })
+})
+
+describe('peekEmailToken', () => {
+  it('returns the user of a valid token without marking it used', async () => {
+    query.mockResolvedValueOnce({ rows: [{ user_id: 'u1' }] })
+    expect(await peekEmailToken('t', 'reset')).toEqual({ userId: 'u1' })
+    expect(query.mock.calls[0][0]).toMatch(/^\s*SELECT/)
+  })
+
+  it('says why a token is refused', async () => {
+    query.mockResolvedValueOnce({ rows: [] }).mockResolvedValueOnce({ rows: [{ used_at: null }] })
+    expect(await peekEmailToken('t', 'reset')).toEqual({ failure: 'expired' })
   })
 })

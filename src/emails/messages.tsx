@@ -1,6 +1,8 @@
 import type { ReactElement } from 'react'
 import type { Email } from '@/lib/email/send'
 import { VERIFY_EMAIL_SUBJECT, VerifyEmail } from './VerifyEmail'
+import { RESET_PASSWORD_SUBJECT, ResetPassword } from './ResetPassword'
+import { PASSWORD_CHANGED_SUBJECT, PasswordChanged } from './PasswordChanged'
 
 /**
  * Turns a mail component into what sendEmail() takes: HTML and the plain-text version.
@@ -16,4 +18,12 @@ async function toEmail(to: string, subject: string, mail: ReactElement): Promise
 
 export function verifyEmailMessage(to: string, url: string): Promise<Email> {
   return toEmail(to, VERIFY_EMAIL_SUBJECT, <VerifyEmail url={url} />)
+}
+
+export function resetPasswordMessage(to: string, url: string): Promise<Email> {
+  return toEmail(to, RESET_PASSWORD_SUBJECT, <ResetPassword url={url} />)
+}
+
+export function passwordChangedMessage(to: string, resetUrl: string): Promise<Email> {
+  return toEmail(to, PASSWORD_CHANGED_SUBJECT, <PasswordChanged resetUrl={resetUrl} />)
 }

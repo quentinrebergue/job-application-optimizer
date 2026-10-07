@@ -6,7 +6,9 @@ Server-side business logic. All functions are barrel-exported from `index.ts`. T
 
 | Directory | Description |
 |-----------|-------------|
-| `data/` | Read/write JSON and Markdown files in the `/data/` directory with Zod validation |
+| `data/` | Data access on Postgres, scoped to the signed-in user |
+| `auth/` | Sessions, password hashing, email confirmation (`email-verification.ts`) and password reset (`password-reset.ts`) |
+| `email/` | `sendEmail()` over SMTP through an ordered list of providers (primary, optional fallback); mails printed in the console in development |
 | `resume/` | Builds the render payload from entities and the user profile, and calls the resume-renderer service (Go + Typst) |
 | `ai/` | AI ranking of the library against a job offer |
 
@@ -19,4 +21,5 @@ Server-side business logic. All functions are barrel-exported from `index.ts`. T
 | `format.ts` | `formatDate(iso, style)` — dates in UTC so server and browser render the same text. Client-safe. |
 | `http.ts` | `fetchJson(url, { json })` — client fetch that throws `HttpError` (with the server's message) when the response is not ok. |
 | `entity-filter.ts` | `LIBRARY_TABS` (no "All"), `parseLibraryTab()` (defaults to experiences), `parseEntityType()`, `libraryHref()` — the `?tab=` / `?type=` of the library in `/resume`. |
+| `rate-limit.ts` | `consumeRateLimit(key, limit, windowMs)` — fixed-window counters in the `rate_limits` table (Redis later, #141); `clientIp(headers)`, `isPublicIp(ip)` (private addresses are not limited: they are the load balancer, shared by everyone). |
 | `job-filter.ts` | `parseStatusFilter()` — the `?status=` filter of `/jobs`; `parseJobTab()` — the `?tab=` of a job page. |
