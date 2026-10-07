@@ -11,6 +11,11 @@ updates:
       - /services/resume-renderer
     schedule:
       interval: weekly
+    ignore:
+      # Node moves to a new major on purpose, with @types/node, when the next
+      # LTS is ready and tested; not through an automatic PR.
+      - dependency-name: node
+        update-types: [version-update:semver-major]
     groups:
       docker-minor-and-patch:
         update-types: [minor, patch]
@@ -30,6 +35,17 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
+    ignore:
+      # Types of the Node runtime: their major must match the Node of the image (22).
+      - dependency-name: "@types/node"
+        update-types: [version-update:semver-major]
+      # Majors not supported yet by their tooling (2026-10): typescript-eslint has
+      # no TypeScript 7 support, eslint-config-next breaks on ESLint 10. Remove
+      # these lines once they catch up.
+      - dependency-name: typescript
+        update-types: [version-update:semver-major]
+      - dependency-name: eslint
+        update-types: [version-update:semver-major]
     groups:
       npm-minor-and-patch:
         update-types: [minor, patch]
