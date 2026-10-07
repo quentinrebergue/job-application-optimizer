@@ -1,0 +1,6 @@
+# Tests and docs are not part of the binary; the templates under
+# internal/templates/builtin are embedded and must stay.
+Dockerfile
+.dockerignore
+**/*_test.go
+**/*.md
