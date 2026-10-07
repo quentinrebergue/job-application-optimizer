@@ -16,6 +16,14 @@ spec:
           containers:
             - name: pg-dump
               image: postgres:17-alpine
+              # pg_dump streams into gzip, so it needs little. Without these the
+              # pod is BestEffort and the first one evicted under memory pressure.
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 32Mi
+                limits:
+                  memory: 128Mi
               env:
                 - name: PGPASSWORD
                   valueFrom:
