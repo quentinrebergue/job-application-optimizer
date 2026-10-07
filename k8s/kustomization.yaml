@@ -25,7 +25,7 @@ images:
   newTag: 18ab544
 - name: ghcr.io/quentinrebergue/job-application-optimizer
   newName: ghcr.io/quentinrebergue/job-application-optimizer
-  newTag: 3d73e21
+  newTag: fb062dd
 - name: ghcr.io/quentinrebergue/resume-renderer
   newName: ghcr.io/quentinrebergue/resume-renderer
   newTag: 3d73e21
