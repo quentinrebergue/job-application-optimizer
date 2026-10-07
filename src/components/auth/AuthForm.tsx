@@ -64,6 +64,11 @@ export function AuthForm({ mode, returnTo, query }: AuthFormProps) {
           <Field label="Password" error={state?.errors?.password?.join(' ')}>
             <Input name="password" type="password" autoComplete={config.passwordAutoComplete} required />
           </Field>
+          {mode === 'login' && (
+            <Link href="/forgot-password" className="-mt-2 self-end text-sm font-semibold text-accent-strong underline underline-offset-4">
+              Forgot password?
+            </Link>
+          )}
           {state?.message && (
             <Alert>{state.message}</Alert>
           )}

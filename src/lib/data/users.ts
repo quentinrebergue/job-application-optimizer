@@ -61,3 +61,9 @@ export async function markEmailVerified(id: string): Promise<void> {
     [id]
   )
 }
+
+/** Sets a new password (hashed like at sign-up). */
+export async function updatePassword(id: string, password: string): Promise<void> {
+  const passwordHash = await hashPassword(password)
+  await pool.query('UPDATE users SET password_hash = $2 WHERE id = $1', [id, passwordHash])
+}

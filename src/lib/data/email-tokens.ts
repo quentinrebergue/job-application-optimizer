@@ -36,14 +36,43 @@ export async function consumeEmailToken(
     [hash, purpose],
   )
   if (rows[0]) return { userId: rows[0].user_id }
+  return { failure: await whyRefused(hash, purpose) }
+}
 
-  const found = await pool.query<{ used_at: Date | null }>(
+/** Why a token that cannot be used was refused. */
+async function whyRefused(hash: string, purpose: TokenPurpose): Promise<TokenFailure> {
+  const { rows } = await pool.query<{ used_at: Date | null }>(
     'SELECT used_at FROM email_tokens WHERE token_hash = $1 AND purpose = $2',
     [hash, purpose],
   )
-  const row = found.rows[0]
-  if (!row) return { failure: 'invalid' }
-  return { failure: row.used_at ? 'used' : 'expired' }
+  if (!rows[0]) return 'invalid'
+  return rows[0].used_at ? 'used' : 'expired'
+}
+
+/**
+ * Checks a token without using it: the reset page opens the form only for a
+ * valid link, and the link survives mail scanners that open it first.
+ */
+export async function peekEmailToken(
+  token: string,
+  purpose: TokenPurpose,
+): Promise<{ userId: string } | { failure: TokenFailure }> {
+  const hash = hashToken(token)
+  const { rows } = await pool.query<{ user_id: string }>(
+    `SELECT user_id FROM email_tokens
+     WHERE token_hash = $1 AND purpose = $2 AND used_at IS NULL AND expires_at > now()`,
+    [hash, purpose],
+  )
+  if (rows[0]) return { userId: rows[0].user_id }
+  return { failure: await whyRefused(hash, purpose) }
+}
+
+/** Marks every unused token of this purpose as used (older links stop working). */
+export async function invalidateEmailTokens(userId: string, purpose: TokenPurpose): Promise<void> {
+  await pool.query(
+    'UPDATE email_tokens SET used_at = now() WHERE user_id = $1 AND purpose = $2 AND used_at IS NULL',
+    [userId, purpose],
+  )
 }
 
 /** Tokens of this purpose created for the user since `since` (to limit resends). */
