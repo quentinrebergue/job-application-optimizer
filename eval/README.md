@@ -1,0 +1,43 @@
+# eval
+
+Evaluation of the AI ranking (#44 follow-up): did a change to the prompt, the model or the pipeline make the ranking better or worse? The question is answered with figures, not with one offer looked at by hand.
+
+## Use
+
+1. Start the gateway (`services/ai-gateway`, see its README) and put `AI_GATEWAY_URL` in `.env.local`.
+2. Turn a real job of the local database into a case, then fill `expected` with the ids you would pick:
+   ```
+   npm run eval:export -- <job id>
+   ```
+3. Run every case three times and compare with the baseline:
+   ```
+   npm run eval:ranking -- --label llama-3.3-70b
+   npm run eval:ranking -- --case arista --runs 5
+   npm run eval:ranking -- --label new-prompt --save-baseline   # when you are happy with it
+   ```
+
+A full evaluation (5 offers x 3 runs) costs about 0.05 EUR.
+
+## What is measured
+
+| Figure | Meaning |
+|---|---|
+| recall | Of the ids you expected, how many the AI recommended |
+| precision | Of the ids it recommended, how many you expected |
+| not scored | Expected ids the AI did not mention at all (forgotten, not judged low) |
+| bad ids | Recommended ids that are not in the library (invented) |
+| stability | Overlap between runs of the same case (1 = same answer every time) |
+| time, tokens | Median and worst time; tokens in and out |
+| failures | Runs that ended in an error |
+
+A change counts as better or worse only beyond the noise: 0.01 on the ratios, 10 % on time and tokens.
+
+## Files
+
+| Path | Versioned | Content |
+|---|---|---|
+| `cases/` | yes | Fictional cases: they exercise the script and show the format |
+| `private/` | **no** | My real offers and library: personal data |
+| `results/` | **no** | One file per run, and `baseline.json` |
+
+The code is in `scripts/eval-ranking/` (`metrics.ts` is tested without any AI call).
