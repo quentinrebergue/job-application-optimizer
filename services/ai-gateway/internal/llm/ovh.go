@@ -36,11 +36,11 @@ type chatMessage struct {
 }
 
 type chatRequest struct {
-	Model          string            `json:"model"`
-	Messages       []chatMessage     `json:"messages"`
-	MaxTokens      int               `json:"max_tokens"`
-	Temperature    float64           `json:"temperature"`
-	ResponseFormat map[string]string `json:"response_format"`
+	Model          string        `json:"model"`
+	Messages       []chatMessage `json:"messages"`
+	MaxTokens      int           `json:"max_tokens"`
+	Temperature    float64       `json:"temperature"`
+	ResponseFormat any           `json:"response_format"`
 }
 
 type chatResponse struct {
@@ -76,6 +76,17 @@ func (c *OVH) Complete(ctx context.Context, req Request) (Result, error) {
 // once makes a single HTTP call. retryable is true for failures that may go
 // away by themselves: network errors, 429 and 5xx.
 func (c *OVH) once(ctx context.Context, req Request) (res Result, retryable bool, err error) {
+	format := any(map[string]string{"type": "json_object"})
+	if len(req.Schema) > 0 {
+		format = map[string]any{
+			"type": "json_schema",
+			"json_schema": map[string]any{
+				"name":   "answer",
+				"strict": true,
+				"schema": req.Schema,
+			},
+		}
+	}
 	body, err := json.Marshal(chatRequest{
 		Model: c.opts.Model,
 		Messages: []chatMessage{
@@ -84,7 +95,7 @@ func (c *OVH) once(ctx context.Context, req Request) (res Result, retryable bool
 		},
 		MaxTokens:      req.MaxTokens,
 		Temperature:    0,
-		ResponseFormat: map[string]string{"type": "json_object"},
+		ResponseFormat: format,
 	})
 	if err != nil {
 		return Result{}, false, err

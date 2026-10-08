@@ -1,11 +1,16 @@
 package llm
 
-import "context"
+import (
+	"context"
+	"encoding/json"
+)
 
 type Request struct {
 	System    string
 	Prompt    string
 	MaxTokens int
+	// Schema is a JSON Schema the answer must follow. Empty: any valid JSON object.
+	Schema json.RawMessage
 }
 
 type Usage struct {

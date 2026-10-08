@@ -2,6 +2,7 @@ package llm
 
 import (
 	"context"
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"sync/atomic"
@@ -52,5 +53,36 @@ func TestCompleteDoesNotRetryOn400(t *testing.T) {
 	}
 	if calls.Load() != 1 {
 		t.Fatalf("expected 1 call, got %d", calls.Load())
+	}
+}
+
+func requestFormat(t *testing.T, schema json.RawMessage) map[string]any {
+	t.Helper()
+	var sent map[string]any
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		_ = json.NewDecoder(r.Body).Decode(&sent)
+		_, _ = w.Write([]byte(`{"choices":[{"message":{"role":"assistant","content":"{}"}}],"usage":{}}`))
+	}))
+	defer ts.Close()
+	if _, err := newTestClient(ts.URL).Complete(context.Background(), Request{Prompt: "hi", Schema: schema}); err != nil {
+		t.Fatal(err)
+	}
+	return sent["response_format"].(map[string]any)
+}
+
+func TestCompleteAsksForAJSONObjectWithoutASchema(t *testing.T) {
+	if f := requestFormat(t, nil); f["type"] != "json_object" {
+		t.Fatalf("got %v", f)
+	}
+}
+
+func TestCompleteAsksForTheSchemaWhenGiven(t *testing.T) {
+	f := requestFormat(t, json.RawMessage(`{"type":"object"}`))
+	js, ok := f["json_schema"].(map[string]any)
+	if f["type"] != "json_schema" || !ok || js["strict"] != true {
+		t.Fatalf("got %v", f)
+	}
+	if schema, _ := js["schema"].(map[string]any); schema["type"] != "object" {
+		t.Fatalf("schema not passed on: %v", js)
 	}
 }
