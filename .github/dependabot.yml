@@ -9,6 +9,7 @@ updates:
       - /
       - /services/db-migrator
       - /services/resume-renderer
+      - /services/ai-gateway
     schedule:
       interval: weekly
     ignore:

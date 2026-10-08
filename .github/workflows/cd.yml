@@ -86,6 +86,7 @@ jobs:
           check job-application-optimizer . app
           check resume-renderer services/resume-renderer '^services/resume-renderer/'
           check db-migrator services/db-migrator '^services/db-migrator/'
+          check ai-gateway services/ai-gateway '^services/ai-gateway/'
 
           echo "images=[$items]" >> "$GITHUB_OUTPUT"
           echo "Images to build: [$items]"

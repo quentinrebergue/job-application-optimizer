@@ -13,6 +13,7 @@ jobs:
       app: ${{ steps.filter.outputs.app }}
       renderer: ${{ steps.filter.outputs.renderer }}
       migrator: ${{ steps.filter.outputs.migrator }}
+      gateway: ${{ steps.filter.outputs.gateway }}
       images: ${{ steps.filter.outputs.images }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -37,9 +38,10 @@ jobs:
           app=$(outside '^(services|k8s|docs|terraform|ansible|scripts)/|\.md$|^\.github/(workflows/cd\.yml|ISSUE_TEMPLATE/)')
           renderer=$(matches '^services/resume-renderer/')
           migrator=$(matches '^services/db-migrator/')
+          gateway=$(matches '^services/ai-gateway/')
 
           # If the CI itself changed, check everything.
-          if [ "$ci" = true ]; then app=true; renderer=true; migrator=true; fi
+          if [ "$ci" = true ]; then app=true; renderer=true; migrator=true; gateway=true; fi
 
           # Images to build (not pushed): the ones whose files changed, and all
           # of them when the CD changes, since it builds them.
@@ -48,6 +50,7 @@ jobs:
           { [ "$app" = true ] || [ "$cd" = true ]; } && add '{"image":"job-application-optimizer","context":"."}'
           { [ "$renderer" = true ] || [ "$cd" = true ]; } && add '{"image":"resume-renderer","context":"services/resume-renderer"}'
           { [ "$migrator" = true ] || [ "$cd" = true ]; } && add '{"image":"db-migrator","context":"services/db-migrator"}'
+          { [ "$gateway" = true ] || [ "$cd" = true ]; } && add '{"image":"ai-gateway","context":"services/ai-gateway"}'
           echo "Images to build: [$items]"
 
           {
@@ -55,6 +58,7 @@ jobs:
             echo "renderer=$renderer"
             echo "migrator=$migrator"
             echo "images=[$items]"
+            echo "gateway=$gateway"
           } >> "$GITHUB_OUTPUT"
   test:
     needs: changes
@@ -179,5 +183,28 @@ jobs:
         run: |
           go run .
           go run . | grep '"applied":0'
+
+      - run: go test -race -count=1 ./...
+
+  ai-gateway:
+    needs: changes
+    if: needs.changes.outputs.gateway == 'true'
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: services/ai-gateway
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: services/ai-gateway/go.mod
+          # No dependency yet, so no go.sum to cache.
+          cache: false
+
+      - name: gofmt
+        run: test -z "$(gofmt -l .)"
+
+      - run: go vet ./...
 
       - run: go test -race -count=1 ./...
