@@ -28,3 +28,16 @@ describe('createJob', () => {
     expect((query.mock.calls[0][1] as unknown[])[8]).toEqual(['go'])
   })
 })
+
+describe('updateJob', () => {
+  it('stores NULL and an empty ats_tags when the ranking is cleared (#167)', async () => {
+    const { updateJob } = await import('./jobs')
+    query.mockReset()
+      .mockResolvedValueOnce({ rows: [{ ...ROW, ats_tags: ['go'], ai_analysis: { job_id: 'job-1' } }] })
+      .mockResolvedValueOnce({ rows: [ROW] })
+    await updateJob('u1', 'job-1', { ai_analysis: undefined, ats_tags: [] })
+    const params = query.mock.calls[1][1] as unknown[]
+    expect(params[9]).toEqual([]) // ats_tags
+    expect(params[10]).toBeNull() // ai_analysis
+  })
+})

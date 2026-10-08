@@ -1,8 +1,6 @@
 import { getJob, updateJob, getResumeProfile } from '@/lib/data'
 import { listEntities } from '@/lib/data'
 import { rankJobWithAI, isAIProvider, type AIProvider } from '@/lib/ai'
-import path from 'path'
-import fs from 'fs/promises'
 import { getSessionUserId } from '@/lib/auth/session'
 import { findUserById } from '@/lib/data/users'
 
@@ -82,11 +80,8 @@ export async function DELETE(_request: Request, { params }: { params: Promise<{ 
     const job = await getJob(userId, id)
     if (!job) return Response.json({ error: 'Job not found' }, { status: 404 })
 
-    // Remove ai_analysis and ats_tags by rewriting offer.json without them
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { ai_analysis: _ai, ats_tags: _tags, ...rest } = job
-    const offerPath = path.join(process.cwd(), 'data', 'jobs', id, 'offer.json')
-    await fs.writeFile(offerPath, JSON.stringify({ ...rest, ats_tags: [] }, null, 2))
+    // Jobs live in Postgres: clear the ranking through the data layer (#167).
+    await updateJob(userId, id, { ai_analysis: undefined, ats_tags: [] })
     return Response.json({ ok: true })
   } catch (error) {
     return Response.json(
