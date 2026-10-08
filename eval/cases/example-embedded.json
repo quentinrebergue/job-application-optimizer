@@ -1,0 +1,31 @@
+{
+  "name": "example-embedded",
+  "job": {
+    "title": "Embedded Software Engineer",
+    "company": "Acme Robotics",
+    "description": "We build motor controllers. You will write C and C++ firmware for Cortex-M microcontrollers, work with an RTOS, debug with oscilloscopes and logic analysers, and review code with the team. Experience with CAN bus and Linux is a plus. Python for test tooling."
+  },
+  "entities": {
+    "experiences": [
+      { "id": "exp-1", "type": "experiences", "title": "Firmware Engineer", "company": "Northwind Devices", "period": "2022 - 2024", "description": "Wrote C++ firmware for a Cortex-M4 motor driver on FreeRTOS. Added CAN bus diagnostics and cut boot time by 40%.", "tags": ["C++", "RTOS", "CAN"] },
+      { "id": "exp-2", "type": "experiences", "title": "Web Developer", "company": "Pixel Studio", "period": "2020 - 2022", "description": "Built marketing sites in TypeScript and React for retail customers.", "tags": ["TypeScript", "React"] },
+      { "id": "exp-3", "type": "experiences", "title": "Teaching Assistant", "company": "State University", "period": "2019 - 2020", "description": "Ran lab sessions on C programming and Linux for 60 first-year students.", "tags": ["C", "Linux", "teaching"] }
+    ],
+    "projects": [
+      { "id": "proj-1", "type": "projects", "title": "Drone flight controller", "tech": ["C", "STM32", "FreeRTOS"], "description": "Open-source flight controller on STM32 with a PID loop at 1 kHz.", "tags": ["embedded", "RTOS"] },
+      { "id": "proj-2", "type": "projects", "title": "Recipe sharing app", "tech": ["Python", "Django"], "description": "Small web app to share recipes.", "tags": ["web"] }
+    ],
+    "skills": [
+      { "id": "skill-1", "type": "skills", "name": "Languages", "category": "Programming", "level": "advanced", "tags": ["C", "C++", "Python", "TypeScript"] },
+      { "id": "skill-2", "type": "skills", "name": "Embedded", "category": "Systems", "level": "advanced", "tags": ["RTOS", "CAN", "Cortex-M", "oscilloscope"] }
+    ],
+    "education": [
+      { "id": "edu-1", "type": "education", "degree": "MSc Electrical Engineering", "institution": "Tech Institute", "period": "2017 - 2019", "tags": ["embedded"] }
+    ]
+  },
+  "expected": {
+    "experiences": ["exp-1", "exp-3"],
+    "projects": ["proj-1"],
+    "skills": ["skill-1", "skill-2"]
+  }
+}
