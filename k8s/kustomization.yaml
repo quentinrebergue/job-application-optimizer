@@ -25,7 +25,7 @@ resources:
 images:
 - name: ghcr.io/quentinrebergue/ai-gateway
   newName: ghcr.io/quentinrebergue/ai-gateway
-  newTag: e1cb9ee
+  newTag: d2c784d
 - name: ghcr.io/quentinrebergue/db-migrator
   newName: ghcr.io/quentinrebergue/db-migrator
   newTag: 18ab544
