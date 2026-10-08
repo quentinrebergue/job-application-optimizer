@@ -4,14 +4,36 @@ import { loginUrlFor, returnToFrom } from '@/lib/auth/return-to'
 
 const PUBLIC_PATHS = ['/login', '/signup', '/forgot-password']
 // Open whether signed in or not: the mail link may be opened in another browser,
-// and the probes (Kubernetes, uptime check) have no session.
-const OPEN_PATHS = ['/verify-email', '/reset-password', '/api/healthz', '/api/livez']
+// and the probes (Kubernetes, uptime check) and crawlers have no session.
+const OPEN_PATHS = [
+  '/verify-email',
+  '/reset-password',
+  '/api/healthz',
+  '/api/livez',
+  // Text pages and what search engines and link previews fetch.
+  '/privacy',
+  '/legal',
+  '/terms',
+  '/robots.txt',
+  '/sitemap.xml',
+  '/opengraph-image',
+]
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
   const isApiRoute = pathname.startsWith('/api/')
   const isPublicPath = PUBLIC_PATHS.includes(pathname)
   const hasSessionCookie = request.cookies.has('session')
+
+  // The landing page lives at /welcome but is shown at "/" to visitors; signed-in
+  // users keep their home at "/". A visitor asking for /welcome goes back to "/"
+  // (one address for crawlers); a signed-in user may open it, to see the page.
+  if (pathname === '/' && !hasSessionCookie) {
+    return NextResponse.rewrite(new URL('/welcome', request.url))
+  }
+  if (pathname === '/welcome') {
+    return hasSessionCookie ? NextResponse.next() : NextResponse.redirect(new URL('/', request.url))
+  }
 
   if (OPEN_PATHS.some((path) => pathname === path || pathname.startsWith(path + '/'))) {
     return NextResponse.next()

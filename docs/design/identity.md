@@ -113,7 +113,11 @@ browser-faked bold). Loaded once with `next/font`, as a variable font.
   does not, and always with an accessible label.
 - No sparkle or magic-wand imagery for AI features; they are named for what they
   do ("Rank with AI"), and recognised by their violet, not by an icon.
-- No continuous animations (marquees, looping effects).
+- No continuous animations (marquees, looping effects). One exception: the product
+  demos of the landing page, which play the app's own screens with a drawn cursor.
+  The one in the first screen loops; the ones of "How it works" play once, when
+  they scroll into view. All have a pause or replay button and, with
+  `prefers-reduced-motion`, show their finished picture instead.
 - No playful styling in the generated PDF.
 
 ## Voice
