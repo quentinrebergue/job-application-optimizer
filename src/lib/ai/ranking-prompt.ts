@@ -1,11 +1,9 @@
 import type { EntityMeta, ExperienceMeta, ProjectMeta, SkillMeta, EducationMeta } from '@/types'
 import type { AIAnalysisResult } from '@/types/job'
 
-/**
- * Shared prompt + response parsing for the job-ranking AI call, so every
- * provider (Gemini, Claude, ...) asks the exact same question and is judged
- * against the exact same output contract.
- */
+/** The prompt and the output contract of the job-ranking AI call. */
+
+export const RANKING_SYSTEM_PROMPT = 'You answer with a single valid JSON object and nothing else.'
 
 export function buildRankingPrompt(
   jobTitle: string,
@@ -89,7 +87,7 @@ The JSON must follow this exact structure:
   "confidence_score": 0.72,
   "summary": "2-3 sentence honest assessment of the fit. Be direct and critical.",
   "recommended_title": "Software Engineer — Embedded Linux",
-  "recommended_profile": "Always use this exact fixed text, only replacing the part after 'with a focus on:': 'Looking for a full-time position in software engineering with a focus on [job-specific focus, max 8 words, ATS keywords]. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded. Fluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running, cooking.'",
+  "recommended_profile": "One neutral sentence (max 30 words) on what the candidate brings for this job, based only on the qualifications above.",
   "resume_tips": [
     "Add keyword X (required by this job, missing from resume)",
     "Quantify impact in experience Y",
@@ -149,7 +147,7 @@ RESUME TIPS (3–6 actionable items):
 
 TITLE & PROFILE (ATS-optimised):
 - recommended_title: one headline, ≤8 words, mirrors the job title keywords exactly. Keep it neutral and factual (e.g. "Embedded Software Engineer — Linux & C").
-- recommended_profile: Keep this EXACT fixed structure, only replacing what is after 'with a focus on': 'Looking for a full-time position in software engineering with a focus on [job-specific focus, max 8 words, ATS keywords]. MSc in Computer Engineering (EPITA - GISTRE) in Systems / Embedded. Fluent in French and English (TOEIC 915, C1). Interests: watchmaking, music, hiking/running, cooking.' Do NOT change anything else.
+- recommended_profile: one neutral sentence, 30 words max, based ONLY on the qualifications above. Do not invent facts, degrees, scores or hobbies.
 
 RECOMMENDATIONS:
 - recommended_experience_ids: 2–4 experiences with the highest scores.
@@ -169,23 +167,14 @@ ENTITY DESCRIPTIONS (only for recommended entities):
 - Omit entities with score < 70 or those not in recommended_experience_ids / recommended_project_ids.`
 }
 
-/** Parses the model's raw text response into the shared analysis shape (minus job_id/analyzed_at, set by the caller). */
-export function parseRankingResponse(
-  responseText: string,
+/** Turns the JSON document the model returned into the shared analysis shape (minus job_id/analyzed_at, set by the caller). */
+export function normalizeRanking(
+  data: unknown,
 ): Omit<AIAnalysisResult, 'job_id' | 'analyzed_at'> {
-  // Parse JSON from response (may be wrapped in markdown code blocks)
-  let jsonText = responseText
-  const jsonMatch = responseText.match(/```json\n?([\s\S]*?)\n?```/)
-  if (jsonMatch) {
-    jsonText = jsonMatch[1]
-  } else {
-    const jsonObjectMatch = responseText.match(/\{[\s\S]*\}/)
-    if (jsonObjectMatch) {
-      jsonText = jsonObjectMatch[0]
-    }
+  if (typeof data !== 'object' || data === null || Array.isArray(data)) {
+    throw new Error('The AI answer is not a JSON object.')
   }
-
-  const analysisData = JSON.parse(jsonText)
+  const analysisData = data as Record<string, any> // eslint-disable-line @typescript-eslint/no-explicit-any
 
   const entitiesByType = analysisData.entities_by_type ?? {}
 

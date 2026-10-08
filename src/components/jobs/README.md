@@ -14,7 +14,7 @@ Feature components for the Job Tracker module.
 | `useJobAutosave.ts` | Per-field debounced save of a job; required fields are not saved empty; "Saving…" / "Saved" state. |
 | `StatusSelect.tsx` | The status as a badge-coloured `SelectMenu` that opens the list of statuses. |
 | `ResumeConfigPanel.tsx` | "Resume": header, the library by type, suggested skills, template, floating at the bottom, three actions of one size: **Reset to defaults** (confirmed in a `Drawer`; also clears the AI ranking), **Rank with AI** (violet), **Download PDF**. Composes `resume-config/`. |
-| `useAiRanking.ts` | `useAiRanking(jobId)` — POST `/api/jobs/[id]/rank`; one provider, moving to OVH AI Endpoints with #44. |
+| `useAiRanking.ts` | `useAiRanking(jobId)` — POST `/api/jobs/[id]/rank`, answered through the AI gateway (#44). |
 
 ## `resume-config/`
 

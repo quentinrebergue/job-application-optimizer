@@ -1,19 +1,11 @@
 import type { EntityMeta } from '@/types'
 import type { AIAnalysisResult } from '@/types/job'
-import { rankJobWithGemini } from './gemini'
-import { rankJobWithClaude } from './claude'
+import { askGateway } from './gateway'
+import { buildRankingPrompt, normalizeRanking, RANKING_SYSTEM_PROMPT } from './ranking-prompt'
 
-export type AIProvider = 'gemini' | 'claude'
-
-export const AI_PROVIDERS: AIProvider[] = ['gemini', 'claude']
-
-export function isAIProvider(value: unknown): value is AIProvider {
-  return value === 'gemini' || value === 'claude'
-}
-
-/** Dispatches the job-ranking call to whichever provider the caller picked. */
+/** Scores the user's library against a job offer, through the AI gateway. */
 export async function rankJobWithAI(
-  provider: AIProvider,
+  userId: string,
   jobTitle: string,
   jobCompany: string,
   jobDescription: string,
@@ -25,6 +17,11 @@ export async function rankJobWithAI(
   },
   aiContext?: string,
 ): Promise<AIAnalysisResult> {
-  const rank = provider === 'claude' ? rankJobWithClaude : rankJobWithGemini
-  return rank(jobTitle, jobCompany, jobDescription, entities, aiContext)
+  const prompt = buildRankingPrompt(jobTitle, jobCompany, jobDescription, entities, aiContext)
+  const { content } = await askGateway({ feature: 'rank', userId, system: RANKING_SYSTEM_PROMPT, prompt })
+  return {
+    job_id: '', // Will be set by the caller
+    analyzed_at: new Date().toISOString(),
+    ...normalizeRanking(content),
+  }
 }

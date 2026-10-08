@@ -1,6 +1,7 @@
 import { getJob, updateJob, getResumeProfile } from '@/lib/data'
 import { listEntities } from '@/lib/data'
-import { rankJobWithAI, isAIProvider, type AIProvider } from '@/lib/ai'
+import { rankJobWithAI } from '@/lib/ai'
+import { AiGatewayError } from '@/lib/ai/gateway'
 import { getSessionUserId } from '@/lib/auth/session'
 import { findUserById } from '@/lib/data/users'
 
@@ -20,12 +21,6 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   try {
     const { id } = await params
 
-    // Which AI provider to use — defaults to Gemini to preserve prior behaviour
-    // when the caller (older UI, MCP tool) doesn't pass one.
-    const body = await request.json().catch(() => ({}))
-    const requestedProvider = (body as { provider?: unknown }).provider
-    const provider: AIProvider = isAIProvider(requestedProvider) ? requestedProvider : 'gemini'
-
     // Get job details
     const job = await getJob(userId, id)
     if (!job) {
@@ -44,7 +39,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       aiContext = (await getResumeProfile(userId)).ai_context
     }
     // Call AI ranking
-    const analysis = await rankJobWithAI(provider, job.title, job.company, job.description, {
+    const analysis = await rankJobWithAI(userId, job.title, job.company, job.description, {
       experiences,
       projects,
       skills,
@@ -63,6 +58,9 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     return Response.json(analysis)
   } catch (error) {
     console.error('AI ranking error:', error)
+    if (error instanceof AiGatewayError) {
+      return Response.json({ error: error.message }, { status: error.status })
+    }
     return Response.json(
       { error: error instanceof Error ? error.message : 'Failed to rank job' },
       { status: 500 },
