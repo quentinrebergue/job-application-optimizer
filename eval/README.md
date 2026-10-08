@@ -13,10 +13,12 @@ Evaluation of the AI ranking (#44 follow-up): did a change to the prompt, the mo
    ```
    npm run eval:ranking -- --label llama-3.3-70b
    npm run eval:ranking -- --case arista --runs 5
+   npm run eval:ranking -- --with-examples     # also run the fictional cases
    npm run eval:ranking -- --label new-prompt --save-baseline   # when you are happy with it
    ```
 
-A full evaluation (5 offers x 3 runs) costs about 0.05 EUR.
+The fictional cases of `cases/` are skipped when `private/` has cases of its own.
+A full evaluation (5 offers x 3 runs) costs about 0.05 EUR. The details of the first run of each case say what the AI missed, what it added and which ids it invented. A baseline is only saved from a run without failures.
 
 ## What is measured
 

@@ -5,8 +5,8 @@
  */
 
 export class AiGatewayError extends Error {
-  constructor(message: string, readonly status: number) {
-    super(message)
+  constructor(message: string, readonly status: number, options?: { cause?: unknown }) {
+    super(message, options)
     this.name = 'AiGatewayError'
   }
 }
@@ -59,7 +59,7 @@ export async function askGateway(request: GatewayRequest): Promise<GatewayAnswer
   } catch (error) {
     console.error('AI gateway unreachable:', error)
     const timedOut = error instanceof Error && error.name === 'TimeoutError'
-    throw new AiGatewayError(messageFor(timedOut ? 504 : 502, undefined), timedOut ? 504 : 502)
+    throw new AiGatewayError(messageFor(timedOut ? 504 : 502, undefined), timedOut ? 504 : 502, { cause: error })
   }
 
   const body = (await res.json().catch(() => null)) as (Partial<GatewayAnswer> & { error?: string }) | null

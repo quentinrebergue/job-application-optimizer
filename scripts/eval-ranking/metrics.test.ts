@@ -39,7 +39,15 @@ describe('scoreRun', () => {
   })
 
   it('counts invented ids', () => {
-    expect(scoreRun(expected, LIBRARY, analysis({ experiences: ['e1', 'zzz'] })).invalidIds).toBe(1)
+    const m = scoreRun(expected, LIBRARY, analysis({ experiences: ['e1', 'zzz'] }))
+    expect(m.invalidIds).toBe(1)
+    expect(m.invalid).toEqual(['experiences:zzz'])
+  })
+
+  it('lists what was missed and what was added', () => {
+    const m = scoreRun(expected, LIBRARY, analysis({ experiences: ['e1', 'e3'], projects: ['p1'] }))
+    expect(m.missed).toEqual(['experiences:e2'])
+    expect(m.extra).toEqual(['experiences:e3'])
   })
 
   it('has no recall when nothing is expected and no precision when nothing is picked', () => {
@@ -62,7 +70,7 @@ describe('stability', () => {
 describe('summarize and compare', () => {
   const run = (recall: number, ms: number): RunRecord => ({
     ok: true,
-    metrics: { hits: 0, expected: 0, recommended: 0, recall, precision: recall, invalidIds: 0, expectedNotScored: 0, selection: ['a'] },
+    metrics: { hits: 0, expected: 0, recommended: 0, recall, precision: recall, invalidIds: 0, expectedNotScored: 0, selection: ['a'], missed: [], extra: [], invalid: [] },
     ms, promptTokens: 1000, completionTokens: 500,
   })
 

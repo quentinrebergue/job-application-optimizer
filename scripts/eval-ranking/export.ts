@@ -35,6 +35,7 @@ async function main() {
   const slug = `${job.company}-${job.title}`.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60) || jobId
   const evalCase: EvalCase = {
     name: slug,
+    source: 'private',
     job: { title: job.title, company: job.company, description: job.description },
     aiContext: aiContext || undefined,
     entities,

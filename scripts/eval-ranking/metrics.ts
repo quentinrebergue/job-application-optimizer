@@ -28,11 +28,17 @@ export interface RunMetrics {
   expectedNotScored: number
   /** Everything it recommended, as "type:id", for the stability measure. */
   selection: string[]
+  /** Expected and not recommended, as "type:id": what the AI missed. */
+  missed: string[]
+  /** Recommended and not expected, as "type:id". */
+  extra: string[]
+  /** Recommended ids that are not in the library of that type, as "type:id". */
+  invalid: string[]
 }
 
 export function scoreRun(expected: Expected, library: Library, analysis: AIAnalysisResult): RunMetrics {
-  let hits = 0, expectedTotal = 0, recommendedTotal = 0, invalidIds = 0, expectedNotScored = 0
-  const selection: string[] = []
+  let hits = 0, expectedTotal = 0, recommendedTotal = 0, expectedNotScored = 0
+  const selection: string[] = [], missed: string[] = [], extra: string[] = [], invalid: string[] = []
   for (const type of SELECTED_TYPES) {
     const wanted = new Set(expected[type] ?? [])
     const picked = new Set(RECOMMENDED[type](analysis) ?? [])
@@ -40,10 +46,14 @@ export function scoreRun(expected: Expected, library: Library, analysis: AIAnaly
     const scored = new Set((analysis.entities_by_type?.[type] ?? []).map((e) => e.id))
     for (const id of picked) {
       if (wanted.has(id)) hits++
-      if (!known.has(id)) invalidIds++
+      else extra.push(`${type}:${id}`)
+      if (!known.has(id)) invalid.push(`${type}:${id}`)
       selection.push(`${type}:${id}`)
     }
-    for (const id of wanted) if (!scored.has(id)) expectedNotScored++
+    for (const id of wanted) {
+      if (!picked.has(id)) missed.push(`${type}:${id}`)
+      if (!scored.has(id)) expectedNotScored++
+    }
     expectedTotal += wanted.size
     recommendedTotal += picked.size
   }
@@ -53,9 +63,12 @@ export function scoreRun(expected: Expected, library: Library, analysis: AIAnaly
     recommended: recommendedTotal,
     recall: expectedTotal ? hits / expectedTotal : null,
     precision: recommendedTotal ? hits / recommendedTotal : null,
-    invalidIds,
+    invalidIds: invalid.length,
     expectedNotScored,
     selection: selection.sort(),
+    missed,
+    extra,
+    invalid,
   }
 }
 
