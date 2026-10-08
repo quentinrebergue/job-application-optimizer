@@ -26,8 +26,10 @@ export const EntityRankingResultSchema = z.object({
   id: z.string(),
   type: z.enum(['experience', 'project', 'skill', 'education']),
   name: z.string(),
-  score: z.number().min(0).max(100),
-  reason: z.string(),
+  level: z.union([z.literal(0), z.literal(1), z.literal(2), z.literal(3)]).optional(),
+  rank: z.number().int().min(1).optional(),
+  score: z.number().min(0).max(100).optional(),
+  reason: z.string().default(''),
 })
 
 export const AIAnalysisResultSchema = z.object({
@@ -40,18 +42,18 @@ export const AIAnalysisResultSchema = z.object({
     skills: z.array(EntityRankingResultSchema),
     education: z.array(EntityRankingResultSchema),
   }),
-  confidence_score: z.number().min(0).max(1),
-  summary: z.string(),
-  resume_tips: z.array(z.string()).default([]),
-  recommended_title: z.string().default(''),
-  recommended_profile: z.string().default(''),
+  confidence_score: z.number().min(0).max(1).optional(),
+  summary: z.string().optional(),
+  resume_tips: z.array(z.string()).optional(),
+  recommended_title: z.string().optional(),
+  recommended_profile: z.string().optional(),
   recommended_experience_ids: z.array(z.string()).default([]),
   recommended_project_ids: z.array(z.string()).default([]),
   recommended_skill_ids: z.array(z.string()).default([]),
   recommended_skill_tags: z.record(z.string(), z.array(z.string())).default({}),
   suggested_new_skills: z.array(SuggestedSkillSchema).default([]),
   suggested_new_skill_tags: z.array(SuggestedSkillTagSchema).default([]),
-  recommended_entity_descriptions: z.record(z.string(), z.string()).default({}),
+  recommended_entity_descriptions: z.record(z.string(), z.string()).optional(),
 })
 
 export const ResumeConfigSchema = z.object({

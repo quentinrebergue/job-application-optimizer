@@ -26,8 +26,8 @@ A full evaluation (5 offers x 3 runs) costs about 0.05 EUR. The details of the f
 |---|---|
 | recall | Of the ids you expected, how many the AI recommended |
 | precision | Of the ids it recommended, how many you expected |
-| not scored | Expected ids the AI did not mention at all (forgotten, not judged low) |
-| bad ids | Recommended ids that are not in the library (invented) |
+| not scored | Expected entries the AI did not rate at all (forgotten, not judged low) |
+| bad ids | Labels the AI invented or put in the wrong list, counted before the code drops them |
 | stability | Overlap between runs of the same case (1 = same answer every time) |
 | time, tokens | Median and worst time; tokens in and out |
 | failures | Runs that ended in an error |

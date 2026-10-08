@@ -2,7 +2,7 @@
 // they can be tested on their own. Each update returns a new ResumeConfig.
 
 import type { EntityMeta, ResumeConfig, SkillMeta } from '@/types'
-import type { AIAnalysisResult } from '@/types/job'
+import type { AIAnalysisResult, EntityRankingResult } from '@/types/job'
 
 export const TYPE_ORDER = ['experiences', 'projects', 'skills', 'education'] as const
 export type EntityType = (typeof TYPE_ORDER)[number]
@@ -70,11 +70,15 @@ const mostRecentFirst = (a: EntityMeta, b: EntityMeta) => parseEndDate(period(b)
 
 // ─── Scores and grouping ─────────────────────────────────────────────────────
 
-/** AI score (0–1 from saved rankings, or 0–100 from a live analysis for projects), -1 when unknown. */
+/** What sorts an entry: its level, then its place in the AI's list; the score of rankings saved before the levels. */
+function aiPriority(r: EntityRankingResult): number {
+  return r.level !== undefined ? r.level * 1000 - (r.rank ?? 0) : (r.score ?? -1)
+}
+
+/** The AI's priority for a project (0–1 saved rankings, or the live analysis), -1 when unknown. */
 function projectScore(id: string, config: ResumeConfig, ai?: AIAnalysisResult | null): number {
-  return ai?.entities_by_type.projects.find((p) => p.id === id)?.score
-    ?? config.ai_rankings.find((r) => r.entity_id === id)?.score
-    ?? -1
+  const live = ai?.entities_by_type.projects.find((p) => p.id === id)
+  return live ? aiPriority(live) : config.ai_rankings.find((r) => r.entity_id === id)?.score ?? -1
 }
 
 function rankingScore(id: string, config: ResumeConfig): number {

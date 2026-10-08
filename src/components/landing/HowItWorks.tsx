@@ -96,7 +96,7 @@ export function HowItWorks() {
                 name: 'Rank',
                 text: (
                   <>
-                    The AI reads the offer, scores every entry of your library, and marks the best ones Recommended.
+                    The AI reads the offer, rates every entry of your library, and marks the best ones Recommended.
                     <InfoTip label="About the AI">{aiStatement().join(' ')}</InfoTip>
                   </>
                 ),
