@@ -18,6 +18,9 @@ type Limits struct {
 	Timeout         time.Duration
 }
 
+// maxSchemaBytes caps the JSON Schema an app may send along with a prompt.
+const maxSchemaBytes = 32 << 10
+
 // features is the list of things the app may ask for. Unknown ones are refused.
 var features = map[string]bool{"rank": true}
 
@@ -53,10 +56,11 @@ func (s *Server) Handler() http.Handler {
 }
 
 type completeRequest struct {
-	Feature string `json:"feature"`
-	UserID  string `json:"user_id"`
-	System  string `json:"system"`
-	Prompt  string `json:"prompt"`
+	Feature string          `json:"feature"`
+	UserID  string          `json:"user_id"`
+	System  string          `json:"system"`
+	Prompt  string          `json:"prompt"`
+	Schema  json.RawMessage `json:"schema"`
 }
 
 type completeResponse struct {
@@ -65,7 +69,7 @@ type completeResponse struct {
 }
 
 func (s *Server) complete(w http.ResponseWriter, r *http.Request) {
-	r.Body = http.MaxBytesReader(w, r.Body, int64(s.limits.MaxPromptBytes)+4096)
+	r.Body = http.MaxBytesReader(w, r.Body, int64(s.limits.MaxPromptBytes)+maxSchemaBytes+4096)
 	dec := json.NewDecoder(r.Body)
 	dec.DisallowUnknownFields()
 	var in completeRequest
@@ -83,12 +87,18 @@ func (s *Server) complete(w http.ResponseWriter, r *http.Request) {
 	case len(in.System)+len(in.Prompt) > s.limits.MaxPromptBytes:
 		writeError(w, http.StatusRequestEntityTooLarge, "prompt too large")
 		return
+	case len(in.Schema) > maxSchemaBytes:
+		writeError(w, http.StatusRequestEntityTooLarge, "schema too large")
+		return
+	case len(in.Schema) > 0 && !isJSONObject(in.Schema):
+		writeError(w, http.StatusBadRequest, "schema must be a JSON object")
+		return
 	}
 
 	ctx, cancel := context.WithTimeout(r.Context(), s.limits.Timeout)
 	defer cancel()
 	res, err := s.llm.Complete(ctx, llm.Request{
-		System: in.System, Prompt: in.Prompt, MaxTokens: s.limits.MaxOutputTokens,
+		System: in.System, Prompt: in.Prompt, MaxTokens: s.limits.MaxOutputTokens, Schema: in.Schema,
 	})
 	if err != nil {
 		s.logger.Error("completion failed", "feature", in.Feature, "error", err)
@@ -120,4 +130,10 @@ func writeJSON(w http.ResponseWriter, status int, v any) {
 
 func writeError(w http.ResponseWriter, status int, msg string) {
 	writeJSON(w, status, map[string]string{"error": msg})
+}
+
+// isJSONObject reports whether raw is a JSON object (not null, an array or a string).
+func isJSONObject(raw json.RawMessage) bool {
+	var m map[string]any
+	return json.Unmarshal(raw, &m) == nil && m != nil
 }
