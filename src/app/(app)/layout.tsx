@@ -1,4 +1,5 @@
 import { AppHeader } from '@/components/layout/AppHeader'
+import { LegalLinks } from '@/components/layout/LegalLinks'
 import { VerifyEmailBanner } from '@/components/layout/VerifyEmailBanner'
 import { getCurrentUser } from '@/lib/auth/dal'
 
@@ -23,6 +24,9 @@ export default async function AppLayout({
       <main id="main" className="min-w-0">
         {children}
       </main>
+      <footer className="mx-auto w-full max-w-7xl px-4 pb-6 pt-2 text-sm text-ink-muted md:px-8">
+        <LegalLinks />
+      </footer>
     </>
   )
 }

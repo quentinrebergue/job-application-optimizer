@@ -1,0 +1,94 @@
+import { LegalPage, LegalSection } from '@/components/legal/LegalPage'
+import { ACCOUNT_TOOLS, AI_ANONYMISED, AI_ON_OVHCLOUD, CONTACT_EMAIL, HOST, PUBLISHER_NAME } from '@/config/legal'
+
+export const metadata = {
+  title: 'Privacy',
+  description: 'What FastResume stores about you, why, where, and what it never does with it.',
+  alternates: { canonical: '/privacy' },
+}
+
+export default function PrivacyPage() {
+  const mail = <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+  return (
+    <LegalPage
+      title="Privacy"
+      intro="FastResume stores what it needs to build your resumes, in France, and nothing else. It never sells your data, shows ads, or trains a model on your resume."
+    >
+      <LegalSection title="Who is responsible">
+        <p>FastResume is run by {PUBLISHER_NAME}, an individual, from France. He decides how your data is used. Contact: {mail}.</p>
+      </LegalSection>
+
+      <LegalSection title="What we store, and why">
+        <ul>
+          <li><strong>Your account:</strong> your email address and your password. The password is never stored: only a one-way hash (bcrypt). We use them to let you sign in and to send you the emails below.</li>
+          <li><strong>Your library and your jobs:</strong> the experiences, projects, skills and education you write, your resume profile (name, contact details), and the job offers you add with the resumes you configure for them. We use them to build your resumes, and only for that.</li>
+          <li><strong>A session cookie:</strong> one random identifier that keeps you signed in for 7 days. It is the only cookie, it is necessary for the service, and it is not used to follow you.</li>
+          <li><strong>Your IP address, briefly:</strong> to slow down abuse (too many sign-in or password-reset attempts), it is kept for at most one hour. Like any web server, ours also log requests (including the IP address); these logs are rotated automatically and used only to fix problems.</li>
+        </ul>
+      </LegalSection>
+
+      <LegalSection title="Emails">
+        <p>
+          We send only the emails the service needs: confirm your address, reset your password, tell you your password changed.
+          No newsletters, no marketing. They go through Brevo, a French email provider, which receives your address and the message.
+        </p>
+      </LegalSection>
+
+      <LegalSection title="No trackers, no ads, no selling">
+        <p>
+          No analytics, no advertising, no third-party cookies, no social-media widgets. Your data is never sold, rented or shared for
+          advertising, and never used to train an AI model.
+        </p>
+      </LegalSection>
+
+      <LegalSection title="The AI">
+        {AI_ON_OVHCLOUD ? (
+          <p>
+            When you rank your library against a job offer, the text of the offer and the content of your library entries are sent to an
+            open-source AI model hosted by OVHcloud in France. They are not kept by the model service and not used to train it. The
+            AI chooses and orders what you wrote; it never adds an experience, a skill or a number you did not write.
+            {AI_ANONYMISED && ' Your name and contact details are removed before anything is sent.'}
+          </p>
+        ) : (
+          <p>
+            The AI ranking is not available yet. When it is, it will run on open-source models hosted in France, and this page will say
+            exactly what is sent before the feature goes live.
+          </p>
+        )}
+      </LegalSection>
+
+      <LegalSection title="Where your data lives, who can see it">
+        <p>
+          Everything is stored on {HOST.name} (OVHcloud) servers in France, under European law (GDPR). Only you see your content. The
+          maintainer can technically reach the database to run the service and does not read your content. A database backup is made
+          every day and kept for 7 days, on the same infrastructure.
+        </p>
+      </LegalSection>
+
+      <LegalSection title="How long we keep it">
+        <ul>
+          <li>Your account and library: until you delete your account.</li>
+          <li>Sessions: they expire after 7 days. Password-reset links: 30 minutes.</li>
+          <li>Backups: 7 days, so deleted data disappears from them within a week.</li>
+        </ul>
+      </LegalSection>
+
+      <LegalSection title="Your rights">
+        <p>
+          Under the GDPR you can ask for a copy of your data, correct it, delete it, or object to how it is used.{' '}
+          {ACCOUNT_TOOLS
+            ? 'You can export your data and delete your account yourself from your account page.'
+            : <>Write to {mail}: we answer within one month and delete your account and data on request.</>}
+        </p>
+        <p>
+          If you think we do not respect your rights, you can complain to the French data protection authority, the{' '}
+          <a href="https://www.cnil.fr">CNIL</a>.
+        </p>
+      </LegalSection>
+
+      <LegalSection title="Changes">
+        <p>If this page changes in a way that matters, the date at the top changes with it.</p>
+      </LegalSection>
+    </LegalPage>
+  )
+}
