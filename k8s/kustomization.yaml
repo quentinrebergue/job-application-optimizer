@@ -23,6 +23,9 @@ resources:
 
 # The only lines the CD pipeline edits: one tag per image we build.
 images:
+- name: ghcr.io/quentinrebergue/ai-gateway
+  newName: ghcr.io/quentinrebergue/ai-gateway
+  newTag: e1cb9ee
 - name: ghcr.io/quentinrebergue/db-migrator
   newName: ghcr.io/quentinrebergue/db-migrator
   newTag: 18ab544
