@@ -36,6 +36,8 @@ spec:
               value: "http://resume-renderer"
             - name: APP_URL
               value: "https://fastresume.tech"
+            - name: AI_GATEWAY_URL
+              value: "http://ai-gateway"
           envFrom:
             - secretRef:
                 name: app-secrets
