@@ -8,7 +8,6 @@ export interface EvalCase {
   /** Not in the JSON: `example` for the versioned fictional cases, `private` for mine. */
   source: 'example' | 'private'
   job: { title: string; company: string; description: string }
-  aiContext?: string
   entities: { experiences: EntityMeta[]; projects: EntityMeta[]; skills: EntityMeta[]; education: EntityMeta[] }
   /** The ids I would pick for this offer: what the evaluation compares the AI with. */
   expected: Expected

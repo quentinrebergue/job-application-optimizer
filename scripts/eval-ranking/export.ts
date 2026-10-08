@@ -8,7 +8,7 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { pool } from '@/lib/db'
-import { getJob, getResumeProfile, listEntities } from '@/lib/data'
+import { getJob, listEntities } from '@/lib/data'
 import { PRIVATE_DIR, type EvalCase } from './cases'
 
 function label(e: unknown): string {
@@ -31,13 +31,11 @@ async function main() {
     skills: await listEntities(userId, 'skills'),
     education: await listEntities(userId, 'education'),
   }
-  const aiContext = job.resume_config.ai_context?.trim() || (await getResumeProfile(userId)).ai_context
   const slug = `${job.company}-${job.title}`.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60) || jobId
   const evalCase: EvalCase = {
     name: slug,
     source: 'private',
     job: { title: job.title, company: job.company, description: job.description },
-    aiContext: aiContext || undefined,
     entities,
     expected: { experiences: [], projects: [], skills: [] },
   }

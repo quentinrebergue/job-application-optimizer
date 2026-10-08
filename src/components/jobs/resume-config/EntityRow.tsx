@@ -3,6 +3,7 @@
 import { ChevronDown } from 'lucide-react'
 import type { EntityMeta } from '@/types'
 import { cn } from '@/lib/cn'
+import { MATCH_LABELS } from '@/config/ranking'
 import { Badge } from '@/components/ui/Badge'
 import { IconButton } from '@/components/ui/IconButton'
 import { entityLabel, entitySubLabel } from './logic'
@@ -11,7 +12,9 @@ export interface RowState {
   selected: boolean
   expanded: boolean
   recommended: boolean
-  /** 0–100, or null when the AI has not scored it */
+  /** 0 none … 3 strong, or null when the AI has not rated it */
+  level: number | null
+  /** 0–100, only for rankings saved before the levels */
   score: number | null
   /** Why the AI scored it so; shown when the row is open */
   reason?: string
@@ -56,10 +59,12 @@ export function EntityRow({ entity, state, onToggle, onExpand, children }: Props
         <div className="flex min-w-0 flex-col gap-1">
           <label htmlFor={checkboxId} title={name} className="cursor-pointer truncate font-extrabold leading-tight">{name}</label>
           {sub && <p className="truncate text-xs text-ink-muted">{sub}</p>}
-          {(state.recommended || state.score !== null || state.tagCount) && (
+          {(state.recommended || state.level !== null || state.score !== null || state.tagCount) && (
             <div className="flex flex-wrap items-center gap-2">
               {state.recommended && <Badge label="Recommended" variant="accent" />}
-              {state.score !== null && <span className="text-xs font-semibold tabular-nums">{state.score}% match</span>}
+              {state.level !== null
+                ? <span className="text-xs font-semibold">{MATCH_LABELS[state.level]}</span>
+                : state.score !== null && <span className="text-xs font-semibold tabular-nums">{state.score}% match</span>}
               {state.tagCount && <Badge label={state.tagCount} variant="muted" />}
             </div>
           )}

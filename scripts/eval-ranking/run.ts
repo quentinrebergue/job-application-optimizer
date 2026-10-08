@@ -47,10 +47,13 @@ async function runCase(c: EvalCase, runs: number): Promise<RunRecord[]> {
     for (let i = 1; i <= runs; i++) {
       const start = Date.now()
       try {
-        const { analysis, usage } = await rankWithUsage('eval', c.job.title, c.job.company, c.job.description, c.entities, c.aiContext)
+        const { analysis, usage, diagnostics } = await rankWithUsage('eval', c.job.title, c.job.company, c.job.description, c.entities)
+        // The code drops what the AI invented before the answer is returned: count it from the diagnostics.
+        const metrics = scoreRun(c.expected, c.entities, analysis)
+        metrics.invalidIds += diagnostics.invalidIds
         records.push({
           ok: true,
-          metrics: scoreRun(c.expected, c.entities, analysis),
+          metrics,
           ms: Date.now() - start,
           promptTokens: usage.prompt_tokens,
           completionTokens: usage.completion_tokens,

@@ -1,219 +1,232 @@
-import type { EntityMeta, ExperienceMeta, ProjectMeta, SkillMeta, EducationMeta } from '@/types'
-import type { AIAnalysisResult } from '@/types/job'
+import type { EntityMeta, ExperienceMeta, ProjectMeta, SkillMeta } from '@/types'
+import type { AIAnalysisResult, EntityRankingResult } from '@/types/job'
+import { RANKING_LIMITS, RECOMMEND_FROM_LEVEL } from '@/config/ranking'
 
-/** The prompt and the output contract of the job-ranking AI call. */
+/**
+ * The prompt and the output contract of the job-ranking AI call.
+ *
+ * The AI answers about labels (E1, P3, S2), never about real ids, and rates
+ * every entry; the code validates the answer, drops what it cannot trust and
+ * chooses what is recommended (#184).
+ */
 
 export const RANKING_SYSTEM_PROMPT = 'You answer with a single valid JSON object and nothing else.'
+
+export type RankedType = 'experiences' | 'projects' | 'skills'
+
+const PREFIX: Record<RankedType, string> = { experiences: 'E', projects: 'P', skills: 'S' }
+
+/** label ("E1") -> the entry it stands for */
+export type RankingLabels = Map<string, { type: RankedType; entity: EntityMeta }>
 
 export function buildRankingPrompt(
   jobTitle: string,
   jobCompany: string,
   jobDescription: string,
-  entities: {
-    experiences: EntityMeta[]
-    projects: EntityMeta[]
-    skills: EntityMeta[]
-    education: EntityMeta[]
-  },
-  aiContext?: string,
-): string {
-  const formattedEntities = {
-    experiences: entities.experiences
-      .map((e) => {
-        const exp = e as ExperienceMeta
-        return `- [ID: ${exp.id}] ${exp.title} at ${exp.company} (${exp.period})\n  Description: ${exp.description}`
+  entities: { experiences: EntityMeta[]; projects: EntityMeta[]; skills: EntityMeta[] },
+): { prompt: string; labels: RankingLabels } {
+  const labels: RankingLabels = new Map()
+  const lines = (type: RankedType, text: (e: EntityMeta) => string) =>
+    entities[type]
+      .map((entity, i) => {
+        const label = `${PREFIX[type]}${i + 1}`
+        labels.set(label, { type, entity })
+        return `${label}. ${text(entity)}`
       })
-      .join('\n'),
-    projects: entities.projects
-      .map((p) => {
-        const proj = p as ProjectMeta
-        return `- [ID: ${proj.id}] ${proj.title} [${proj.tech?.join(', ')}]\n  Description: ${proj.description}`
-      })
-      .join('\n'),
-    skills: entities.skills
-      .map((s) => {
-        const skill = s as SkillMeta
-        return `- [ID: ${skill.id}] ${skill.name} — ${skill.level} (${skill.tags?.join(', ')})`
-      })
-      .join('\n'),
-    education: entities.education
-      .map((ed) => {
-        const edu = ed as EducationMeta
-        return `- [ID: ${edu.id}] ${edu.degree} from ${edu.institution} (${edu.period})`
-      })
-      .join('\n'),
-  }
+      .join('\n') || '(none)'
 
-  const contextSection = aiContext?.trim()
-    ? `\nCANDIDATE CONTEXT (provided by the candidate — use this to better calibrate scores):\n${aiContext.trim()}\n`
-    : ''
+  const experiences = lines('experiences', (e) => {
+    const x = e as ExperienceMeta
+    return `${x.title} at ${x.company} (${x.period}): ${x.description}`
+  })
+  const projects = lines('projects', (e) => {
+    const x = e as ProjectMeta
+    return `${x.title} [${x.tech?.join(', ')}]: ${x.description}`
+  })
+  const skills = lines('skills', (e) => {
+    const x = e as SkillMeta
+    return `${x.name}, ${x.level} (tags: ${x.tags?.join(', ')})`
+  })
 
-  return `You are a senior technical recruiter and ATS specialist with high standards. You evaluate candidates critically and do not inflate scores — a score of 80+ means an exceptional, near-perfect match for that specific requirement.
+  const prompt = `You are a strict technical recruiter. Rate how well each entry of a candidate's library fits a job offer.
 
-═══════════════════════════════════════════
 JOB OFFER
-═══════════════════════════════════════════
 Title: ${jobTitle}
 Company: ${jobCompany}
-
 Description:
 ${jobDescription}
-${contextSection}
-═══════════════════════════════════════════
-CANDIDATE QUALIFICATIONS
-═══════════════════════════════════════════
 
-EXPERIENCES:
-${formattedEntities.experiences || '(none)'}
+CANDIDATE LIBRARY (every entry has a label)
+EXPERIENCES
+${experiences}
 
-PROJECTS:
-${formattedEntities.projects || '(none)'}
+PROJECTS
+${projects}
 
-SKILLS:
-${formattedEntities.skills || '(none)'}
+SKILLS
+${skills}
 
-EDUCATION:
-${formattedEntities.education || '(none)'}
-
-═══════════════════════════════════════════
-INSTRUCTIONS
-═══════════════════════════════════════════
-
-Respond with a single valid JSON object. No markdown, no extra text, no code blocks.
-
-The JSON must follow this exact structure:
+ANSWER
+One JSON object, nothing else:
 {
-  "ats_tags": ["tag1", "tag2"],
-  "confidence_score": 0.72,
-  "summary": "2-3 sentence honest assessment of the fit. Be direct and critical.",
-  "recommended_title": "Software Engineer — Embedded Linux",
-  "recommended_profile": "One neutral sentence (max 30 words) on what the candidate brings for this job, based only on the qualifications above.",
-  "resume_tips": [
-    "Add keyword X (required by this job, missing from resume)",
-    "Quantify impact in experience Y",
-    "Highlight Z more prominently"
-  ],
-  "recommended_experience_ids": ["id-from-list", "id-from-list"],
-  "recommended_project_ids": ["id-from-list", "id-from-list"],
-  "recommended_skill_ids": ["id-from-list", "id-from-list"],
-  "recommended_skill_tags": {
-    "id-from-list": ["tag1", "tag2"]
-  },
-  "suggested_new_skills": [
-    {"name": "Rust", "category": "Languages", "level": "intermediate", "tags": ["memory safety", "systems"], "reason": "Required by job"}
-  ],
-  "suggested_new_skill_tags": [
-    {"skill_id": "id-from-list", "tag": "new-tag", "reason": "Used in this job but missing from skill"}
-  ],
-  "recommended_entity_descriptions": {
-    "id-from-list": "Rewritten description for this entity, tailored for this job. Factual, concise, ATS keywords included."
-  },
-  "entities_by_type": {
-    "experiences": [
-      {"id": "id-from-list", "name": "Experience Name", "score": 74, "reason": "One sentence: what matches and what does not."}
-    ],
-    "projects": [
-      {"id": "id-from-list", "name": "Project Name", "score": 68, "reason": "One sentence: what matches and what does not."}
-    ],
-    "skills": [
-      {"id": "id-from-list", "name": "Skill Name", "score": 90, "reason": "One sentence: what matches and what does not."}
-    ],
-    "education": [
-      {"id": "id-from-list", "name": "Degree Name", "score": 65, "reason": "One sentence: what matches and what does not."}
-    ]
-  }
+  "ats_tags": ["keyword"],
+  "experiences": [{"id": "E2", "level": 3, "why": "at most 10 words"}],
+  "projects": [{"id": "P1", "level": 2, "why": "at most 10 words"}],
+  "skills": [{"id": "S1", "level": 3, "why": "at most 10 words", "tags": ["tag"]}],
+  "new_skills": [{"name": "Rust", "category": "Languages", "level": "intermediate", "tags": ["tag"], "reason": "at most 10 words"}],
+  "new_skill_tags": [{"skill": "S1", "tag": "new tag", "reason": "at most 10 words"}]
 }
 
-SCORING RULES (apply strictly):
-- Score 0–100. 50 = mediocre match, 70 = good match, 85+ = excellent match.
-- Be harsh. If a skill/experience is only tangentially related, score it 30–50.
-- Only include entities with score >= 60. Exclude everything below — do not mention them.
-- Penalise seniority mismatch (e.g. student project vs. production system requirement).
-- Penalise technology mismatch (e.g. Python experience for a C++ job = max 40).
+RULES
+- Rate EVERY entry of "experiences", "projects" and "skills", using its label exactly as given. Never skip one, never invent one.
+- Level: 3 = the offer asks for it (same technology or same kind of work); 2 = related and transferable; 1 = weak link; 0 = unrelated. Be strict: level 3 needs the offer's technology or domain to appear in the entry itself.
+- List each array best first (level 3 first).
+- "why": at most 10 words, naming the evidence in the entry. Only for levels 2 and 3; leave it out for levels 0 and 1.
+- Skills: "tags" lists only the tags of that skill that matter for this offer, copied exactly; only for levels 2 and 3.
+- "ats_tags": 5 to 10 keywords an applicant tracking system would search in this offer (tools, languages, domain, level, work mode).
+- "new_skills": 0 to 3 skills the offer asks for that the library lacks. "new_skill_tags": 0 to 5 tags to add to an existing skill ("skill" is its label).`
 
-ATS TAGS (5–10 tags):
-- Extract the actual keywords the ATS would search for (tools, languages, domain, level, work mode).
-- Examples: "C++", "RTOS", "on-site", "internship", "embedded", "Linux-kernel", "senior-level".
-
-SUMMARY (2–3 sentences max):
-- State the overall fit percentage honestly.
-- Mention the strongest match and the biggest gap.
-- Do NOT repeat lists of entities — refer to them by category.
-
-RESUME TIPS (3–6 actionable items):
-- Each tip is a specific, actionable improvement targeting THIS job.
-- Focus on: missing keywords the ATS would flag, quantification of impact, reordering priorities, rephrasing to match the job's vocabulary.
-- Do NOT give generic advice like "improve your resume".
-
-TITLE & PROFILE (ATS-optimised):
-- recommended_title: one headline, ≤8 words, mirrors the job title keywords exactly. Keep it neutral and factual (e.g. "Embedded Software Engineer — Linux & C").
-- recommended_profile: one neutral sentence, 30 words max, based ONLY on the qualifications above. Do not invent facts, degrees, scores or hobbies.
-
-RECOMMENDATIONS:
-- recommended_experience_ids: 2–4 experiences with the highest scores.
-- recommended_project_ids: 3–5 projects with the highest scores.
-- recommended_skill_ids: 2–4 skill sections most relevant to this job. Use ONLY existing IDs.
-- recommended_skill_tags: for each recommended skill, list ONLY the tags that are relevant to this job (subset of the skill's existing tags). Omit tags that don't match.
-- suggested_new_skills: 0–3 entirely new skill entries the candidate should add to their library. Include only skills explicitly required or strongly preferred by the job that are absent from the candidate's list.
-- suggested_new_skill_tags: 0–5 new tag items to add to EXISTING skills. Use only [ID: ...] from the skills list above. Suggest tags that the job mentions and that logically belong in that skill category.
-- Use ONLY the exact IDs shown as [ID: ...] above. Do NOT invent IDs.
-
-ENTITY DESCRIPTIONS (only for recommended entities):
-- recommended_entity_descriptions: for each recommended experience and project (not skills/education), rewrite its description to maximise relevance for this specific job.
-- Keep it factual — only use information present in the original description.
-- Weave in 1–3 keywords from the job posting naturally.
-- For experiences: 2–4 bullet-style sentences, plain text.
-- For projects: 1–3 sentences, plain text.
-- Omit entities with score < 70 or those not in recommended_experience_ids / recommended_project_ids.`
+  return { prompt, labels }
 }
 
-/** Turns the JSON document the model returned into the shared analysis shape (minus job_id/analyzed_at, set by the caller). */
-export function normalizeRanking(
-  data: unknown,
-): Omit<AIAnalysisResult, 'job_id' | 'analyzed_at'> {
-  if (typeof data !== 'object' || data === null || Array.isArray(data)) {
-    throw new Error('The AI answer is not a JSON object.')
-  }
-  const analysisData = data as Record<string, any> // eslint-disable-line @typescript-eslint/no-explicit-any
+export interface RankingDiagnostics {
+  /** Labels the AI used that do not exist, or of another type, or with no valid level: dropped. */
+  invalidIds: number
+  /** Entries the AI did not rate at all. */
+  unrated: number
+}
 
-  const entitiesByType = analysisData.entities_by_type ?? {}
+type Analysis = Omit<AIAnalysisResult, 'job_id' | 'analyzed_at'>
+interface Rated {
+  entity: EntityMeta
+  level: 0 | 1 | 2 | 3
+  why: string
+  tags: string[]
+}
 
-  const enrichedEntities = {
-    experiences: (entitiesByType.experiences || []).map((e: Record<string, unknown>) => ({
-      ...e,
-      type: 'experience' as const,
-    })),
-    projects: (entitiesByType.projects || []).map((p: Record<string, unknown>) => ({
-      ...p,
-      type: 'project' as const,
-    })),
-    skills: (entitiesByType.skills || []).map((s: Record<string, unknown>) => ({
-      ...s,
-      type: 'skill' as const,
-    })),
-    education: (entitiesByType.education || []).map((ed: Record<string, unknown>) => ({
-      ...ed,
-      type: 'education' as const,
-    })),
+const isRecord = (x: unknown): x is Record<string, unknown> => typeof x === 'object' && x !== null && !Array.isArray(x)
+const text = (x: unknown, max: number) => (typeof x === 'string' ? x.trim().slice(0, max) : '')
+const textList = (x: unknown, max: number) =>
+  Array.isArray(x) ? [...new Set(x.filter((t): t is string => typeof t === 'string').map((t) => t.trim()).filter(Boolean))].slice(0, max) : []
+
+const NAME_OF: Record<RankedType, (e: EntityMeta) => string> = {
+  experiences: (e) => (e as ExperienceMeta).title,
+  projects: (e) => (e as ProjectMeta).title,
+  skills: (e) => (e as SkillMeta).name,
+}
+const ENTRY_TYPE = { experiences: 'experience', projects: 'project', skills: 'skill' } as const
+const SKILL_LEVELS = ['beginner', 'intermediate', 'advanced', 'expert']
+
+/** The AI's list for one type, validated: unknown or misplaced labels and bad levels dropped, best level first. */
+function rate(raw: unknown, type: RankedType, labels: RankingLabels, diagnostics: RankingDiagnostics): Rated[] {
+  const seen = new Set<string>()
+  const rated: Rated[] = []
+  for (const item of Array.isArray(raw) ? raw : []) {
+    const label = isRecord(item) && typeof item.id === 'string' ? item.id.trim().toUpperCase() : ''
+    const known = labels.get(label)
+    const level = isRecord(item) ? Number(item.level) : NaN
+    if (!known || known.type !== type || ![0, 1, 2, 3].includes(level)) {
+      diagnostics.invalidIds++
+      continue
+    }
+    if (seen.has(label)) continue
+    seen.add(label)
+    const record = item as Record<string, unknown>
+    rated.push({
+      entity: known.entity,
+      level: level as Rated['level'],
+      why: text(record.why, 200),
+      tags: textList(record.tags, 60),
+    })
   }
+  diagnostics.unrated += [...labels.values()].filter((l) => l.type === type).length - rated.length
+  return rated.sort((a, b) => b.level - a.level) // stable: the AI's order within a level
+}
+
+/** What is recommended: the good ones up to the maximum, topped up with weak ones to reach the minimum. */
+function choose(rated: Rated[], { min, max }: { min: number; max: number }): Rated[] {
+  const good = rated.filter((r) => r.level >= RECOMMEND_FROM_LEVEL).slice(0, max)
+  return good.length >= min ? good : rated.filter((r) => r.level >= 1).slice(0, min)
+}
+
+/**
+ * Turns the JSON document the AI returned into the shared analysis shape (minus
+ * job_id/analyzed_at, set by the caller). The answer is untrusted input: every
+ * label is checked against the library.
+ */
+export function normalizeRanking(data: unknown, labels: RankingLabels): { analysis: Analysis; diagnostics: RankingDiagnostics } {
+  if (!isRecord(data)) throw new Error('The AI answer is not a JSON object.')
+  const diagnostics: RankingDiagnostics = { invalidIds: 0, unrated: 0 }
+
+  const rated = {
+    experiences: rate(data.experiences, 'experiences', labels, diagnostics),
+    projects: rate(data.projects, 'projects', labels, diagnostics),
+    skills: rate(data.skills, 'skills', labels, diagnostics),
+  }
+  const chosen = {
+    experiences: choose(rated.experiences, RANKING_LIMITS.experiences),
+    projects: choose(rated.projects, RANKING_LIMITS.projects),
+    skills: choose(rated.skills, RANKING_LIMITS.skills),
+  }
+
+  const entry = (type: RankedType, r: Rated, i: number): EntityRankingResult => ({
+    id: r.entity.id,
+    type: ENTRY_TYPE[type],
+    name: NAME_OF[type](r.entity),
+    level: r.level,
+    rank: i + 1,
+    reason: r.why,
+  })
+
+  // Only the tags the AI kept that really belong to the skill, narrower than the whole list.
+  const skillTags: Record<string, string[]> = {}
+  for (const r of chosen.skills) {
+    const own = (r.entity as SkillMeta).tags ?? []
+    const byLower = new Map(own.map((t) => [t.toLowerCase(), t]))
+    const kept = [...new Set(r.tags.map((t) => byLower.get(t.toLowerCase())).filter((t): t is string => !!t))]
+    if (kept.length > 0 && kept.length < own.length) skillTags[r.entity.id] = kept
+  }
+
+  const existingNames = new Set(rated.skills.map((r) => NAME_OF.skills(r.entity).toLowerCase()))
+  const newSkills = (Array.isArray(data.new_skills) ? data.new_skills : [])
+    .filter(isRecord)
+    .map((s) => ({
+      name: text(s.name, 80),
+      category: text(s.category, 80),
+      level: SKILL_LEVELS.includes(String(s.level)) ? String(s.level) : 'intermediate',
+      tags: textList(s.tags, 10),
+      reason: text(s.reason, 200),
+    }))
+    .filter((s) => s.name && s.category && !existingNames.has(s.name.toLowerCase()))
+    .slice(0, 3)
+
+  const newSkillTags = (Array.isArray(data.new_skill_tags) ? data.new_skill_tags : [])
+    .filter(isRecord)
+    .flatMap((t) => {
+      const target = labels.get(typeof t.skill === 'string' ? t.skill.trim().toUpperCase() : '')
+      const tag = text(t.tag, 80)
+      if (!target || target.type !== 'skills' || !tag) return []
+      if (((target.entity as SkillMeta).tags ?? []).some((own) => own.toLowerCase() === tag.toLowerCase())) return []
+      return [{ skill_id: target.entity.id, tag, reason: text(t.reason, 200) }]
+    })
+    .slice(0, 5)
 
   return {
-    ats_tags: analysisData.ats_tags,
-    entities_by_type: enrichedEntities,
-    confidence_score:
-      analysisData.confidence_score > 1
-        ? analysisData.confidence_score / 100
-        : analysisData.confidence_score,
-    summary: analysisData.summary,
-    resume_tips: analysisData.resume_tips || [],
-    recommended_title: analysisData.recommended_title || '',
-    recommended_profile: analysisData.recommended_profile || '',
-    recommended_experience_ids: analysisData.recommended_experience_ids || [],
-    recommended_project_ids: analysisData.recommended_project_ids || [],
-    recommended_skill_ids: analysisData.recommended_skill_ids || [],
-    recommended_skill_tags: analysisData.recommended_skill_tags || {},
-    suggested_new_skills: analysisData.suggested_new_skills || [],
-    suggested_new_skill_tags: analysisData.suggested_new_skill_tags || [],
-    recommended_entity_descriptions: analysisData.recommended_entity_descriptions || {},
+    analysis: {
+      ats_tags: textList(data.ats_tags, 10),
+      entities_by_type: {
+        experiences: rated.experiences.map((r, i) => entry('experiences', r, i)),
+        projects: rated.projects.map((r, i) => entry('projects', r, i)),
+        skills: rated.skills.map((r, i) => entry('skills', r, i)),
+        education: [],
+      },
+      recommended_experience_ids: chosen.experiences.map((r) => r.entity.id),
+      recommended_project_ids: chosen.projects.map((r) => r.entity.id),
+      recommended_skill_ids: chosen.skills.map((r) => r.entity.id),
+      recommended_skill_tags: skillTags,
+      suggested_new_skills: newSkills,
+      suggested_new_skill_tags: newSkillTags,
+    },
+    diagnostics,
   }
 }

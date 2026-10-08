@@ -1,4 +1,4 @@
-import { getJob, updateJob, getResumeProfile } from '@/lib/data'
+import { getJob, updateJob } from '@/lib/data'
 import { listEntities } from '@/lib/data'
 import { rankJobWithAI } from '@/lib/ai'
 import { AiGatewayError } from '@/lib/ai/gateway'
@@ -27,24 +27,13 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       return Response.json({ error: 'Job not found' }, { status: 404 })
     }
 
-    // Get all entities
+    // The entries the AI rates (education is not rated: every entry stays available)
     const experiences = await listEntities(userId, 'experiences')
     const projects = await listEntities(userId, 'projects')
     const skills = await listEntities(userId, 'skills')
-    const education = await listEntities(userId, 'education')
 
-    // Merge job-specific ai_context with the user's profile default
-    let aiContext = job.resume_config.ai_context ?? ''
-    if (!aiContext.trim()) {
-      aiContext = (await getResumeProfile(userId)).ai_context
-    }
     // Call AI ranking
-    const analysis = await rankJobWithAI(userId, job.title, job.company, job.description, {
-      experiences,
-      projects,
-      skills,
-      education,
-    }, aiContext || undefined)
+    const analysis = await rankJobWithAI(userId, job.title, job.company, job.description, { experiences, projects, skills })
 
     // Attach job_id and save
     analysis.job_id = id

@@ -55,6 +55,19 @@ describe('groupEntities', () => {
     expect(groups.projects.map((e) => e.id)).toEqual(['p2', 'p1'])
     expect(groups.skills.map((e) => e.id)).toEqual(['s2', 's1'])
   })
+
+  it('sorts projects by the AI level, then by its order, in a live analysis', () => {
+    const entry = (id: string, level: 0 | 1 | 2 | 3, rank: number) => ({ id, type: 'project' as const, name: id, level, rank, reason: '' })
+    const ai = { entities_by_type: { experiences: [], skills: [], education: [], projects: [entry('p1', 2, 3), entry('p2', 3, 2), entry('p3', 3, 1), entry('p4', 0, 4)] } } as unknown as AIAnalysisResult
+    const groups = groupEntities([proj('p1'), proj('p2'), proj('p3'), proj('p4')], cfg(), ai)
+    expect(groups.projects.map((e) => e.id)).toEqual(['p3', 'p2', 'p1', 'p4'])
+  })
+
+  it('still reads a ranking saved with a score and no level', () => {
+    const entry = (id: string, score: number) => ({ id, type: 'project' as const, name: id, score, reason: '' })
+    const ai = { entities_by_type: { experiences: [], skills: [], education: [], projects: [entry('p1', 40), entry('p2', 90)] } } as unknown as AIAnalysisResult
+    expect(groupEntities([proj('p1'), proj('p2')], cfg(), ai).projects.map((e) => e.id)).toEqual(['p2', 'p1'])
+  })
 })
 
 describe('toggleEntity', () => {

@@ -22,7 +22,7 @@ interface Props {
 }
 
 function rowState(entity: EntityMeta, config: ResumeConfig, expanded: Set<string>, ai?: AIAnalysisResult | null): RowState {
-  const live = entity.type === 'experiences' || entity.type === 'projects'
+  const live = entity.type !== 'education'
     ? ai?.entities_by_type[entity.type].find((r) => r.id === entity.id)
     : undefined
   const saved = config.ai_rankings.find((r) => r.entity_id === entity.id)
@@ -35,7 +35,8 @@ function rowState(entity: EntityMeta, config: ResumeConfig, expanded: Set<string
     selected: config.selected_entity_ids.includes(entity.id),
     expanded: expanded.has(entity.id),
     recommended: recommended && entity.type !== 'education',
-    score: live ? Math.round(live.score) : saved ? Math.round(saved.score * 100) : null,
+    level: live?.level ?? null,
+    score: live?.score !== undefined ? Math.round(live.score) : live?.level === undefined && saved ? Math.round(saved.score * 100) : null,
     reason: live?.reason,
     tagCount: tags ? `${tags.length}/${(entity as SkillMeta).tags.length} tags` : undefined,
   }

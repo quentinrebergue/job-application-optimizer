@@ -52,10 +52,16 @@ export interface EntityRankingResult {
   id: string
   type: 'experience' | 'project' | 'skill' | 'education'
   name: string
-  score: number // 0–100
+  /** 0 none, 1 weak, 2 good, 3 strong; absent in rankings saved before the levels. */
+  level?: 0 | 1 | 2 | 3
+  /** Position in the AI's list, best first (1 = best). */
+  rank?: number
+  /** 0–100, only in rankings saved before the levels. */
+  score?: number
   reason: string
 }
 
+/** Fields marked optional were asked of the AI before #184 and are only present in old rankings: nothing reads them. */
 export interface AIAnalysisResult {
   job_id: string
   analyzed_at: string // ISO 8601
@@ -66,18 +72,18 @@ export interface AIAnalysisResult {
     skills: EntityRankingResult[]
     education: EntityRankingResult[]
   }
-  confidence_score: number // 0–1
-  summary: string
-  resume_tips: string[] // Actionable tips to improve the resume for this job
-  recommended_title: string // AI-suggested resume headline for this job
-  recommended_profile: string // AI-suggested profile/summary paragraph for this job
+  confidence_score?: number // 0–1
+  summary?: string
+  resume_tips?: string[] // Actionable tips to improve the resume for this job
+  recommended_title?: string // AI-suggested resume headline for this job
+  recommended_profile?: string // AI-suggested profile/summary paragraph for this job
   recommended_experience_ids: string[]
   recommended_project_ids: string[]
   recommended_skill_ids: string[] // Top skill sections to include
   recommended_skill_tags: Record<string, string[]> // skill_id -> relevant tag subset
   suggested_new_skills: SuggestedSkill[] // Skills not in library but useful for this job
   suggested_new_skill_tags: SuggestedSkillTag[] // New tags to add to existing skills
-  recommended_entity_descriptions: Record<string, string> // entity_id -> ATS-tailored description (experiences + projects only)
+  recommended_entity_descriptions?: Record<string, string> // entity_id -> ATS-tailored description (experiences + projects only)
 }
 
 export interface JobOffer {
