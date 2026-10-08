@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-gateway
+  namespace: job-optimizer
+  annotations:
+    # Second wave, like resume-renderer: never rolls out next to the app (#171).
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: ai-gateway
+  template:
+    metadata:
+      labels:
+        app: ai-gateway
+    spec:
+      priorityClassName: workload-critical
+      imagePullSecrets:
+        - name: ghcr-pull-secret
+      terminationGracePeriodSeconds: 70
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: ai-gateway
+          # The tag is set by k8s/kustomization.yaml (CD writes it): this one does not exist on purpose.
+          image: ghcr.io/quentinrebergue/ai-gateway:set-by-kustomize
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            - name: AI_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: ai-gateway-secrets
+                  key: AI_TOKEN
+            # Exact name from the OVH catalogue.
+            - name: AI_MODEL
+              value: "Meta-Llama-3_3-70B-Instruct"
+            - name: REQUEST_TIMEOUT
+              value: "60s"
+            - name: SHUTDOWN_DELAY
+              value: "5s"
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            periodSeconds: 5
+            failureThreshold: 2
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: 10m
+              memory: 24Mi
+            limits:
+              cpu: 200m
+              memory: 96Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
