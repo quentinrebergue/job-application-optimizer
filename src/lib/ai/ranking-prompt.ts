@@ -24,7 +24,7 @@ export function buildRankingPrompt(
   jobCompany: string,
   jobDescription: string,
   entities: { experiences: EntityMeta[]; projects: EntityMeta[]; skills: EntityMeta[] },
-): { prompt: string; labels: RankingLabels } {
+): { prompt: string; labels: RankingLabels; parts: Record<string, string> } {
   const labels: RankingLabels = new Map()
   const lines = (type: RankedType, text: (e: EntityMeta) => string) =>
     entities[type]
@@ -48,25 +48,22 @@ export function buildRankingPrompt(
     return `${x.name}, ${x.level}. Tags: ${(x.tags ?? []).map((tag, i) => `${i + 1} ${tag}`).join(', ')}`
   })
 
-  const prompt = `You are a strict technical recruiter. Rate how well each entry of a candidate's library fits a job offer.
-
-JOB OFFER
+  // The prompt is built from named parts so the evaluation can tell what each one costs.
+  const parts = {
+    intro: `You are a strict technical recruiter. Rate how well each entry of a candidate's library fits a job offer.`,
+    offer: `JOB OFFER
 Title: ${jobTitle}
 Company: ${jobCompany}
 Description:
-${jobDescription}
-
-CANDIDATE LIBRARY (every entry has a label)
+${jobDescription}`,
+    experiences: `CANDIDATE LIBRARY (every entry has a label)
 EXPERIENCES
-${experiences}
-
-PROJECTS
-${projects}
-
-SKILLS
-${skills}
-
-ANSWER
+${experiences}`,
+    projects: `PROJECTS
+${projects}`,
+    skills: `SKILLS
+${skills}`,
+    answer: `ANSWER
 One JSON object, nothing else, written minified on a single line (no indentation, no line breaks, no space after : or ,):
 {"ats_tags":["keyword"],"levels":{"E1":3,"E2":0,"P1":2,"S1":3},"best":{"experiences":[{"id":"E1","why":"at most 10 words"}],"projects":[{"id":"P3","why":"at most 10 words"}],"skills":[{"id":"S1","tags":[1,4,5]}]},"new_skill_tags":[{"skill":"S1","tag":"Go"}]}
 
@@ -75,9 +72,11 @@ RULES
 - Level: 3 = the offer asks for it (same technology or same kind of work); 2 = related and transferable; 1 = weak link; 0 = unrelated. Be strict: level 3 needs the offer's technology or domain to appear in the entry itself.
 - "best": for each type, the entries of level 2 or 3, best first: at most ${RANKING_LIMITS.experiences.max} experiences, ${RANKING_LIMITS.projects.max} projects, ${RANKING_LIMITS.skills.max} skills. For experiences and projects, "why" names the evidence in the entry. For skills, "tags" are the numbers of the tags of that skill that matter for this offer.
 - "ats_tags": 5 to 10 keywords an applicant tracking system would search in this offer (tools, languages, domain, level, work mode).
-- "new_skill_tags": 0 to 5 technologies or skills the offer asks for that no skill of the library has; each one is a tag to add to the skill it fits best ("skill" is its label).`
+- "new_skill_tags": 0 to 5 technologies or skills the offer asks for that no skill of the library has; each one is a tag to add to the skill it fits best ("skill" is its label).`,
+  }
+  const prompt = Object.values(parts).join('\n\n')
 
-  return { prompt, labels }
+  return { prompt, labels, parts }
 }
 
 type Schema = Record<string, unknown>

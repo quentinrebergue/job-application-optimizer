@@ -21,7 +21,8 @@ import { rankWithUsage } from '@/lib/ai'
 import { buildRankingPrompt, buildRankingSchema, RANKING_SYSTEM_PROMPT } from '@/lib/ai/ranking-prompt'
 import { loadCases, RESULTS_DIR, type EvalCase } from './cases'
 import { compare, overall, scoreRun, summarize, type RunRecord, type Summary } from './metrics'
-import { costOf } from './prices'
+import { costOf, priceOf } from './prices'
+import { averageShares, formatMoney } from './money'
 import { formatAnswer } from './show'
 import { countSyntax } from './syntax'
 
@@ -59,7 +60,7 @@ async function runCase(c: EvalCase, runs: number): Promise<RunRecord[]> {
     for (let i = 1; i <= runs; i++) {
       const start = Date.now()
       try {
-        const { analysis, usage, diagnostics, raw } = await rankWithUsage('eval', c.job.title, c.job.company, c.job.description, c.entities)
+        const { analysis, usage, diagnostics, raw, promptParts } = await rankWithUsage('eval', c.job.title, c.job.company, c.job.description, c.entities)
         // The code drops what the AI invented before the answer is returned: count it from the diagnostics.
         const metrics = scoreRun(c.expected, c.entities, analysis)
         metrics.invalidIds += diagnostics.invalidIds
@@ -71,6 +72,7 @@ async function runCase(c: EvalCase, runs: number): Promise<RunRecord[]> {
           completionTokens: usage.completion_tokens,
           raw,
           analysis,
+          promptParts,
         })
       } catch (error) {
         records.push({ ok: false, error: describe(error) })
@@ -123,39 +125,43 @@ function printDetails(c: EvalCase, records: RunRecord[]) {
 /** The reference file: `baseline.json` by default, `baseline-<name>.json` for a named one. */
 const baselineFile = (name: string | undefined) => path.join(RESULTS_DIR, name ? `baseline-${name}.json` : 'baseline.json')
 
-/**
- * Where the output tokens go: the share of each part of the AI's first answer,
- * applied to the tokens the call really used (JSON takes more tokens than its
- * length suggests), averaged over the cases. Also how much of the answer is only
- * JSON structure ({ } [ ] : , and quotes), in total and in each part.
- */
-function printOutputParts(records: Record<string, RunRecord[]>) {
-  const tokens = new Map<string, number>()
-  const syntax = new Map<string, { total: number; syntax: number }>()
-  let answers = 0
+/** How much of the AI's first answer is only JSON structure ({ } [ ] : , and quotes), in total and in each part. */
+function printJsonStructure(records: Record<string, RunRecord[]>) {
+  const parts = new Map<string, { total: number; syntax: number }>()
   const grand = { total: 0, syntax: 0 }
+  let answers = 0
   for (const list of Object.values(records)) {
     const first = list.find((r): r is Extract<RunRecord, { ok: true }> => r.ok)
     if (!first || typeof first.raw !== 'object' || first.raw === null) continue
-    const parts = Object.entries(first.raw).map(([key, value]) => [key, countSyntax(value)] as const)
-    const all = parts.reduce((sum, [, c]) => sum + c.total, 0)
-    if (!all) continue
     answers++
-    for (const [key, c] of parts) {
-      tokens.set(key, (tokens.get(key) ?? 0) + (c.total / all) * first.completionTokens)
-      const sum = syntax.get(key) ?? { total: 0, syntax: 0 }
-      syntax.set(key, { total: sum.total + c.total, syntax: sum.syntax + c.syntax })
+    for (const [key, value] of Object.entries(first.raw)) {
+      const c = countSyntax(value)
+      const sum = parts.get(key) ?? { total: 0, syntax: 0 }
+      parts.set(key, { total: sum.total + c.total, syntax: sum.syntax + c.syntax })
       grand.total += c.total
       grand.syntax += c.syntax
     }
   }
   if (!answers) return
   const share = (c: { total: number; syntax: number }) => `${Math.round((c.syntax / Math.max(1, c.total)) * 100)}%`
-  const parts = [...tokens]
-    .map(([key, t]) => [key, Math.round(t / answers), share(syntax.get(key)!)] as const)
-    .sort((a, b) => b[1] - a[1])
-  console.log(`\nOutput by part, tokens per answer (share of JSON structure): ${parts.map(([key, t, s]) => `${key} ${t} (${s})`).join(', ')}`)
-  console.log(`JSON structure { } [ ] : , " : ${Math.round(grand.syntax / answers)} of ${Math.round(grand.total / answers)} characters per answer, ${share(grand)}`)
+  console.log(`JSON structure { } [ ] : , " : ${Math.round(grand.syntax / answers)} of ${Math.round(grand.total / answers)} characters per answer, ${share(grand)} (${[...parts].map(([key, c]) => `${key} ${share(c)}`).join(', ')})`)
+}
+
+/** The cost split between the prompt and the answer, and between their parts, to see where to optimise. */
+function printMoney(model: string | undefined, total: Summary, records: Record<string, RunRecord[]>) {
+  const firsts = Object.values(records)
+    .map((list) => list.find((r): r is Extract<RunRecord, { ok: true }> => r.ok))
+    .filter((r): r is Extract<RunRecord, { ok: true }> => !!r)
+  const sizes = (raw: unknown) =>
+    typeof raw === 'object' && raw !== null ? Object.fromEntries(Object.entries(raw).map(([key, value]) => [key, JSON.stringify(value).length])) : {}
+  console.log('\n' + formatMoney({
+    model,
+    price: priceOf(model),
+    promptTokens: total.promptTokens,
+    completionTokens: total.completionTokens,
+    inputShares: averageShares(firsts.map((r) => r.promptParts ?? {})),
+    outputShares: averageShares(firsts.map((r) => sizes(r.raw))),
+  }))
 }
 
 const hasFlag = (name: string) => process.argv.includes(`--${name}`)
@@ -223,7 +229,8 @@ async function main() {
     console.log(`Cost: about ${perRanking.toFixed(4)} EUR per ranking, ${(perRanking * 1000).toFixed(2)} EUR per 1000, ${(perRanking * ok).toFixed(3)} EUR for this evaluation (upper bound)`)
   }
   for (const e of errors) console.log(`Failure: ${e}`)
-  printOutputParts(records)
+  printMoney(model, total, records)
+  printJsonStructure(records)
   if (hasFlag('show-answer') || hasFlag('raw')) {
     for (const c of filter ? cases : cases.slice(0, 1)) {
       const first = records[c.name].find((r): r is Extract<RunRecord, { ok: true }> => r.ok)

@@ -12,6 +12,11 @@ export const PRICES: Record<string, { input: number; output: number }> = {
   'meta-llama-3_3-70b-instruct': { input: 0.67, output: 0.67 },
 }
 
+/** The price per million tokens of a model, or null when it is unknown. */
+export function priceOf(model: string | undefined): { input: number; output: number } | null {
+  return (model && PRICES[model.toLowerCase()]) || null
+}
+
 /** The cost in euros of one call, or null when the model has no known price. */
 export function costOf(model: string | undefined, promptTokens: number, completionTokens: number): number | null {
   const price = model ? PRICES[model.toLowerCase()] : undefined
