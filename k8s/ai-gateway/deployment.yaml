@@ -25,7 +25,7 @@ spec:
       priorityClassName: workload-critical
       imagePullSecrets:
         - name: ghcr-pull-secret
-      terminationGracePeriodSeconds: 130
+      terminationGracePeriodSeconds: 55
       securityContext:
         runAsNonRoot: true
         runAsUser: 10001
@@ -45,17 +45,22 @@ spec:
                 secretKeyRef:
                   name: ai-gateway-secrets
                   key: AI_TOKEN
-            # Exact name from the OVH catalogue.
+            # Mistral AI's European API (#192). A dated model name on purpose: "latest" would change
+            # without notice, and Mistral retires models (watch the date). Never a "labs-" model: those
+            # are trained on whatever the privacy setting says.
+            - name: AI_BASE_URL
+              value: "https://api.mistral.ai/v1"
             - name: AI_MODEL
-              value: "Meta-Llama-3_3-70B-Instruct"
+              value: "mistral-small-2603"
+            # Mistral answers in about 3 s: tight limits bound the cost and the wait when something is wrong.
             - name: REQUEST_TIMEOUT
-              value: "120s"
+              value: "45s"
             - name: SHUTDOWN_DELAY
               value: "5s"
             - name: MAX_OUTPUT_TOKENS
-              value: "8000"
+              value: "2000"
             - name: ATTEMPT_TIMEOUT
-              value: "100s"
+              value: "30s"
           readinessProbe:
             httpGet:
               path: /readyz
