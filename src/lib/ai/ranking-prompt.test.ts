@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import type { EntityMeta } from '@/types'
-import { buildRankingPrompt, normalizeRanking, type RankingLabels } from './ranking-prompt'
+import { buildRankingPrompt, buildRankingSchema, normalizeRanking, type RankingLabels } from './ranking-prompt'
 
 const exp = (id: string, title: string): EntityMeta => ({ id, type: 'experiences', title, company: 'Acme', period: '2022', description: 'd', tags: [] }) as EntityMeta
 const proj = (id: string, title: string): EntityMeta => ({ id, type: 'projects', title, tech: ['C'], description: 'd', tags: [] }) as EntityMeta
@@ -123,5 +123,42 @@ describe('normalizeRanking', () => {
     const { analysis } = normalizeRanking({ ats_tags: ['x'] }, none)
     expect(analysis.recommended_project_ids).toEqual([])
     expect(analysis.entities_by_type.education).toEqual([])
+  })
+})
+
+describe('buildRankingSchema', () => {
+  const labels = buildRankingPrompt('Dev', 'Acme', 'x', LIBRARY).labels
+  const schema = buildRankingSchema(labels) as any // eslint-disable-line @typescript-eslint/no-explicit-any
+
+  it('allows only the labels of this library, and no count or length that would slow the model server down', () => {
+    expect(schema.properties.experiences.minItems).toBeUndefined()
+    expect(schema.properties.experiences.maxItems).toBeUndefined()
+    expect(schema.properties.experiences.items.properties.why.maxLength).toBeUndefined()
+    expect(schema.properties.experiences.items.properties.id.enum).toEqual(['E1', 'E2', 'E3'])
+    expect(schema.properties.projects.items.properties.id.enum).toEqual(['P1', 'P2', 'P3', 'P4', 'P5', 'P6'])
+    expect(schema.properties.skills.items.properties.id.enum).toEqual(['S1', 'S2', 'S3'])
+    expect(schema.properties.skills.items.properties.tags).toBeDefined()
+    expect(schema.properties.experiences.items.properties.tags).toBeUndefined()
+  })
+
+  it('allows only the levels 0 to 3 and requires every top-level list', () => {
+    expect(schema.properties.projects.items.properties.level.enum).toEqual([0, 1, 2, 3])
+    expect(schema.required).toEqual(['ats_tags', 'experiences', 'projects', 'skills', 'new_skills', 'new_skill_tags'])
+    expect(schema.additionalProperties).toBe(false)
+  })
+
+  it('suggests a tag only for a skill of this library', () => {
+    expect(schema.properties.new_skill_tags.items.properties.skill.enum).toEqual(['S1', 'S2', 'S3'])
+  })
+
+  it('allows no entry at all for an empty type instead of an empty enum', () => {
+    const none = buildRankingSchema(buildRankingPrompt('T', 'C', 'D', { experiences: [], projects: [], skills: [] }).labels) as any // eslint-disable-line @typescript-eslint/no-explicit-any
+    expect(none.properties.experiences).toEqual({ type: 'array', maxItems: 0 })
+    expect(none.properties.new_skill_tags).toEqual({ type: 'array', maxItems: 0 })
+  })
+
+  it('stays small for a big library', () => {
+    const big = { experiences: [], projects: Array.from({ length: 20 }, (_, i) => proj(`p${i}`, `P${i}`)), skills: [] }
+    expect(JSON.stringify(buildRankingSchema(buildRankingPrompt('T', 'C', 'D', big).labels)).length).toBeLessThan(8000)
   })
 })

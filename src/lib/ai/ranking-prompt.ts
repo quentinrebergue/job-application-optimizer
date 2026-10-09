@@ -89,6 +89,72 @@ RULES
   return { prompt, labels }
 }
 
+const SKILL_LEVELS = ['beginner', 'intermediate', 'advanced', 'expert']
+
+type Schema = Record<string, unknown>
+
+const string: Schema = { type: 'string' }
+
+/**
+ * The JSON Schema the AI's answer must follow. It lists the exact labels of this
+ * library and the levels 0 to 3, so the AI cannot invent a label or a level.
+ *
+ * It stays simple on purpose: a first version also forced the exact number of
+ * entries and the length of every text, and the model server then took minutes
+ * to build its grammar (8 of 15 evaluation calls failed). The code still checks
+ * that every entry is rated once and drops duplicates.
+ */
+export function buildRankingSchema(labels: RankingLabels): Schema {
+  const labelsOf = (type: RankedType) => [...labels].filter(([, l]) => l.type === type).map(([label]) => label)
+
+  const rated = (type: RankedType, extra: Schema = {}): Schema => {
+    const ids = labelsOf(type)
+    if (ids.length === 0) return { type: 'array', maxItems: 0 }
+    return {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: { id: { enum: ids }, level: { enum: [0, 1, 2, 3] }, why: string, ...extra },
+        required: ['id', 'level'],
+        additionalProperties: false,
+      },
+    }
+  }
+
+  const skillLabels = labelsOf('skills')
+  return {
+    type: 'object',
+    properties: {
+      ats_tags: { type: 'array', items: string },
+      experiences: rated('experiences'),
+      projects: rated('projects'),
+      skills: rated('skills', { tags: { type: 'array', items: string } }),
+      new_skills: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: { name: string, category: string, level: { enum: SKILL_LEVELS }, tags: { type: 'array', items: string }, reason: string },
+          required: ['name', 'category'],
+          additionalProperties: false,
+        },
+      },
+      new_skill_tags: skillLabels.length === 0
+        ? { type: 'array', maxItems: 0 }
+        : {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: { skill: { enum: skillLabels }, tag: string, reason: string },
+              required: ['skill', 'tag'],
+              additionalProperties: false,
+            },
+          },
+    },
+    required: ['ats_tags', 'experiences', 'projects', 'skills', 'new_skills', 'new_skill_tags'],
+    additionalProperties: false,
+  }
+}
+
 export interface RankingDiagnostics {
   /** Labels the AI used that do not exist, or of another type, or with no valid level: dropped. */
   invalidIds: number
@@ -115,7 +181,6 @@ const NAME_OF: Record<RankedType, (e: EntityMeta) => string> = {
   skills: (e) => (e as SkillMeta).name,
 }
 const ENTRY_TYPE = { experiences: 'experience', projects: 'project', skills: 'skill' } as const
-const SKILL_LEVELS = ['beginner', 'intermediate', 'advanced', 'expert']
 
 /** The AI's list for one type, validated: unknown or misplaced labels and bad levels dropped, best level first. */
 function rate(raw: unknown, type: RankedType, labels: RankingLabels, diagnostics: RankingDiagnostics): Rated[] {
