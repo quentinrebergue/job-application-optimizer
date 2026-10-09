@@ -1,14 +1,21 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 const createEntity = vi.fn()
-vi.mock('@/lib/data', () => ({ listEntities: vi.fn(), createEntity: (...a: unknown[]) => createEntity(...a) }))
+const countEntities = vi.fn()
+vi.mock('@/lib/data', () => ({ listEntities: vi.fn(), createEntity: (...a: unknown[]) => createEntity(...a), countEntities: (...a: unknown[]) => countEntities(...a) }))
+const consumeRateLimit = vi.fn()
+vi.mock('@/lib/rate-limit', () => ({ consumeRateLimit: (...a: unknown[]) => consumeRateLimit(...a) }))
 vi.mock('@/lib/auth/session', () => ({ getSessionUserId: vi.fn().mockResolvedValue('u1') }))
 
 const { POST } = await import('./route')
 
 const send = (body: unknown) => POST(new Request('http://x', { method: 'POST', body: JSON.stringify(body) }))
 
-beforeEach(() => createEntity.mockReset().mockResolvedValue({ id: 'proj-1', type: 'projects' }))
+beforeEach(() => {
+  createEntity.mockReset().mockResolvedValue({ id: 'proj-1', type: 'projects' })
+  countEntities.mockReset().mockResolvedValue(0)
+  consumeRateLimit.mockReset().mockResolvedValue({ allowed: true, retryAfterMs: 0 })
+})
 
 describe('POST /api/entities', () => {
   it('saves an entry of the kind sent, without the kind in its data', async () => {
@@ -35,5 +42,34 @@ describe('POST /api/entities', () => {
     const res = await send({ type: 'skills', name: 'N', category: 'C', tags })
     expect(res.status).toBe(400)
     expect(await res.json()).toMatchObject({ error: 'Tags has too many items: 30 at most.' })
+  })
+})
+
+describe('POST /api/entities: how many and how fast (#202)', () => {
+  const project = { type: 'projects', title: 'Queue' }
+
+  it('refuses an entry when the user has the maximum of that kind, and says which', async () => {
+    countEntities.mockResolvedValue(50)
+    const res = await send(project)
+    expect(res.status).toBe(403)
+    expect(await res.json()).toMatchObject({ code: 'limit_reached', error: 'You have reached the limit of 50 projects. Delete one to add another.' })
+    expect(countEntities).toHaveBeenCalledWith('u1', 'projects')
+    expect(createEntity).not.toHaveBeenCalled()
+  })
+
+  it('counts creations per hour and per day, whatever the kind', async () => {
+    await send(project)
+    await send({ type: 'skills', name: 'N', category: 'C' })
+    expect(consumeRateLimit.mock.calls.map((c) => c[0])).toEqual([
+      'create:entity:u1:hour', 'create:entity:u1:day', 'create:entity:u1:hour', 'create:entity:u1:day',
+    ])
+  })
+
+  it('answers 429 once the hour is over, and creates nothing', async () => {
+    consumeRateLimit.mockResolvedValueOnce({ allowed: false, retryAfterMs: 90 * 60_000 })
+    const res = await send(project)
+    expect(res.status).toBe(429)
+    expect(await res.json()).toMatchObject({ error: 'Too many entries in a short time (30 per hour). Try again in about 2 hours.' })
+    expect(createEntity).not.toHaveBeenCalled()
   })
 })

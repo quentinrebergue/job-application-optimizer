@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
-import { listEntities, createEntity } from '@/lib/data'
-import { ENTITY_TYPE_IDS } from '@/config'
+import { listEntities, createEntity, countEntities } from '@/lib/data'
+import { capReached, consumeCreation, quotas } from '@/lib/quotas'
+import { ENTITY_TYPE_IDS, getEntityTypeConfig } from '@/config'
 import type { EntityType } from '@/types'
 import { getSessionUserId } from '@/lib/auth/session'
 import { EntityCreateSchema } from '@/schemas/inputs'
@@ -32,6 +33,11 @@ export async function POST(request: Request) {
   if (!body.ok) return body.response
 
   const { type, ...data } = body.data
+  if ((await countEntities(userId, type)) >= quotas().maxEntitiesPerType) {
+    return capReached(quotas().maxEntitiesPerType, getEntityTypeConfig(type).label.toLowerCase())
+  }
+  const limited = await consumeCreation(userId, 'entity')
+  if (limited) return limited
   // A failure past this point is ours, not the request's.
   try {
     const entity = await createEntity(userId, type, data as never)

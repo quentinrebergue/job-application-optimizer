@@ -20,6 +20,15 @@ function rowToEntityMeta(row: EntityRow): EntityMeta {
   } as EntityMeta
 }
 
+/** How many entries of this kind the user has right now. */
+export async function countEntities(userId: string, type: EntityType): Promise<number> {
+  const { rows } = await pool.query<{ count: string }>(
+    'SELECT count(*) FROM entities WHERE user_id = $1 AND type = $2',
+    [userId, type]
+  )
+  return Number(rows[0].count)
+}
+
 export async function listEntities(userId: string, type: EntityType): Promise<EntityMeta[]> {
   const { rows } = await pool.query(
     'SELECT * FROM entities WHERE user_id = $1 AND type = $2 ORDER BY id',
