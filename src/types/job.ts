@@ -45,6 +45,7 @@ export interface SuggestedSkill {
 export interface SuggestedSkillTag {
   skill_id: string
   tag: string
+  /** Empty for rankings made since #184. */
   reason: string
 }
 

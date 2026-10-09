@@ -98,7 +98,7 @@ export function SkillTagPicker({ skill, selected, libraryTags, suggestions, busy
               >
                 + {s.tag}
               </Button>
-              <span className="text-ink-muted">{s.reason}</span>
+              {s.reason && <span className="text-ink-muted">{s.reason}</span>}
             </div>
           ))}
         </div>

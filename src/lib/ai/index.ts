@@ -21,14 +21,14 @@ export async function rankJobWithAI(
   return (await rankWithUsage(userId, jobTitle, jobCompany, jobDescription, entities)).analysis
 }
 
-/** Same, with the tokens the call used and what the AI got wrong (the evaluation script measures both). */
+/** Same, with the tokens the call used, what the AI got wrong and its answer as it came (the evaluation script measures all three). */
 export async function rankWithUsage(
   userId: string,
   jobTitle: string,
   jobCompany: string,
   jobDescription: string,
   entities: Library,
-): Promise<{ analysis: AIAnalysisResult; usage: GatewayAnswer['usage']; diagnostics: RankingDiagnostics }> {
+): Promise<{ analysis: AIAnalysisResult; usage: GatewayAnswer['usage']; diagnostics: RankingDiagnostics; raw: unknown }> {
   const { prompt, labels } = buildRankingPrompt(jobTitle, jobCompany, jobDescription, entities)
   const { content, usage } = await askGateway({
     feature: 'rank',
@@ -49,5 +49,6 @@ export async function rankWithUsage(
     },
     usage,
     diagnostics,
+    raw: content,
   }
 }

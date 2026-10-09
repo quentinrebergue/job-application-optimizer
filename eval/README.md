@@ -20,6 +20,16 @@ Evaluation of the AI ranking (#44 follow-up): did a change to the prompt, the mo
    ```
 
 The fictional cases of `cases/` are skipped when `private/` has cases of its own.
+See what is sent and what comes back:
+```
+npm run eval:ranking -- --dry-run --case helsing        # the request only: no call, no cost
+npm run eval:ranking -- --show-prompt --case helsing    # the request, then the evaluation
+npm run eval:ranking -- --show-answer --case helsing    # also the answer: every entry with its level and reason,
+                                                         # what the app recommends and what you expected
+npm run eval:ranking -- --raw --case helsing            # the answer exactly as it came (JSON)
+npm run eval:ranking -- --raw --show-answer --case helsing   # both
+```
+
 A full evaluation (5 offers x 3 runs) costs about 0.05 EUR. The details of the first run of each case say what the AI missed, what it added and which ids it invented. A baseline is only saved from a run without failures.
 
 ## What is measured

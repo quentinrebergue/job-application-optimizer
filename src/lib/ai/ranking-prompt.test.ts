@@ -24,10 +24,19 @@ describe('buildRankingPrompt', () => {
   it('gives every entry a short label and never shows a real id', () => {
     expect(prompt).toContain('E1. Firmware at Acme')
     expect(prompt).toContain('P6. Project 6')
-    expect(prompt).toContain('S3. Web, advanced')
+    expect(prompt).toContain('S3. Web, advanced. Tags: 1 React')
     expect(prompt).not.toMatch(/exp-aaaa|proj-0000|skil-/)
     expect(labels.get('E2')?.entity.id).toBe('exp-aaaa0002')
     expect(labels.size).toBe(3 + 6 + 3)
+  })
+
+  it('numbers the tags of each skill so the AI can answer with numbers', () => {
+    expect(prompt).toContain('S1. Languages, advanced. Tags: 1 C, 2 C++, 3 Python')
+  })
+
+  it('shows the answer minified on one line, and asks for it, so the AI does not pay for indentation', () => {
+    expect(prompt).toContain('minified on a single line')
+    expect(prompt).toMatch(/\n\{"ats_tags":\["keyword"\],"levels":\{"E1":3,[^\n]+\}\n/)
   })
 
   it('contains nothing about a specific person', () => {
@@ -43,7 +52,15 @@ describe('buildRankingPrompt', () => {
 describe('normalizeRanking', () => {
   const labels: RankingLabels = buildRankingPrompt('Dev', 'Acme', 'x', LIBRARY).labels
   const normalize = (data: unknown) => normalizeRanking(data, labels)
-  const rate = (prefix: string, levels: number[]) => levels.map((level, i) => ({ id: `${prefix}${i + 1}`, level, why: level >= 2 ? 'matches' : undefined }))
+  /** levels for E1.., P1.., S1.. in order, from three lists of levels */
+  const levelsOf = (e: number[], p: number[], s: number[]) =>
+    Object.fromEntries([...e.map((l, i) => [`E${i + 1}`, l]), ...p.map((l, i) => [`P${i + 1}`, l]), ...s.map((l, i) => [`S${i + 1}`, l])])
+  const best = (experiences: string[], projects: string[], skills: string[]) => ({
+    experiences: experiences.map((id) => ({ id, why: 'matches' })),
+    projects: projects.map((id) => ({ id, why: 'matches' })),
+    skills: skills.map((id) => ({ id, why: 'matches' })),
+  })
+  const FULL = levelsOf([3, 1, 2], [3, 3, 3, 2, 2, 2], [3, 2, 0])
 
   it('refuses an answer that is not a JSON object', () => {
     for (const bad of [null, 'text', 42, ['a']]) expect(() => normalize(bad)).toThrow('not a JSON object')
@@ -52,9 +69,8 @@ describe('normalizeRanking', () => {
   it('maps labels back to real ids and recommends the good ones within the limits', () => {
     const { analysis, diagnostics } = normalize({
       ats_tags: ['C', 'RTOS'],
-      experiences: rate('E', [3, 1, 2]),
-      projects: rate('P', [3, 3, 3, 2, 2, 2]),
-      skills: rate('S', [3, 2, 0]),
+      levels: FULL,
+      best: best(['E1', 'E3'], ['P1', 'P2', 'P3', 'P4', 'P5', 'P6'], ['S1', 'S2']),
     })
     expect(analysis.recommended_experience_ids).toEqual(['exp-aaaa0001', 'exp-aaaa0003'])
     expect(analysis.recommended_project_ids).toHaveLength(5) // the maximum, best first
@@ -64,63 +80,84 @@ describe('normalizeRanking', () => {
     expect(diagnostics).toEqual({ invalidIds: 0, unrated: 0 })
   })
 
-  it('orders each list by level, keeping the AI order within a level', () => {
-    const { analysis } = normalize({ experiences: [{ id: 'E2', level: 1 }, { id: 'E3', level: 3 }, { id: 'E1', level: 3 }] })
-    expect(analysis.entities_by_type.experiences.map((e) => [e.id, e.rank])).toEqual([['exp-aaaa0003', 1], ['exp-aaaa0001', 2], ['exp-aaaa0002', 3]])
+  it('orders by level, then by the AI order among its best, then by the library', () => {
+    const { analysis } = normalize({
+      levels: levelsOf([3, 3, 3], [], []),
+      best: best(['E3', 'E1'], [], []), // E2 is level 3 but not in "best": it comes after
+    })
+    expect(analysis.entities_by_type.experiences.map((e) => [e.id, e.level, e.rank])).toEqual([
+      ['exp-aaaa0003', 3, 1],
+      ['exp-aaaa0001', 3, 2],
+      ['exp-aaaa0002', 3, 3],
+    ])
+  })
+
+  it('keeps the reason of the best entries only', () => {
+    const { analysis } = normalize({ levels: levelsOf([3, 3, 0], [], []), best: { experiences: [{ id: 'E1', why: 'C++ firmware' }] } })
+    const reasons = Object.fromEntries(analysis.entities_by_type.experiences.map((e) => [e.id, e.reason]))
+    expect(reasons).toEqual({ 'exp-aaaa0001': 'C++ firmware', 'exp-aaaa0002': '', 'exp-aaaa0003': '' })
   })
 
   it('tops up with weak entries to reach the minimum, never with unrelated ones', () => {
-    const { analysis } = normalize({ experiences: rate('E', [2, 1, 0]), projects: rate('P', [1, 0, 0, 0, 0, 0]) })
+    const { analysis } = normalize({ levels: levelsOf([2, 1, 0], [1, 0, 0, 0, 0, 0], [3, 3, 3]) })
     expect(analysis.recommended_experience_ids).toEqual(['exp-aaaa0001', 'exp-aaaa0002'])
     expect(analysis.recommended_project_ids).toEqual(['proj-00000001']) // only one entry is above level 0
   })
 
   it('drops invented, misplaced and badly rated labels and counts them', () => {
     const { analysis, diagnostics } = normalize({
-      experiences: [{ id: 'E1', level: 3 }, { id: 'E9', level: 3 }, { id: 'P1', level: 3 }, { id: 'E2', level: 7 }, { id: 'E1', level: 0 }],
+      levels: { ...levelsOf([3, 3], [], []), E9: 3, E3: 7 }, // E9 unknown, E3 level 7 (E3 stays unrated)
+      best: { experiences: [{ id: 'E1' }, { id: 'P1' }, { id: 'E7' }, { id: 'E1' }] }, // P1 wrong type, E7 unknown, E1 twice
     })
-    expect(analysis.entities_by_type.experiences.map((e) => e.id)).toEqual(['exp-aaaa0001'])
-    expect(diagnostics.invalidIds).toBe(3) // E9 (unknown), P1 (wrong type), E2 (level 7)
-    expect(diagnostics.unrated).toBe(2 + 6 + 3) // E2 and E3, then every project and skill
+    expect(analysis.entities_by_type.experiences.map((e) => e.id)).toEqual(['exp-aaaa0001', 'exp-aaaa0002'])
+    expect(diagnostics.invalidIds).toBe(4) // E9, E3=7, P1, E7
+    expect(diagnostics.unrated).toBe(1 + 6 + 3) // E3, then every project and skill
   })
 
   it('accepts a label in lower case', () => {
-    expect(normalize({ experiences: [{ id: 'e1', level: 3 }] }).analysis.recommended_experience_ids).toEqual(['exp-aaaa0001'])
+    expect(normalize({ levels: { e1: 3 }, best: { experiences: [{ id: 'e1' }] } }).analysis.recommended_experience_ids).toEqual(['exp-aaaa0001'])
   })
 
-  it('keeps only the tags that belong to the skill, and only when they narrow it', () => {
+  it('also reads a plain label in "best"', () => {
+    expect(normalize({ levels: { E1: 3 }, best: { experiences: ['E1'] } }).analysis.recommended_experience_ids).toEqual(['exp-aaaa0001'])
+  })
+
+  it('reads the tags of a skill by number and only keeps those of the skill', () => {
     const { analysis } = normalize({
-      skills: [
-        { id: 'S1', level: 3, tags: ['c', 'python', 'Cobol'] }, // "c" matches "C" whatever the case; Cobol is not a tag
-        { id: 'S2', level: 3, tags: ['RTOS', 'CAN'] }, // every tag: no narrowing
-      ],
+      levels: levelsOf([], [], [3, 3, 3]),
+      best: {
+        skills: [
+          { id: 'S1', tags: [1, '3', 9, 0] }, // 9 and 0 are not tags of S1; "3" is read as 3
+          { id: 'S2', tags: [1, 2] }, // every tag: no narrowing
+        ],
+      },
     })
     expect(analysis.recommended_skill_tags).toEqual({ 'skil-1': ['C', 'Python'] })
   })
 
-  it('validates the suggestions', () => {
+  it('also accepts a tag written out, whatever its case', () => {
+    const { analysis } = normalize({ levels: levelsOf([], [], [3]), best: { skills: [{ id: 'S1', tags: ['c', 'python', 'Cobol'] }] } })
+    expect(analysis.recommended_skill_tags).toEqual({ 'skil-1': ['C', 'Python'] })
+  })
+
+  it('suggests tags to add, only to a skill of the library and only new ones', () => {
     const { analysis } = normalize({
-      skills: rate('S', [3, 3, 3]),
-      new_skills: [
-        { name: 'Rust', category: 'Languages', level: 'wizard', tags: ['memory safety'], reason: 'asked' },
-        { name: 'languages', category: 'x', reason: 'already there' }, // same name as an existing skill
-        { category: 'no name' },
-        'junk',
-      ],
+      levels: levelsOf([], [], [3, 3, 3]),
       new_skill_tags: [
-        { skill: 'S1', tag: 'Rust', reason: 'asked' },
-        { skill: 'S1', tag: 'python', reason: 'already a tag' },
-        { skill: 'E1', tag: 'x', reason: 'not a skill' },
-        { skill: 'S9', tag: 'x', reason: 'unknown' },
+        { skill: 'S1', tag: 'Rust' },
+        { skill: 'S1', tag: 'python' }, // already a tag
+        { skill: 'E1', tag: 'x' }, // not a skill
+        { skill: 'S9', tag: 'x' }, // unknown
+        { skill: 'S2', tag: '' },
       ],
     })
-    expect(analysis.suggested_new_skills).toEqual([{ name: 'Rust', category: 'Languages', level: 'intermediate', tags: ['memory safety'], reason: 'asked' }])
-    expect(analysis.suggested_new_skill_tags).toEqual([{ skill_id: 'skil-1', tag: 'Rust', reason: 'asked' }])
+    expect(analysis.suggested_new_skill_tags).toEqual([{ skill_id: 'skil-1', tag: 'Rust', reason: '' }])
+    expect(analysis.suggested_new_skills).toEqual([])
   })
 
   it('answers with empty lists when the library is empty', () => {
     const none = buildRankingPrompt('T', 'C', 'D', { experiences: [], projects: [], skills: [] }).labels
-    const { analysis } = normalizeRanking({ ats_tags: ['x'] }, none)
+    const { analysis } = normalizeRanking({ ats_tags: ['x'], levels: {}, best: {} }, none)
     expect(analysis.recommended_project_ids).toEqual([])
     expect(analysis.entities_by_type.education).toEqual([])
   })
@@ -130,30 +167,41 @@ describe('buildRankingSchema', () => {
   const labels = buildRankingPrompt('Dev', 'Acme', 'x', LIBRARY).labels
   const schema = buildRankingSchema(labels) as any // eslint-disable-line @typescript-eslint/no-explicit-any
 
-  it('allows only the labels of this library, and no count or length that would slow the model server down', () => {
-    expect(schema.properties.experiences.minItems).toBeUndefined()
-    expect(schema.properties.experiences.maxItems).toBeUndefined()
-    expect(schema.properties.experiences.items.properties.why.maxLength).toBeUndefined()
-    expect(schema.properties.experiences.items.properties.id.enum).toEqual(['E1', 'E2', 'E3'])
-    expect(schema.properties.projects.items.properties.id.enum).toEqual(['P1', 'P2', 'P3', 'P4', 'P5', 'P6'])
-    expect(schema.properties.skills.items.properties.id.enum).toEqual(['S1', 'S2', 'S3'])
-    expect(schema.properties.skills.items.properties.tags).toBeDefined()
-    expect(schema.properties.experiences.items.properties.tags).toBeUndefined()
+  it('requires a level from 0 to 3 for every label of this library', () => {
+    expect(schema.properties.levels.required).toEqual(['E1', 'E2', 'E3', 'P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'S1', 'S2', 'S3'])
+    expect(schema.properties.levels.properties.P4).toEqual({ enum: [0, 1, 2, 3] })
+    expect(schema.properties.levels.additionalProperties).toBe(false)
   })
 
-  it('allows only the levels 0 to 3 and requires every top-level list', () => {
-    expect(schema.properties.projects.items.properties.level.enum).toEqual([0, 1, 2, 3])
-    expect(schema.required).toEqual(['ats_tags', 'experiences', 'projects', 'skills', 'new_skills', 'new_skill_tags'])
+  it('lets "best" name only the labels of the right type: reasons for experiences and projects, tag numbers for skills', () => {
+    const best = schema.properties.best.properties
+    expect(best.experiences.items.properties.id.enum).toEqual(['E1', 'E2', 'E3'])
+    expect(best.projects.items.properties.id.enum).toEqual(['P1', 'P2', 'P3', 'P4', 'P5', 'P6'])
+    expect(best.skills.items.properties.id.enum).toEqual(['S1', 'S2', 'S3'])
+    expect(best.skills.items.properties.tags.items).toEqual({ type: 'integer' })
+    expect(best.skills.items.properties.why).toBeUndefined()
+    expect(best.experiences.items.properties.tags).toBeUndefined()
+  })
+
+  it('requires every part of the answer and nothing else', () => {
+    expect(schema.required).toEqual(['ats_tags', 'levels', 'best', 'new_skill_tags'])
     expect(schema.additionalProperties).toBe(false)
+  })
+
+  it('stays free of counts and text lengths, which slow the model server down', () => {
+    const json = JSON.stringify(schema)
+    expect(json).not.toMatch(/minItems|maxLength|uniqueItems/)
   })
 
   it('suggests a tag only for a skill of this library', () => {
     expect(schema.properties.new_skill_tags.items.properties.skill.enum).toEqual(['S1', 'S2', 'S3'])
+    expect(schema.properties.new_skill_tags.items.properties.reason).toBeUndefined()
+    expect(schema.properties.new_skills).toBeUndefined()
   })
 
   it('allows no entry at all for an empty type instead of an empty enum', () => {
     const none = buildRankingSchema(buildRankingPrompt('T', 'C', 'D', { experiences: [], projects: [], skills: [] }).labels) as any // eslint-disable-line @typescript-eslint/no-explicit-any
-    expect(none.properties.experiences).toEqual({ type: 'array', maxItems: 0 })
+    expect(none.properties.best.properties.experiences).toEqual({ type: 'array', maxItems: 0 })
     expect(none.properties.new_skill_tags).toEqual({ type: 'array', maxItems: 0 })
   })
 
