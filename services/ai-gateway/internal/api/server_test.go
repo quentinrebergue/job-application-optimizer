@@ -28,7 +28,7 @@ func (r *recordingLLM) Complete(_ context.Context, req llm.Request) (llm.Result,
 
 func post(t *testing.T, content, body string) *httptest.ResponseRecorder {
 	t.Helper()
-	srv := New(fakeLLM{content}, Limits{MaxPromptBytes: 100, MaxOutputTokens: 50, Timeout: time.Second},
+	srv := New(fakeLLM{content}, Limits{MaxPromptChars: 100, MaxOutputTokens: 50, Timeout: time.Second},
 		slog.New(slog.NewTextHandler(io.Discard, nil)))
 	rec := httptest.NewRecorder()
 	srv.Handler().ServeHTTP(rec, httptest.NewRequest(http.MethodPost, "/v1/complete", strings.NewReader(body)))
@@ -71,9 +71,41 @@ func TestCompleteValidatesTheRequest(t *testing.T) {
 	}
 }
 
+func TestCompleteCountsCharactersNotBytes(t *testing.T) {
+	// 100 "é" are 200 bytes but 100 characters: at the limit, accepted. 101 are refused.
+	ok := post(t, `{}`, `{"feature":"rank","user_id":"u1","prompt":"`+strings.Repeat("é", 100)+`"}`)
+	if ok.Code != http.StatusOK {
+		t.Fatalf("100 characters: got %d %s", ok.Code, ok.Body)
+	}
+	tooLong := post(t, `{}`, `{"feature":"rank","user_id":"u1","prompt":"`+strings.Repeat("é", 101)+`"}`)
+	if tooLong.Code != http.StatusRequestEntityTooLarge {
+		t.Fatalf("101 characters: got %d", tooLong.Code)
+	}
+}
+
+func TestCompleteTellsTheAppWhyItRefused(t *testing.T) {
+	cases := map[string]struct {
+		body     string
+		wantCode string
+	}{
+		"prompt too large": {`{"feature":"rank","user_id":"u1","prompt":"` + strings.Repeat("a", 200) + `"}`, "prompt_too_large"},
+		"body too large":   {`{"feature":"rank","user_id":"u1","prompt":"` + strings.Repeat("a", 100000) + `"}`, "prompt_too_large"},
+		"unknown feature":  {`{"feature":"x","user_id":"u1","prompt":"hi"}`, "invalid_request"},
+		"broken body":      {`{`, "invalid_request"},
+	}
+	for name, c := range cases {
+		t.Run(name, func(t *testing.T) {
+			rec := post(t, `{}`, c.body)
+			if !strings.Contains(rec.Body.String(), `"code":"`+c.wantCode+`"`) {
+				t.Fatalf("got %d %s, want code %s", rec.Code, rec.Body, c.wantCode)
+			}
+		})
+	}
+}
+
 func TestCompletePassesTheSchemaOn(t *testing.T) {
 	rec := &recordingLLM{}
-	srv := New(rec, Limits{MaxPromptBytes: 100, MaxOutputTokens: 50, Timeout: time.Second},
+	srv := New(rec, Limits{MaxPromptChars: 100, MaxOutputTokens: 50, Timeout: time.Second},
 		slog.New(slog.NewTextHandler(io.Discard, nil)))
 	w := httptest.NewRecorder()
 	body := `{"feature":"rank","user_id":"u1","prompt":"hi","schema":{"type":"object"}}`

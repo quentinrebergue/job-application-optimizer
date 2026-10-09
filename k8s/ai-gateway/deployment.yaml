@@ -59,6 +59,10 @@ spec:
               value: "5s"
             - name: MAX_OUTPUT_TOKENS
               value: "2000"
+            # System + prompt, in characters. The biggest of 45 real offers with a full library is
+            # 16,800: this is about twice that. Above it the app tells the user to shorten.
+            - name: MAX_PROMPT_CHARS
+              value: "30000"
             - name: ATTEMPT_TIMEOUT
               value: "30s"
           readinessProbe:

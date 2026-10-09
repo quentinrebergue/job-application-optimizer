@@ -38,7 +38,7 @@ func run(logger *slog.Logger) error {
 		Backoff:        500 * time.Millisecond,
 	})
 	srv := api.New(client, api.Limits{
-		MaxPromptBytes:  cfg.MaxPromptBytes,
+		MaxPromptChars:  cfg.MaxPromptChars,
 		MaxOutputTokens: cfg.MaxOutputTokens,
 		Timeout:         cfg.RequestTimeout,
 	}, logger)

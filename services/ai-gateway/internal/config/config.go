@@ -20,7 +20,7 @@ type Config struct {
 	MaxRetries     int
 
 	MaxOutputTokens int
-	MaxPromptBytes  int
+	MaxPromptChars  int
 
 	ShutdownDelay time.Duration
 }
@@ -57,14 +57,14 @@ func Load(lookup func(string) (string, bool)) (Config, error) {
 		AttemptTimeout:  dur("ATTEMPT_TIMEOUT", "30s"),
 		MaxRetries:      num("MAX_RETRIES", 2),
 		MaxOutputTokens: num("MAX_OUTPUT_TOKENS", 2000),
-		MaxPromptBytes:  num("MAX_PROMPT_BYTES", 60000),
+		MaxPromptChars:  num("MAX_PROMPT_CHARS", 30000),
 		ShutdownDelay:   dur("SHUTDOWN_DELAY", "5s"),
 	}
 	if cfg.Token == "" {
 		errs = append(errs, errors.New("AI_TOKEN is required"))
 	}
-	if cfg.MaxOutputTokens == 0 || cfg.MaxPromptBytes == 0 {
-		errs = append(errs, errors.New("MAX_OUTPUT_TOKENS and MAX_PROMPT_BYTES must be above 0"))
+	if cfg.MaxOutputTokens == 0 || cfg.MaxPromptChars == 0 {
+		errs = append(errs, errors.New("MAX_OUTPUT_TOKENS and MAX_PROMPT_CHARS must be above 0"))
 	}
 	return cfg, errors.Join(errs...)
 }

@@ -57,7 +57,7 @@ describe('askGateway', () => {
   it.each([
     [504, 'too long'],
     [502, 'unavailable'],
-    [413, 'too long to rank'],
+    [413, 'Please shorten it'],
   ])('answers %i with a message the user can read', async (status, fragment) => {
     fetchMock.mockResolvedValue(reply(status, { error: 'internal detail' }))
     const error = await askGateway(REQUEST).catch((e) => e)
@@ -65,6 +65,19 @@ describe('askGateway', () => {
     expect(error.status).toBe(status)
     expect(error.message).toContain(fragment)
     expect(error.message).not.toContain('internal detail')
+  })
+
+  it('shows the same message for the code prompt_too_large, and keeps the code', async () => {
+    fetchMock.mockResolvedValue(reply(413, { code: 'prompt_too_large', error: 'prompt too large' }))
+    const error = await askGateway(REQUEST).catch((e) => e)
+    expect(error).toMatchObject({ status: 413, code: 'prompt_too_large' })
+    expect(error.message).toBe('Your content is too long to guarantee a reliable answer. Please shorten it.')
+  })
+
+  it('does not blame the user when the gateway refuses its own schema', async () => {
+    fetchMock.mockResolvedValue(reply(413, { code: 'schema_too_large', error: 'schema too large' }))
+    const error = await askGateway(REQUEST).catch((e) => e)
+    expect(error.message).not.toContain('shorten')
   })
 
   it('answers 502 when the gateway cannot be reached', async () => {

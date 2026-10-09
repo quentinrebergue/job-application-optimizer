@@ -25,6 +25,7 @@ export const FLAGS: Flag[] = [
   { name: 'money', type: 'boolean', group: 'Print', description: 'Where the money goes: input and output, by part of the prompt and of the answer.' },
   { name: 'structure', type: 'boolean', group: 'Print', description: 'How much of the JSON answer is only structure ({ } [ ] : , and quotes).' },
   { name: 'show-prompt', type: 'boolean', group: 'Print', description: 'The request: system prompt, prompt and schema of the answer; then the evaluation runs.' },
+  { name: 'sizes', type: 'boolean', group: 'Print', description: 'How big the request is for every case (system prompt + prompt, what the gateway limit counts), part by part, with the min, median, p90 and max. No call to the AI.' },
   { name: 'dry-run', type: 'boolean', group: 'Print', description: 'The request, then stop: no call to the AI, no cost, no gateway needed.' },
   { name: 'show-answer', type: 'boolean', group: 'Print', description: 'The answer as the app understood it: every entry with its level, what is recommended, what you expected.' },
   { name: 'raw', type: 'boolean', group: 'Print', description: 'The answer of the AI exactly as it came.' },
@@ -47,6 +48,7 @@ export interface Args {
   money: boolean
   structure: boolean
   showPrompt: boolean
+  sizes: boolean
   dryRun: boolean
   showAnswer: boolean
   raw: boolean
@@ -90,6 +92,7 @@ export function parseArguments(argv: string[]): Args {
     money: Boolean(values.money),
     structure: Boolean(values.structure),
     showPrompt: Boolean(values['show-prompt']),
+    sizes: Boolean(values.sizes),
     dryRun: Boolean(values['dry-run']),
     showAnswer: Boolean(values['show-answer']),
     raw: Boolean(values.raw),
@@ -106,6 +109,9 @@ export function helpText(): string {
     '',
     'Runs every case (eval/private, or eval/cases) through the real ranking, gateway included,',
     'measures it and compares it with a saved reference. Nothing here changes the app.',
+    '',
+    'It calls the AI (and needs AI_GATEWAY_URL) unless you pass --sizes or --dry-run: those two',
+    'only print and stop, with no gateway and no cost.',
   ]
   for (const group of GROUPS) {
     lines.push('', `${group}:`)
@@ -120,6 +126,7 @@ export function helpText(): string {
     '  npm run eval:ranking -- --model mistral-medium-2604 --baseline medium',
     '  npm run eval:ranking -- --model mistral-medium-2604 --baseline medium --save-baseline',
     '  npm run eval:ranking -- --dry-run --case helsing --clean-offer code',
+    '  npm run eval:ranking -- --sizes',
     '  npm run eval:ranking -- --model mistral-medium-2604 --answer-format yaml --label yaml --details --money',
     '',
     'Other commands: npm run eval:export -- <job id>   turns one of your jobs into a case in eval/private/',
