@@ -2,18 +2,20 @@ import { describe, it, expect } from 'vitest'
 import { aiStatement } from './ai-copy'
 
 describe('aiStatement', () => {
-  it('says only the honest-AI rule while the AI is not on OVHcloud', () => {
-    const text = aiStatement({ onOvhcloud: false, anonymised: false }).join(' ')
+  it('says only the honest-AI rule while the AI is not on Mistral', () => {
+    const text = aiStatement({ onMistral: false, trainingOptedOut: true }).join(' ')
     expect(text).toContain('never invents')
-    expect(text).not.toMatch(/OVHcloud|removed/)
+    expect(text).not.toMatch(/Mistral|opted out|OVHcloud/)
   })
 
-  it('does not claim anonymisation without the OVHcloud AI, even if the flag is on', () => {
-    expect(aiStatement({ onOvhcloud: false, anonymised: true }).join(' ')).not.toMatch(/removed|OVHcloud/)
+  it('names the provider once the AI runs on it, without claiming the opt-out until it is set', () => {
+    const text = aiStatement({ onMistral: true, trainingOptedOut: false }).join(' ')
+    expect(text).toMatch(/Mistral AI, a French company, in Europe/)
+    expect(text).toMatch(/name and contact details are never sent/)
+    expect(text).not.toMatch(/opted out|train/)
   })
 
-  it('adds the hosting sentence, then the anonymisation one, as they become true', () => {
-    expect(aiStatement({ onOvhcloud: true, anonymised: false })).toHaveLength(2)
-    expect(aiStatement({ onOvhcloud: true, anonymised: true }).join(' ')).toMatch(/OVHcloud.*removed/)
+  it('adds the training opt-out only when it is set', () => {
+    expect(aiStatement({ onMistral: true, trainingOptedOut: true })).toHaveLength(3)
   })
 })

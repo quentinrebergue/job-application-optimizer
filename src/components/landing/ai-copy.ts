@@ -1,20 +1,20 @@
-import { AI_ANONYMISED, AI_ON_OVHCLOUD } from '@/config/legal'
+import { AI_ON_MISTRAL, AI_TRAINING_OPTED_OUT } from '@/config/legal'
 
 interface AiFlags {
-  onOvhcloud: boolean
-  anonymised: boolean
+  onMistral: boolean
+  trainingOptedOut: boolean
 }
 
 /**
  * What the landing page says about the AI. The first sentence is the charter's
- * "honest AI"; the others are added only when the work behind them is done (#44),
+ * "honest AI"; the others are added only when the work behind them is done (#192),
  * so the page never claims what the code does not do.
  */
-export function aiStatement(flags: AiFlags = { onOvhcloud: AI_ON_OVHCLOUD, anonymised: AI_ANONYMISED }): string[] {
+export function aiStatement(flags: AiFlags = { onMistral: AI_ON_MISTRAL, trainingOptedOut: AI_TRAINING_OPTED_OUT }): string[] {
   const sentences = ['The AI chooses and orders what you wrote. It never invents an experience, a skill or a number.']
-  if (flags.onOvhcloud) {
-    sentences.push('It is an open-source model hosted by OVHcloud in France: what it reads is not kept and never used to train it.')
-    if (flags.anonymised) sentences.push('Your name and contact details are removed before anything is sent.')
+  if (flags.onMistral) {
+    sentences.push('It runs on Mistral AI, a French company, in Europe. Your name and contact details are never sent to it.')
+    if (flags.trainingOptedOut) sentences.push('We opted out of training: your content is not used to train the model.')
   }
   return sentences
 }

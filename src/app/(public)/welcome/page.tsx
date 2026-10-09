@@ -23,7 +23,7 @@ export const metadata = {
 
 const bigButton = 'h-12 px-6 text-base'
 
-// What happens to the data. True today (docs/charter.md); add the AI ones with AI_ON_OVHCLOUD (#44).
+// What happens to the data. True today (docs/charter.md); the AI ones come from ai-copy.ts (AI_ON_MISTRAL, #192).
 const DATA_SENTENCE = 'encrypted in transit, hosted in France, never sold, never used to train a model.'
 
 /**

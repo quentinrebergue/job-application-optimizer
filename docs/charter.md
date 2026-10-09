@@ -25,7 +25,7 @@ Slogan: **"One job. One resume. Three clicks."** (other ideas and why they were 
 | **Funded by donations** | Running costs (servers, AI, domain) are paid by donations, and the money raised and spent is public. Non-profit at heart: donations pay the costs first. | Funding page (#111) |
 | **Your data is yours** | Never sold, never used for ads, never used to train an AI model. Export all of it or delete your account at any time. | Export and delete (#104) |
 | **Hosted in France** | The app and its database run on OVHcloud servers in France, under European law (GDPR). | True |
-| **AI that stays in France** | The AI runs on open-source models hosted by OVHcloud in France; what you send is neither kept nor used for training. | OVHcloud AI Endpoints (#44) |
+| **AI that stays in Europe** | The AI ranking runs on Mistral AI's API (a French company), hosted in the European Economic Area, through its European endpoint. We send the offer and your entries' text, never your name or contact details. We opted out of training; Mistral may keep requests for a limited time to detect abuse unless zero data retention is approved. | Mistral API (#192), opt-out confirmed in the console |
 | **No tracking** | No analytics, no ads, no third-party cookies. Only the cookie that keeps you signed in. | True |
 | **Honest AI** | The AI chooses and orders what you wrote. It never invents an experience, a skill or a number. | True for the ranking; a rule for every future AI feature |
 

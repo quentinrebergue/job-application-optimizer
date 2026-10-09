@@ -1,5 +1,6 @@
 import { LegalPage, LegalSection } from '@/components/legal/LegalPage'
-import { ACCOUNT_TOOLS, AI_ANONYMISED, AI_ON_OVHCLOUD, CONTACT_EMAIL, HOST, PUBLISHER_NAME } from '@/config/legal'
+import { aiPrivacy } from '@/components/legal/ai-privacy'
+import { ACCOUNT_TOOLS, AI_ON_MISTRAL, AI_PROVIDER, CONTACT_EMAIL, HOST, PUBLISHER_NAME } from '@/config/legal'
 
 export const metadata = {
   title: 'Privacy',
@@ -42,24 +43,18 @@ export default function PrivacyPage() {
       </LegalSection>
 
       <LegalSection title="The AI">
-        {AI_ON_OVHCLOUD ? (
+        <p>{aiPrivacy().join(' ')}</p>
+        {AI_ON_MISTRAL && (
           <p>
-            When you rank your library against a job offer, the text of the offer and the content of your library entries are sent to an
-            open-source AI model hosted by OVHcloud in France. They are not kept by the model service and not used to train it. The
-            AI chooses and orders what you wrote; it never adds an experience, a skill or a number you did not write.
-            {AI_ANONYMISED && ' Your name and contact details are removed before anything is sent.'}
-          </p>
-        ) : (
-          <p>
-            The AI ranking is not available yet. When it is, it will run on open-source models hosted in France, and this page will say
-            exactly what is sent before the feature goes live.
+            Mistral’s infrastructure providers and their countries are listed on its{' '}
+            <a href={AI_PROVIDER.trustCenter}>sub-processors page</a>.
           </p>
         )}
       </LegalSection>
 
       <LegalSection title="Where your data lives, who can see it">
         <p>
-          Everything is stored on {HOST.name} (OVHcloud) servers in France, under European law (GDPR). Only you see your content. The
+          Everything is stored on {HOST.name} (OVHcloud) servers in France, under European law (GDPR). Only you see your content, and the AI provider named above when you use the AI ranking. The
           maintainer can technically reach the database to run the service and does not read your content. A database backup is made
           every day and kept for 7 days, on the same infrastructure.
         </p>

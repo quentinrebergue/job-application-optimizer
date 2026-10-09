@@ -14,15 +14,34 @@ export const HOST = {
 }
 
 /** Date of the last change of the three pages. Update it with the text. */
-export const LEGAL_UPDATED = '2026-10-08'
+export const LEGAL_UPDATED = '2026-10-09'
 
 /**
  * Statements that are true only once a ticket ships. Switch the flag in the
  * same pull request as the work, so the pages never say something the code does not do.
  */
-/** #44: the AI runs on open-source models hosted by OVHcloud in France, and Claude and Gemini are removed. */
-export const AI_ON_OVHCLOUD = false
-/** #44: names and contact details are removed from what the AI receives. Only meaningful with AI_ON_OVHCLOUD. */
-export const AI_ANONYMISED = false
+
+/** The company that runs the AI model (#192), as the privacy page names it. */
+export const AI_PROVIDER = {
+  name: 'Mistral AI',
+  seat: 'Paris, France',
+  website: 'https://mistral.ai',
+  trustCenter: 'https://trust.mistral.ai/subprocessors',
+}
+
+/**
+ * #192: the ranking runs on Mistral AI's API. Switch it in the pull request that points the gateway at Mistral.
+ * Only valid with AI_TRAINING_OPTED_OUT (a test checks it).
+ */
+export const AI_ON_MISTRAL = true
+/**
+ * The opt-out of training is set in the Mistral console: Admin, API, Privacy, "Allow the use of your API calls to
+ * train Mistral's AI models" is off (seen on 2026-10-09; it covers new calls only). Keep "Enable Labs models" off:
+ * Labs models are trained on whatever the setting says. Mistral's terms let it train on customer data unless the
+ * customer opts out, so switch this to false if the setting is ever turned back on.
+ */
+export const AI_TRAINING_OPTED_OUT = true
+/** Mistral approved zero data retention for the account (a support request, shown in the console once approved). */
+export const AI_ZERO_RETENTION = false
 /** #104: account page with "export my data" and "delete my account". */
 export const ACCOUNT_TOOLS = false

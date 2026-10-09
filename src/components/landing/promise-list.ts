@@ -1,3 +1,5 @@
+import { AI_ON_MISTRAL } from '@/config/legal'
+
 /**
  * What the landing page promises. The charter decides: a promise is shown only
  * once it is true (docs/charter.md). One that is not true yet has `blockedBy`,
@@ -20,7 +22,8 @@ export const ALL_PROMISES: Promise[] = [
   { title: 'Your data is yours', note: 'Never sold, never used to train a model.' },
   // Not true yet:
   { title: 'Open source', note: 'Read it, run it, improve it.', blockedBy: '#107' },
-  { title: 'AI that stays in France', note: 'An open-source model on OVHcloud.', blockedBy: '#44' },
+  // Ships with AI_ON_MISTRAL (config/legal.ts).
+  { title: 'AI that stays in Europe', note: 'Mistral AI, a French company.', blockedBy: AI_ON_MISTRAL ? undefined : '#192' },
 ]
 
 /** What the page shows today. */
