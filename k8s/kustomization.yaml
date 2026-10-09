@@ -25,13 +25,13 @@ resources:
 images:
 - name: ghcr.io/quentinrebergue/ai-gateway
   newName: ghcr.io/quentinrebergue/ai-gateway
-  newTag: 3e023d8
+  newTag: 88d86b6
 - name: ghcr.io/quentinrebergue/db-migrator
   newName: ghcr.io/quentinrebergue/db-migrator
   newTag: 18ab544
 - name: ghcr.io/quentinrebergue/job-application-optimizer
   newName: ghcr.io/quentinrebergue/job-application-optimizer
-  newTag: 915efed
+  newTag: 88d86b6
 - name: ghcr.io/quentinrebergue/resume-renderer
   newName: ghcr.io/quentinrebergue/resume-renderer
   newTag: 3d73e21
