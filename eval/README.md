@@ -14,6 +14,8 @@ Evaluation of the AI ranking (#44 follow-up): did a change to the prompt, the mo
    npm run eval:ranking -- --label llama-3.3-70b
    npm run eval:ranking -- --case arista --runs 5
    npm run eval:ranking -- --with-examples     # also run the fictional cases
+   npm run eval:ranking -- --model mistral-small-2603 --baseline small --save-baseline   # one reference per way of ranking
+   npm run eval:ranking -- --model mistral-small-2603 --baseline small                    # compare with it
    npm run eval:ranking -- --label new-prompt --save-baseline   # when you are happy with it
    ```
 
@@ -31,6 +33,7 @@ A full evaluation (5 offers x 3 runs) costs about 0.05 EUR. The details of the f
 | stability | Overlap between runs of the same case (1 = same answer every time) |
 | time, tokens | Median and worst time; tokens in and out |
 | failures | Runs that ended in an error |
+| cost | Euros per ranking (needs `--model`; an upper bound, cached tokens are not known). Prices are in `scripts/eval-ranking/prices.ts` |
 
 A change counts as better or worse only beyond the noise: 0.01 on the ratios, 10 % on time and tokens.
 
