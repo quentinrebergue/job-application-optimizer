@@ -1,7 +1,9 @@
 'use client'
 
 import type { JobOffer } from '@/types'
+import { LIMITS } from '@/config/limits'
 import { fetchJson } from '@/lib/http'
+import { tooLong } from '@/lib/text-limit'
 import { useFieldAutosave } from '@/hooks/useFieldAutosave'
 
 export type { SaveState } from '@/hooks/useFieldAutosave'
@@ -32,7 +34,7 @@ export function useJobAutosave(job: JobOffer, onSaved: (job: JobOffer) => void) 
     save: async (field, value) => {
       onSaved(await fetchJson<JobOffer>(`/api/jobs/${job.id}`, { method: 'PUT', json: { [field]: value.trim() } }))
     },
-    validate: (field, value) => (value.trim() ? undefined : REQUIRED[field]),
+    validate: (field, value) => (value.trim() ? tooLong(value, LIMITS.job[field]) : REQUIRED[field]),
   })
   return { drafts: values, errors, state, failure, edit }
 }

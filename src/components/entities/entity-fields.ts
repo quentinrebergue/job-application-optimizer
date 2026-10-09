@@ -1,6 +1,8 @@
 // The fields of each kind of library entry, defined once: the creation form and
 // the inline editor both render from here. Pure (no React), so it is tested.
 
+import { LIMITS } from '@/config/limits'
+import { tooLong } from '@/lib/text-limit'
 import type { EducationMeta, EntityMeta, EntityType, ExperienceMeta, ProjectMeta, SkillMeta } from '@/types'
 
 export type FieldKind = 'text' | 'textarea' | 'list' | 'select'
@@ -17,6 +19,8 @@ export interface FieldDef {
   wide?: boolean
   /** Other keys saved with the same value (e.g. a project's technologies are also its tags) */
   mirrors?: string[]
+  /** The most characters it takes (config/limits.ts); a list has its own limits instead */
+  maxLength?: number
 }
 
 /** Keywords of an experience or a degree (tag taxonomy); not printed, not sent to the AI ranking. */
@@ -27,34 +31,34 @@ const KEYWORDS: FieldDef = {
 
 export const ENTITY_FIELDS: Record<EntityType, FieldDef[]> = {
   experiences: [
-    { key: 'title', label: 'Title', kind: 'text', required: true, placeholder: 'Software Engineer Intern' },
-    { key: 'company', label: 'Company', kind: 'text', required: true, placeholder: 'Acme Corp' },
-    { key: 'location', label: 'Location', kind: 'text', placeholder: 'Paris' },
-    { key: 'period', label: 'Period', kind: 'text', placeholder: '06/2024 – 09/2024' },
-    { key: 'description', label: 'Description', kind: 'textarea', wide: true, placeholder: 'Your role and what you achieved.' },
+    { key: 'title', label: 'Title', kind: 'text', required: true, placeholder: 'Software Engineer Intern', maxLength: LIMITS.experiences.title },
+    { key: 'company', label: 'Company', kind: 'text', required: true, placeholder: 'Acme Corp', maxLength: LIMITS.experiences.company },
+    { key: 'location', label: 'Location', kind: 'text', placeholder: 'Paris', maxLength: LIMITS.experiences.location },
+    { key: 'period', label: 'Period', kind: 'text', placeholder: '06/2024 – 09/2024', maxLength: LIMITS.experiences.period },
+    { key: 'description', label: 'Description', kind: 'textarea', wide: true, placeholder: 'Your role and what you achieved.', maxLength: LIMITS.experiences.description },
     KEYWORDS,
   ],
   projects: [
-    { key: 'title', label: 'Title', kind: 'text', required: true, placeholder: 'Distributed Task Queue' },
+    { key: 'title', label: 'Title', kind: 'text', required: true, placeholder: 'Distributed Task Queue', maxLength: LIMITS.projects.title },
     // One list for a project: printed in the resume and matched by the AI (saved as its tags too).
     {
       key: 'tech', label: 'Technologies', kind: 'list', mirrors: ['tags'],
       placeholder: 'Python, Redis, Docker', hint: 'Comma-separated. Printed in the resume and used by the AI to match a job.',
     },
-    { key: 'description', label: 'Description', kind: 'textarea', wide: true, placeholder: 'The project and your part in it.' },
+    { key: 'description', label: 'Description', kind: 'textarea', wide: true, placeholder: 'The project and your part in it.', maxLength: LIMITS.projects.description },
   ],
   skills: [
-    { key: 'name', label: 'Name', kind: 'text', required: true, placeholder: 'Programming languages' },
-    { key: 'category', label: 'Category', kind: 'text', required: true, placeholder: 'Languages' },
+    { key: 'name', label: 'Name', kind: 'text', required: true, placeholder: 'Programming languages', maxLength: LIMITS.skills.name },
+    { key: 'category', label: 'Category', kind: 'text', required: true, placeholder: 'Languages', maxLength: LIMITS.skills.category },
     {
       key: 'tags', label: 'Skills', kind: 'list', wide: true,
       placeholder: 'C, Rust, Go', hint: 'Comma-separated. Printed after the name of the group.',
     },
   ],
   education: [
-    { key: 'degree', label: 'Degree', kind: 'text', required: true, placeholder: 'MSc Computer Engineering' },
-    { key: 'institution', label: 'Institution', kind: 'text', required: true, placeholder: 'EPITA' },
-    { key: 'period', label: 'Period', kind: 'text', placeholder: '2020 – 2026' },
+    { key: 'degree', label: 'Degree', kind: 'text', required: true, placeholder: 'MSc Computer Engineering', maxLength: LIMITS.education.degree },
+    { key: 'institution', label: 'Institution', kind: 'text', required: true, placeholder: 'EPITA', maxLength: LIMITS.education.institution },
+    { key: 'period', label: 'Period', kind: 'text', placeholder: '2020 – 2026', maxLength: LIMITS.education.period },
     KEYWORDS,
   ],
 }
@@ -111,11 +115,18 @@ export function toPayload(type: EntityType, values: FieldValues): Omit<Experienc
   return payload as unknown as Omit<ExperienceMeta, 'id' | 'type'>
 }
 
-/** Field errors for the required fields left empty. */
-export function missingFields(type: EntityType, values: FieldValues): Record<string, string> {
+/** What is wrong with a value, if anything: a required field left empty, or a text over its limit. */
+export function fieldError(field: FieldDef, value: string): string | undefined {
+  if (field.required && !value.trim()) return `Enter the ${field.label.toLowerCase()}.`
+  return tooLong(value, field.maxLength)
+}
+
+/** Field errors of a whole form. */
+export function fieldErrors(type: EntityType, values: FieldValues): Record<string, string> {
   const errors: Record<string, string> = {}
   for (const field of ENTITY_FIELDS[type]) {
-    if (field.required && !values[field.key]?.trim()) errors[field.key] = `Enter the ${field.label.toLowerCase()}.`
+    const message = fieldError(field, values[field.key] ?? '')
+    if (message) errors[field.key] = message
   }
   return errors
 }

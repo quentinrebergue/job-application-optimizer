@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/Button'
 import { useFieldAutosave, type SaveState } from '@/hooks/useFieldAutosave'
 import { fetchJson } from '@/lib/http'
 import { EntityFields } from './EntityFields'
-import { ENTITY_FIELDS, fieldUpdate, toValues } from './entity-fields'
+import { ENTITY_FIELDS, fieldError, fieldUpdate, toValues } from './entity-fields'
 
 interface Props {
   entity: EntityMeta
@@ -26,7 +26,7 @@ export function EntityEditor({ entity, onSaved, onDelete, deleting, onSaveStateC
     initial: toValues(type, entity),
     validate: (key, value) => {
       const field = fields.find((f) => f.key === key)
-      return field?.required && !value.trim() ? `Enter the ${field.label.toLowerCase()}.` : undefined
+      return field ? fieldError(field, value) : undefined
     },
     save: async (key, value) => {
       const field = fields.find((f) => f.key === key)!

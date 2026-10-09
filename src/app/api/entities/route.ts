@@ -3,6 +3,8 @@ import { listEntities, createEntity } from '@/lib/data'
 import { ENTITY_TYPE_IDS } from '@/config'
 import type { EntityType } from '@/types'
 import { getSessionUserId } from '@/lib/auth/session'
+import { EntityCreateSchema } from '@/schemas/inputs'
+import { readJson } from '@/lib/validation/read-json'
 
 export async function GET(request: Request) {
   const userId = await getSessionUserId()
@@ -26,17 +28,16 @@ export async function POST(request: Request) {
   if (!userId) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
+  const body = await readJson(request, EntityCreateSchema)
+  if (!body.ok) return body.response
+
+  const { type, ...data } = body.data
+  // A failure past this point is ours, not the request's.
   try {
-    const body = (await request.json()) as { type?: string; [key: string]: unknown }
-    const { type, ...data } = body
-
-    if (!type || !ENTITY_TYPE_IDS.includes(type as EntityType)) {
-      return NextResponse.json({ error: 'Invalid entity type' }, { status: 400 })
-    }
-
-    const entity = await createEntity(userId, type as EntityType, data as never)
+    const entity = await createEntity(userId, type, data as never)
     return NextResponse.json(entity, { status: 201 })
-  } catch {
-    return NextResponse.json({ error: 'Invalid request body' }, { status: 400 })
+  } catch (err) {
+    console.error('create entity failed', err)
+    return NextResponse.json({ error: 'The entry could not be saved. Try again.' }, { status: 500 })
   }
 }

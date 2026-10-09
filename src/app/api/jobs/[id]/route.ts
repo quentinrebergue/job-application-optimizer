@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { getJob, updateJob, deleteJob } from '@/lib/data'
 import { getSessionUserId } from '@/lib/auth/session'
+import { JobUpdateSchema } from '@/schemas/inputs'
+import { readJson } from '@/lib/validation/read-json'
 
 type Params = Promise<{ id: string }>
 
@@ -21,14 +23,11 @@ export async function PUT(req: Request, { params }: { params: Params }) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
   const { id } = await params
-  try {
-    const body = (await req.json()) as Record<string, unknown>
-    const updated = await updateJob(userId, id, body as never)
-    if (!updated) return NextResponse.json({ error: 'Not found' }, { status: 404 })
-    return NextResponse.json(updated)
-  } catch {
-    return NextResponse.json({ error: 'Invalid request body' }, { status: 400 })
-  }
+  const body = await readJson(req, JobUpdateSchema)
+  if (!body.ok) return body.response
+  const updated = await updateJob(userId, id, body.data)
+  if (!updated) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+  return NextResponse.json(updated)
 }
 
 export async function DELETE(_req: Request, { params }: { params: Params }) {

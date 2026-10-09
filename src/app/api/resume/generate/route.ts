@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server'
-import { z } from 'zod'
 import { getJob, getResumeProfile, listEntities } from '@/lib/data'
 import { ENTITY_TYPE_IDS } from '@/config'
 import { getSessionUserId } from '@/lib/auth/session'
 import { buildPayload, type PayloadConfig } from '@/lib/resume/build-payload'
 import { RenderError, renderPdf } from '@/lib/resume/renderer-client'
 import { GenerateResumeSchema } from '@/schemas/resume-generate'
+import { readJson } from '@/lib/validation/read-json'
 
 const DEFAULT_TEMPLATE = 'classic'
 
@@ -15,13 +15,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const parsed = GenerateResumeSchema.safeParse(await request.json().catch(() => null))
-  if (!parsed.success) {
-    return NextResponse.json(
-      { error: 'Invalid request', fields: z.flattenError(parsed.error).fieldErrors },
-      { status: 400 },
-    )
-  }
+  const parsed = await readJson(request, GenerateResumeSchema)
+  if (!parsed.ok) return parsed.response
   const { jobId, entityIds, template, options, skillTagOverrides } = parsed.data
 
   const profile = await getResumeProfile(userId)

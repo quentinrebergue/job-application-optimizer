@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/Button'
 import { Field } from '@/components/ui/Field'
 import { Textarea } from '@/components/ui/Input'
+import { LIMITS } from '@/config/limits'
+import { counterFor, tooLong } from '@/lib/text-limit'
 
 interface Props {
   /** Text used in the PDF: the custom one, or the library's */
@@ -26,11 +28,13 @@ export function DescriptionEditor({ value, original, isCustom, onCommit }: Props
       <Field
         label="Description in this resume"
         hint={isCustom ? 'Custom for this job; the library keeps the original.' : 'From your library. Edit it for this job only.'}
+        error={tooLong(draft, LIMITS.resume.entityDescription)}
+        count={counterFor(draft, LIMITS.resume.entityDescription)}
       >
         <Textarea
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
-          onBlur={() => { if (draft !== value) onCommit(draft) }}
+          onBlur={() => { if (draft !== value && !tooLong(draft, LIMITS.resume.entityDescription)) onCommit(draft) }}
           autoGrow
         />
       </Field>
