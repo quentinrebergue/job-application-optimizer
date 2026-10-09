@@ -8,6 +8,7 @@ import { rankWithUsage } from '@/lib/ai'
 import type { PromptOptions } from '@/lib/ai/formats'
 import { helpText, parseArguments, type Args } from './args'
 import { loadCases, RESULTS_DIR, type EvalCase } from './cases'
+import { formatSizes, measureSizes } from './sizes'
 import { overall, scoreRun, summarize, type RunRecord, type Summary } from './metrics'
 import { printAnswers, printComparison, printCost, printDetails, printFailures, printHeader, printHints, printMoney, printRequest, printStructure, printTable, type Saved } from './report'
 
@@ -47,7 +48,7 @@ async function runCase(c: EvalCase, runs: number, options: PromptOptions): Promi
 const baselineFile = (name: string | undefined) => path.join(RESULTS_DIR, name ? `baseline-${name}.json` : 'baseline.json')
 
 async function main(args: Args) {
-  if (!args.dryRun && !process.env.AI_GATEWAY_URL) {
+  if (!args.dryRun && !args.sizes && !process.env.AI_GATEWAY_URL) {
     console.error('AI_GATEWAY_URL is not set: start the gateway (see services/ai-gateway) and put its address in .env.local.')
     process.exit(1)
   }
@@ -68,6 +69,12 @@ async function main(args: Args) {
   if (!cases.length) {
     console.error('No case found. Put some in eval/private/ (npm run eval:export -- <job id>) or eval/cases/.')
     process.exit(1)
+  }
+
+  if (args.sizes) {
+    // Sizes need no gateway and no AI: print them and stop, like --dry-run.
+    console.log(formatSizes(measureSizes(cases, options)))
+    return
   }
 
   if (args.dryRun || args.showPrompt) {
