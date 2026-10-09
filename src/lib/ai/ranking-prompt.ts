@@ -3,6 +3,7 @@ import type { AIAnalysisResult, EntityRankingResult } from '@/types/job'
 import { RANKING_LIMITS, RECOMMEND_FROM_LEVEL } from '@/config/ranking'
 import { stringify } from 'yaml'
 import { ANSWER_LAYOUT, type PromptOptions } from './formats'
+import { cleanOffer } from './offer'
 
 /**
  * The prompt and the output contract of the job-ranking AI call.
@@ -91,7 +92,7 @@ ${skills}`,
 Title: ${jobTitle}
 Company: ${jobCompany}
 Description:
-${jobDescription}`,
+${options.cleanOffer === 'code' ? cleanOffer(jobDescription) : jobDescription}`,
   }
   const prompt = Object.values(parts).join('\n\n')
 

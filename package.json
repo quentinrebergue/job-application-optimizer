@@ -9,6 +9,7 @@
     "lint": "eslint",
     "test": "vitest run",
     "eval:ranking": "node --env-file-if-exists=.env.local --import tsx scripts/eval-ranking/run.ts",
+    "eval:compare": "node --import tsx scripts/eval-ranking/compare.ts",
     "eval:export": "node --env-file-if-exists=.env.local --import tsx scripts/eval-ranking/export.ts"
   },
   "dependencies": {

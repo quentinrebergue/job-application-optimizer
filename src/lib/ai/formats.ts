@@ -13,6 +13,8 @@ export interface PromptOptions {
   libraryFormat?: LibraryFormat
   /** false: the JSON answer is not held to a schema (the code still validates it). An experiment. */
   schema?: boolean
+  /** 'code': the offer is cleaned with plain rules before it is sent (see offer.ts). */
+  cleanOffer?: 'code'
 }
 
 export const ANSWER_FORMATS: AnswerFormat[] = ['json', 'yaml', 'yaml-compact']

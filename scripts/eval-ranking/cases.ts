@@ -24,7 +24,8 @@ export async function loadCases(): Promise<EvalCase[]> {
   for (const dir of CASE_DIRS) {
     const source = dir === PRIVATE_DIR ? 'private' : 'example'
     const files = await fs.readdir(dir).catch(() => [])
-    for (const file of files.filter((f) => f.endsWith('.json')).sort()) {
+    // A file or folder starting with _ is kept aside (raw exports, cases not to run): it is not a case.
+    for (const file of files.filter((f) => f.endsWith('.json') && !f.startsWith('_')).sort()) {
       const data = JSON.parse(await fs.readFile(path.join(dir, file), 'utf8')) as Partial<EvalCase>
       if (!data.job?.description || !data.entities || !data.expected) {
         throw new Error(`${path.join(dir, file)}: needs "job", "entities" and "expected"`)

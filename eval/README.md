@@ -9,37 +9,27 @@ Evaluation of the AI ranking (#44 follow-up): did a change to the prompt, the mo
    ```
    npm run eval:export -- <job id>
    ```
-3. Run every case three times and compare with the baseline:
+3. Run every case and compare with the reference:
    ```
-   npm run eval:ranking -- --label llama-3.3-70b
-   npm run eval:ranking -- --case arista --runs 5
-   npm run eval:ranking -- --with-examples     # also run the fictional cases
-   npm run eval:ranking -- --model mistral-small-2603 --baseline small --save-baseline   # one reference per way of ranking
-   npm run eval:ranking -- --model mistral-small-2603 --baseline small                    # compare with it
-   npm run eval:ranking -- --label new-prompt --save-baseline   # when you are happy with it
+   npm run eval:ranking -- --model mistral-medium-2604 --baseline medium
+   npm run eval:ranking -- --model mistral-medium-2604 --baseline medium --save-baseline   # keep this run as the reference
    ```
+
+`npm run eval:ranking -- --help` lists every option: what to print (`--details`, `--money`,
+`--structure`, `--show-answer`, `--raw`, `--show-prompt`, `--dry-run`) and what to try
+(`--answer-format`, `--library-format`, `--no-schema`, `--clean-offer`). Nothing here changes the app.
 
 The fictional cases of `cases/` are skipped when `private/` has cases of its own.
-Try another format (same keys and values; the app only ever uses JSON):
-```
-npm run eval:ranking -- --model mistral-medium-2604 --answer-format yaml --label yaml          # the answer in YAML
-npm run eval:ranking -- --model mistral-medium-2604 --answer-format yaml-compact --label yaml-compact   # lists and small maps on one line
-npm run eval:ranking -- --model mistral-medium-2604 --library-format yaml --label library-yaml          # the library in YAML
-```
-`--no-schema` keeps the JSON answer but does not hold it to a schema (to see whether the schema costs quality).
-A YAML answer cannot be held to a JSON schema: the gateway returns the text and the code validates it, so a badly written answer counts as a failure.
+A full evaluation (15 offers x 3 runs) costs a few cents.
 
-See what is sent and what comes back:
-```
-npm run eval:ranking -- --dry-run --case helsing        # the request only: no call, no cost
-npm run eval:ranking -- --show-prompt --case helsing    # the request, then the evaluation
-npm run eval:ranking -- --show-answer --case helsing    # also the answer: every entry with its level and reason,
-                                                         # what the app recommends and what you expected
-npm run eval:ranking -- --raw --case helsing            # the answer exactly as it came (JSON)
-npm run eval:ranking -- --raw --show-answer --case helsing   # both
-```
+## Is a difference real?
 
-A full evaluation (5 offers x 3 runs) costs about 0.05 EUR. The details of the first run of each case say what the AI missed, what it added and which ids it invented. A baseline is only saved from a run without failures.
+With a few offers, a gap of a few points is often chance: each offer has about ten expected
+entries, so one entry more or less is 10 points on that offer, and the same prompt gives nearly the
+same answer from one run to the next, so repeating a run does not add evidence. The comparison is
+therefore made **case by case**: it says on how many offers the figure got better, worse or stayed
+the same, the mean change with its 95 % interval, and whether it is probably real or could be
+chance. More offers narrow the interval; more runs hardly do.
 
 ## What is measured
 
@@ -48,7 +38,6 @@ A full evaluation (5 offers x 3 runs) costs about 0.05 EUR. The details of the f
 | recall | Of the ids you expected, how many the AI recommended |
 | precision | Of the ids it recommended, how many you expected |
 | not scored | Expected entries the AI did not rate at all (forgotten, not judged low) |
-| bad ids | Labels the AI invented or put in the wrong list, counted before the code drops them |
 | stability | Overlap between runs of the same case (1 = same answer every time) |
 | time, tokens | Median and worst time; tokens in and out |
 | failures | Runs that ended in an error |

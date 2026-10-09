@@ -39,6 +39,15 @@ describe('buildRankingPrompt', () => {
     expect(prompt).toMatch(/\n\{"ats_tags":\["keyword"\],"levels":\{"E1":3,[^\n]+\}\n/)
   })
 
+  it('cleans the offer only when asked to', () => {
+    const offer = 'You will write C.\n\nBenefits:\n- Free lunch'
+    expect(buildRankingPrompt('Dev', 'Acme', offer, LIBRARY).prompt).toContain('Free lunch')
+    const cleaned = buildRankingPrompt('Dev', 'Acme', offer, LIBRARY, { cleanOffer: 'code' })
+    expect(cleaned.prompt).toContain('You will write C.')
+    expect(cleaned.prompt).not.toContain('Free lunch')
+    expect(cleaned.parts.offer.length).toBeLessThan(buildRankingPrompt('Dev', 'Acme', offer, LIBRARY).parts.offer.length)
+  })
+
   it('contains nothing about a specific person', () => {
     for (const personal of ['EPITA', 'TOEIC', 'watchmaking', 'GISTRE']) expect(prompt).not.toContain(personal)
   })
