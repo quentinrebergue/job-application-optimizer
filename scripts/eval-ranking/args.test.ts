@@ -11,6 +11,11 @@ describe('parseArguments', () => {
     expect(a).toMatchObject({ model: 'm', runs: 5, case: 'helsing', schema: false, cleanOffer: 'code', details: true, answerFormat: 'yaml' })
   })
 
+  it('reads --sizes', () => {
+    expect(parseArguments(['--sizes'])).toMatchObject({ sizes: true })
+    expect(parseArguments([]).sizes).toBe(false)
+  })
+
   it('refuses an unknown option and a bad value, with a hint', () => {
     expect(() => parseArguments(['--nope'])).toThrow('--help')
     expect(() => parseArguments(['--answer-format', 'xml'])).toThrow('--answer-format is one of')
@@ -24,5 +29,11 @@ describe('helpText', () => {
     const help = helpText()
     for (const f of FLAGS) expect(help).toContain(`--${f.name}`)
     expect(help).toContain('Examples:')
+  })
+
+  it('says which options never call the AI', () => {
+    const help = helpText()
+    expect(help).toMatch(/unless you pass --sizes or --dry-run/)
+    expect(help).toContain('--sizes')
   })
 })

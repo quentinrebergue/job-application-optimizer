@@ -109,6 +109,9 @@ export function helpText(): string {
     '',
     'Runs every case (eval/private, or eval/cases) through the real ranking, gateway included,',
     'measures it and compares it with a saved reference. Nothing here changes the app.',
+    '',
+    'It calls the AI (and needs AI_GATEWAY_URL) unless you pass --sizes or --dry-run: those two',
+    'only print and stop, with no gateway and no cost.',
   ]
   for (const group of GROUPS) {
     lines.push('', `${group}:`)
