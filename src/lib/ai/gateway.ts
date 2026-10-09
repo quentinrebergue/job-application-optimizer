@@ -16,6 +16,8 @@ export interface GatewayRequest {
   userId: string
   system: string
   prompt: string
+  /** A JSON Schema the answer must follow: the model cannot write anything it does not allow. */
+  schema?: object
 }
 
 export interface GatewayAnswer {
@@ -53,6 +55,7 @@ export async function askGateway(request: GatewayRequest): Promise<GatewayAnswer
         user_id: request.userId,
         system: request.system,
         prompt: request.prompt,
+        ...(request.schema ? { schema: request.schema } : {}),
       }),
       signal: AbortSignal.timeout(TIMEOUT_MS),
     })

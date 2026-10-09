@@ -1,7 +1,7 @@
 import type { EntityMeta } from '@/types'
 import type { AIAnalysisResult } from '@/types/job'
 import { askGateway, type GatewayAnswer } from './gateway'
-import { buildRankingPrompt, normalizeRanking, RANKING_SYSTEM_PROMPT, type RankingDiagnostics } from './ranking-prompt'
+import { buildRankingPrompt, buildRankingSchema, normalizeRanking, RANKING_SYSTEM_PROMPT, type RankingDiagnostics } from './ranking-prompt'
 
 type Library = {
   experiences: EntityMeta[]
@@ -30,7 +30,13 @@ export async function rankWithUsage(
   entities: Library,
 ): Promise<{ analysis: AIAnalysisResult; usage: GatewayAnswer['usage']; diagnostics: RankingDiagnostics }> {
   const { prompt, labels } = buildRankingPrompt(jobTitle, jobCompany, jobDescription, entities)
-  const { content, usage } = await askGateway({ feature: 'rank', userId, system: RANKING_SYSTEM_PROMPT, prompt })
+  const { content, usage } = await askGateway({
+    feature: 'rank',
+    userId,
+    system: RANKING_SYSTEM_PROMPT,
+    prompt,
+    schema: buildRankingSchema(labels),
+  })
   const { analysis, diagnostics } = normalizeRanking(content, labels)
   if (diagnostics.invalidIds > 0 || diagnostics.unrated > 0) {
     console.warn(`AI ranking: ${diagnostics.invalidIds} invalid label(s) dropped, ${diagnostics.unrated} entry(ies) not rated`)

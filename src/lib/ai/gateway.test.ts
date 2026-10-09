@@ -27,6 +27,14 @@ describe('askGateway', () => {
     expect(JSON.parse(init.body)).toEqual({ feature: 'rank', user_id: 'u1', system: 's', prompt: 'p' })
   })
 
+  it('sends the schema only when there is one', async () => {
+    fetchMock.mockImplementation(async () => reply(200, { content: {}, usage: { prompt_tokens: 1, completion_tokens: 1 } }))
+    await askGateway(REQUEST)
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body)).not.toHaveProperty('schema')
+    await askGateway({ ...REQUEST, schema: { type: 'object' } })
+    expect(JSON.parse(fetchMock.mock.calls[1][1].body).schema).toEqual({ type: 'object' })
+  })
+
   it('refuses to run without a gateway address', async () => {
     vi.stubEnv('AI_GATEWAY_URL', '')
     await expect(askGateway(REQUEST)).rejects.toMatchObject({ status: 503 })
