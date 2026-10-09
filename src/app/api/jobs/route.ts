@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
-import { listJobs, createJob } from '@/lib/data'
+import { listJobs, createJob, countJobs } from '@/lib/data'
+import { capReached, consumeCreation, quotas } from '@/lib/quotas'
 import { JobCreateSchema } from '@/schemas/inputs'
 import { readJson } from '@/lib/validation/read-json'
 import { getSessionUserId } from '@/lib/auth/session'
@@ -20,6 +21,10 @@ export async function POST(request: Request) {
   }
   const body = await readJson(request, JobCreateSchema)
   if (!body.ok) return body.response
+  // The cap first (it costs nothing to refuse), then the rate, which counts this creation.
+  if ((await countJobs(userId)) >= quotas().maxJobs) return capReached(quotas().maxJobs, 'jobs')
+  const limited = await consumeCreation(userId, 'job')
+  if (limited) return limited
   // A failure past this point is ours, not the request's: log it and say so (#97).
   try {
     const job = await createJob(userId, { ...body.data, tags: body.data.tags ?? [] })

@@ -39,6 +39,12 @@ function rowToJobOffer(row: JobRow): JobOffer {
   }
 }
 
+/** How many jobs the user has right now. */
+export async function countJobs(userId: string): Promise<number> {
+  const { rows } = await pool.query<{ count: string }>('SELECT count(*) FROM jobs WHERE user_id = $1', [userId])
+  return Number(rows[0].count)
+}
+
 export async function listJobs(userId: string): Promise<JobOffer[]> {
   const { rows } = await pool.query(
     'SELECT * FROM jobs WHERE user_id = $1 ORDER BY date_added DESC',

@@ -6,6 +6,7 @@ import { buildPayload, type PayloadConfig } from '@/lib/resume/build-payload'
 import { RenderError, renderPdf } from '@/lib/resume/renderer-client'
 import { GenerateResumeSchema } from '@/schemas/resume-generate'
 import { readJson } from '@/lib/validation/read-json'
+import { consumeCreation } from '@/lib/quotas'
 
 const DEFAULT_TEMPLATE = 'classic'
 
@@ -18,6 +19,10 @@ export async function POST(request: Request) {
   const parsed = await readJson(request, GenerateResumeSchema)
   if (!parsed.ok) return parsed.response
   const { jobId, entityIds, template, options, skillTagOverrides } = parsed.data
+
+  // The PDF is the heaviest call after the AI: counted per hour and per day.
+  const limited = await consumeCreation(userId, 'pdf')
+  if (limited) return limited
 
   const profile = await getResumeProfile(userId)
   if (!profile.full_name) {
