@@ -82,3 +82,18 @@ func TestCompletePassesTheSchemaOn(t *testing.T) {
 		t.Fatalf("got %d, schema %q", w.Code, rec.got.Schema)
 	}
 }
+
+func TestCompleteReturnsFreeTextAsAJSONString(t *testing.T) {
+	// The model's text is not JSON: with format "text" it is returned as a string, not refused.
+	rec := post(t, "levels:\n  E1: 3", `{"feature":"rank","user_id":"u1","prompt":"hi","format":"text"}`)
+	if rec.Code != http.StatusOK || !strings.Contains(rec.Body.String(), `"content":"levels:\n  E1: 3"`) {
+		t.Fatalf("got %d %s", rec.Code, rec.Body)
+	}
+}
+
+func TestCompleteStillRefusesTextThatIsNotJSONByDefault(t *testing.T) {
+	rec := post(t, "levels: 1", `{"feature":"rank","user_id":"u1","prompt":"hi"}`)
+	if rec.Code != http.StatusBadGateway {
+		t.Fatalf("got %d", rec.Code)
+	}
+}

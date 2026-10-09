@@ -3,6 +3,8 @@
  * prints how it did, compared with the saved baseline.
  *
  *   npm run eval:ranking -- [--model name] [--runs 3] [--case text] [--label name] [--baseline name] [--with-examples] [--save-baseline]
+ *   npm run eval:ranking -- --answer-format yaml|yaml-compact --library-format yaml   # try other formats (default: json, text)
+ *   npm run eval:ranking -- --no-schema                   # JSON answer not held to a schema (an experiment)
  *   npm run eval:ranking -- --show-prompt [--case text]   # print the request, then run
  *   npm run eval:ranking -- --dry-run [--case text]       # print the request and stop: no call, no cost
  *   npm run eval:ranking -- --raw [--case text]           # print the AI's answer exactly as it came (JSON)
@@ -18,7 +20,8 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { rankWithUsage } from '@/lib/ai'
-import { buildRankingPrompt, buildRankingSchema, RANKING_SYSTEM_PROMPT } from '@/lib/ai/ranking-prompt'
+import { buildRankingPrompt, buildRankingSchema } from '@/lib/ai/ranking-prompt'
+import { ANSWER_FORMATS, ANSWER_LAYOUT, LIBRARY_FORMATS, type AnswerFormat, type LibraryFormat, type PromptOptions } from '@/lib/ai/formats'
 import { loadCases, RESULTS_DIR, type EvalCase } from './cases'
 import { compare, overall, scoreRun, summarize, type RunRecord, type Summary } from './metrics'
 import { costOf, priceOf } from './prices'
@@ -51,7 +54,7 @@ function describe(error: unknown): string {
   return parts.filter((m, i) => m && parts.indexOf(m) === i).join(' <- ')
 }
 
-async function runCase(c: EvalCase, runs: number): Promise<RunRecord[]> {
+async function runCase(c: EvalCase, runs: number, options: PromptOptions): Promise<RunRecord[]> {
   const records: RunRecord[] = []
   // The client logs every failure with its stack: the summary at the end says it once.
   const logError = console.error
@@ -60,7 +63,7 @@ async function runCase(c: EvalCase, runs: number): Promise<RunRecord[]> {
     for (let i = 1; i <= runs; i++) {
       const start = Date.now()
       try {
-        const { analysis, usage, diagnostics, raw, promptParts } = await rankWithUsage('eval', c.job.title, c.job.company, c.job.description, c.entities)
+        const { analysis, usage, diagnostics, raw, promptParts } = await rankWithUsage('eval', c.job.title, c.job.company, c.job.description, c.entities, options)
         // The code drops what the AI invented before the answer is returned: count it from the diagnostics.
         const metrics = scoreRun(c.expected, c.entities, analysis)
         metrics.invalidIds += diagnostics.invalidIds
@@ -167,12 +170,13 @@ function printMoney(model: string | undefined, total: Summary, records: Record<s
 const hasFlag = (name: string) => process.argv.includes(`--${name}`)
 
 /** The request the app sends for this case: the system prompt, the prompt and the JSON schema of the answer. */
-function printRequest(c: EvalCase) {
-  const { prompt, labels } = buildRankingPrompt(c.job.title, c.job.company, c.job.description, c.entities)
-  const schema = JSON.stringify(buildRankingSchema(labels), null, 2)
+function printRequest(c: EvalCase, options: PromptOptions) {
+  const { prompt, labels } = buildRankingPrompt(c.job.title, c.job.company, c.job.description, c.entities, options)
+  const json = (options.answerFormat ?? 'json') === 'json' && options.schema !== false
+  const schema = json ? JSON.stringify(buildRankingSchema(labels), null, 2) : '(none: the answer is not held to a schema, the code validates it)'
   const line = '='.repeat(72)
   console.log(`\n${line}\nREQUEST for "${c.name}"\n${line}`)
-  console.log(`\n--- system ---\n${RANKING_SYSTEM_PROMPT}`)
+  console.log(`\n--- system ---\n${ANSWER_LAYOUT[options.answerFormat ?? 'json'].system}`)
   console.log(`\n--- prompt (${prompt.length} characters, about ${Math.round(prompt.length / 4)} tokens) ---\n${prompt}`)
   console.log(`\n--- schema of the answer (${schema.length} characters) ---\n${schema}\n${line}\n`)
 }
@@ -186,6 +190,14 @@ async function main() {
   const runs = Number(arg('runs') ?? 3)
   const filter = arg('case')
   const model = arg('model')
+  const answerFormat = (arg('answer-format') ?? 'json') as AnswerFormat
+  const libraryFormat = (arg('library-format') ?? 'text') as LibraryFormat
+  if (!ANSWER_FORMATS.includes(answerFormat) || !LIBRARY_FORMATS.includes(libraryFormat)) {
+    console.error(`--answer-format is one of ${ANSWER_FORMATS.join(', ')}; --library-format one of ${LIBRARY_FORMATS.join(', ')}.`)
+    process.exit(1)
+  }
+  const options: PromptOptions = { answerFormat, libraryFormat, schema: !hasFlag('no-schema') }
+  const formats = answerFormat === 'json' && libraryFormat === 'text' && options.schema ? '' : ` [answer ${answerFormat}${options.schema ? '' : ', no schema'}, library ${libraryFormat}]`
   const label = arg('label') ?? model ?? 'run'
   const baselinePath = baselineFile(arg('baseline'))
   const all = await loadCases()
@@ -201,7 +213,7 @@ async function main() {
   if (dryRun || hasFlag('show-prompt')) {
     // One case is enough to read a request; --case picks which.
     const shown = filter ? cases : cases.slice(0, 1)
-    for (const c of shown) printRequest(c)
+    for (const c of shown) printRequest(c, options)
     if (!filter && cases.length > 1) console.log(`(first case only: ${cases.length} cases found, use --case to choose)`)
   }
   if (dryRun) return
@@ -210,7 +222,7 @@ async function main() {
   const records: Record<string, RunRecord[]> = {}
   const errors = new Set<string>()
   for (const c of cases) {
-    records[c.name] = await runCase(c, runs)
+    records[c.name] = await runCase(c, runs, options)
     for (const r of records[c.name]) if (!r.ok) errors.add(r.error)
     summaries[c.name] = summarize(records[c.name])
     if (Object.values(c.expected).every((ids) => ids.length === 0)) {
@@ -219,7 +231,7 @@ async function main() {
   }
   const total = overall(Object.values(summaries))
 
-  console.log(`\n${cases.length} case(s) x ${runs} run(s), label "${label}"\n`)
+  console.log(`\n${cases.length} case(s) x ${runs} run(s), label "${label}"${formats}\n`)
   console.table(Object.fromEntries([...Object.entries(summaries), ['ALL', total]].map(([name, s]) => [name, row(s as Summary)])))
   const perRanking = costOf(model, total.promptTokens, total.completionTokens)
   if (perRanking === null) {
@@ -230,7 +242,7 @@ async function main() {
   }
   for (const e of errors) console.log(`Failure: ${e}`)
   printMoney(model, total, records)
-  printJsonStructure(records)
+  if (answerFormat === 'json') printJsonStructure(records)
   if (hasFlag('show-answer') || hasFlag('raw')) {
     for (const c of filter ? cases : cases.slice(0, 1)) {
       const first = records[c.name].find((r): r is Extract<RunRecord, { ok: true }> => r.ok)

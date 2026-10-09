@@ -1,7 +1,8 @@
 import type { EntityMeta } from '@/types'
 import type { AIAnalysisResult } from '@/types/job'
 import { askGateway, type GatewayAnswer } from './gateway'
-import { buildRankingPrompt, buildRankingSchema, normalizeRanking, RANKING_SYSTEM_PROMPT, type RankingDiagnostics } from './ranking-prompt'
+import { ANSWER_LAYOUT, parseYamlAnswer, type PromptOptions } from './formats'
+import { buildRankingPrompt, buildRankingSchema, normalizeRanking, type RankingDiagnostics } from './ranking-prompt'
 
 type Library = {
   experiences: EntityMeta[]
@@ -28,16 +29,18 @@ export async function rankWithUsage(
   jobCompany: string,
   jobDescription: string,
   entities: Library,
+  options: PromptOptions = {},
 ): Promise<{ analysis: AIAnalysisResult; usage: GatewayAnswer['usage']; diagnostics: RankingDiagnostics; raw: unknown; promptParts: Record<string, number> }> {
-  const { prompt, labels, parts } = buildRankingPrompt(jobTitle, jobCompany, jobDescription, entities)
-  const { content, usage } = await askGateway({
-    feature: 'rank',
-    userId,
-    system: RANKING_SYSTEM_PROMPT,
-    prompt,
-    schema: buildRankingSchema(labels),
-  })
-  const { analysis, diagnostics } = normalizeRanking(content, labels)
+  const { prompt, labels, parts } = buildRankingPrompt(jobTitle, jobCompany, jobDescription, entities, options)
+  const answerFormat = options.answerFormat ?? 'json'
+  const system = ANSWER_LAYOUT[answerFormat].system
+  // JSON: the schema holds the model to the labels and levels of this library. YAML (an experiment, picked by
+  // the evaluation only) cannot be held to a schema: the gateway returns the text and the code validates it.
+  const { content, usage } = answerFormat === 'json'
+    ? await askGateway({ feature: 'rank', userId, system, prompt, ...(options.schema === false ? {} : { schema: buildRankingSchema(labels) }) })
+    : await askGateway({ feature: 'rank', userId, system, prompt, format: 'text' })
+  const data = answerFormat === 'json' ? content : parseYamlAnswer(String(content))
+  const { analysis, diagnostics } = normalizeRanking(data, labels)
   if (diagnostics.invalidIds > 0 || diagnostics.unrated > 0) {
     console.warn(`AI ranking: ${diagnostics.invalidIds} invalid label(s) dropped, ${diagnostics.unrated} entry(ies) not rated`)
   }
@@ -49,7 +52,7 @@ export async function rankWithUsage(
     },
     usage,
     diagnostics,
-    raw: content,
+    raw: data,
     promptParts: Object.fromEntries(Object.entries(parts).map(([name, text]) => [name, text.length])),
   }
 }

@@ -1,6 +1,8 @@
 import type { EntityMeta, ExperienceMeta, ProjectMeta, SkillMeta } from '@/types'
 import type { AIAnalysisResult, EntityRankingResult } from '@/types/job'
 import { RANKING_LIMITS, RECOMMEND_FROM_LEVEL } from '@/config/ranking'
+import { stringify } from 'yaml'
+import { ANSWER_LAYOUT, type PromptOptions } from './formats'
 
 /**
  * The prompt and the output contract of the job-ranking AI call.
@@ -10,7 +12,7 @@ import { RANKING_LIMITS, RECOMMEND_FROM_LEVEL } from '@/config/ranking'
  * chooses what is recommended (#184).
  */
 
-export const RANKING_SYSTEM_PROMPT = 'You answer with a single valid JSON object and nothing else.'
+export const RANKING_SYSTEM_PROMPT = ANSWER_LAYOUT.json.system
 
 export type RankedType = 'experiences' | 'projects' | 'skills'
 
@@ -24,48 +26,53 @@ export function buildRankingPrompt(
   jobCompany: string,
   jobDescription: string,
   entities: { experiences: EntityMeta[]; projects: EntityMeta[]; skills: EntityMeta[] },
+  options: PromptOptions = {},
 ): { prompt: string; labels: RankingLabels; parts: Record<string, string> } {
   const labels: RankingLabels = new Map()
-  const lines = (type: RankedType, text: (e: EntityMeta) => string) =>
-    entities[type]
-      .map((entity, i) => {
-        const label = `${PREFIX[type]}${i + 1}`
-        labels.set(label, { type, entity })
-        return `${label}. ${text(entity)}`
-      })
-      .join('\n') || '(none)'
+  const yamlLibrary = options.libraryFormat === 'yaml'
+  const lines = (type: RankedType, text: (e: EntityMeta) => string, fields: (e: EntityMeta) => object) => {
+    const labelled = entities[type].map((entity, i) => {
+      const label = `${PREFIX[type]}${i + 1}`
+      labels.set(label, { type, entity })
+      return [label, entity] as const
+    })
+    if (labelled.length === 0) return '(none)'
+    return yamlLibrary
+      ? stringify(Object.fromEntries(labelled.map(([label, e]) => [label, fields(e)])), { lineWidth: 0 }).trimEnd()
+      : labelled.map(([label, e]) => `${label}. ${text(e)}`).join('\n')
+  }
 
   const experiences = lines('experiences', (e) => {
     const x = e as ExperienceMeta
     return `${x.title} at ${x.company} (${x.period}): ${x.description}`
+  }, (e) => {
+    const x = e as ExperienceMeta
+    return { title: x.title, company: x.company, period: x.period, description: x.description }
   })
   const projects = lines('projects', (e) => {
     const x = e as ProjectMeta
     return `${x.title} [${x.tech?.join(', ')}]: ${x.description}`
+  }, (e) => {
+    const x = e as ProjectMeta
+    return { title: x.title, tech: x.tech ?? [], description: x.description }
   })
   const skills = lines('skills', (e) => {
     const x = e as SkillMeta
     return `${x.name}, ${x.level}. Tags: ${(x.tags ?? []).map((tag, i) => `${i + 1} ${tag}`).join(', ')}`
+  }, (e) => {
+    const x = e as SkillMeta
+    return { name: x.name, level: x.level, tags: x.tags ?? [] }
   })
 
-  // The prompt is built from named parts so the evaluation can tell what each one costs.
+  // The prompt is built from named parts so the evaluation can tell what each one costs. The parts that
+  // stay the same come first (the instructions, then the user's library) and the offer last: a model
+  // provider that caches the start of a prompt can then reuse it from one offer to the next.
+  const layout = ANSWER_LAYOUT[options.answerFormat ?? 'json']
   const parts = {
-    intro: `You are a strict technical recruiter. Rate how well each entry of a candidate's library fits a job offer.`,
-    offer: `JOB OFFER
-Title: ${jobTitle}
-Company: ${jobCompany}
-Description:
-${jobDescription}`,
-    experiences: `CANDIDATE LIBRARY (every entry has a label)
-EXPERIENCES
-${experiences}`,
-    projects: `PROJECTS
-${projects}`,
-    skills: `SKILLS
-${skills}`,
+    intro: `You are a strict technical recruiter. Rate how well each entry of a candidate's library fits a job offer. Below: how to answer, then the library, then the job offer.`,
     answer: `ANSWER
-One JSON object, nothing else, written minified on a single line (no indentation, no line breaks, no space after : or ,):
-{"ats_tags":["keyword"],"levels":{"E1":3,"E2":0,"P1":2,"S1":3},"best":{"experiences":[{"id":"E1","why":"at most 10 words"}],"projects":[{"id":"P3","why":"at most 10 words"}],"skills":[{"id":"S1","tags":[1,4,5]}]},"new_skill_tags":[{"skill":"S1","tag":"Go"}]}
+${layout.instruction}
+${layout.example}
 
 RULES
 - "levels" has EVERY label of the library, each with a level, using the label exactly as given. Never skip one, never invent one.
@@ -73,6 +80,18 @@ RULES
 - "best": for each type, the entries of level 2 or 3, best first: at most ${RANKING_LIMITS.experiences.max} experiences, ${RANKING_LIMITS.projects.max} projects, ${RANKING_LIMITS.skills.max} skills. For experiences and projects, "why" names the evidence in the entry. For skills, "tags" are the numbers of the tags of that skill that matter for this offer.
 - "ats_tags": 5 to 10 keywords an applicant tracking system would search in this offer (tools, languages, domain, level, work mode).
 - "new_skill_tags": 0 to 5 technologies or skills the offer asks for that no skill of the library has; each one is a tag to add to the skill it fits best ("skill" is its label).`,
+    experiences: `CANDIDATE LIBRARY (every entry has a label)
+EXPERIENCES
+${experiences}`,
+    projects: `PROJECTS
+${projects}`,
+    skills: `SKILLS${yamlLibrary ? ' (the tags of a skill are numbered from 1 in the order listed)' : ''}
+${skills}`,
+    offer: `JOB OFFER
+Title: ${jobTitle}
+Company: ${jobCompany}
+Description:
+${jobDescription}`,
   }
   const prompt = Object.values(parts).join('\n\n')
 
