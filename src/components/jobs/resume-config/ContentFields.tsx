@@ -3,6 +3,8 @@
 import { Button } from '@/components/ui/Button'
 import { Field } from '@/components/ui/Field'
 import { Input, Textarea } from '@/components/ui/Input'
+import { LIMITS } from '@/config/limits'
+import { counterFor, tooLong } from '@/lib/text-limit'
 import type { TextField } from './useResumeConfig'
 
 type HeaderField = Extract<TextField, 'resume_title' | 'profile_text'>
@@ -37,13 +39,19 @@ export function ContentFields({ drafts, defaults, saved, onChange }: Props) {
           <Input
             value={drafts.resume_title}
             onChange={(e) => onChange('resume_title', e.target.value)}
+            maxLength={LIMITS.profile.resume_title}
             placeholder="Software Engineer — Systems & Networking"
           />
         </Field>
         {useDefault('resume_title')}
       </div>
       <div className="flex flex-col gap-1">
-        <Field label="Profile" hint={hint('profile_text', 'The short paragraph at the top of the resume.')}>
+        <Field
+          label="Profile"
+          hint={hint('profile_text', 'The short paragraph at the top of the resume.')}
+          error={tooLong(drafts.profile_text, LIMITS.profile.profile_text)}
+          count={counterFor(drafts.profile_text, LIMITS.profile.profile_text)}
+        >
           <Textarea
             value={drafts.profile_text}
             onChange={(e) => onChange('profile_text', e.target.value)}

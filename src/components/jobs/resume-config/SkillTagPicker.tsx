@@ -6,6 +6,7 @@ import type { SuggestedSkillTag } from '@/types/job'
 import { cn } from '@/lib/cn'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
+import { LIMITS } from '@/config/limits'
 import { eyebrow, focusRing } from '@/components/ui/styles'
 
 interface Props {
@@ -69,6 +70,7 @@ export function SkillTagPicker({ skill, selected, libraryTags, suggestions, busy
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={(e) => { if (e.key === 'Escape') { setAdding(false); setQuery('') } }}
+              maxLength={LIMITS.tag}
               placeholder="Search or create"
               className="h-8 w-44"
             />

@@ -6,6 +6,8 @@ import { Alert } from '@/components/ui/Alert'
 import { Button } from '@/components/ui/Button'
 import { Field } from '@/components/ui/Field'
 import { Input, Textarea } from '@/components/ui/Input'
+import { LIMITS } from '@/config/limits'
+import { counterFor, tooLong } from '@/lib/text-limit'
 import { useJobAutosave, type SaveState } from './useJobAutosave'
 
 interface Props {
@@ -29,16 +31,16 @@ export function JobOfferEditor({ job, onSaved, onDelete, deleting, onSaveStateCh
       {/* One field per row in the narrow desktop column, two side by side elsewhere. */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
         <Field label="Job title" error={errors.title}>
-          <Input value={drafts.title} onChange={(e) => edit('title', e.target.value)} required />
+          <Input value={drafts.title} onChange={(e) => edit('title', e.target.value)} maxLength={LIMITS.job.title} required />
         </Field>
         <Field label="Company" error={errors.company}>
-          <Input value={drafts.company} onChange={(e) => edit('company', e.target.value)} required />
+          <Input value={drafts.company} onChange={(e) => edit('company', e.target.value)} maxLength={LIMITS.job.company} required />
         </Field>
         <Field label="Location">
-          <Input value={drafts.location} onChange={(e) => edit('location', e.target.value)} placeholder="Paris, France" />
+          <Input value={drafts.location} onChange={(e) => edit('location', e.target.value)} maxLength={LIMITS.job.location} placeholder="Paris, France" />
         </Field>
         <Field label="Offer link">
-          <Input type="url" value={drafts.url} onChange={(e) => edit('url', e.target.value)} placeholder="https://..." />
+          <Input type="url" value={drafts.url} onChange={(e) => edit('url', e.target.value)} maxLength={LIMITS.job.url} placeholder="https://..." />
         </Field>
       </div>
       {drafts.url && (
@@ -47,7 +49,12 @@ export function JobOfferEditor({ job, onSaved, onDelete, deleting, onSaveStateCh
         </a>
       )}
 
-      <Field label="Description" hint="The full text of the offer. The AI reads it to pick your best entries.">
+      <Field
+        label="Description"
+        hint="The full text of the offer. The AI reads it to pick your best entries."
+        error={errors.description || tooLong(drafts.description, LIMITS.job.description)}
+        count={counterFor(drafts.description, LIMITS.job.description)}
+      >
         <Textarea value={drafts.description} onChange={(e) => edit('description', e.target.value)} autoGrow />
       </Field>
 

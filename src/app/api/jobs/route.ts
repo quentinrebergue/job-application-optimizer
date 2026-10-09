@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { listJobs, createJob } from '@/lib/data'
-import type { JobOffer } from '@/types'
+import { JobCreateSchema } from '@/schemas/inputs'
+import { readJson } from '@/lib/validation/read-json'
 import { getSessionUserId } from '@/lib/auth/session'
 
 export async function GET() {
@@ -17,18 +18,11 @@ export async function POST(request: Request) {
   if (!userId) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
-  let body: Omit<JobOffer, 'id' | 'date_added'>
-  try {
-    body = await request.json()
-  } catch {
-    return NextResponse.json({ error: 'Invalid request body' }, { status: 400 })
-  }
-  if (!body.company || !body.title || !body.description || !body.status) {
-    return NextResponse.json({ error: 'Missing required fields: company, title, description, status' }, { status: 400 })
-  }
+  const body = await readJson(request, JobCreateSchema)
+  if (!body.ok) return body.response
   // A failure past this point is ours, not the request's: log it and say so (#97).
   try {
-    const job = await createJob(userId, body)
+    const job = await createJob(userId, { ...body.data, tags: body.data.tags ?? [] })
     return NextResponse.json(job, { status: 201 })
   } catch (err) {
     console.error('create job failed', err)

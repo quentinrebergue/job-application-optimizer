@@ -7,6 +7,8 @@ import { Alert } from '@/components/ui/Alert'
 import { Button } from '@/components/ui/Button'
 import { Field } from '@/components/ui/Field'
 import { Input, Select, Textarea } from '@/components/ui/Input'
+import { LIMITS } from '@/config/limits'
+import { counterFor, tooLong } from '@/lib/text-limit'
 
 type FormValues = {
   title: string
@@ -48,6 +50,7 @@ export function JobForm({ initial, saving, onSave, onCancel }: Props) {
       setMissing(true)
       return
     }
+    if (tooLong(values.description, LIMITS.job.description)) return
     setMissing(false)
     try {
       await onSave({
@@ -69,16 +72,16 @@ export function JobForm({ initial, saving, onSave, onCancel }: Props) {
 
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="Job title" error={missing && !values.title.trim() ? 'Enter the job title.' : undefined}>
-          <Input value={values.title} onChange={(e) => set('title', e.target.value)} placeholder="Software Engineer" required />
+          <Input value={values.title} onChange={(e) => set('title', e.target.value)} maxLength={LIMITS.job.title} placeholder="Software Engineer" required />
         </Field>
         <Field label="Company" error={missing && !values.company.trim() ? 'Enter the company.' : undefined}>
-          <Input value={values.company} onChange={(e) => set('company', e.target.value)} placeholder="Acme Corp" required />
+          <Input value={values.company} onChange={(e) => set('company', e.target.value)} maxLength={LIMITS.job.company} placeholder="Acme Corp" required />
         </Field>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="Location">
-          <Input value={values.location} onChange={(e) => set('location', e.target.value)} placeholder="Paris, France" />
+          <Input value={values.location} onChange={(e) => set('location', e.target.value)} maxLength={LIMITS.job.location} placeholder="Paris, France" />
         </Field>
         <Field label="Status">
           <Select value={values.status} onChange={(e) => set('status', e.target.value)}>
@@ -90,10 +93,15 @@ export function JobForm({ initial, saving, onSave, onCancel }: Props) {
       </div>
 
       <Field label="Job URL">
-        <Input type="url" value={values.url} onChange={(e) => set('url', e.target.value)} placeholder="https://..." />
+        <Input type="url" value={values.url} onChange={(e) => set('url', e.target.value)} maxLength={LIMITS.job.url} placeholder="https://..." />
       </Field>
 
-      <Field label="Job description" hint="The full text of the offer. The AI uses it to pick your best experiences.">
+      <Field
+        label="Job description"
+        hint="The full text of the offer. The AI uses it to pick your best experiences."
+        error={tooLong(values.description, LIMITS.job.description)}
+        count={counterFor(values.description, LIMITS.job.description)}
+      >
         <Textarea value={values.description} onChange={(e) => set('description', e.target.value)} rows={8} className="resize-y" />
       </Field>
 

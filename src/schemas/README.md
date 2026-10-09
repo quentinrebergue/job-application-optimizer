@@ -12,3 +12,4 @@ Zod schemas that mirror the TypeScript types; the API routes validate request bo
 | `resume-profile.ts` | `ResumeProfileSchema` |
 | `resume-generate.ts` | `GenerateResumeSchema` (body of `api/resume/generate`) |
 | `resume-template.ts` | `TemplateInfoSchema`, `TemplateListSchema` (templates of the renderer service) |
+| `inputs.ts` | What the API accepts in a body, with a size for every field (#201): `JobCreateSchema`, `JobUpdateSchema`, `EntityCreateSchema`, `EntityUpdateSchemas`, `ResumeConfigInputSchema`. Unknown keys are dropped; an update takes any of the fields and has no defaults, so it never overwrites what it does not send. |

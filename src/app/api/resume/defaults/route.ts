@@ -1,7 +1,7 @@
-import { z } from 'zod'
 import { getSessionUserId } from '@/lib/auth/session'
 import { getResumeProfile, saveResumeProfile } from '@/lib/data'
 import { ResumeProfileSchema } from '@/schemas/resume-profile'
+import { readJson } from '@/lib/validation/read-json'
 
 export async function GET() {
   const userId = await getSessionUserId()
@@ -17,13 +17,7 @@ export async function PUT(request: Request) {
     return Response.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const body = await request.json().catch(() => null)
-  const parsed = ResumeProfileSchema.safeParse(body)
-  if (!parsed.success) {
-    return Response.json(
-      { error: 'Invalid profile', fields: z.flattenError(parsed.error).fieldErrors },
-      { status: 400 }
-    )
-  }
-  return Response.json(await saveResumeProfile(userId, parsed.data))
+  const body = await readJson(request, ResumeProfileSchema)
+  if (!body.ok) return body.response
+  return Response.json(await saveResumeProfile(userId, body.data))
 }

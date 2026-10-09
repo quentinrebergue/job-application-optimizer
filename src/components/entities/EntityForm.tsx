@@ -5,7 +5,7 @@ import type { EntityType } from '@/types'
 import { Alert } from '@/components/ui/Alert'
 import { Button } from '@/components/ui/Button'
 import { EntityFields } from './EntityFields'
-import { missingFields, toPayload, toValues } from './entity-fields'
+import { fieldErrors, toPayload, toValues } from './entity-fields'
 
 interface Props {
   type: EntityType
@@ -24,7 +24,7 @@ export function EntityForm({ type, saving, onSave, onCancel }: Props) {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setFailure(null)
-    const missing = missingFields(type, values)
+    const missing = fieldErrors(type, values)
     setErrors(missing)
     if (Object.keys(missing).length > 0) return
     try {
