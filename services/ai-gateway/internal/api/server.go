@@ -61,6 +61,8 @@ type completeRequest struct {
 	System  string          `json:"system"`
 	Prompt  string          `json:"prompt"`
 	Schema  json.RawMessage `json:"schema"`
+	// Format is "json" (the default: the answer must be a JSON document) or "text" (any text, returned as a JSON string).
+	Format string `json:"format"`
 }
 
 type completeResponse struct {
@@ -93,12 +95,18 @@ func (s *Server) complete(w http.ResponseWriter, r *http.Request) {
 	case len(in.Schema) > 0 && !isJSONObject(in.Schema):
 		writeError(w, http.StatusBadRequest, "schema must be a JSON object")
 		return
+	case in.Format != "" && in.Format != "json" && in.Format != "text":
+		writeError(w, http.StatusBadRequest, "format must be json or text")
+		return
+	case in.Format == "text" && len(in.Schema) > 0:
+		writeError(w, http.StatusBadRequest, "a schema needs the json format")
+		return
 	}
 
 	ctx, cancel := context.WithTimeout(r.Context(), s.limits.Timeout)
 	defer cancel()
 	res, err := s.llm.Complete(ctx, llm.Request{
-		System: in.System, Prompt: in.Prompt, MaxTokens: s.limits.MaxOutputTokens, Schema: in.Schema,
+		System: in.System, Prompt: in.Prompt, MaxTokens: s.limits.MaxOutputTokens, Schema: in.Schema, Text: in.Format == "text",
 	})
 	if err != nil {
 		s.logger.Error("completion failed", "feature", in.Feature, "error", err)
@@ -109,8 +117,17 @@ func (s *Server) complete(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusBadGateway, "the AI is unavailable")
 		return
 	}
-	// Strict JSON: refuse anything the model returned that is not valid JSON.
-	if !json.Valid([]byte(res.Content)) {
+	content := json.RawMessage(res.Content)
+	if in.Format == "text" {
+		// Free text: the caller reads it, so it travels as a JSON string.
+		encoded, err := json.Marshal(res.Content)
+		if err != nil {
+			writeError(w, http.StatusBadGateway, "the AI returned an invalid answer")
+			return
+		}
+		content = encoded
+	} else if !json.Valid([]byte(res.Content)) {
+		// Strict JSON: refuse anything the model returned that is not valid JSON.
 		s.logger.Error("model returned invalid JSON", "feature", in.Feature)
 		writeError(w, http.StatusBadGateway, "the AI returned an invalid answer")
 		return
@@ -119,7 +136,7 @@ func (s *Server) complete(w http.ResponseWriter, r *http.Request) {
 	s.logger.Info("completion",
 		"feature", in.Feature, "user", in.UserID,
 		"prompt_tokens", res.Usage.PromptTokens, "completion_tokens", res.Usage.CompletionTokens)
-	writeJSON(w, http.StatusOK, completeResponse{Content: json.RawMessage(res.Content), Usage: res.Usage})
+	writeJSON(w, http.StatusOK, completeResponse{Content: content, Usage: res.Usage})
 }
 
 func writeJSON(w http.ResponseWriter, status int, v any) {

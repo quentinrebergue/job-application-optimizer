@@ -40,7 +40,7 @@ type chatRequest struct {
 	Messages       []chatMessage `json:"messages"`
 	MaxTokens      int           `json:"max_tokens"`
 	Temperature    float64       `json:"temperature"`
-	ResponseFormat any           `json:"response_format"`
+	ResponseFormat any           `json:"response_format,omitempty"`
 }
 
 type chatResponse struct {
@@ -86,6 +86,9 @@ func (c *OVH) once(ctx context.Context, req Request) (res Result, retryable bool
 				"schema": req.Schema,
 			},
 		}
+	}
+	if req.Text {
+		format = nil // omitted from the request: the model answers freely
 	}
 	body, err := json.Marshal(chatRequest{
 		Model: c.opts.Model,

@@ -18,6 +18,8 @@ export interface GatewayRequest {
   prompt: string
   /** A JSON Schema the answer must follow: the model cannot write anything it does not allow. */
   schema?: object
+  /** 'text': the answer is not JSON (no schema); the gateway returns the text as it came. */
+  format?: 'text'
 }
 
 export interface GatewayAnswer {
@@ -56,6 +58,7 @@ export async function askGateway(request: GatewayRequest): Promise<GatewayAnswer
         system: request.system,
         prompt: request.prompt,
         ...(request.schema ? { schema: request.schema } : {}),
+        ...(request.format ? { format: request.format } : {}),
       }),
       signal: AbortSignal.timeout(TIMEOUT_MS),
     })

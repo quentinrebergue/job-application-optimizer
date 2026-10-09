@@ -86,3 +86,19 @@ func TestCompleteAsksForTheSchemaWhenGiven(t *testing.T) {
 		t.Fatalf("schema not passed on: %v", js)
 	}
 }
+
+func TestCompleteOmitsTheResponseFormatForFreeText(t *testing.T) {
+	var sent map[string]any
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		_ = json.NewDecoder(r.Body).Decode(&sent)
+		_, _ = w.Write([]byte(`{"choices":[{"message":{"role":"assistant","content":"a: 1"}}],"usage":{}}`))
+	}))
+	defer ts.Close()
+	res, err := newTestClient(ts.URL).Complete(context.Background(), Request{Prompt: "hi", Text: true})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, found := sent["response_format"]; found || res.Content != "a: 1" {
+		t.Fatalf("response_format sent: %v, content %q", found, res.Content)
+	}
+}

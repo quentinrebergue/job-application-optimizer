@@ -20,6 +20,15 @@ Evaluation of the AI ranking (#44 follow-up): did a change to the prompt, the mo
    ```
 
 The fictional cases of `cases/` are skipped when `private/` has cases of its own.
+Try another format (same keys and values; the app only ever uses JSON):
+```
+npm run eval:ranking -- --model mistral-medium-2604 --answer-format yaml --label yaml          # the answer in YAML
+npm run eval:ranking -- --model mistral-medium-2604 --answer-format yaml-compact --label yaml-compact   # lists and small maps on one line
+npm run eval:ranking -- --model mistral-medium-2604 --library-format yaml --label library-yaml          # the library in YAML
+```
+`--no-schema` keeps the JSON answer but does not hold it to a schema (to see whether the schema costs quality).
+A YAML answer cannot be held to a JSON schema: the gateway returns the text and the code validates it, so a badly written answer counts as a failure.
+
 See what is sent and what comes back:
 ```
 npm run eval:ranking -- --dry-run --case helsing        # the request only: no call, no cost

@@ -11,6 +11,8 @@ type Request struct {
 	MaxTokens int
 	// Schema is a JSON Schema the answer must follow. Empty: any valid JSON object.
 	Schema json.RawMessage
+	// Text asks for a free-text answer (no response_format): the caller reads it itself.
+	Text bool
 }
 
 type Usage struct {

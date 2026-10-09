@@ -35,6 +35,14 @@ describe('askGateway', () => {
     expect(JSON.parse(fetchMock.mock.calls[1][1].body).schema).toEqual({ type: 'object' })
   })
 
+  it('asks for free text only when told to', async () => {
+    fetchMock.mockImplementation(async () => reply(200, { content: 'a: 1', usage: { prompt_tokens: 1, completion_tokens: 1 } }))
+    expect((await askGateway({ ...REQUEST, format: 'text' })).content).toBe('a: 1')
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body).format).toBe('text')
+    await askGateway(REQUEST)
+    expect(JSON.parse(fetchMock.mock.calls[1][1].body)).not.toHaveProperty('format')
+  })
+
   it('refuses to run without a gateway address', async () => {
     vi.stubEnv('AI_GATEWAY_URL', '')
     await expect(askGateway(REQUEST)).rejects.toMatchObject({ status: 503 })
