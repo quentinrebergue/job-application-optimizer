@@ -89,7 +89,7 @@ export function stability(selections: string[][]): number | null {
 }
 
 export type RunRecord =
-  | { ok: true; metrics: RunMetrics; ms: number; promptTokens: number; completionTokens: number }
+  | { ok: true; metrics: RunMetrics; ms: number; promptTokens: number; completionTokens: number; raw?: unknown; analysis?: AIAnalysisResult; promptParts?: Record<string, number> }
   | { ok: false; error: string }
 
 export interface Summary {

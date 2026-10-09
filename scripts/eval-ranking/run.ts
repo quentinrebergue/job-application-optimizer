@@ -3,6 +3,11 @@
  * prints how it did, compared with the saved baseline.
  *
  *   npm run eval:ranking -- [--model name] [--runs 3] [--case text] [--label name] [--baseline name] [--with-examples] [--save-baseline]
+ *   npm run eval:ranking -- --show-prompt [--case text]   # print the request, then run
+ *   npm run eval:ranking -- --dry-run [--case text]       # print the request and stop: no call, no cost
+ *   npm run eval:ranking -- --raw [--case text]           # print the AI's answer exactly as it came (JSON)
+ *   npm run eval:ranking -- --show-answer [--case text]   # print it as the app understood it: levels, reasons, expectations
+ *   (--raw and --show-answer can be combined)
  *
  * --model is the model the gateway runs (it sets the prices); --baseline names the
  * reference to compare with and to save (one per way of ranking, e.g. small, medium).
@@ -13,11 +18,17 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { rankWithUsage } from '@/lib/ai'
+import { buildRankingPrompt, buildRankingSchema, RANKING_SYSTEM_PROMPT } from '@/lib/ai/ranking-prompt'
 import { loadCases, RESULTS_DIR, type EvalCase } from './cases'
 import { compare, overall, scoreRun, summarize, type RunRecord, type Summary } from './metrics'
-import { costOf } from './prices'
+import { costOf, priceOf } from './prices'
+import { averageShares, formatMoney } from './money'
+import { formatAnswer } from './show'
+import { countSyntax } from './syntax'
 
 interface Saved {
+  /** The AI's first answer for each case, as it came: lets the selection rules be replayed without calling it again. */
+  raw?: Record<string, unknown>
   label: string
   model?: string
   /** Euros for one ranking (an upper bound: cached tokens are not known). */
@@ -49,7 +60,7 @@ async function runCase(c: EvalCase, runs: number): Promise<RunRecord[]> {
     for (let i = 1; i <= runs; i++) {
       const start = Date.now()
       try {
-        const { analysis, usage, diagnostics } = await rankWithUsage('eval', c.job.title, c.job.company, c.job.description, c.entities)
+        const { analysis, usage, diagnostics, raw, promptParts } = await rankWithUsage('eval', c.job.title, c.job.company, c.job.description, c.entities)
         // The code drops what the AI invented before the answer is returned: count it from the diagnostics.
         const metrics = scoreRun(c.expected, c.entities, analysis)
         metrics.invalidIds += diagnostics.invalidIds
@@ -59,6 +70,9 @@ async function runCase(c: EvalCase, runs: number): Promise<RunRecord[]> {
           ms: Date.now() - start,
           promptTokens: usage.prompt_tokens,
           completionTokens: usage.completion_tokens,
+          raw,
+          analysis,
+          promptParts,
         })
       } catch (error) {
         records.push({ ok: false, error: describe(error) })
@@ -111,8 +125,61 @@ function printDetails(c: EvalCase, records: RunRecord[]) {
 /** The reference file: `baseline.json` by default, `baseline-<name>.json` for a named one. */
 const baselineFile = (name: string | undefined) => path.join(RESULTS_DIR, name ? `baseline-${name}.json` : 'baseline.json')
 
+/** How much of the AI's first answer is only JSON structure ({ } [ ] : , and quotes), in total and in each part. */
+function printJsonStructure(records: Record<string, RunRecord[]>) {
+  const parts = new Map<string, { total: number; syntax: number }>()
+  const grand = { total: 0, syntax: 0 }
+  let answers = 0
+  for (const list of Object.values(records)) {
+    const first = list.find((r): r is Extract<RunRecord, { ok: true }> => r.ok)
+    if (!first || typeof first.raw !== 'object' || first.raw === null) continue
+    answers++
+    for (const [key, value] of Object.entries(first.raw)) {
+      const c = countSyntax(value)
+      const sum = parts.get(key) ?? { total: 0, syntax: 0 }
+      parts.set(key, { total: sum.total + c.total, syntax: sum.syntax + c.syntax })
+      grand.total += c.total
+      grand.syntax += c.syntax
+    }
+  }
+  if (!answers) return
+  const share = (c: { total: number; syntax: number }) => `${Math.round((c.syntax / Math.max(1, c.total)) * 100)}%`
+  console.log(`JSON structure { } [ ] : , " : ${Math.round(grand.syntax / answers)} of ${Math.round(grand.total / answers)} characters per answer, ${share(grand)} (${[...parts].map(([key, c]) => `${key} ${share(c)}`).join(', ')})`)
+}
+
+/** The cost split between the prompt and the answer, and between their parts, to see where to optimise. */
+function printMoney(model: string | undefined, total: Summary, records: Record<string, RunRecord[]>) {
+  const firsts = Object.values(records)
+    .map((list) => list.find((r): r is Extract<RunRecord, { ok: true }> => r.ok))
+    .filter((r): r is Extract<RunRecord, { ok: true }> => !!r)
+  const sizes = (raw: unknown) =>
+    typeof raw === 'object' && raw !== null ? Object.fromEntries(Object.entries(raw).map(([key, value]) => [key, JSON.stringify(value).length])) : {}
+  console.log('\n' + formatMoney({
+    model,
+    price: priceOf(model),
+    promptTokens: total.promptTokens,
+    completionTokens: total.completionTokens,
+    inputShares: averageShares(firsts.map((r) => r.promptParts ?? {})),
+    outputShares: averageShares(firsts.map((r) => sizes(r.raw))),
+  }))
+}
+
+const hasFlag = (name: string) => process.argv.includes(`--${name}`)
+
+/** The request the app sends for this case: the system prompt, the prompt and the JSON schema of the answer. */
+function printRequest(c: EvalCase) {
+  const { prompt, labels } = buildRankingPrompt(c.job.title, c.job.company, c.job.description, c.entities)
+  const schema = JSON.stringify(buildRankingSchema(labels), null, 2)
+  const line = '='.repeat(72)
+  console.log(`\n${line}\nREQUEST for "${c.name}"\n${line}`)
+  console.log(`\n--- system ---\n${RANKING_SYSTEM_PROMPT}`)
+  console.log(`\n--- prompt (${prompt.length} characters, about ${Math.round(prompt.length / 4)} tokens) ---\n${prompt}`)
+  console.log(`\n--- schema of the answer (${schema.length} characters) ---\n${schema}\n${line}\n`)
+}
+
 async function main() {
-  if (!process.env.AI_GATEWAY_URL) {
+  const dryRun = hasFlag('dry-run')
+  if (!dryRun && !process.env.AI_GATEWAY_URL) {
     console.error('AI_GATEWAY_URL is not set: start the gateway (see services/ai-gateway) and put its address in .env.local.')
     process.exit(1)
   }
@@ -130,6 +197,14 @@ async function main() {
     console.error('No case found. Put some in eval/private/ (npm run eval:export -- <job id>) or eval/cases/.')
     process.exit(1)
   }
+
+  if (dryRun || hasFlag('show-prompt')) {
+    // One case is enough to read a request; --case picks which.
+    const shown = filter ? cases : cases.slice(0, 1)
+    for (const c of shown) printRequest(c)
+    if (!filter && cases.length > 1) console.log(`(first case only: ${cases.length} cases found, use --case to choose)`)
+  }
+  if (dryRun) return
 
   const summaries: Record<string, Summary> = {}
   const records: Record<string, RunRecord[]> = {}
@@ -154,9 +229,28 @@ async function main() {
     console.log(`Cost: about ${perRanking.toFixed(4)} EUR per ranking, ${(perRanking * 1000).toFixed(2)} EUR per 1000, ${(perRanking * ok).toFixed(3)} EUR for this evaluation (upper bound)`)
   }
   for (const e of errors) console.log(`Failure: ${e}`)
+  printMoney(model, total, records)
+  printJsonStructure(records)
+  if (hasFlag('show-answer') || hasFlag('raw')) {
+    for (const c of filter ? cases : cases.slice(0, 1)) {
+      const first = records[c.name].find((r): r is Extract<RunRecord, { ok: true }> => r.ok)
+      if (!first) continue
+      const line = '='.repeat(72)
+      if (hasFlag('show-answer') && first.analysis) {
+        console.log(`\n${line}\nANSWER for "${c.name}" (first run)\n${line}\n${formatAnswer(first.analysis, c.expected)}`)
+      }
+      if (hasFlag('raw')) {
+        console.log(`\n${line}\nRAW ANSWER of the AI for "${c.name}" (first run, as it came, ${first.completionTokens} tokens)\n${line}\n${JSON.stringify(first.raw, null, 2)}`)
+      }
+    }
+  }
   for (const c of cases) printDetails(c, records[c.name])
 
-  const saved: Saved = { label, model, costPerRanking: perRanking, date: new Date().toISOString(), runsPerCase: runs, cases: summaries, overall: total }
+  const raw = Object.fromEntries(Object.entries(records).flatMap(([name, list]) => {
+    const first = list.find((r): r is Extract<RunRecord, { ok: true }> => r.ok)
+    return first ? [[name, first.raw]] : []
+  }))
+  const saved: Saved = { label, model, costPerRanking: perRanking, raw, date: new Date().toISOString(), runsPerCase: runs, cases: summaries, overall: total }
   const baseline = await fs.readFile(baselinePath, 'utf8').then((t) => JSON.parse(t) as Saved).catch(() => null)
   if (baseline && baseline.overall.failures === 0) {
     console.log(`\nCompared with the baseline "${baseline.label}" (${baseline.date.slice(0, 10)}):`)

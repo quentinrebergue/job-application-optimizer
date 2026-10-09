@@ -24,7 +24,7 @@ export function buildRankingPrompt(
   jobCompany: string,
   jobDescription: string,
   entities: { experiences: EntityMeta[]; projects: EntityMeta[]; skills: EntityMeta[] },
-): { prompt: string; labels: RankingLabels } {
+): { prompt: string; labels: RankingLabels; parts: Record<string, string> } {
   const labels: RankingLabels = new Map()
   const lines = (type: RankedType, text: (e: EntityMeta) => string) =>
     entities[type]
@@ -45,51 +45,39 @@ export function buildRankingPrompt(
   })
   const skills = lines('skills', (e) => {
     const x = e as SkillMeta
-    return `${x.name}, ${x.level} (tags: ${x.tags?.join(', ')})`
+    return `${x.name}, ${x.level}. Tags: ${(x.tags ?? []).map((tag, i) => `${i + 1} ${tag}`).join(', ')}`
   })
 
-  const prompt = `You are a strict technical recruiter. Rate how well each entry of a candidate's library fits a job offer.
-
-JOB OFFER
+  // The prompt is built from named parts so the evaluation can tell what each one costs.
+  const parts = {
+    intro: `You are a strict technical recruiter. Rate how well each entry of a candidate's library fits a job offer.`,
+    offer: `JOB OFFER
 Title: ${jobTitle}
 Company: ${jobCompany}
 Description:
-${jobDescription}
-
-CANDIDATE LIBRARY (every entry has a label)
+${jobDescription}`,
+    experiences: `CANDIDATE LIBRARY (every entry has a label)
 EXPERIENCES
-${experiences}
-
-PROJECTS
-${projects}
-
-SKILLS
-${skills}
-
-ANSWER
-One JSON object, nothing else:
-{
-  "ats_tags": ["keyword"],
-  "experiences": [{"id": "E2", "level": 3, "why": "at most 10 words"}],
-  "projects": [{"id": "P1", "level": 2, "why": "at most 10 words"}],
-  "skills": [{"id": "S1", "level": 3, "why": "at most 10 words", "tags": ["tag"]}],
-  "new_skills": [{"name": "Rust", "category": "Languages", "level": "intermediate", "tags": ["tag"], "reason": "at most 10 words"}],
-  "new_skill_tags": [{"skill": "S1", "tag": "new tag", "reason": "at most 10 words"}]
-}
+${experiences}`,
+    projects: `PROJECTS
+${projects}`,
+    skills: `SKILLS
+${skills}`,
+    answer: `ANSWER
+One JSON object, nothing else, written minified on a single line (no indentation, no line breaks, no space after : or ,):
+{"ats_tags":["keyword"],"levels":{"E1":3,"E2":0,"P1":2,"S1":3},"best":{"experiences":[{"id":"E1","why":"at most 10 words"}],"projects":[{"id":"P3","why":"at most 10 words"}],"skills":[{"id":"S1","tags":[1,4,5]}]},"new_skill_tags":[{"skill":"S1","tag":"Go"}]}
 
 RULES
-- Rate EVERY entry of "experiences", "projects" and "skills", using its label exactly as given. Never skip one, never invent one.
+- "levels" has EVERY label of the library, each with a level, using the label exactly as given. Never skip one, never invent one.
 - Level: 3 = the offer asks for it (same technology or same kind of work); 2 = related and transferable; 1 = weak link; 0 = unrelated. Be strict: level 3 needs the offer's technology or domain to appear in the entry itself.
-- List each array best first (level 3 first).
-- "why": at most 10 words, naming the evidence in the entry. Only for levels 2 and 3; leave it out for levels 0 and 1.
-- Skills: "tags" lists only the tags of that skill that matter for this offer, copied exactly; only for levels 2 and 3.
+- "best": for each type, the entries of level 2 or 3, best first: at most ${RANKING_LIMITS.experiences.max} experiences, ${RANKING_LIMITS.projects.max} projects, ${RANKING_LIMITS.skills.max} skills. For experiences and projects, "why" names the evidence in the entry. For skills, "tags" are the numbers of the tags of that skill that matter for this offer.
 - "ats_tags": 5 to 10 keywords an applicant tracking system would search in this offer (tools, languages, domain, level, work mode).
-- "new_skills": 0 to 3 skills the offer asks for that the library lacks. "new_skill_tags": 0 to 5 tags to add to an existing skill ("skill" is its label).`
+- "new_skill_tags": 0 to 5 technologies or skills the offer asks for that no skill of the library has; each one is a tag to add to the skill it fits best ("skill" is its label).`,
+  }
+  const prompt = Object.values(parts).join('\n\n')
 
-  return { prompt, labels }
+  return { prompt, labels, parts }
 }
-
-const SKILL_LEVELS = ['beginner', 'intermediate', 'advanced', 'expert']
 
 type Schema = Record<string, unknown>
 
@@ -97,46 +85,52 @@ const string: Schema = { type: 'string' }
 
 /**
  * The JSON Schema the AI's answer must follow. It lists the exact labels of this
- * library and the levels 0 to 3, so the AI cannot invent a label or a level.
+ * library: `levels` must give every label a level from 0 to 3, and `best` can
+ * only name labels of the right type, so the AI cannot invent a label, skip an
+ * entry or use another level.
  *
  * It stays simple on purpose: a first version also forced the exact number of
  * entries and the length of every text, and the model server then took minutes
- * to build its grammar (8 of 15 evaluation calls failed). The code still checks
- * that every entry is rated once and drops duplicates.
+ * to build its grammar (8 of 15 evaluation calls failed).
  */
 export function buildRankingSchema(labels: RankingLabels): Schema {
   const labelsOf = (type: RankedType) => [...labels].filter(([, l]) => l.type === type).map(([label]) => label)
 
-  const rated = (type: RankedType, extra: Schema = {}): Schema => {
+  const best = (type: RankedType, properties: Schema): Schema => {
     const ids = labelsOf(type)
     if (ids.length === 0) return { type: 'array', maxItems: 0 }
     return {
       type: 'array',
       items: {
         type: 'object',
-        properties: { id: { enum: ids }, level: { enum: [0, 1, 2, 3] }, why: string, ...extra },
-        required: ['id', 'level'],
+        properties: { id: { enum: ids }, ...properties },
+        required: ['id'],
         additionalProperties: false,
       },
     }
   }
 
+  const every = [...labels.keys()]
   const skillLabels = labelsOf('skills')
   return {
     type: 'object',
     properties: {
       ats_tags: { type: 'array', items: string },
-      experiences: rated('experiences'),
-      projects: rated('projects'),
-      skills: rated('skills', { tags: { type: 'array', items: string } }),
-      new_skills: {
-        type: 'array',
-        items: {
-          type: 'object',
-          properties: { name: string, category: string, level: { enum: SKILL_LEVELS }, tags: { type: 'array', items: string }, reason: string },
-          required: ['name', 'category'],
-          additionalProperties: false,
+      levels: {
+        type: 'object',
+        properties: Object.fromEntries(every.map((label) => [label, { enum: [0, 1, 2, 3] }])),
+        required: every,
+        additionalProperties: false,
+      },
+      best: {
+        type: 'object',
+        properties: {
+          experiences: best('experiences', { why: string }),
+          projects: best('projects', { why: string }),
+          skills: best('skills', { tags: { type: 'array', items: { type: 'integer' } } }),
         },
+        required: ['experiences', 'projects', 'skills'],
+        additionalProperties: false,
       },
       new_skill_tags: skillLabels.length === 0
         ? { type: 'array', maxItems: 0 }
@@ -144,13 +138,13 @@ export function buildRankingSchema(labels: RankingLabels): Schema {
             type: 'array',
             items: {
               type: 'object',
-              properties: { skill: { enum: skillLabels }, tag: string, reason: string },
+              properties: { skill: { enum: skillLabels }, tag: string },
               required: ['skill', 'tag'],
               additionalProperties: false,
             },
           },
     },
-    required: ['ats_tags', 'experiences', 'projects', 'skills', 'new_skills', 'new_skill_tags'],
+    required: ['ats_tags', 'levels', 'best', 'new_skill_tags'],
     additionalProperties: false,
   }
 }
@@ -182,30 +176,68 @@ const NAME_OF: Record<RankedType, (e: EntityMeta) => string> = {
 }
 const ENTRY_TYPE = { experiences: 'experience', projects: 'project', skills: 'skill' } as const
 
-/** The AI's list for one type, validated: unknown or misplaced labels and bad levels dropped, best level first. */
-function rate(raw: unknown, type: RankedType, labels: RankingLabels, diagnostics: RankingDiagnostics): Rated[] {
-  const seen = new Set<string>()
-  const rated: Rated[] = []
+/** The tags of a skill the AI picked by number (1 is the first); a tag written out is accepted too. Only tags of the skill are kept. */
+function tagsOf(raw: unknown, own: string[]): string[] {
+  const byLower = new Map(own.map((t) => [t.toLowerCase(), t]))
+  const kept = new Set<string>()
   for (const item of Array.isArray(raw) ? raw : []) {
-    const label = isRecord(item) && typeof item.id === 'string' ? item.id.trim().toUpperCase() : ''
-    const known = labels.get(label)
-    const level = isRecord(item) ? Number(item.level) : NaN
-    if (!known || known.type !== type || ![0, 1, 2, 3].includes(level)) {
+    const n = typeof item === 'number' ? item : typeof item === 'string' && /^\d+$/.test(item.trim()) ? Number(item) : NaN
+    const tag = Number.isInteger(n) ? own[n - 1] : typeof item === 'string' ? byLower.get(item.trim().toLowerCase()) : undefined
+    if (tag) kept.add(tag)
+  }
+  return [...kept]
+}
+
+/** The label the AI wrote, normalised ("e1" -> "E1"). */
+const labelOf = (x: unknown) => (typeof x === 'string' ? x.trim().toUpperCase() : '')
+
+/** The level the AI gave to every label, validated: unknown labels and levels outside 0 to 3 are dropped and counted. */
+function readLevels(raw: unknown, labels: RankingLabels, diagnostics: RankingDiagnostics): Map<string, Rated['level']> {
+  const levels = new Map<string, Rated['level']>()
+  for (const [key, value] of Object.entries(isRecord(raw) ? raw : {})) {
+    const label = labelOf(key)
+    const level = Number(value)
+    if (!labels.has(label) || ![0, 1, 2, 3].includes(level) || value === null || value === '') {
       diagnostics.invalidIds++
+    } else if (!levels.has(label)) {
+      levels.set(label, level as Rated['level'])
+    }
+  }
+  return levels
+}
+
+/** One type, validated: its rated entries, ordered by level then by the AI's "best" list. */
+function rate(type: RankedType, root: Record<string, unknown>, levels: Map<string, Rated['level']>, labels: RankingLabels, diagnostics: RankingDiagnostics): Rated[] {
+  const best = isRecord(root.best) && Array.isArray(root.best[type]) ? (root.best[type] as unknown[]) : []
+  const picked = new Map<string, { position: number; why: string; tags: string[] }>()
+  for (const item of best) {
+    const label = labelOf(isRecord(item) ? item.id : item)
+    const known = labels.get(label)
+    if (!known || known.type !== type) {
+      diagnostics.invalidIds++
+    } else if (!picked.has(label)) {
+      const record = isRecord(item) ? item : {}
+      picked.set(label, {
+        position: picked.size,
+        why: text(record.why, 200),
+        tags: type === 'skills' ? tagsOf(record.tags, (known.entity as SkillMeta).tags ?? []) : [],
+      })
+    }
+  }
+
+  const rated: (Rated & { position: number })[] = []
+  for (const [label, { entity }] of labels) {
+    const level = levels.get(label)
+    if (labels.get(label)?.type !== type) continue
+    if (level === undefined) {
+      diagnostics.unrated++
       continue
     }
-    if (seen.has(label)) continue
-    seen.add(label)
-    const record = item as Record<string, unknown>
-    rated.push({
-      entity: known.entity,
-      level: level as Rated['level'],
-      why: text(record.why, 200),
-      tags: textList(record.tags, 60),
-    })
+    const best = picked.get(label)
+    rated.push({ entity, level, why: best?.why ?? '', tags: best?.tags ?? [], position: best?.position ?? Infinity })
   }
-  diagnostics.unrated += [...labels.values()].filter((l) => l.type === type).length - rated.length
-  return rated.sort((a, b) => b.level - a.level) // stable: the AI's order within a level
+  // Level first, then the AI's own order among its best, then the order of the library.
+  return rated.sort((a, b) => b.level - a.level || a.position - b.position)
 }
 
 /** What is recommended: the good ones up to the maximum, topped up with weak ones to reach the minimum. */
@@ -223,10 +255,11 @@ export function normalizeRanking(data: unknown, labels: RankingLabels): { analys
   if (!isRecord(data)) throw new Error('The AI answer is not a JSON object.')
   const diagnostics: RankingDiagnostics = { invalidIds: 0, unrated: 0 }
 
+  const levels = readLevels(data.levels, labels, diagnostics)
   const rated = {
-    experiences: rate(data.experiences, 'experiences', labels, diagnostics),
-    projects: rate(data.projects, 'projects', labels, diagnostics),
-    skills: rate(data.skills, 'skills', labels, diagnostics),
+    experiences: rate('experiences', data, levels, labels, diagnostics),
+    projects: rate('projects', data, levels, labels, diagnostics),
+    skills: rate('skills', data, levels, labels, diagnostics),
   }
   const chosen = {
     experiences: choose(rated.experiences, RANKING_LIMITS.experiences),
@@ -243,36 +276,21 @@ export function normalizeRanking(data: unknown, labels: RankingLabels): { analys
     reason: r.why,
   })
 
-  // Only the tags the AI kept that really belong to the skill, narrower than the whole list.
+  // Only the tags the AI kept, narrower than the whole list.
   const skillTags: Record<string, string[]> = {}
   for (const r of chosen.skills) {
-    const own = (r.entity as SkillMeta).tags ?? []
-    const byLower = new Map(own.map((t) => [t.toLowerCase(), t]))
-    const kept = [...new Set(r.tags.map((t) => byLower.get(t.toLowerCase())).filter((t): t is string => !!t))]
-    if (kept.length > 0 && kept.length < own.length) skillTags[r.entity.id] = kept
+    const total = (r.entity as SkillMeta).tags?.length ?? 0
+    if (r.tags.length > 0 && r.tags.length < total) skillTags[r.entity.id] = r.tags
   }
-
-  const existingNames = new Set(rated.skills.map((r) => NAME_OF.skills(r.entity).toLowerCase()))
-  const newSkills = (Array.isArray(data.new_skills) ? data.new_skills : [])
-    .filter(isRecord)
-    .map((s) => ({
-      name: text(s.name, 80),
-      category: text(s.category, 80),
-      level: SKILL_LEVELS.includes(String(s.level)) ? String(s.level) : 'intermediate',
-      tags: textList(s.tags, 10),
-      reason: text(s.reason, 200),
-    }))
-    .filter((s) => s.name && s.category && !existingNames.has(s.name.toLowerCase()))
-    .slice(0, 3)
 
   const newSkillTags = (Array.isArray(data.new_skill_tags) ? data.new_skill_tags : [])
     .filter(isRecord)
     .flatMap((t) => {
-      const target = labels.get(typeof t.skill === 'string' ? t.skill.trim().toUpperCase() : '')
+      const target = labels.get(labelOf(t.skill))
       const tag = text(t.tag, 80)
       if (!target || target.type !== 'skills' || !tag) return []
       if (((target.entity as SkillMeta).tags ?? []).some((own) => own.toLowerCase() === tag.toLowerCase())) return []
-      return [{ skill_id: target.entity.id, tag, reason: text(t.reason, 200) }]
+      return [{ skill_id: target.entity.id, tag, reason: '' }]
     })
     .slice(0, 5)
 
@@ -289,7 +307,7 @@ export function normalizeRanking(data: unknown, labels: RankingLabels): { analys
       recommended_project_ids: chosen.projects.map((r) => r.entity.id),
       recommended_skill_ids: chosen.skills.map((r) => r.entity.id),
       recommended_skill_tags: skillTags,
-      suggested_new_skills: newSkills,
+      suggested_new_skills: [],
       suggested_new_skill_tags: newSkillTags,
     },
     diagnostics,
