@@ -16,14 +16,18 @@ export interface Promise {
 
 export const ALL_PROMISES: Promise[] = [
   { title: 'Free', note: 'Every feature, for everyone.' },
-  { title: 'Hosted in France', note: 'OVHcloud servers, under European law (GDPR).' },
+  // The AI half of the note ships with AI_ON_MISTRAL (config/legal.ts).
+  {
+    title: 'Hosted in France',
+    note: AI_ON_MISTRAL
+      ? 'OVHcloud servers, and the AI by Mistral AI (French too). Under European law (GDPR).'
+      : 'OVHcloud servers, under European law (GDPR).',
+  },
   { title: 'No tracking', note: 'No analytics, no ads, one cookie.' },
   { title: 'Not for profit', note: 'No ads, no paid plan.' },
   { title: 'Your data is yours', note: 'Never sold, never used to train a model.' },
   // Not true yet:
   { title: 'Open source', note: 'Read it, run it, improve it.', blockedBy: '#107' },
-  // Ships with AI_ON_MISTRAL (config/legal.ts).
-  { title: 'AI that stays in Europe', note: 'Mistral AI, a French company.', blockedBy: AI_ON_MISTRAL ? undefined : '#192' },
 ]
 
 /** What the page shows today. */
