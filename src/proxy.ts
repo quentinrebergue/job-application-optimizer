@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { loginUrlFor, returnToFrom } from '@/lib/auth/return-to'
 import { buildCsp, cspHeaderName, cspMode, CSP_REPORT_PATH, newNonce } from '@/lib/security/csp'
+import { checkOrigin } from '@/lib/security/origin'
 
 const PUBLIC_PATHS = ['/login', '/signup', '/forgot-password']
 // Open whether signed in or not: the mail link may be opened in another browser,
@@ -43,6 +44,16 @@ export function proxy(request: NextRequest) {
   const isApiRoute = pathname.startsWith('/api/')
   const isPublicPath = PUBLIC_PATHS.includes(pathname)
   const hasSessionCookie = request.cookies.has('session')
+
+  // A request that changes data must come from our own pages (#206). The browsers report the
+  // violations of the CSP in their own way, so that one address is not checked.
+  if (isApiRoute && pathname !== CSP_REPORT_PATH) {
+    const origin = checkOrigin(request.method, request.headers)
+    if (!origin.ok) {
+      console.warn('request from another origin refused', { method: request.method, path: pathname, reason: origin.reason })
+      return NextResponse.json({ error: 'This request does not come from the site itself.', code: 'bad_origin' }, { status: 403 })
+    }
+  }
 
   // The landing page lives at /welcome but is shown at "/" to visitors; signed-in
   // users keep their home at "/". A visitor asking for /welcome goes back to "/"

@@ -9,7 +9,7 @@ vi.mock('@/lib/auth/session', () => ({ getSessionUserId: vi.fn().mockResolvedVal
 
 const { POST } = await import('./route')
 
-const send = (body: unknown) => POST(new Request('http://x', { method: 'POST', body: typeof body === 'string' ? body : JSON.stringify(body) }))
+const send = (body: unknown) => POST(new Request('http://x', { method: 'POST', body: typeof body === 'string' ? body : JSON.stringify(body), headers: { 'content-type': 'application/json' } }))
 const job = { title: 'Dev', company: 'Acme', description: 'Build things', status: 'saved' }
 
 beforeEach(() => {

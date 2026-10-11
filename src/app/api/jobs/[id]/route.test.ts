@@ -7,7 +7,7 @@ vi.mock('@/lib/auth/session', () => ({ getSessionUserId: vi.fn().mockResolvedVal
 const { PUT } = await import('./route')
 
 const ctx = { params: Promise.resolve({ id: 'job-1' }) }
-const put = (body: unknown) => PUT(new Request('http://x', { method: 'PUT', body: JSON.stringify(body) }), ctx)
+const put = (body: unknown) => PUT(new Request('http://x', { method: 'PUT', body: JSON.stringify(body), headers: { 'content-type': 'application/json' } }), ctx)
 
 beforeEach(() => updateJob.mockReset().mockResolvedValue({ id: 'job-1' }))
 
