@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { envNumber } from '@/lib/env'
 import { consumeRateLimit } from '@/lib/rate-limit'
 
 // How much a user may create, and how fast (#202). Two kinds of limit, because one is not enough:
@@ -14,27 +15,21 @@ import { consumeRateLimit } from '@/lib/rate-limit'
 const HOUR_MS = 60 * 60 * 1000
 const DAY_MS = 24 * HOUR_MS
 
-/** A positive whole number from the environment, or the default (a typo must not switch a limit off). */
-function number(name: string, fallback: number): number {
-  const value = Number(process.env[name])
-  return Number.isInteger(value) && value > 0 ? value : fallback
-}
-
 export type QuotaKind = 'job' | 'entity' | 'pdf'
 
 /** The numbers, read each time so a change of environment applies without a restart of the tests. */
 export function quotas() {
   return {
-    maxJobs: number('MAX_JOBS', 40),
+    maxJobs: envNumber('MAX_JOBS', 40),
     perHour: {
-      job: number('JOBS_PER_HOUR', 15),
-      entity: number('ENTITIES_PER_HOUR', 30),
-      pdf: number('PDFS_PER_HOUR', 30),
+      job: envNumber('JOBS_PER_HOUR', 15),
+      entity: envNumber('ENTITIES_PER_HOUR', 30),
+      pdf: envNumber('PDFS_PER_HOUR', 30),
     },
     perDay: {
-      job: number('JOBS_PER_DAY', 40),
-      entity: number('ENTITIES_PER_DAY', 100),
-      pdf: number('PDFS_PER_DAY', 100),
+      job: envNumber('JOBS_PER_DAY', 40),
+      entity: envNumber('ENTITIES_PER_DAY', 100),
+      pdf: envNumber('PDFS_PER_DAY', 100),
     },
   }
 }

@@ -15,6 +15,9 @@ vi.mock('@/lib/auth/session', () => ({ createSession: vi.fn(), deleteSession: vi
 vi.mock('@/lib/auth/email-verification', () => ({ sendVerificationEmail: vi.fn() }))
 vi.mock('@/lib/auth/password', () => ({ verifyPassword: vi.fn(async () => false) }))
 vi.mock('next/navigation', () => ({ redirect: vi.fn() }))
+vi.mock('next/headers', () => ({ headers: async () => new Headers() }))
+vi.mock('next/server', () => ({ after: vi.fn() }))
+vi.mock('@/lib/auth/signup-limit', () => ({ checkSignup: vi.fn(async () => ({ ok: true })) }))
 
 const { login, signup } = await import('./auth')
 
