@@ -41,6 +41,17 @@ dbDescribe('the schema of the migrations', () => {
     expect(columns.filter((c) => !present.includes(c)), `missing in ${table}`).toEqual([])
   })
 
+  it('no longer has the tables and columns of the removed modules (#113)', async () => {
+    const { rows: tables } = await pool.query<{ tablename: string }>('SELECT tablename FROM pg_tables WHERE schemaname = current_schema()')
+    for (const gone of ['taxonomy', 'general_questions', 'knowledge', 'exercises', 'cover_letter_sentences']) {
+      expect(tables.map((t) => t.tablename), gone).not.toContain(gone)
+    }
+    const { rows: columns } = await pool.query<{ t: string }>(
+      "SELECT table_name || '.' || column_name AS t FROM information_schema.columns WHERE table_schema = current_schema() AND table_name IN ('jobs', 'entities')",
+    )
+    for (const gone of ['jobs.questions', 'jobs.cover_letter', 'entities.questions']) expect(columns.map((c) => c.t), gone).not.toContain(gone)
+  })
+
   it('ran in the schema of the test and nowhere else (the database is not touched)', async () => {
     const { rows } = await pool.query<{ schema: string }>('SELECT current_schema() AS schema')
     expect(rows[0].schema).toBe(process.env.DB_TEST_SCHEMA)

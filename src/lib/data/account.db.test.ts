@@ -83,14 +83,10 @@ dbDescribe('account on Postgres', () => {
   })
 
   describe('deleteAccount', () => {
-    it('fills every table that holds a user, except the old ones the app no longer writes (so the test below proves something)', async () => {
+    it('fills every table that holds a user (so the test below proves something)', async () => {
       const before = await rowsOf(alice)
-      // Tables of removed modules (#113 drops them): they still cascade, and nothing writes in them.
-      const legacy = ['cover_letter_sentences', 'exercises', 'general_questions', 'knowledge', 'taxonomy']
       // A new table that names a user fails here until `fill` gives it a row.
-      for (const [table, n] of Object.entries(before)) {
-        if (!legacy.includes(table)) expect(n, `rows of alice in ${table}: add one to fill()`).toBeGreaterThan(0)
-      }
+      for (const [table, n] of Object.entries(before)) expect(n, `rows of alice in ${table}: add one to fill()`).toBeGreaterThan(0)
     })
 
     it('removes every row of the user in every table, and the account', async () => {
