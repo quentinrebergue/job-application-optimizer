@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { loginUrlFor, returnToFrom } from '@/lib/auth/return-to'
+import { buildCsp, cspHeaderName, cspMode, CSP_REPORT_PATH, newNonce } from '@/lib/security/csp'
 
 const PUBLIC_PATHS = ['/login', '/signup', '/forgot-password']
 // Open whether signed in or not: the mail link may be opened in another browser,
@@ -17,7 +18,25 @@ const OPEN_PATHS = [
   '/robots.txt',
   '/sitemap.xml',
   '/opengraph-image',
+  // Where the browsers report a violation of the CSP: from visitors who have no session.
+  CSP_REPORT_PATH,
 ]
+
+/**
+ * The Content Security Policy of a page, with a nonce of its own (#205). Next.js reads the nonce from
+ * the policy in the *request* headers and puts it on its scripts and styles, so the policy goes there
+ * as well as in the response. A report-only policy is reported, not enforced, but is read the same way.
+ */
+function withCsp(request: NextRequest, respond: (init: { request: { headers: Headers } }) => NextResponse): NextResponse {
+  const nonce = newNonce()
+  const policy = buildCsp(nonce, { dev: process.env.NODE_ENV === 'development' })
+  const headers = new Headers(request.headers)
+  headers.set('x-nonce', nonce)
+  headers.set('content-security-policy', policy)
+  const response = respond({ request: { headers } })
+  response.headers.set(cspHeaderName(cspMode()), policy)
+  return response
+}
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
@@ -29,14 +48,14 @@ export function proxy(request: NextRequest) {
   // users keep their home at "/". A visitor asking for /welcome goes back to "/"
   // (one address for crawlers); a signed-in user may open it, to see the page.
   if (pathname === '/' && !hasSessionCookie) {
-    return NextResponse.rewrite(new URL('/welcome', request.url))
+    return withCsp(request, (init) => NextResponse.rewrite(new URL('/welcome', request.url), init))
   }
   if (pathname === '/welcome') {
-    return hasSessionCookie ? NextResponse.next() : NextResponse.redirect(new URL('/', request.url))
+    return hasSessionCookie ? withCsp(request, (init) => NextResponse.next(init)) : NextResponse.redirect(new URL('/', request.url))
   }
 
   if (OPEN_PATHS.some((path) => pathname === path || pathname.startsWith(path + '/'))) {
-    return NextResponse.next()
+    return isApiRoute ? NextResponse.next() : withCsp(request, (init) => NextResponse.next(init))
   }
 
   if (isApiRoute) {
@@ -56,7 +75,7 @@ export function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL(returnToFrom(request.nextUrl.searchParams), request.url))
   }
 
-  return NextResponse.next()
+  return withCsp(request, (init) => NextResponse.next(init))
 }
 
 export const config = {

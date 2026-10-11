@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next'
+import { connection } from 'next/server'
 import { DM_Sans } from 'next/font/google'
 import { SITE_URL } from '@/config/legal'
 import './globals.css'
@@ -25,17 +26,17 @@ export const metadata: Metadata = {
 
 // Only the document shell. The navigation lives in the route groups:
 // (app)/layout.tsx for signed-in pages, (public)/layout.tsx for the others.
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  // Every page is rendered at the request: the Content Security Policy has a nonce of its own for each
+  // request, and Next.js can only put it on a page that is not built ahead (#205). The colour scheme is
+  // set in globals.css, so the root element needs no style attribute.
+  await connection()
   return (
-    <html
-      lang="en"
-      className={dmSans.variable}
-      style={{ colorScheme: 'light' }}
-    >
+    <html lang="en" className={dmSans.variable}>
       <body className="bg-canvas font-sans text-ink antialiased">
         {children}
       </body>
