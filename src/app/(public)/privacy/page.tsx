@@ -71,7 +71,10 @@ export default function PrivacyPage() {
       <LegalSection title="How long we keep it">
         <ul>
           <li>Your account and library: until you delete your account.</li>
-          <li>Sessions: they expire after 7 days. Password-reset links: 30 minutes.</li>
+          <li>
+            Sessions: they expire after 7 days. Links sent by mail: 24 hours to confirm an address, 30 minutes to reset a password; they
+            are deleted a day after they expire, with the address they carried.
+          </li>
           <li>Backups: 7 days, so deleted data disappears from them within a week.</li>
           <li>
             The log of AI ranking calls (date, tokens, cost): kept without your identity after you delete your account. It only
