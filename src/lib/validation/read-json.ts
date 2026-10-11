@@ -57,6 +57,15 @@ export async function readJson<S extends z.ZodType>(
   schema: S,
   maxBytes: number = MAX_BODY_BYTES.default,
 ): Promise<Result<z.output<S>>> {
+  // An HTML form can only send these three types, not JSON: a body of one of them is never from our own
+  // pages (which send application/json) and is how a page of another site would try to fake a JSON body (#206).
+  const type = (request.headers.get('content-type') ?? '').toLowerCase()
+  if (/^(application\/x-www-form-urlencoded|multipart\/form-data|text\/plain)/.test(type)) {
+    return {
+      ok: false,
+      response: NextResponse.json({ error: 'Expected a JSON body.', code: 'unsupported_media_type' }, { status: 415 }),
+    }
+  }
   const raw = await readText(request, maxBytes)
   if (raw === null) {
     return {

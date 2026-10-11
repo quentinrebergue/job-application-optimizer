@@ -97,3 +97,41 @@ describe('proxy: Content Security Policy (#205)', () => {
   })
 })
 
+describe('proxy: requests that change data must come from the site (#206)', () => {
+  const api = (path: string, method: string, headers: Record<string, string> = {}) =>
+    new NextRequest(`https://fastresume.tech${path}`, { method, headers: { cookie: 'session=abc', host: 'fastresume.tech', ...headers } })
+
+  it('answers 403 to a POST from another site, with a code, and never reaches the route', async () => {
+    const res = proxy(api('/api/jobs', 'POST', { 'sec-fetch-site': 'cross-site', origin: 'https://evil.test' }))
+    expect(res.status).toBe(403)
+    expect(await res.json()).toEqual({ error: 'This request does not come from the site itself.', code: 'bad_origin' })
+  })
+
+  it.each(['POST', 'PUT', 'PATCH', 'DELETE'])('refuses a %s from another origin of the same site', (method) => {
+    expect(proxy(api('/api/entities/projects/x', method, { 'sec-fetch-site': 'same-site' })).status).toBe(403)
+  })
+
+  it('lets a request from our own pages through', () => {
+    const res = proxy(api('/api/jobs', 'POST', { 'sec-fetch-site': 'same-origin' }))
+    expect(res.status).toBe(200)
+    expect(res.headers.get('x-middleware-next')).toBe('1')
+  })
+
+  it('checks before the session: a visitor from another site gets 403, not a hint about the session', () => {
+    const res = proxy(new NextRequest('https://fastresume.tech/api/jobs', { method: 'POST', headers: { host: 'fastresume.tech', 'sec-fetch-site': 'cross-site' } }))
+    expect(res.status).toBe(403)
+  })
+
+  it('does not touch a read', () => {
+    expect(proxy(api('/api/jobs', 'GET', { 'sec-fetch-site': 'cross-site' })).status).toBe(200)
+  })
+
+  it('does not touch the reports of the Content Security Policy, which the browser sends its own way', () => {
+    expect(proxy(new NextRequest('https://fastresume.tech/api/csp-report', { method: 'POST', headers: { host: 'fastresume.tech' } })).status).toBe(200)
+  })
+
+  it('does not touch the pages: Next.js checks the Server Actions itself', () => {
+    expect(proxy(new NextRequest('https://fastresume.tech/login', { method: 'POST', headers: { host: 'fastresume.tech', 'sec-fetch-site': 'cross-site' } })).status).toBe(200)
+  })
+})
+

@@ -9,7 +9,7 @@ vi.mock('@/lib/auth/session', () => ({ getSessionUserId: vi.fn().mockResolvedVal
 
 const { POST } = await import('./route')
 
-const send = (body: unknown) => POST(new Request('http://x', { method: 'POST', body: JSON.stringify(body) }))
+const send = (body: unknown) => POST(new Request('http://x', { method: 'POST', body: JSON.stringify(body), headers: { 'content-type': 'application/json' } }))
 
 beforeEach(() => {
   createEntity.mockReset().mockResolvedValue({ id: 'proj-1', type: 'projects' })

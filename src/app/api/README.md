@@ -1,6 +1,6 @@
 # src/app/api
 
-Next.js API route handlers. All routes return JSON, need a signed-in user, and only see that user's data (except the two probes `healthz/` and `livez/`, and `csp-report/`). Request bodies are validated with Zod.
+Next.js API route handlers. All routes return JSON, need a signed-in user, and only see that user's data (except the two probes `healthz/` and `livez/`, and `csp-report/`). Request bodies are validated with Zod. A request that changes data (POST, PUT, PATCH, DELETE) must come from our own pages, checked in `src/proxy.ts` (403 `bad_origin`, #206), and its body must be JSON (415 otherwise).
 
 ## Routes
 

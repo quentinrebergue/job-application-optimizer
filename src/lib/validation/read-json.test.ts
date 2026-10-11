@@ -4,7 +4,7 @@ import { describeIssue, readJson } from './read-json'
 
 const schema = z.object({ title: z.string().min(1).max(10), tags: z.array(z.string().max(3)).max(2).optional() })
 const post = (body: string, headers: Record<string, string> = {}) =>
-  new Request('http://x', { method: 'POST', body, headers })
+  new Request('http://x', { method: 'POST', body, headers: { 'content-type': 'application/json', ...headers } })
 
 describe('readJson', () => {
   it('returns the data of a valid body, without the keys the schema does not know', async () => {
@@ -45,6 +45,30 @@ describe('readJson', () => {
       expect(result.response.status).toBe(400)
       expect(await result.response.json()).toMatchObject({ error: 'Title is too long: 10 characters at most.' })
     }
+  })
+})
+
+describe('readJson: the type of the body (#206)', () => {
+  // The three types an HTML form can send: a page of another site could use them to fake a JSON body.
+  it.each(['text/plain', 'text/plain;charset=UTF-8', 'application/x-www-form-urlencoded', 'multipart/form-data; boundary=x', 'TEXT/PLAIN'])(
+    'refuses %s with 415, without reading the body',
+    async (type) => {
+      const result = await readJson(post('{"title":"ok"}', { 'content-type': type }), schema)
+      expect(result.ok).toBe(false)
+      if (!result.ok) {
+        expect(result.response.status).toBe(415)
+        expect(await result.response.json()).toMatchObject({ code: 'unsupported_media_type' })
+      }
+    },
+  )
+
+  it.each(['application/json', 'application/json; charset=utf-8', 'application/vnd.api+json'])('accepts %s', async (type) => {
+    expect((await readJson(post('{"title":"ok"}', { 'content-type': type }), schema)).ok).toBe(true)
+  })
+
+  it('does not reject a body with no type at all (a client that sends none)', async () => {
+    const request = new Request('http://x', { method: 'POST', body: new Blob(['{"title":"ok"}']) })
+    expect((await readJson(request, schema)).ok).toBe(true)
   })
 })
 
