@@ -13,7 +13,7 @@ afterEach(() => vi.unstubAllEnvs())
 
 describe('quotas', () => {
   it('has generous defaults', () => {
-    expect(quotas()).toMatchObject({ maxJobs: 40 })
+    expect(quotas()).toMatchObject({ maxJobs: 100 })
     expect(quotas().perHour).toEqual({ job: 15, entity: 30, pdf: 30 })
     expect(quotas().perDay).toEqual({ job: 40, entity: 100, pdf: 100 })
   })
@@ -27,7 +27,7 @@ describe('quotas', () => {
 
   it.each(['', 'abc', '0', '-3', '2.5'])('ignores %j, so a typo cannot switch a limit off', (value) => {
     vi.stubEnv('MAX_JOBS', value)
-    expect(quotas().maxJobs).toBe(40)
+    expect(quotas().maxJobs).toBe(100)
   })
 })
 
