@@ -19,7 +19,7 @@ function Figure({ children, note, tilt }: { children: React.ReactNode; note: num
       <a
         href={`#why-source-${note}`}
         aria-label={`Source ${note}`}
-        className="relative -top-2 ml-1 inline-block px-0.5 text-sm font-extrabold leading-none text-ink underline underline-offset-2 after:absolute after:-inset-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+        className="relative -top-2 ml-1 inline-block px-0.5 text-sm font-extrabold leading-none text-ink underline underline-offset-2 after:absolute after:-inset-2 focus-visible:bg-warning focus-visible:outline-2 focus-visible:outline-transparent"
       >
         {note}
       </a>

@@ -7,7 +7,8 @@ import { findUserById, type User } from '@/lib/data/users'
 export const verifySession = cache(async (): Promise<{ userId: string }> => {
   const userId = await getSessionUserId()
   if (!userId) {
-    redirect('/login')
+    // Not /login: a cookie that points at no session would loop with the proxy (#178).
+    redirect('/session-expired')
   }
   return { userId }
 })

@@ -1,3 +1,5 @@
+import { cn } from '@/lib/cn'
+import { focusLink } from '@/components/ui/styles'
 import Link from 'next/link'
 import { LegalLinks } from './LegalLinks'
 import { Wordmark } from './Wordmark'
@@ -7,8 +9,10 @@ const LINKS = [
   { href: '/signup', label: 'Sign up' },
 ]
 
-const linkClass =
-  'inline-flex min-h-10 items-center rounded-control underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-strong'
+const linkClass = cn(
+  'inline-flex min-h-10 items-center rounded-control underline-offset-4 hover:underline',
+  focusLink,
+)
 
 /** Footer of the pages a visitor sees before signing in. */
 export function SiteFooter() {

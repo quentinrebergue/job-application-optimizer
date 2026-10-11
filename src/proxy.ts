@@ -19,6 +19,11 @@ const OPEN_PATHS = [
   '/robots.txt',
   '/sitemap.xml',
   '/opengraph-image',
+  // The icons of the browser tab and of the home screen (#168): without this a visitor got a redirect to /login.
+  '/icon.svg',
+  '/apple-icon.png',
+  // Clears a cookie that points at no session, then opens /login (#178).
+  '/session-expired',
   // Where the browsers report a violation of the CSP: from visitors who have no session.
   CSP_REPORT_PATH,
 ]

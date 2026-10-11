@@ -1,3 +1,4 @@
+import { focusLink } from '@/components/ui/styles'
 import Link from 'next/link'
 import { CONTACT_EMAIL } from '@/config/legal'
 import { cn } from '@/lib/cn'
@@ -8,8 +9,10 @@ const LINKS = [
   { href: '/terms', label: 'Terms' },
 ] as const
 
-const linkClass =
-  'inline-flex min-h-10 items-center rounded-control underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-strong'
+const linkClass = cn(
+  'inline-flex min-h-10 items-center rounded-control underline-offset-4 hover:underline',
+  focusLink,
+)
 
 /** The pages every visitor and user can reach from the footer, and the contact address. */
 export function LegalLinks({ className }: { className?: string }) {

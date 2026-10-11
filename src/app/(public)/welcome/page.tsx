@@ -1,11 +1,12 @@
 import Link from 'next/link'
+import { cn } from '@/lib/cn'
 import { Catch } from '@/components/landing/Catch'
 import { HeroDemo } from '@/components/landing/HeroDemo'
 import { HowItWorks } from '@/components/landing/HowItWorks'
 import { Promises } from '@/components/landing/Promises'
 import { Sources, Why } from '@/components/landing/Why'
 import { buttonClasses } from '@/components/ui/Button'
-import { page } from '@/components/ui/styles'
+import { focusLink, page } from '@/components/ui/styles'
 
 export const metadata = {
   title: { absolute: 'FastResume · One job. One resume. Three clicks.' },
@@ -80,7 +81,7 @@ export default function WelcomePage() {
             </div>
             <div className="flex w-full flex-col items-center gap-4">
               <Link href="/signup" className={buttonClasses({ className: 'h-14 w-full px-10 text-lg sm:w-auto' })}>Create your account</Link>
-              <Link href="/login" className="inline-flex min-h-10 items-center font-semibold underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-strong">
+              <Link href="/login" className={cn('inline-flex min-h-10 items-center font-semibold underline underline-offset-4', focusLink)}>
                 I already have an account
               </Link>
             </div>

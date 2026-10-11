@@ -1,3 +1,5 @@
+import { cn } from '@/lib/cn'
+import { focusLink } from '@/components/ui/styles'
 import Link from 'next/link'
 import { Logo } from './Logo'
 
@@ -6,7 +8,7 @@ export function Wordmark() {
   return (
     <Link
       href="/"
-      className="inline-flex items-center gap-2 rounded-control text-base font-extrabold tracking-tight text-ink focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-strong"
+      className={cn('inline-flex items-center gap-2 rounded-control text-base font-extrabold tracking-tight text-ink', focusLink)}
     >
       <Logo className="size-7" />
       FastResume

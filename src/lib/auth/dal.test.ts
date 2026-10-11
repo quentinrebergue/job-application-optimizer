@@ -19,9 +19,9 @@ beforeEach(() => {
 })
 
 describe('verifySession', () => {
-  it('sends a visitor with no session to the login page: the page never renders', async () => {
+  it('sends a visitor with no session to the cleaning route, which opens /login: the page never renders', async () => {
     getSessionUserId.mockResolvedValue(null)
-    await expect(verifySession()).rejects.toThrow('REDIRECT /login')
+    await expect(verifySession()).rejects.toThrow('REDIRECT /session-expired')
   })
 
   it('gives the id of the signed-in user', async () => {

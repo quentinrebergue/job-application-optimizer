@@ -39,7 +39,7 @@ describe('proxy: landing page', () => {
 })
 
 describe('proxy: pages open to everyone', () => {
-  for (const path of ['/privacy', '/legal', '/terms', '/robots.txt', '/sitemap.xml', '/opengraph-image']) {
+  for (const path of ['/privacy', '/legal', '/terms', '/robots.txt', '/sitemap.xml', '/opengraph-image', '/icon.svg', '/apple-icon.png']) {
     it(`lets a visitor read ${path}`, () => {
       const res = proxy(request(path))
       expect(res.headers.get('location')).toBeNull()
@@ -135,3 +135,11 @@ describe('proxy: requests that change data must come from the site (#206)', () =
   })
 })
 
+
+describe('proxy: stale session cookie (#178)', () => {
+  it('lets a visitor with a cookie reach the cleaning route, where the cookie is checked', () => {
+    const res = proxy(request('/session-expired', true))
+    expect(res.headers.get('location')).toBeNull()
+    expect(res.status).toBe(200)
+  })
+})

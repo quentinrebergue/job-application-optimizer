@@ -46,6 +46,17 @@ export async function deleteSession(): Promise<void> {
   cookieStore.delete(SESSION_COOKIE)
 }
 
+/**
+ * Removes the cookie when it points at no valid session (expired, or deleted by a password
+ * reset). Returns false, and removes nothing, when the session is valid.
+ */
+export async function clearStaleSession(): Promise<boolean> {
+  if (await getSessionUserId()) return false
+  const cookieStore = await cookies()
+  cookieStore.delete(SESSION_COOKIE)
+  return true
+}
+
 /** Signs the user out everywhere (after a password reset). */
 export async function deleteAllSessions(userId: string): Promise<void> {
   await pool.query('DELETE FROM sessions WHERE user_id = $1', [userId])
