@@ -8,6 +8,9 @@
  *
  * Checked on every .ts and .tsx file of src/ (class strings also live in .ts
  * files such as components/ui/styles.ts).
+ *
+ * One test that lists every offending file (not one test per file), and a test of the rule itself
+ * so that a change to the pattern cannot silently stop catching raw colours (#220).
  */
 
 import { describe, it, expect } from 'vitest'
@@ -35,12 +38,31 @@ function collectSourceFiles(dir: string, files: string[] = []): string[] {
   return files
 }
 
+describe('design tokens: the rule', () => {
+  it.each(['bg-slate-50', 'text-blue-600', 'border-red-500', 'hover:bg-gray-100', 'ring-emerald-400/50', 'bg-[#fff]', 'text-[#0a0a0a]', 'border-t-zinc-200'])(
+    'catches %s',
+    (cls) => {
+      expect(`className="${cls}"`.match(RAW_COLOR)?.length, cls).toBeGreaterThan(0)
+    },
+  )
+
+  it.each(['bg-canvas', 'text-ink', 'border-line', 'bg-accent-strong', 'text-ink-muted', 'shadow-hard', 'bg-surface'])('lets the token %s through', (cls) => {
+    expect(`className="${cls}"`.match(RAW_COLOR)).toBeNull()
+  })
+})
+
 describe('design tokens: no raw palette classes', () => {
-  for (const file of collectSourceFiles(SRC)) {
-    const rel = path.relative(ROOT, file)
-    it(rel, () => {
-      const found = fs.readFileSync(file, 'utf8').match(RAW_COLOR) ?? []
-      expect(found, `${rel} uses raw colour classes: ${found.join(', ')}. Use the tokens from globals.css.`).toEqual([])
-    })
-  }
+  const files = collectSourceFiles(SRC)
+
+  it('finds the source files', () => {
+    expect(files.length).toBeGreaterThan(100)
+  })
+
+  it('has no raw colour class in any file', () => {
+    const offenders = files
+      .map((file) => ({ rel: path.relative(ROOT, file), found: fs.readFileSync(file, 'utf8').match(RAW_COLOR) ?? [] }))
+      .filter(({ found }) => found.length > 0)
+      .map(({ rel, found }) => `${rel}: ${found.join(', ')}`)
+    expect(offenders, 'files that use raw colour classes: use the tokens from globals.css').toEqual([])
+  })
 })

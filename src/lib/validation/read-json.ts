@@ -29,7 +29,12 @@ async function readText(request: Request, maxBytes: number): Promise<string | nu
   return Buffer.concat(chunks).toString('utf8')
 }
 
-const label = (key: string) => (key === 'url' ? 'URL' : key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' '))
+/** A field name for a person: `profile_text` and `entityIds` both read "Profile text" and "Entity ids". */
+const label = (key: string) => {
+  if (key === 'url') return 'URL'
+  const words = key.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/_/g, ' ').toLowerCase()
+  return words.charAt(0).toUpperCase() + words.slice(1)
+}
 const count = (n: number) => n.toLocaleString('en-US')
 
 /** What the user reads for the first problem found: which field, and the limit. */
@@ -43,6 +48,8 @@ export function describeIssue(issue: z.core.$ZodIssue): string {
   if (issue.code === 'too_big' && issue.origin === 'array') {
     return `${name} has too many items: ${count(Number(issue.maximum))} at most.`
   }
+  // A rule written by us (a refine) comes with a message meant to be read.
+  if (issue.code === 'custom' && issue.message) return issue.message
   if (issue.code === 'too_small' && issue.origin === 'string') return `${name} is required.`
   if (issue.code === 'invalid_type') return `${name} is missing or not valid.`
   return `${name} is not valid.`

@@ -44,7 +44,7 @@ describe('login', () => {
   it('returns the email after a validation error', async () => {
     const state = await login(undefined, form({ email: 'ada@example.test', password: '' }))
     expect(state?.email).toBe('ada@example.test')
-    expect(state?.errors?.password).toBeDefined()
+    expect(state?.errors?.password).toEqual(['Enter your password.'])
   })
 })
 

@@ -21,7 +21,7 @@ vi.mock('@/lib/ai/usage', () => ({
 const getSessionUserId = vi.fn()
 vi.mock('@/lib/auth/session', () => ({ getSessionUserId: () => getSessionUserId() }))
 
-const { DELETE, POST } = await import('./route')
+const { DELETE, GET, POST } = await import('./route')
 
 const { AiGatewayError } = await import('@/lib/ai/gateway')
 
@@ -155,5 +155,36 @@ describe('POST /api/jobs/[id]/rank', () => {
       expect(res.status).toBe(503)
       expect(settleAiCall).toHaveBeenCalledWith({ id: 7 }, { status: 'released' })
     })
+  })
+})
+
+describe('GET /api/jobs/[id]/rank (#220)', () => {
+  const get = () => GET(new Request('http://x'), ctx)
+
+  it('answers the saved ranking of a job of the user', async () => {
+    getJob.mockResolvedValue({ id: 'job-1', ai_analysis: { job_id: 'job-1', summary: 'ok' } })
+    const res = await get()
+    expect(res.status).toBe(200)
+    expect(await res.json()).toEqual({ job_id: 'job-1', summary: 'ok' })
+    expect(getJob).toHaveBeenCalledWith('u1', 'job-1')
+  })
+
+  it('answers 404 for a job that has not been ranked yet', async () => {
+    getJob.mockResolvedValue({ id: 'job-1', ai_analysis: undefined })
+    const res = await get()
+    expect(res.status).toBe(404)
+    expect(await res.json()).toEqual({ error: 'Job has not been ranked yet' })
+  })
+
+  it('answers 404 for a job that is not the user\'s, without saying it exists', async () => {
+    getJob.mockResolvedValue(null)
+    const res = await get()
+    expect(res.status).toBe(404)
+    expect(await res.json()).toEqual({ error: 'Job not found' })
+  })
+
+  it('answers 401 without a session', async () => {
+    getSessionUserId.mockResolvedValue(null)
+    expect((await get()).status).toBe(401)
   })
 })
