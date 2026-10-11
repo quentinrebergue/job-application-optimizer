@@ -30,15 +30,22 @@ export default function PrivacyPage() {
 
       <LegalSection title="Emails">
         <p>
-          We send only the emails the service needs: confirm your address, reset your password, tell you your password changed.
-          No newsletters, no marketing. They go through Brevo, a French email provider, which receives your address and the message.
+          We send only the emails the service needs: confirm your address, reset your password, tell you your password changed,
+          tell you your data was downloaded, tell you your account was deleted. No newsletters, no marketing. They go through
+          Brevo, a French email provider, which receives your address and the message.
+        </p>
+        <p>
+          Brevo rewrites the links of its emails to count clicks and cannot turn this off for our account: the links in our
+          emails, which carry a single-use token, therefore pass through a Brevo address before reaching our site. We do not use
+          these statistics, and the tokens work only once and expire (24 hours to confirm an address, 30 minutes to reset a password).
         </p>
       </LegalSection>
 
       <LegalSection title="No trackers, no ads, no selling">
         <p>
           No analytics, no advertising, no third-party cookies, no social-media widgets. Your data is never sold, rented or shared for
-          advertising, and never used to train an AI model.
+          advertising, and never used to train an AI model. The one thing we cannot switch off is the click counting of our email
+          provider, explained under Emails.
         </p>
       </LegalSection>
 
