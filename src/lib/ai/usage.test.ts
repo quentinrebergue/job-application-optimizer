@@ -44,16 +44,16 @@ afterEach(() => vi.unstubAllEnvs())
 
 describe('worst case', () => {
   it('prices the biggest prompt and answer at the dearest model when none is known', () => {
-    // 30000 chars / 2 = 15000 tokens at 1.28 + 2000 tokens at 6.38, per million
-    expect(worstCaseCost()).toBeCloseTo(0.0192 + 0.01276, 5)
-    expect(timeoutCost()).toBeCloseTo(0.0192, 5)
-    expect(worstCaseCost('some-new-model')).toBeCloseTo(0.0192 + 0.01276, 5)
+    // 60000 chars / 2 = 30000 tokens at 1.28 + 2000 tokens at 6.38, per million
+    expect(worstCaseCost()).toBeCloseTo(0.0384 + 0.01276, 5)
+    expect(timeoutCost()).toBeCloseTo(0.0384, 5)
+    expect(worstCaseCost('some-new-model')).toBeCloseTo(0.0384 + 0.01276, 5)
   })
 
   it('prices it at the model that is used, so Small does not pay for Medium', () => {
-    // 15000 tokens at 0.13 + 2000 tokens at 0.51, per million
-    expect(worstCaseCost('mistral-small-2603')).toBeCloseTo(0.00195 + 0.00102, 6)
-    expect(timeoutCost('mistral-small-2603')).toBeCloseTo(0.00195, 6)
+    // 30000 tokens at 0.13 + 2000 tokens at 0.51, per million
+    expect(worstCaseCost('mistral-small-2603')).toBeCloseTo(0.0039 + 0.00102, 6)
+    expect(timeoutCost('mistral-small-2603')).toBeCloseTo(0.0039, 6)
     expect(worstCaseCost('mistral-medium-2604')).toBeGreaterThan(worstCaseCost('mistral-small-2603') * 10)
   })
 })
@@ -76,7 +76,7 @@ describe('reserveAiCall', () => {
     expect(result).toEqual({ id: 41, model: 'mistral-small-2603' })
     const insert = calls.find((c) => c.sql.includes('INSERT'))!
     expect(insert.params[2]).toBeCloseTo(worstCaseCost('mistral-small-2603'), 6)
-    expect(insert.params[2]).toBeLessThan(0.004)
+    expect(insert.params[2]).toBeLessThan(0.006)
   })
 
   it('refuses at the hourly limit and says when the oldest call leaves the hour', async () => {

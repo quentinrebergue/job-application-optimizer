@@ -59,12 +59,15 @@ spec:
               value: "5s"
             - name: MAX_OUTPUT_TOKENS
               value: "2000"
-            # System + prompt, in characters. The biggest of 45 real offers with a full library is
-            # 16,800: this is about twice that. Above it the app tells the user to shorten.
+            # System + prompt, in characters. A library at its caps (10 experiences, 20 projects, 10
+            # skills, descriptions at their 1,000 limit) with an offer at its 12,000 limit is about
+            # 48,000: this leaves room.
+            # At 60,000 characters a call costs 0.005 EUR at most with Mistral Small. Above it the app
+            # tells the user what to shorten, before it calls the gateway.
             # The app prices a call at the most this allows (AI_MAX_PROMPT_CHARS, AI_MAX_OUTPUT_TOKENS
             # in k8s/app): change them together.
             - name: MAX_PROMPT_CHARS
-              value: "30000"
+              value: "60000"
             - name: ATTEMPT_TIMEOUT
               value: "30s"
             # The kill switch: "false" refuses every call (503, the app says the AI is paused) while

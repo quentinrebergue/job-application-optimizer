@@ -32,6 +32,7 @@ export const FLAGS: Flag[] = [
   { name: 'answer-format', type: 'string', value: 'json|yaml|yaml-compact', group: 'Try a variant', description: `How the AI writes its answer (default json). YAML cannot be held to a schema: the code validates it.` },
   { name: 'library-format', type: 'string', value: 'text|yaml', group: 'Try a variant', description: 'How the library is written in the prompt (default text).' },
   { name: 'no-schema', type: 'boolean', group: 'Try a variant', description: 'JSON answer not held to a JSON schema (the code still validates it).' },
+  { name: 'pad', type: 'string', value: 'n', group: 'Try a variant', description: 'Bury each library in a bigger one: n fictional entries of each kind (from eval/distractors.json, many fields) before and after the real ones. Tells whether a long prompt makes the model miss what it finds in a short one.' },
   { name: 'clean-offer', type: 'string', value: 'code', group: 'Try a variant', description: 'Clean the offer before it is sent: drops benefits, "about us", equal-opportunity text and links (plain rules, see src/lib/ai/offer.ts).' },
 ]
 
@@ -56,6 +57,7 @@ export interface Args {
   libraryFormat: LibraryFormat
   schema: boolean
   cleanOffer?: 'code'
+  pad?: number
 }
 
 export function parseArguments(argv: string[]): Args {
@@ -76,6 +78,8 @@ export function parseArguments(argv: string[]): Args {
   if (!LIBRARY_FORMATS.includes(libraryFormat)) throw new Error(`--library-format is one of ${LIBRARY_FORMATS.join(', ')}.`)
   const cleanOffer = values['clean-offer'] as string | undefined
   if (cleanOffer !== undefined && cleanOffer !== 'code') throw new Error('--clean-offer is code.')
+  const pad = values.pad === undefined ? undefined : Number(values.pad)
+  if (pad !== undefined && (!Number.isInteger(pad) || pad < 1)) throw new Error('--pad is a whole number of at least 1.')
   const runs = Number(values.runs ?? 3)
   if (!Number.isInteger(runs) || runs < 1) throw new Error('--runs is a whole number of at least 1.')
 
@@ -100,6 +104,7 @@ export function parseArguments(argv: string[]): Args {
     libraryFormat,
     schema: !values['no-schema'],
     cleanOffer: cleanOffer as 'code' | undefined,
+    pad,
   }
 }
 
@@ -127,6 +132,8 @@ export function helpText(): string {
     '  npm run eval:ranking -- --model mistral-medium-2604 --baseline medium --save-baseline',
     '  npm run eval:ranking -- --dry-run --case helsing --clean-offer code',
     '  npm run eval:ranking -- --sizes',
+    '  npm run eval:ranking -- --sizes --pad 10          (how big a library of about 60 entries is)',
+    '  npm run eval:ranking -- --model mistral-small-2603 --pad 10 --label padded-10 --details',
     '  npm run eval:ranking -- --model mistral-medium-2604 --answer-format yaml --label yaml --details --money',
     '',
     'Other commands: npm run eval:export -- <job id>   turns one of your jobs into a case in eval/private/',

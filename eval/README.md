@@ -16,8 +16,12 @@ Evaluation of the AI ranking (#44 follow-up): did a change to the prompt, the mo
    ```
 
 `npm run eval:ranking -- --help` lists every option: what to print (`--details`, `--money`,
-`--structure`, `--show-answer`, `--raw`, `--show-prompt`, `--dry-run`) and what to try
-(`--answer-format`, `--library-format`, `--no-schema`, `--clean-offer`). Nothing here changes the app.
+`--structure`, `--show-answer`, `--raw`, `--show-prompt`, `--dry-run`, `--sizes`) and what to try
+(`--answer-format`, `--library-format`, `--no-schema`, `--clean-offer`, `--pad`). Nothing here changes the app.
+
+`distractors.json` holds fictional experiences, projects and skills from many fields (health, teaching,
+law, trades, writing, some tech): `--pad n` buries each case's library in `n` of each kind, with the real
+entries in the middle, to see whether a long prompt makes the model miss what it finds in a short one (#185).
 
 The fictional cases of `cases/` are skipped when `private/` has cases of its own.
 A full evaluation (15 offers x 3 runs) costs a few cents.

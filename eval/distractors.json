@@ -1,0 +1,868 @@
+{
+ "_comment": "Fictional entries from many fields (health, teaching, law, trades, writing, some tech) used by `--pad` to bury the real library of a case in a bigger one. No real data.",
+ "experiences": [
+  {
+   "id": "pad-exp-1",
+   "type": "experiences",
+   "title": "Registered Nurse",
+   "company": "St Mary Hospital",
+   "period": "2016 - 2017",
+   "description": "Cared for 12 patients a shift on a cardiology ward, administered medication, coordinated with physicians and trained three new nurses on the electronic record system.",
+   "tags": [
+    "nursing",
+    "patient care"
+   ]
+  },
+  {
+   "id": "pad-exp-2",
+   "type": "experiences",
+   "title": "Primary School Teacher",
+   "company": "Oakfield School",
+   "period": "2017 - 2018",
+   "description": "Taught a class of 28 pupils aged 8 to 9, planned maths and science units, ran parent meetings and introduced a reading programme that raised test scores.",
+   "tags": [
+    "teaching",
+    "curriculum"
+   ]
+  },
+  {
+   "id": "pad-exp-3",
+   "type": "experiences",
+   "title": "Financial Analyst",
+   "company": "Brightwater Capital",
+   "period": "2018 - 2019",
+   "description": "Built monthly forecasts in Excel for three business units, prepared board reports and reconciled the budget against actuals with the accounting team.",
+   "tags": [
+    "finance",
+    "Excel",
+    "forecasting"
+   ]
+  },
+  {
+   "id": "pad-exp-4",
+   "type": "experiences",
+   "title": "Paralegal",
+   "company": "Hartley & Co Solicitors",
+   "period": "2019 - 2020",
+   "description": "Drafted contracts and witness statements, managed the case files of 40 clients and prepared documents for court hearings.",
+   "tags": [
+    "law",
+    "contracts"
+   ]
+  },
+  {
+   "id": "pad-exp-5",
+   "type": "experiences",
+   "title": "Store Manager",
+   "company": "Maple Grocers",
+   "period": "2020 - 2021",
+   "description": "Managed a team of 15, handled stock orders and weekly rotas, and reduced waste by 18% by changing the ordering routine.",
+   "tags": [
+    "retail",
+    "management"
+   ]
+  },
+  {
+   "id": "pad-exp-6",
+   "type": "experiences",
+   "title": "Line Cook",
+   "company": "Bistro Verde",
+   "period": "2021 - 2022",
+   "description": "Prepared up to 200 covers on busy evenings, followed food safety rules and trained two apprentices on the grill station.",
+   "tags": [
+    "cooking",
+    "food safety"
+   ]
+  },
+  {
+   "id": "pad-exp-7",
+   "type": "experiences",
+   "title": "Site Engineer",
+   "company": "Calder Construction",
+   "period": "2022 - 2023",
+   "description": "Supervised concrete works on a residential block, checked drawings against the site and wrote the weekly safety report.",
+   "tags": [
+    "civil engineering",
+    "site safety"
+   ]
+  },
+  {
+   "id": "pad-exp-8",
+   "type": "experiences",
+   "title": "Logistics Coordinator",
+   "company": "Northline Freight",
+   "period": "2023 - 2024",
+   "description": "Planned daily deliveries for 30 drivers, negotiated rates with carriers and cut late deliveries by a quarter.",
+   "tags": [
+    "logistics",
+    "planning"
+   ]
+  },
+  {
+   "id": "pad-exp-9",
+   "type": "experiences",
+   "title": "Marketing Assistant",
+   "company": "Lumen Brands",
+   "period": "2015 - 2016",
+   "description": "Wrote newsletters and social media posts, ran two paid campaigns and reported results with Google Analytics.",
+   "tags": [
+    "marketing",
+    "content",
+    "analytics"
+   ]
+  },
+  {
+   "id": "pad-exp-10",
+   "type": "experiences",
+   "title": "Junior Journalist",
+   "company": "The Daily Courier",
+   "period": "2016 - 2017",
+   "description": "Reported on local council news, interviewed sources and published four articles a week for the website and the print edition.",
+   "tags": [
+    "journalism",
+    "writing"
+   ]
+  },
+  {
+   "id": "pad-exp-11",
+   "type": "experiences",
+   "title": "Farm Technician",
+   "company": "Green Valley Farm",
+   "period": "2017 - 2018",
+   "description": "Operated and maintained harvesting machinery, recorded yields in a field log and helped introduce drip irrigation on 12 hectares.",
+   "tags": [
+    "agriculture",
+    "machinery"
+   ]
+  },
+  {
+   "id": "pad-exp-12",
+   "type": "experiences",
+   "title": "Graphic Designer",
+   "company": "Studio Kite",
+   "period": "2018 - 2019",
+   "description": "Designed brand identities and packaging for small businesses, prepared files for print and presented concepts to clients.",
+   "tags": [
+    "design",
+    "Illustrator",
+    "branding"
+   ]
+  },
+  {
+   "id": "pad-exp-13",
+   "type": "experiences",
+   "title": "Policy Officer",
+   "company": "City Council",
+   "period": "2019 - 2020",
+   "description": "Researched housing policy, wrote briefing notes for councillors and organised three public consultations.",
+   "tags": [
+    "public policy",
+    "research"
+   ]
+  },
+  {
+   "id": "pad-exp-14",
+   "type": "experiences",
+   "title": "Laboratory Technician",
+   "company": "Biogen Research",
+   "period": "2020 - 2021",
+   "description": "Prepared cell cultures, ran PCR and ELISA assays and kept the lab notebook and sample inventory.",
+   "tags": [
+    "biology",
+    "PCR",
+    "lab"
+   ]
+  },
+  {
+   "id": "pad-exp-15",
+   "type": "experiences",
+   "title": "Customer Support Agent",
+   "company": "Tidy Home",
+   "period": "2021 - 2022",
+   "description": "Answered 60 calls and chats a day, solved delivery and billing issues and kept a satisfaction score above 92%.",
+   "tags": [
+    "customer service"
+   ]
+  },
+  {
+   "id": "pad-exp-16",
+   "type": "experiences",
+   "title": "Web Developer",
+   "company": "Pixel Works",
+   "period": "2022 - 2023",
+   "description": "Built websites with HTML, CSS and JavaScript for local shops, set up hosting and maintained a content management system.",
+   "tags": [
+    "JavaScript",
+    "CSS",
+    "web"
+   ]
+  },
+  {
+   "id": "pad-exp-17",
+   "type": "experiences",
+   "title": "Data Analyst",
+   "company": "Orchard Insurance",
+   "period": "2023 - 2024",
+   "description": "Wrote SQL queries and dashboards on claims data, found a pricing error worth 80k and presented it to management.",
+   "tags": [
+    "SQL",
+    "dashboards",
+    "statistics"
+   ]
+  },
+  {
+   "id": "pad-exp-18",
+   "type": "experiences",
+   "title": "QA Tester",
+   "company": "Nimbus Apps",
+   "period": "2015 - 2016",
+   "description": "Wrote test plans for a mobile app, ran regression tests before each release and reported bugs with clear reproduction steps.",
+   "tags": [
+    "testing",
+    "mobile"
+   ]
+  },
+  {
+   "id": "pad-exp-19",
+   "type": "experiences",
+   "title": "Physiotherapy Assistant",
+   "company": "Move Well Clinic",
+   "period": "2016 - 2017",
+   "description": "Prepared exercise programmes under a physiotherapist, supported patients in sessions and kept treatment records.",
+   "tags": [
+    "physiotherapy",
+    "care"
+   ]
+  },
+  {
+   "id": "pad-exp-20",
+   "type": "experiences",
+   "title": "Hotel Receptionist",
+   "company": "Seaview Hotel",
+   "period": "2017 - 2018",
+   "description": "Handled check-in and bookings for 80 rooms, dealt with complaints and worked nights and weekends in a team of six.",
+   "tags": [
+    "hospitality",
+    "booking"
+   ]
+  },
+  {
+   "id": "pad-exp-21",
+   "type": "experiences",
+   "title": "Electrician Apprentice",
+   "company": "Voltline Services",
+   "period": "2018 - 2019",
+   "description": "Installed wiring and sockets in new homes, tested circuits and learned to read electrical plans under a master electrician.",
+   "tags": [
+    "electrical",
+    "safety"
+   ]
+  },
+  {
+   "id": "pad-exp-22",
+   "type": "experiences",
+   "title": "HR Assistant",
+   "company": "Fairwind Group",
+   "period": "2019 - 2020",
+   "description": "Posted job ads, scheduled interviews, prepared contracts and kept the employee files in order for 250 staff.",
+   "tags": [
+    "human resources",
+    "recruitment"
+   ]
+  }
+ ],
+ "projects": [
+  {
+   "id": "pad-proj-1",
+   "type": "projects",
+   "title": "Community garden",
+   "tech": [
+    "community",
+    "planning"
+   ],
+   "description": "Organised a volunteer group of 25 to turn an empty lot into a shared garden, with a planting calendar and weekly workdays.",
+   "tags": [
+    "community",
+    "planning"
+   ]
+  },
+  {
+   "id": "pad-proj-2",
+   "type": "projects",
+   "title": "Thesis on urban noise",
+   "tech": [
+    "research",
+    "statistics"
+   ],
+   "description": "Master thesis measuring noise levels in six streets over a year and comparing them with resident surveys.",
+   "tags": [
+    "research",
+    "statistics"
+   ]
+  },
+  {
+   "id": "pad-proj-3",
+   "type": "projects",
+   "title": "Charity fun run",
+   "tech": [
+    "events",
+    "fundraising"
+   ],
+   "description": "Planned a 5 km run for 300 people: route permits, volunteers, sponsors and 6,000 euros raised for a children hospital.",
+   "tags": [
+    "events",
+    "fundraising"
+   ]
+  },
+  {
+   "id": "pad-proj-4",
+   "type": "projects",
+   "title": "School newsletter",
+   "tech": [
+    "writing",
+    "editing"
+   ],
+   "description": "Edited a monthly newsletter for a school of 400 families, with interviews, photos and a layout done in Canva.",
+   "tags": [
+    "writing",
+    "editing"
+   ]
+  },
+  {
+   "id": "pad-proj-5",
+   "type": "projects",
+   "title": "Budget planner spreadsheet",
+   "tech": [
+    "Excel",
+    "finance"
+   ],
+   "description": "Spreadsheet to plan a household budget with categories, monthly summaries and charts, shared with friends.",
+   "tags": [
+    "Excel",
+    "finance"
+   ]
+  },
+  {
+   "id": "pad-proj-6",
+   "type": "projects",
+   "title": "Patient information leaflets",
+   "tech": [
+    "health",
+    "communication"
+   ],
+   "description": "Rewrote ten leaflets for a clinic in plain language, tested with patients and translated into two languages.",
+   "tags": [
+    "health",
+    "communication"
+   ]
+  },
+  {
+   "id": "pad-proj-7",
+   "type": "projects",
+   "title": "Lesson plan library",
+   "tech": [
+    "teaching",
+    "science"
+   ],
+   "description": "Collection of 40 science lesson plans for primary school, with experiments and printable worksheets.",
+   "tags": [
+    "teaching",
+    "science"
+   ]
+  },
+  {
+   "id": "pad-proj-8",
+   "type": "projects",
+   "title": "Photography exhibition",
+   "tech": [
+    "photography",
+    "curation"
+   ],
+   "description": "Curated an exhibition of 30 photographs in a local library, from the selection to printing and hanging.",
+   "tags": [
+    "photography",
+    "curation"
+   ]
+  },
+  {
+   "id": "pad-proj-9",
+   "type": "projects",
+   "title": "Bike repair workshop",
+   "tech": [
+    "community",
+    "repair"
+   ],
+   "description": "Weekly volunteer workshop teaching neighbours to repair bicycles, with a stock of donated parts.",
+   "tags": [
+    "community",
+    "repair"
+   ]
+  },
+  {
+   "id": "pad-proj-10",
+   "type": "projects",
+   "title": "Wine list redesign",
+   "tech": [
+    "hospitality",
+    "sales"
+   ],
+   "description": "Reorganised the wine list of a restaurant by taste and price, which raised the sales of local wines.",
+   "tags": [
+    "hospitality",
+    "sales"
+   ]
+  },
+  {
+   "id": "pad-proj-11",
+   "type": "projects",
+   "title": "Legal clinic case study",
+   "tech": [
+    "law",
+    "writing"
+   ],
+   "description": "Case study for a university legal clinic on tenant rights, with a guide for tenants of four pages.",
+   "tags": [
+    "law",
+    "writing"
+   ]
+  },
+  {
+   "id": "pad-proj-12",
+   "type": "projects",
+   "title": "Personal website",
+   "tech": [
+    "web",
+    "HTML",
+    "CSS"
+   ],
+   "description": "Portfolio site in HTML and CSS with a blog, hosted on a static host and updated each month.",
+   "tags": [
+    "web",
+    "HTML",
+    "CSS"
+   ]
+  },
+  {
+   "id": "pad-proj-13",
+   "type": "projects",
+   "title": "Sales dashboard",
+   "tech": [
+    "Power BI",
+    "analytics"
+   ],
+   "description": "Dashboard in Power BI showing sales by region and product for a small company, refreshed every week.",
+   "tags": [
+    "Power BI",
+    "analytics"
+   ]
+  },
+  {
+   "id": "pad-proj-14",
+   "type": "projects",
+   "title": "Mobile budget app",
+   "tech": [
+    "Kotlin",
+    "Android"
+   ],
+   "description": "Android app to track expenses with Kotlin and a local database, used by 50 classmates.",
+   "tags": [
+    "Kotlin",
+    "Android"
+   ]
+  },
+  {
+   "id": "pad-proj-15",
+   "type": "projects",
+   "title": "Chess club website",
+   "tech": [
+    "web",
+    "PHP",
+    "MySQL"
+   ],
+   "description": "Small website for a chess club with a tournament calendar and results in a database.",
+   "tags": [
+    "web",
+    "PHP",
+    "MySQL"
+   ]
+  },
+  {
+   "id": "pad-proj-16",
+   "type": "projects",
+   "title": "Soil study",
+   "tech": [
+    "agriculture",
+    "lab"
+   ],
+   "description": "Field study of soil acidity on six farms, with samples, lab analysis and recommendations for lime.",
+   "tags": [
+    "agriculture",
+    "lab"
+   ]
+  },
+  {
+   "id": "pad-proj-17",
+   "type": "projects",
+   "title": "Museum audio guide",
+   "tech": [
+    "writing",
+    "audio"
+   ],
+   "description": "Wrote and recorded the script of an audio guide of 12 stops for a local museum.",
+   "tags": [
+    "writing",
+    "audio"
+   ]
+  },
+  {
+   "id": "pad-proj-18",
+   "type": "projects",
+   "title": "Welding certificate project",
+   "tech": [
+    "welding",
+    "fabrication"
+   ],
+   "description": "Built a steel frame for a workshop table to pass a welding certificate, from the drawing to the final inspection.",
+   "tags": [
+    "welding",
+    "fabrication"
+   ]
+  },
+  {
+   "id": "pad-proj-19",
+   "type": "projects",
+   "title": "Language exchange group",
+   "tech": [
+    "teaching",
+    "languages"
+   ],
+   "description": "Ran a weekly conversation group for 20 people learning English and Spanish, with themes and games.",
+   "tags": [
+    "teaching",
+    "languages"
+   ]
+  },
+  {
+   "id": "pad-proj-20",
+   "type": "projects",
+   "title": "Inventory tracker",
+   "tech": [
+    "Python",
+    "automation"
+   ],
+   "description": "Python script reading a stock spreadsheet and sending a weekly list of items to reorder by email.",
+   "tags": [
+    "Python",
+    "automation"
+   ]
+  },
+  {
+   "id": "pad-proj-21",
+   "type": "projects",
+   "title": "Nutrition plan study",
+   "tech": [
+    "nutrition",
+    "sport"
+   ],
+   "description": "Planned and followed a four-week nutrition plan for a sports team, with weekly weighing and a report.",
+   "tags": [
+    "nutrition",
+    "sport"
+   ]
+  },
+  {
+   "id": "pad-proj-22",
+   "type": "projects",
+   "title": "Podcast on local history",
+   "tech": [
+    "audio",
+    "history"
+   ],
+   "description": "Ten episodes of a podcast on local history: research in archives, interviews, editing in Audacity.",
+   "tags": [
+    "audio",
+    "history"
+   ]
+  },
+  {
+   "id": "pad-proj-23",
+   "type": "projects",
+   "title": "Climate data visualisation",
+   "tech": [
+    "R",
+    "data visualisation"
+   ],
+   "description": "Charts of temperature and rainfall of 30 years from public data, in R, for a school project.",
+   "tags": [
+    "R",
+    "data visualisation"
+   ]
+  },
+  {
+   "id": "pad-proj-24",
+   "type": "projects",
+   "title": "Nursing handover checklist",
+   "tech": [
+    "nursing",
+    "process"
+   ],
+   "description": "Checklist for shift handover on a ward, tested for a month and adopted by the team.",
+   "tags": [
+    "nursing",
+    "process"
+   ]
+  },
+  {
+   "id": "pad-proj-25",
+   "type": "projects",
+   "title": "Shared flat accounting",
+   "tech": [
+    "Excel",
+    "finance"
+   ],
+   "description": "Simple tool in a spreadsheet to split bills in a flat of five and settle the balance each month.",
+   "tags": [
+    "Excel",
+    "finance"
+   ]
+  },
+  {
+   "id": "pad-proj-26",
+   "type": "projects",
+   "title": "Open-source docs fixes",
+   "tech": [
+    "Python",
+    "open source",
+    "documentation"
+   ],
+   "description": "Fixed the documentation and examples of a popular Python library, with six merged pull requests.",
+   "tags": [
+    "Python",
+    "open source",
+    "documentation"
+   ]
+  },
+  {
+   "id": "pad-proj-27",
+   "type": "projects",
+   "title": "Escape room design",
+   "tech": [
+    "design",
+    "games"
+   ],
+   "description": "Designed a puzzle room for a youth club: story, six puzzles, props and a game master guide.",
+   "tags": [
+    "design",
+    "games"
+   ]
+  },
+  {
+   "id": "pad-proj-28",
+   "type": "projects",
+   "title": "Bakery recipe costing",
+   "tech": [
+    "costing",
+    "food"
+   ],
+   "description": "Costed 25 recipes of a bakery per portion, which helped to reprice four products.",
+   "tags": [
+    "costing",
+    "food"
+   ]
+  },
+  {
+   "id": "pad-proj-29",
+   "type": "projects",
+   "title": "Robotics club",
+   "tech": [
+    "Arduino",
+    "C++",
+    "robotics"
+   ],
+   "description": "Led a team of 8 students building a line-following robot with Arduino, ranked third in a regional contest.",
+   "tags": [
+    "Arduino",
+    "C++",
+    "robotics"
+   ]
+  },
+  {
+   "id": "pad-proj-30",
+   "type": "projects",
+   "title": "Accessibility audit",
+   "tech": [
+    "accessibility",
+    "web"
+   ],
+   "description": "Audited the website of a local association against WCAG and wrote a list of fixes ordered by priority.",
+   "tags": [
+    "accessibility",
+    "web"
+   ]
+  }
+ ],
+ "skills": [
+  {
+   "id": "pad-skill-1",
+   "type": "skills",
+   "name": "Clinical skills",
+   "category": "Healthcare",
+   "level": "advanced",
+   "tags": [
+    "patient care",
+    "medication",
+    "first aid",
+    "triage",
+    "records"
+   ]
+  },
+  {
+   "id": "pad-skill-2",
+   "type": "skills",
+   "name": "Teaching",
+   "category": "Education",
+   "level": "advanced",
+   "tags": [
+    "lesson planning",
+    "classroom management",
+    "assessment",
+    "parent communication"
+   ]
+  },
+  {
+   "id": "pad-skill-3",
+   "type": "skills",
+   "name": "Finance and accounting",
+   "category": "Business",
+   "level": "intermediate",
+   "tags": [
+    "Excel",
+    "budgeting",
+    "forecasting",
+    "reconciliation",
+    "reporting"
+   ]
+  },
+  {
+   "id": "pad-skill-4",
+   "type": "skills",
+   "name": "Languages",
+   "category": "Communication",
+   "level": "advanced",
+   "tags": [
+    "English",
+    "French",
+    "Spanish",
+    "translation"
+   ]
+  },
+  {
+   "id": "pad-skill-5",
+   "type": "skills",
+   "name": "Office tools",
+   "category": "Productivity",
+   "level": "advanced",
+   "tags": [
+    "Word",
+    "Excel",
+    "PowerPoint",
+    "Outlook",
+    "Google Workspace"
+   ]
+  },
+  {
+   "id": "pad-skill-6",
+   "type": "skills",
+   "name": "Design",
+   "category": "Creative",
+   "level": "intermediate",
+   "tags": [
+    "Illustrator",
+    "Photoshop",
+    "InDesign",
+    "Canva",
+    "typography"
+   ]
+  },
+  {
+   "id": "pad-skill-7",
+   "type": "skills",
+   "name": "Customer service",
+   "category": "Business",
+   "level": "advanced",
+   "tags": [
+    "complaint handling",
+    "phone support",
+    "CRM",
+    "de-escalation"
+   ]
+  },
+  {
+   "id": "pad-skill-8",
+   "type": "skills",
+   "name": "Project and event management",
+   "category": "Management",
+   "level": "intermediate",
+   "tags": [
+    "planning",
+    "budgeting",
+    "volunteers",
+    "scheduling",
+    "risk"
+   ]
+  },
+  {
+   "id": "pad-skill-9",
+   "type": "skills",
+   "name": "Writing and editing",
+   "category": "Communication",
+   "level": "advanced",
+   "tags": [
+    "copywriting",
+    "proofreading",
+    "interviewing",
+    "SEO"
+   ]
+  },
+  {
+   "id": "pad-skill-10",
+   "type": "skills",
+   "name": "Web basics",
+   "category": "Programming",
+   "level": "intermediate",
+   "tags": [
+    "HTML",
+    "CSS",
+    "JavaScript",
+    "WordPress"
+   ]
+  },
+  {
+   "id": "pad-skill-11",
+   "type": "skills",
+   "name": "Data analysis",
+   "category": "Analytics",
+   "level": "intermediate",
+   "tags": [
+    "SQL",
+    "Excel",
+    "Power BI",
+    "R",
+    "statistics"
+   ]
+  },
+  {
+   "id": "pad-skill-12",
+   "type": "skills",
+   "name": "Trades and safety",
+   "category": "Technical",
+   "level": "intermediate",
+   "tags": [
+    "electrical",
+    "welding",
+    "site safety",
+    "reading plans"
+   ]
+  }
+ ]
+}

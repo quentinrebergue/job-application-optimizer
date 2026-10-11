@@ -22,14 +22,24 @@ const PREFIX: Record<RankedType, string> = { experiences: 'E', projects: 'P', sk
 /** label ("E1") -> the entry it stands for */
 export type RankingLabels = Map<string, { type: RankedType; entity: EntityMeta }>
 
+/** What a prompt is made of, for a size check: the characters of each part and of each entry's line. */
+export interface PromptMeasure {
+  prompt: string
+  labels: RankingLabels
+  parts: Record<string, string>
+  /** label ("P3") -> characters of the entry's line in the prompt */
+  sizes: Record<string, number>
+}
+
 export function buildRankingPrompt(
   jobTitle: string,
   jobCompany: string,
   jobDescription: string,
   entities: { experiences: EntityMeta[]; projects: EntityMeta[]; skills: EntityMeta[] },
   options: PromptOptions = {},
-): { prompt: string; labels: RankingLabels; parts: Record<string, string> } {
+): PromptMeasure {
   const labels: RankingLabels = new Map()
+  const sizes: Record<string, number> = {}
   const yamlLibrary = options.libraryFormat === 'yaml'
   const lines = (type: RankedType, text: (e: EntityMeta) => string, fields: (e: EntityMeta) => object) => {
     const labelled = entities[type].map((entity, i) => {
@@ -38,6 +48,7 @@ export function buildRankingPrompt(
       return [label, entity] as const
     })
     if (labelled.length === 0) return '(none)'
+    for (const [label, e] of labelled) sizes[label] = [...text(e)].length
     return yamlLibrary
       ? stringify(Object.fromEntries(labelled.map(([label, e]) => [label, fields(e)])), { lineWidth: 0 }).trimEnd()
       : labelled.map(([label, e]) => `${label}. ${text(e)}`).join('\n')
@@ -96,7 +107,7 @@ ${options.cleanOffer === 'code' ? cleanOffer(jobDescription) : jobDescription}`,
   }
   const prompt = Object.values(parts).join('\n\n')
 
-  return { prompt, labels, parts }
+  return { prompt, labels, parts, sizes }
 }
 
 type Schema = Record<string, unknown>

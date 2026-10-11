@@ -68,7 +68,7 @@ func Load(lookup func(string) (string, bool)) (Config, error) {
 		AttemptTimeout:  dur("ATTEMPT_TIMEOUT", "30s"),
 		MaxRetries:      num("MAX_RETRIES", 2),
 		MaxOutputTokens: num("MAX_OUTPUT_TOKENS", 2000),
-		MaxPromptChars:  num("MAX_PROMPT_CHARS", 30000),
+		MaxPromptChars:  num("MAX_PROMPT_CHARS", 60000),
 		Enabled:         flag("AI_ENABLED", true),
 		ShutdownDelay:   dur("SHUTDOWN_DELAY", "5s"),
 	}
