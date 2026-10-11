@@ -6,6 +6,7 @@ Reusable React components. Organised by feature area and a shared `ui/` primitiv
 
 | Directory | Description |
 |-----------|-------------|
+| `account/` | The account page: ExportButton, DeleteAccount (#104) |
 | `layout/` | App-shell components (Sidebar), the public footer (SiteFooter) and the legal links shared by both footers (LegalLinks) |
 | `legal/` | The frame of the text pages: LegalPage, LegalSection |
 | `ui/` | Generic UI primitives — Badge, PageHeader |

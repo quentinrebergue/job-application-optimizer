@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { passwordChangedMessage, resetPasswordMessage, verifyEmailMessage } from './messages'
+import { accountDeletedMessage, dataExportedMessage, passwordChangedMessage, resetPasswordMessage, verifyEmailMessage } from './messages'
 
 describe('verifyEmailMessage', () => {
   const url = 'https://fastresume.tech/verify-email/confirm?token=abc'
@@ -34,5 +34,23 @@ describe('passwordChangedMessage', () => {
     const mail = await passwordChangedMessage('a@b.c', 'https://fastresume.tech/forgot-password')
     expect(mail.subject).toBe('Your password was changed')
     expect(mail.html).toContain('href="https://fastresume.tech/forgot-password"')
+  })
+})
+
+describe('dataExportedMessage', () => {
+  it('says a copy was downloaded and links to a password reset', async () => {
+    const mail = await dataExportedMessage('a@b.c', 'https://fastresume.tech/forgot-password')
+    expect(mail.subject).toBe('A copy of your data was downloaded')
+    expect(mail.html).toContain('href="https://fastresume.tech/forgot-password"')
+    expect(mail.text).toContain('downloaded')
+  })
+})
+
+describe('accountDeletedMessage', () => {
+  it('says the account is gone, that backups keep a copy for 7 days, and whom to write to', async () => {
+    const mail = await accountDeletedMessage('a@b.c', 'contact@fastresume.tech')
+    expect(mail.subject).toBe('Your account was deleted')
+    expect(mail.text).toContain('7 days')
+    expect(mail.html).toContain('href="mailto:contact@fastresume.tech"')
   })
 })

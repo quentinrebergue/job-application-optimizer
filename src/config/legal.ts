@@ -44,4 +44,4 @@ export const AI_TRAINING_OPTED_OUT = true
 /** Mistral approved zero data retention for the account (a support request, shown in the console once approved). */
 export const AI_ZERO_RETENTION = false
 /** #104: account page with "export my data" and "delete my account". */
-export const ACCOUNT_TOOLS = false
+export const ACCOUNT_TOOLS = true

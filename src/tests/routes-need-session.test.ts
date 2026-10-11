@@ -10,6 +10,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import path from 'path'
 
+// Modules that guard themselves against the browser (server-only) refuse to load under the test runner.
+vi.mock('server-only', () => ({}))
 vi.mock('@/lib/db', () => ({
   pool: {
     query: vi.fn().mockRejectedValue(new Error('the database was used before the session was checked')),

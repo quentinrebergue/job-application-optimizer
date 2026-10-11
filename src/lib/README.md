@@ -8,6 +8,7 @@ Server-side business logic. All functions are barrel-exported from `index.ts`. T
 |-----------|-------------|
 | `data/` | Data access on Postgres, scoped to the signed-in user |
 | `auth/` | Sessions, password hashing, email confirmation (`email-verification.ts`), password reset (`password-reset.ts`) and the limit on sign-ups (`signup-limit.ts`: per address, IPv6 by its /64, 30 an hour and 60 a day; for the site a warning at 150 a day and a refusal only at 1,000; `SIGNUPS_PER_IP_PER_HOUR`, `SIGNUPS_PER_IP_PER_DAY`, `SIGNUPS_ALERT_PER_DAY`, `SIGNUPS_MAX_PER_DAY`; #210) |
+| `account-notice.ts` | The mails that tell an owner their data was downloaded (at most one an hour) or their account deleted, sent after the response (#104) |
 | `email/` | `sendEmail()` over SMTP through an ordered list of providers (primary, optional fallback); mails printed in the console in development |
 | `resume/` | Builds the render payload from entities and the user profile, and calls the resume-renderer service (Go + Typst) |
 | `ai/` | AI ranking of the library against a job offer |

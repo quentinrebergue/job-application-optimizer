@@ -3,6 +3,8 @@ import type { Email } from '@/lib/email/send'
 import { VERIFY_EMAIL_SUBJECT, VerifyEmail } from './VerifyEmail'
 import { RESET_PASSWORD_SUBJECT, ResetPassword } from './ResetPassword'
 import { PASSWORD_CHANGED_SUBJECT, PasswordChanged } from './PasswordChanged'
+import { DATA_EXPORTED_SUBJECT, DataExported } from './DataExported'
+import { ACCOUNT_DELETED_SUBJECT, AccountDeleted } from './AccountDeleted'
 
 /**
  * Turns a mail component into what sendEmail() takes: HTML and the plain-text version.
@@ -26,4 +28,12 @@ export function resetPasswordMessage(to: string, url: string): Promise<Email> {
 
 export function passwordChangedMessage(to: string, resetUrl: string): Promise<Email> {
   return toEmail(to, PASSWORD_CHANGED_SUBJECT, <PasswordChanged resetUrl={resetUrl} />)
+}
+
+export function dataExportedMessage(to: string, resetUrl: string): Promise<Email> {
+  return toEmail(to, DATA_EXPORTED_SUBJECT, <DataExported resetUrl={resetUrl} />)
+}
+
+export function accountDeletedMessage(to: string, contact: string): Promise<Email> {
+  return toEmail(to, ACCOUNT_DELETED_SUBJECT, <AccountDeleted contact={contact} />)
 }

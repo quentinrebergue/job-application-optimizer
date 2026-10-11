@@ -108,3 +108,12 @@ export const ResumeConfigInputSchema = z.object({
     .refine((o) => Object.keys(o).length <= LIMITS.resume.optionKeys, { error: 'Too many options' })
     .optional(),
 })
+
+/** The confirmation to delete an account: the address of the account typed again, and its password (#104). */
+export const DeleteAccountSchema = z.object({
+  email: z.string().trim().max(254),
+  password: z.string().min(1, { error: 'Enter your password.' }).max(1000),
+})
+
+/** The password, asked again before a copy of the data is given (#104). */
+export const ExportAccountSchema = z.object({ password: z.string().min(1, { error: 'Enter your password.' }).max(1000) })

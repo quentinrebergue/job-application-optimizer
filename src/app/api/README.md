@@ -18,3 +18,5 @@ Next.js API route handlers. All routes return JSON, need a signed-in user, and o
 | `resume/generate/` | POST | Build a payload from the user's profile and entries and render a PDF through the resume-renderer service. Body: `{ jobId?, entityIds?, template?, options? }` |
 | `resume/templates/` | GET | List the templates (and their option schemas) offered by the renderer service |
 | `resume/defaults/` | GET, PUT | Read or write the user's resume profile (name, contact, default title and profile) |
+| `account/export/` | POST | The user's data as one JSON file to save: account, profile, library, jobs with their resume settings, AI calls. Body: `{ password }`; 10 attempts an hour; the owner gets a mail (#104) |
+| `account/` | DELETE | Deletes the account and all its data. Body: `{ email, password }`, the account's own address typed again and its password; 5 attempts an hour (#104) |
