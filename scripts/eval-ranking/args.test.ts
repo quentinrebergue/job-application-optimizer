@@ -18,6 +18,12 @@ describe('parseArguments', () => {
     expect(() => parseArguments(['--pad', 'x'])).toThrow('--pad')
   })
 
+  it('reads --pad-length, which needs --pad', () => {
+    expect(parseArguments(['--pad', '7', '--pad-length', '800']).padLength).toBe(800)
+    expect(() => parseArguments(['--pad-length', '800'])).toThrow('goes with --pad')
+    expect(() => parseArguments(['--pad', '7', '--pad-length', '0'])).toThrow('--pad-length')
+  })
+
   it('reads --sizes', () => {
     expect(parseArguments(['--sizes'])).toMatchObject({ sizes: true })
     expect(parseArguments([]).sizes).toBe(false)
