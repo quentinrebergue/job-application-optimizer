@@ -4,6 +4,8 @@ import { rankJobWithAI } from '@/lib/ai'
 import { AiGatewayError } from '@/lib/ai/gateway'
 import { getSessionUserId } from '@/lib/auth/session'
 import { findUserById } from '@/lib/data/users'
+import { reserveAiCall, settleAiCall } from '@/lib/ai/usage'
+import { outcomeOfFailure } from '@/lib/ai/failure'
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const userId = await getSessionUserId()
@@ -32,8 +34,30 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     const projects = await listEntities(userId, 'projects')
     const skills = await listEntities(userId, 'skills')
 
-    // Call AI ranking
-    const analysis = await rankJobWithAI(userId, job.title, job.company, job.description, { experiences, projects, skills })
+    // The limits (per user, and the site's monthly cap) are checked and the call is written down
+    // before the AI is asked; it is settled with the real tokens, or as a failure (#203).
+    const reservation = await reserveAiCall(userId, 'rank')
+    if (reservation.denied) {
+      return Response.json(
+        { error: reservation.message, code: reservation.code },
+        { status: reservation.status, headers: reservation.retryAfterSeconds ? { 'Retry-After': String(reservation.retryAfterSeconds) } : undefined },
+      )
+    }
+
+    let result
+    try {
+      result = await rankJobWithAI(userId, job.title, job.company, job.description, { experiences, projects, skills })
+    } catch (error) {
+      await settleAiCall(reservation, outcomeOfFailure(error))
+      throw error
+    }
+    await settleAiCall(reservation, {
+      status: 'done',
+      model: result.model,
+      promptTokens: result.usage.prompt_tokens,
+      completionTokens: result.usage.completion_tokens,
+    })
+    const analysis = result.analysis
 
     // Attach job_id and save
     analysis.job_id = id

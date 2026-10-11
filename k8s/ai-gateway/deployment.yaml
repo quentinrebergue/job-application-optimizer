@@ -61,10 +61,16 @@ spec:
               value: "2000"
             # System + prompt, in characters. The biggest of 45 real offers with a full library is
             # 16,800: this is about twice that. Above it the app tells the user to shorten.
+            # The app prices a call at the most this allows (AI_MAX_PROMPT_CHARS, AI_MAX_OUTPUT_TOKENS
+            # in k8s/app): change them together.
             - name: MAX_PROMPT_CHARS
               value: "30000"
             - name: ATTEMPT_TIMEOUT
               value: "30s"
+            # The kill switch: "false" refuses every call (503, the app says the AI is paused) while
+            # the pod stays up. Set it, sync Argo CD, and the pod restarts with it. No rebuild.
+            - name: AI_ENABLED
+              value: "true"
           readinessProbe:
             httpGet:
               path: /readyz

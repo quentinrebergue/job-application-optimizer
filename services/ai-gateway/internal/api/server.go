@@ -14,6 +14,9 @@ import (
 )
 
 type Limits struct {
+	// Disabled is the kill switch (AI_ENABLED=false): every completion is refused with a 503.
+	// It is a "not" so that the zero value of Limits is a working gateway.
+	Disabled bool
 	// MaxPromptChars caps system + prompt, counted in characters (a "é" is one, not two).
 	MaxPromptChars  int
 	MaxOutputTokens int
@@ -26,6 +29,7 @@ const maxSchemaBytes = 32 << 10
 // Codes tell the app why a request was refused, so it can show its own message:
 // the "error" text is for logs, never for users.
 const (
+	codeAIDisabled     = "ai_disabled"
 	codeInvalidRequest = "invalid_request"
 	codePromptTooLarge = "prompt_too_large"
 	codeSchemaTooLarge = "schema_too_large"
@@ -85,9 +89,14 @@ type completeRequest struct {
 type completeResponse struct {
 	Content json.RawMessage `json:"content"`
 	Usage   llm.Usage       `json:"usage"`
+	Model   string          `json:"model,omitempty"`
 }
 
 func (s *Server) complete(w http.ResponseWriter, r *http.Request) {
+	if s.limits.Disabled {
+		writeError(w, http.StatusServiceUnavailable, codeAIDisabled, "the AI is disabled")
+		return
+	}
 	r.Body = http.MaxBytesReader(w, r.Body, int64(s.limits.MaxPromptChars)*maxBytesPerChar+maxSchemaBytes+4096)
 	dec := json.NewDecoder(r.Body)
 	dec.DisallowUnknownFields()
@@ -157,8 +166,8 @@ func (s *Server) complete(w http.ResponseWriter, r *http.Request) {
 
 	s.logger.Info("completion",
 		"feature", in.Feature, "user", in.UserID,
-		"prompt_tokens", res.Usage.PromptTokens, "completion_tokens", res.Usage.CompletionTokens)
-	writeJSON(w, http.StatusOK, completeResponse{Content: content, Usage: res.Usage})
+		"model", res.Model, "prompt_tokens", res.Usage.PromptTokens, "completion_tokens", res.Usage.CompletionTokens)
+	writeJSON(w, http.StatusOK, completeResponse{Content: content, Usage: res.Usage, Model: res.Model})
 }
 
 func writeJSON(w http.ResponseWriter, status int, v any) {

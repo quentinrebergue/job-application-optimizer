@@ -40,6 +40,26 @@ func TestCompleteRetriesOn503ThenSucceeds(t *testing.T) {
 	}
 }
 
+func TestCompleteReportsTheModelThatAnswered(t *testing.T) {
+	answer := func(body string) Result {
+		ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) { _, _ = w.Write([]byte(body)) }))
+		defer ts.Close()
+		res, err := newTestClient(ts.URL).Complete(context.Background(), Request{Prompt: "hi", MaxTokens: 10})
+		if err != nil {
+			t.Fatal(err)
+		}
+		return res
+	}
+	msg := `"choices":[{"message":{"role":"assistant","content":"{}"}}],"usage":{}`
+	if got := answer(`{"model":"mistral-small-2603",` + msg + `}`).Model; got != "mistral-small-2603" {
+		t.Fatalf("the model of the answer should win, got %q", got)
+	}
+	// No model in the answer: the configured one (the test client is configured with "m").
+	if got := answer(`{` + msg + `}`).Model; got != "m" {
+		t.Fatal("expected the configured model when the answer has none")
+	}
+}
+
 func TestCompleteDoesNotRetryOn400(t *testing.T) {
 	var calls atomic.Int32
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {

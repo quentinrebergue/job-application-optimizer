@@ -37,7 +37,11 @@ func run(logger *slog.Logger) error {
 		MaxRetries:     cfg.MaxRetries,
 		Backoff:        500 * time.Millisecond,
 	})
+	if !cfg.Enabled {
+		logger.Warn("the AI is disabled (AI_ENABLED=false): every completion is refused")
+	}
 	srv := api.New(client, api.Limits{
+		Disabled:        !cfg.Enabled,
 		MaxPromptChars:  cfg.MaxPromptChars,
 		MaxOutputTokens: cfg.MaxOutputTokens,
 		Timeout:         cfg.RequestTimeout,

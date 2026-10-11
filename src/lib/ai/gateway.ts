@@ -29,6 +29,8 @@ export interface GatewayRequest {
 export interface GatewayAnswer {
   content: unknown
   usage: { prompt_tokens: number; completion_tokens: number }
+  /** The model that answered, as the provider names it: the call is priced with it (#203). */
+  model?: string
 }
 
 // A bit above the gateway's own timeout (120 s), so the gateway answers first.
@@ -42,6 +44,7 @@ function messageFor(status: number, code: string | undefined, gatewayMessage: st
   if (code === 'prompt_too_large' || (status === 413 && !code)) {
     return 'Your content is too long to guarantee a reliable answer. Please shorten it.'
   }
+  if (code === 'ai_disabled') return 'The AI is paused for now. Try again later.'
   switch (status) {
     case 429:
       return gatewayMessage ?? 'The AI limit is reached for now. Try again later.'
@@ -82,5 +85,5 @@ export async function askGateway(request: GatewayRequest): Promise<GatewayAnswer
     console.error('AI gateway error:', res.status, body?.error)
     throw new AiGatewayError(messageFor(res.status, body?.code, body?.error), res.ok ? 502 : res.status, { code: body?.code })
   }
-  return { content: body.content, usage: body.usage }
+  return { content: body.content, usage: body.usage, model: body.model }
 }

@@ -16,6 +16,23 @@ func TestLoadDefaults(t *testing.T) {
 	}
 }
 
+func TestLoadKillSwitch(t *testing.T) {
+	cfg, err := Load(lookupFrom(map[string]string{"AI_TOKEN": "t"}))
+	if err != nil || !cfg.Enabled {
+		t.Fatalf("enabled by default, got %+v, %v", cfg, err)
+	}
+	for _, off := range []string{"false", "0", "FALSE"} {
+		cfg, err := Load(lookupFrom(map[string]string{"AI_TOKEN": "t", "AI_ENABLED": off}))
+		if err != nil || cfg.Enabled {
+			t.Fatalf("AI_ENABLED=%s should switch the AI off, got %+v, %v", off, cfg, err)
+		}
+	}
+	// A typo must not leave the AI on while the operator thinks it is off: it is an error.
+	if _, err := Load(lookupFrom(map[string]string{"AI_TOKEN": "t", "AI_ENABLED": "nope"})); err == nil {
+		t.Fatal("expected an error for AI_ENABLED=nope")
+	}
+}
+
 func TestLoadRequiresToken(t *testing.T) {
 	if _, err := Load(lookupFrom(nil)); err == nil {
 		t.Fatal("expected an error without AI_TOKEN")

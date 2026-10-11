@@ -22,6 +22,10 @@ type Config struct {
 	MaxOutputTokens int
 	MaxPromptChars  int
 
+	// Enabled is the kill switch: AI_ENABLED=false refuses every call with a 503, until it is
+	// set back and the pod restarted. No rebuild.
+	Enabled bool
+
 	ShutdownDelay time.Duration
 }
 
@@ -39,6 +43,13 @@ func Load(lookup func(string) (string, bool)) (Config, error) {
 			errs = append(errs, fmt.Errorf("%s: %w", key, err))
 		}
 		return d
+	}
+	flag := func(key string, def bool) bool {
+		v, err := strconv.ParseBool(str(key, strconv.FormatBool(def)))
+		if err != nil {
+			errs = append(errs, fmt.Errorf("%s: must be true or false", key))
+		}
+		return v
 	}
 	num := func(key string, def int) int {
 		n, err := strconv.Atoi(str(key, strconv.Itoa(def)))
@@ -58,6 +69,7 @@ func Load(lookup func(string) (string, bool)) (Config, error) {
 		MaxRetries:      num("MAX_RETRIES", 2),
 		MaxOutputTokens: num("MAX_OUTPUT_TOKENS", 2000),
 		MaxPromptChars:  num("MAX_PROMPT_CHARS", 30000),
+		Enabled:         flag("AI_ENABLED", true),
 		ShutdownDelay:   dur("SHUTDOWN_DELAY", "5s"),
 	}
 	if cfg.Token == "" {

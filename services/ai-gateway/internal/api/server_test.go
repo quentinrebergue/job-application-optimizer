@@ -16,7 +16,7 @@ import (
 type fakeLLM struct{ content string }
 
 func (f fakeLLM) Complete(context.Context, llm.Request) (llm.Result, error) {
-	return llm.Result{Content: f.content, Usage: llm.Usage{PromptTokens: 3, CompletionTokens: 2}}, nil
+	return llm.Result{Content: f.content, Usage: llm.Usage{PromptTokens: 3, CompletionTokens: 2}, Model: "test-model-1"}, nil
 }
 
 type recordingLLM struct{ got llm.Request }
@@ -40,6 +40,36 @@ func TestCompleteReturnsContentAndUsage(t *testing.T) {
 	if rec.Code != http.StatusOK || !strings.Contains(rec.Body.String(), `"score":7`) ||
 		!strings.Contains(rec.Body.String(), `"prompt_tokens":3`) {
 		t.Fatalf("got %d %s", rec.Code, rec.Body)
+	}
+}
+
+func TestCompleteSaysWhichModelAnswered(t *testing.T) {
+	rec := post(t, `{}`, `{"feature":"rank","user_id":"u1","prompt":"hi"}`)
+	if !strings.Contains(rec.Body.String(), `"model":"test-model-1"`) {
+		t.Fatalf("got %s", rec.Body)
+	}
+}
+
+func TestKillSwitchRefusesEveryCompletion(t *testing.T) {
+	rec := &recordingLLM{}
+	srv := New(rec, Limits{Disabled: true, MaxPromptChars: 100, MaxOutputTokens: 50, Timeout: time.Second},
+		slog.New(slog.NewTextHandler(io.Discard, nil)))
+	w := httptest.NewRecorder()
+	body := `{"feature":"rank","user_id":"u1","prompt":"hi"}`
+	srv.Handler().ServeHTTP(w, httptest.NewRequest(http.MethodPost, "/v1/complete", strings.NewReader(body)))
+	if w.Code != http.StatusServiceUnavailable || !strings.Contains(w.Body.String(), `"code":"ai_disabled"`) {
+		t.Fatalf("got %d %s", w.Code, w.Body)
+	}
+	if rec.got.Prompt != "" {
+		t.Fatal("the AI was called although it is disabled")
+	}
+	// The probes still answer: switching the AI off must not get the pod restarted.
+	for _, path := range []string{"/healthz", "/readyz"} {
+		p := httptest.NewRecorder()
+		srv.Handler().ServeHTTP(p, httptest.NewRequest(http.MethodGet, path, nil))
+		if p.Code != http.StatusOK {
+			t.Fatalf("%s answered %d", path, p.Code)
+		}
 	}
 }
 

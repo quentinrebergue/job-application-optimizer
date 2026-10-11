@@ -80,6 +80,17 @@ describe('askGateway', () => {
     expect(error.message).not.toContain('shorten')
   })
 
+  it('returns the model that answered, to price the call', async () => {
+    fetchMock.mockResolvedValue(reply(200, { content: {}, usage: { prompt_tokens: 1, completion_tokens: 1 }, model: 'mistral-small-2603' }))
+    expect((await askGateway(REQUEST)).model).toBe('mistral-small-2603')
+  })
+
+  it('says the AI is paused when the kill switch is on, with the code kept', async () => {
+    fetchMock.mockResolvedValue(reply(503, { code: 'ai_disabled', error: 'the AI is disabled' }))
+    const error = await askGateway(REQUEST).catch((e) => e)
+    expect(error).toMatchObject({ status: 503, code: 'ai_disabled', message: 'The AI is paused for now. Try again later.' })
+  })
+
   it('answers 502 when the gateway cannot be reached', async () => {
     fetchMock.mockRejectedValue(new TypeError('fetch failed'))
     await expect(askGateway(REQUEST)).rejects.toMatchObject({ status: 502 })

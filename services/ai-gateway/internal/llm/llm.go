@@ -23,6 +23,9 @@ type Usage struct {
 type Result struct {
 	Content string
 	Usage   Usage
+	// Model is the one that answered, as the provider reports it (a dated name such as
+	// "mistral-small-2603"): the app prices the call with it.
+	Model string
 }
 
 // Completer is anything that can answer a prompt with a JSON document.

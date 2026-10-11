@@ -47,7 +47,8 @@ type chatResponse struct {
 	Choices []struct {
 		Message chatMessage `json:"message"`
 	} `json:"choices"`
-	Usage Usage `json:"usage"`
+	Usage Usage  `json:"usage"`
+	Model string `json:"model"`
 }
 
 func (c *OVH) Complete(ctx context.Context, req Request) (Result, error) {
@@ -138,5 +139,10 @@ func (c *OVH) once(ctx context.Context, req Request) (res Result, retryable bool
 	if len(parsed.Choices) == 0 {
 		return Result{}, false, errors.New("AI response has no choices")
 	}
-	return Result{Content: parsed.Choices[0].Message.Content, Usage: parsed.Usage}, false, nil
+	// An endpoint that does not say which model answered is taken at its word: the configured one.
+	model := parsed.Model
+	if model == "" {
+		model = c.opts.Model
+	}
+	return Result{Content: parsed.Choices[0].Message.Content, Usage: parsed.Usage, Model: model}, false, nil
 }
