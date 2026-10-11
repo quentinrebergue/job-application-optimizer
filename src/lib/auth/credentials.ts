@@ -1,6 +1,7 @@
 import 'server-only'
 import * as z from 'zod'
-import { consumeEmailChangeToken, createEmailToken, invalidateEmailTokens, type TokenFailure } from '@/lib/data/email-tokens'
+import { after } from 'next/server'
+import { consumeEmailChangeToken, createEmailToken, deleteExpiredEmailTokens, invalidateEmailTokens, type TokenFailure } from '@/lib/data/email-tokens'
 import { emailTaken, findPasswordHash, findUserById, replacePassword, updateEmail } from '@/lib/data/users'
 import {
   noticeChangeEmailLink,
@@ -13,7 +14,7 @@ import { verifyPassword } from '@/lib/auth/password'
 import { createSession } from '@/lib/auth/session'
 import { appUrl } from '@/lib/email/providers'
 import { envNumber } from '@/lib/env'
-import { consumeRateLimit } from '@/lib/rate-limit'
+import { consumeRateLimit, deleteExpiredRateLimits } from '@/lib/rate-limit'
 import { SignupSchema } from '@/lib/validation/auth-schemas'
 
 // Change of password and of address, from the account page, by a signed-in user (#236). Both ask the
@@ -83,6 +84,7 @@ export async function requestEmailChange(userId: string, password: string, addre
   const site = await consumeRateLimit('account-email-all:day', emailChangesPerDay(), DAY_MS)
   if (!site.allowed) return refuse(503, 'busy', 'Address changes are paused for today. Try again tomorrow.')
 
+  after(() => Promise.all([deleteExpiredRateLimits(), deleteExpiredEmailTokens()]).catch(() => {}))
   if (await emailTaken(email)) {
     noticeEmailAlreadyUsed(email)
   } else {

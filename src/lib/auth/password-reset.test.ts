@@ -24,6 +24,7 @@ vi.mock('@/lib/data/email-tokens', () => ({
   createEmailToken: (...a: unknown[]) => createEmailToken(...a),
   consumeEmailToken: (...a: unknown[]) => consumeEmailToken(...a),
   peekEmailToken: (...a: unknown[]) => peekEmailToken(...a),
+  deleteExpiredEmailTokens: vi.fn(async () => 0),
 }))
 vi.mock('@/lib/rate-limit', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@/lib/rate-limit')>()),

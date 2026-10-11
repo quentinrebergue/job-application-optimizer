@@ -4,6 +4,7 @@ import {
   countRecentTokens,
   createEmailToken,
   consumeEmailToken,
+  deleteExpiredEmailTokens,
   peekEmailToken,
   type TokenFailure,
 } from '@/lib/data/email-tokens'
@@ -49,7 +50,7 @@ export async function requestPasswordReset(email: string, ip: string | null, now
     const { allowed } = await consumeRateLimit(`reset-ip:${ipRateKey(ip)}`, IP_MAX_PER_HOUR, HOUR_MS, now)
     if (!allowed) return 'too-many'
   }
-  after(() => deleteExpiredRateLimits().catch(() => {}))
+  after(() => Promise.all([deleteExpiredRateLimits(), deleteExpiredEmailTokens()]).catch(() => {}))
 
   const user = await findUserByEmail(email)
   if (!user) return 'sent'

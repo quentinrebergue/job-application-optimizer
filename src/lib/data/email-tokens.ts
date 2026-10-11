@@ -57,6 +57,30 @@ export async function consumeEmailChangeToken(
   return { failure: await whyRefused(hash, 'change-email') }
 }
 
+/** Checks the link of a change of address without using it: the page that asks for the click reads it. */
+export async function peekEmailChangeToken(
+  token: string,
+): Promise<{ userId: string; newEmail: string } | { failure: TokenFailure }> {
+  const hash = hashToken(token)
+  const { rows } = await pool.query<{ user_id: string; new_email: string }>(
+    `SELECT user_id, new_email FROM email_tokens
+     WHERE token_hash = $1 AND purpose = 'change-email' AND used_at IS NULL AND expires_at > now() AND new_email IS NOT NULL`,
+    [hash],
+  )
+  if (rows[0]) return { userId: rows[0].user_id, newEmail: rows[0].new_email }
+  return { failure: await whyRefused(hash, 'change-email') }
+}
+
+/**
+ * Deletes the tokens that expired more than a day ago. They are kept a little after their expiry so that an
+ * old link still says "used" or "expired" and not "not valid"; and no more, because a change of address
+ * carries an address typed by someone, possibly not the owner of it. Returns how many were deleted.
+ */
+export async function deleteExpiredEmailTokens(): Promise<number> {
+  const { rowCount } = await pool.query("DELETE FROM email_tokens WHERE expires_at < now() - interval '1 day'")
+  return rowCount ?? 0
+}
+
 /** Why a token that cannot be used was refused. */
 async function whyRefused(hash: string, purpose: TokenPurpose): Promise<TokenFailure> {
   const { rows } = await pool.query<{ used_at: Date | null }>(

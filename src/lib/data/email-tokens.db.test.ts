@@ -3,7 +3,17 @@
 import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'vitest'
 import type { Pool } from 'pg'
 import { dbDescribe, getPool, makeUser, resetData } from '@/tests/db/helpers'
-import { consumeEmailChangeToken, consumeEmailToken, countRecentTokens, createEmailToken, hashToken, invalidateEmailTokens, peekEmailToken } from './email-tokens'
+import {
+  consumeEmailChangeToken,
+  consumeEmailToken,
+  countRecentTokens,
+  createEmailToken,
+  deleteExpiredEmailTokens,
+  hashToken,
+  invalidateEmailTokens,
+  peekEmailChangeToken,
+  peekEmailToken,
+} from './email-tokens'
 
 const HOUR = 3_600_000
 let pool: Pool
@@ -110,6 +120,33 @@ dbDescribe('email tokens on Postgres', () => {
       await invalidateEmailTokens(user, 'change-email')
       expect(await consumeEmailChangeToken(first)).toEqual({ failure: 'used' })
       expect(await consumeEmailToken(reset, 'reset')).toEqual({ userId: user })
+    })
+  })
+
+  describe('reading a link of a change of address without using it, and cleaning up (#236)', () => {
+    it('gives the address without using the link, as often as asked: a scanner that opens it changes nothing', async () => {
+      const token = await createEmailToken(user, 'change-email', HOUR, 'new@example.test')
+      expect(await peekEmailChangeToken(token)).toEqual({ userId: user, newEmail: 'new@example.test' })
+      expect(await peekEmailChangeToken(token)).toEqual({ userId: user, newEmail: 'new@example.test' })
+      expect(await consumeEmailChangeToken(token)).toEqual({ userId: user, newEmail: 'new@example.test' })
+      expect(await peekEmailChangeToken(token)).toEqual({ failure: 'used' })
+    })
+
+    it('refuses a link of another purpose and an expired one', async () => {
+      expect(await peekEmailChangeToken(await createEmailToken(user, 'verify', HOUR))).toEqual({ failure: 'invalid' })
+      expect(await peekEmailChangeToken(await createEmailToken(user, 'change-email', -1000, 'new@example.test'))).toEqual({ failure: 'expired' })
+    })
+
+    it('deletes the tokens that expired more than a day ago, with the address they carried, and only those', async () => {
+      const dayAgoPlus = await createEmailToken(user, 'change-email', -(25 * HOUR), 'typed-by-someone@example.test')
+      const justExpired = await createEmailToken(user, 'change-email', -1000, 'recent@example.test')
+      const valid = await createEmailToken(user, 'change-email', HOUR, 'valid@example.test')
+      expect(await deleteExpiredEmailTokens()).toBe(1)
+      const { rows } = await pool.query('SELECT token_hash FROM email_tokens ORDER BY token_hash')
+      expect(rows.map((r) => r.token_hash).sort()).toEqual([hashToken(justExpired), hashToken(valid)].sort())
+      expect(JSON.stringify(rows)).not.toContain(hashToken(dayAgoPlus))
+      // A link just expired still says so: it was not cleaned up yet.
+      expect(await peekEmailChangeToken(justExpired)).toEqual({ failure: 'expired' })
     })
   })
 })

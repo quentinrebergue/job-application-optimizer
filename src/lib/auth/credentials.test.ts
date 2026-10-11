@@ -2,7 +2,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 vi.mock('server-only', () => ({}))
 const consumeRateLimit = vi.fn()
-vi.mock('@/lib/rate-limit', () => ({ consumeRateLimit: (...a: unknown[]) => consumeRateLimit(...a) }))
+vi.mock('@/lib/rate-limit', () => ({ consumeRateLimit: (...a: unknown[]) => consumeRateLimit(...a), deleteExpiredRateLimits: vi.fn(async () => 0) }))
+vi.mock('next/server', () => ({ after: (task: () => unknown) => task() }))
 const findPasswordHash = vi.fn()
 const findUserById = vi.fn()
 const replacePassword = vi.fn()
@@ -21,6 +22,7 @@ const invalidateEmailTokens = vi.fn()
 vi.mock('@/lib/data/email-tokens', () => ({
   consumeEmailChangeToken: (...a: unknown[]) => consumeEmailChangeToken(...a),
   createEmailToken: (...a: unknown[]) => createEmailToken(...a),
+  deleteExpiredEmailTokens: vi.fn(async () => 0),
   invalidateEmailTokens: (...a: unknown[]) => invalidateEmailTokens(...a),
 }))
 const verifyPassword = vi.fn()
