@@ -12,3 +12,5 @@ App-shell components, rendered by the route-group layouts in `src/app/(app)/layo
 | `Wordmark.tsx` | App name with its mark (`Logo`), links to `/`. Used in the app header and the public layout. |
 | `Logo.tsx` | The FastResume mark (F-bolt on a red sticker) as inline SVG with the token colours; source and icons in `docs/brand/`. |
 | `nav.ts` | `isActiveModule(pathname, mod)`: matches the module's `href` and its `alsoActiveOn` prefixes. |
+| `StatusPage.tsx` | A short message in a sticker with a mark ("404", "Oops"), a title and the next step: the look of the not-found and error pages (#78). |
+| `ErrorPage.tsx` | What an error boundary shows: "Try again" (`retry()` of Next.js 16, which re-renders the page) and a way out. Used by `app/error.tsx` and `app/(app)/error.tsx`. |
