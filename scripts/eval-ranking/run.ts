@@ -59,7 +59,7 @@ async function main(args: Args) {
     args.libraryFormat !== 'text' && `library ${args.libraryFormat}`,
     !args.schema && 'no schema',
     args.cleanOffer && 'offer cleaned',
-    args.pad !== undefined && `library padded with ${args.pad} entries of each kind`,
+    args.pad !== undefined && `library padded with ${args.pad} entries of each kind${args.padLength ? `, descriptions of about ${args.padLength} characters` : ''}`,
   ].filter(Boolean).join(', ')
   const label = args.label ?? args.model ?? 'run'
 
@@ -70,7 +70,7 @@ async function main(args: Args) {
     .filter((c) => !args.case || c.name.includes(args.case))
   if (args.pad !== undefined) {
     const pool = await loadDistractors()
-    cases = cases.map((c) => ({ ...c, entities: padEntities(c.entities, pool, args.pad!) }))
+    cases = cases.map((c) => ({ ...c, entities: padEntities(c.entities, pool, args.pad!, args.padLength) }))
   }
   if (!cases.length) {
     console.error('No case found. Put some in eval/private/ (npm run eval:export -- <job id>) or eval/cases/.')
