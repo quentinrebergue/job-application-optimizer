@@ -7,6 +7,8 @@ Next.js App Router root. Contains the document layout, two route groups (their n
 | File | Description |
 |------|-------------|
 | `layout.tsx` | Root layout — `<html>`, `<body>` and fonts only, no navigation. |
+| `not-found.tsx`, `error.tsx` | An address that matches no page, and a failure outside the app shell: the name, a message and a way back (#78). |
+| `(app)/not-found.tsx`, `(app)/error.tsx`, `(app)/loading.tsx` | The same inside the app's bar: an unknown job or entry, a page that failed (with "Try again"), and the wait while a page loads. |
 | `(app)/layout.tsx` | Shell of the signed-in app: one top bar (`AppHeader`) at every width. |
 | `(app)/page.tsx` | Home page: a card per section (Jobs, Resume) with real counts. |
 | `(public)/layout.tsx` | Shell of the pages before sign-in (`login/`, `signup/`): wordmark only, no app navigation. |
