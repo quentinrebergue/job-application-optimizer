@@ -54,16 +54,16 @@ describe('POST /api/jobs', () => {
 
 describe('POST /api/jobs: how many and how fast (#202)', () => {
   it('refuses a job when the user is at the cap, without counting it against the rate', async () => {
-    countJobs.mockResolvedValue(40)
+    countJobs.mockResolvedValue(100)
     const res = await send(job)
     expect(res.status).toBe(403)
-    expect(await res.json()).toMatchObject({ code: 'limit_reached', error: 'You have reached the limit of 40 jobs. Delete one to add another.' })
+    expect(await res.json()).toMatchObject({ code: 'limit_reached', error: 'You have reached the limit of 100 jobs. Delete one to add another.' })
     expect(createJob).not.toHaveBeenCalled()
     expect(consumeRateLimit).not.toHaveBeenCalled()
   })
 
   it('accepts the job just under the cap', async () => {
-    countJobs.mockResolvedValue(39)
+    countJobs.mockResolvedValue(99)
     expect((await send(job)).status).toBe(201)
   })
 

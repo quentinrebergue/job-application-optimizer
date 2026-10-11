@@ -3,7 +3,7 @@ import { envNumber } from '@/lib/env'
 import { consumeRateLimit } from '@/lib/rate-limit'
 
 // How much a user may create, and how fast (#202). Two kinds of limit, because one is not enough:
-//  - a cap on what exists (40 jobs; the caps on entries are constants, config/limits.ts, because the
+//  - a cap on what exists (100 jobs; the caps on entries are constants, config/limits.ts, because the
 //    library shows them): someone at the cap who deletes 3 and adds 3, again and again,
 //    never goes over it;
 //  - a limit on creations per hour and per day. The counters of rate-limit.ts count what was
@@ -20,7 +20,7 @@ export type QuotaKind = 'job' | 'entity' | 'pdf'
 /** The numbers, read each time so a change of environment applies without a restart of the tests. */
 export function quotas() {
   return {
-    maxJobs: envNumber('MAX_JOBS', 40),
+    maxJobs: envNumber('MAX_JOBS', 100),
     perHour: {
       job: envNumber('JOBS_PER_HOUR', 15),
       entity: envNumber('ENTITIES_PER_HOUR', 30),
