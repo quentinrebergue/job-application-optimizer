@@ -34,9 +34,13 @@ const OTHER_TABLES: Record<string, string> = {
   ai_usage: 'accounting rows of the site, written and settled by id',
 }
 
+// The code of the tests themselves (src/tests) is not the app: its queries read the catalog of Postgres.
+const TEST_CODE = path.join(SRC, 'tests')
+
 function sourceFiles(dir: string, files: string[] = []): string[] {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const full = path.join(dir, entry.name)
+    if (full === TEST_CODE) continue
     if (entry.isDirectory()) sourceFiles(full, files)
     else if (/\.tsx?$/.test(entry.name) && !/\.test\.tsx?$/.test(entry.name) && !entry.name.endsWith('.d.ts')) files.push(full)
   }

@@ -46,6 +46,30 @@ is closed.
    gh pr merge --squash --delete-branch
    ```
 
+### Running the tests
+
+```bash
+npm test          # every test; the ones that need Postgres are skipped without a database
+npm run test:db   # only the ones that need Postgres (the *.db.test.ts files)
+```
+
+The tests that need Postgres (the quotas, the rate limits, the data layer, the sessions, the accounts, the schema) run the real SQL against a
+real database, in a schema of their own made from the real migrations, and drop it afterwards. Give them a
+database with `TEST_DATABASE_URL`; a throwaway one is enough:
+
+```bash
+docker run --rm -d --name pgtest -p 5434:5432 -e POSTGRES_PASSWORD=test postgres:17-alpine
+TEST_DATABASE_URL=postgres://postgres:test@localhost:5434/postgres npm run test:db
+docker stop pgtest
+```
+
+The suite refuses a database that is not on this machine (`TEST_DATABASE_URL` with another host fails before anything
+is created, unless `TEST_DATABASE_ALLOW_REMOTE=1`), and every step that empties tables first checks that the
+connection is in the schema the run made: a wrong URL cannot reach real data.
+
+In the CI the variable is set by the `test` job (a Postgres service next to it) and the run fails if it is missing,
+so these tests cannot be skipped by mistake. A change to a migration runs the app's tests too.
+
 ## 3. Deploying
 
 Merging to `master` builds the images and commits their new tags to

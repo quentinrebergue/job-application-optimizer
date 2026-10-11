@@ -38,10 +38,14 @@ jobs:
           app=$(outside '^(services|k8s|docs|terraform|ansible|scripts)/|\.md$|^\.github/(workflows/cd\.yml|ISSUE_TEMPLATE/)')
           renderer=$(matches '^services/resume-renderer/')
           migrator=$(matches '^services/db-migrator/')
+          # The tests of the app run its SQL against the real migrations (#221): a new migration
+          # must be tried against them, even when nothing else of the app changed.
+          migrations=$(matches '^services/db-migrator/migrations/')
           gateway=$(matches '^services/ai-gateway/')
 
           # If the CI itself changed, check everything.
           if [ "$ci" = true ]; then app=true; renderer=true; migrator=true; gateway=true; fi
+          if [ "$migrations" = true ]; then app=true; fi
 
           # Images to build (not pushed): the ones whose files changed, and all
           # of them when the CD changes, since it builds them.
@@ -64,6 +68,24 @@ jobs:
     needs: changes
     if: needs.changes.outputs.app == 'true'
     runs-on: ubuntu-24.04
+    # A real Postgres next to the job (#221): the *.db.test.ts files run the SQL of the quotas, the rate
+    # limits and the data layer against it, with the real migrations, in a schema of their own. A fake
+    # pool cannot show a wrong query, a lock that does not hold or a column that was renamed.
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_PASSWORD: test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      # Set here, and the global setup refuses to run in CI without it: the tests cannot be skipped by mistake.
+      TEST_DATABASE_URL: postgres://postgres:test@localhost:5432/postgres
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
