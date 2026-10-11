@@ -38,6 +38,12 @@ spec:
               value: "https://fastresume.tech"
             - name: AI_GATEWAY_URL
               value: "http://ai-gateway"
+            # The Content Security Policy (#205). First deploy: "report-only" (the browsers report what it
+            # would block, to the logs, and block nothing). Look at `kubectl -n job-optimizer logs deploy/app
+            # | grep "csp violation"` for a few days, then set "enforce" (or remove this variable: enforce
+            # is the default). Setting it back to "report-only" is the way to undo a policy that breaks a page.
+            - name: CSP_MODE
+              value: "report-only"
           envFrom:
             - secretRef:
                 name: app-secrets
