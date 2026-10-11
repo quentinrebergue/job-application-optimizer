@@ -65,6 +65,10 @@ export default function PrivacyPage() {
           <li>Your account and library: until you delete your account.</li>
           <li>Sessions: they expire after 7 days. Password-reset links: 30 minutes.</li>
           <li>Backups: 7 days, so deleted data disappears from them within a week.</li>
+          <li>
+            The log of AI ranking calls (date, tokens, cost): kept without your identity after you delete your account. It only
+            serves to keep the site&apos;s monthly AI budget.
+          </li>
         </ul>
       </LegalSection>
 

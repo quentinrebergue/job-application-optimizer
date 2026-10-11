@@ -12,3 +12,4 @@ Data access layer on Postgres (`@/lib/db`). Every query is scoped to the signed-
 | `resume-profile.ts` | `getResumeProfile`, `saveResumeProfile` |
 | `users.ts` | `createUser`, `findUserByEmail`, `findUserById`, `markEmailVerified`, `updatePassword` |
 | `email-tokens.ts` | Single-use tokens sent by mail (only their SHA-256 is stored): `createEmailToken`, `consumeEmailToken`, `peekEmailToken` (check without using), `invalidateEmailTokens`, `countRecentTokens` |
+| `account.ts` | `exportAccount` (everything the user holds, as one document) and `deleteAccount` (the account, its rows by cascade, its login attempts and creation counters, in one transaction; the AI calls stay without the user) (#104) |

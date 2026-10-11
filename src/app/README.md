@@ -21,6 +21,7 @@ Next.js App Router root. Contains the document layout, two route groups (their n
 | `(app)/resume/` | Resume page: the profile and the library (`?tab=` kind) |
 | `(app)/entities/` | Entry page and new entry; `/entities` and `/entities/[type]` redirect to the library in `/resume` |
 | `(app)/jobs/` | Job Application Tracker pages |
+| `(app)/account/` | The account page: data export and account deletion (#104) |
 | `(app)/ui/` | Catalogue of the UI components (for development) |
 | `(public)/login/`, `(public)/signup/` | Sign-in and sign-up pages |
 | `api/` | Next.js API route handlers (server-side, JSON responses) |

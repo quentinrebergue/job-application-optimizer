@@ -1,6 +1,7 @@
 'use client'
 
 import { useTransition } from 'react'
+import Link from 'next/link'
 import { Menu } from '@base-ui/react/menu'
 import { logout } from '@/app/actions/auth'
 import { cn } from '@/lib/cn'
@@ -8,7 +9,7 @@ import { focusRing, pressable } from '@/components/ui/styles'
 
 /**
  * The account: a square with the user's initial that opens a small menu with
- * the email and "Log out" (room for "Settings" later). Base UI handles the
+ * the email, "Account" (data export and deletion) and "Log out". Base UI handles the
  * keyboard, focus and screen readers.
  */
 export function AccountMenu({ email }: { email: string }) {
@@ -35,11 +36,20 @@ export function AccountMenu({ email }: { email: string }) {
               <p className="text-xs text-ink-muted">Signed in as</p>
               <p className="truncate text-sm font-semibold" title={email}>{email}</p>
             </div>
+            <Menu.LinkItem
+              render={<Link href="/account" />}
+              className={cn(
+                'mt-1 flex cursor-default items-center rounded-control border-2 border-transparent px-3 py-1.5 text-sm outline-none',
+                'data-highlighted:border-ink data-highlighted:bg-accent',
+              )}
+            >
+              Account
+            </Menu.LinkItem>
             <Menu.Item
               disabled={pending}
               onClick={() => startTransition(() => logout())}
               className={cn(
-                'mt-1 flex cursor-default items-center rounded-control border-2 border-transparent px-3 py-1.5 text-sm outline-none',
+                'flex cursor-default items-center rounded-control border-2 border-transparent px-3 py-1.5 text-sm outline-none',
                 'data-highlighted:border-ink data-highlighted:bg-accent data-disabled:opacity-50',
               )}
             >

@@ -54,6 +54,12 @@ export async function findUserById(id: string): Promise<User | null> {
   return row ? rowToUser(row) : null
 }
 
+/** The hash of the password of this account, to check it before a sensitive action. */
+export async function findPasswordHash(id: string): Promise<string | null> {
+  const result = await pool.query<{ password_hash: string }>('SELECT password_hash FROM users WHERE id = $1', [id])
+  return result.rows[0]?.password_hash ?? null
+}
+
 /** Marks the address as confirmed (keeps the first confirmation date). */
 export async function markEmailVerified(id: string): Promise<void> {
   await pool.query(
