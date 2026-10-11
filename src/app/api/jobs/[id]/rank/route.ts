@@ -6,6 +6,7 @@ import { getSessionUserId } from '@/lib/auth/session'
 import { findUserById } from '@/lib/data/users'
 import { reserveAiCall, settleAiCall } from '@/lib/ai/usage'
 import { outcomeOfFailure } from '@/lib/ai/failure'
+import { checkPromptSize } from '@/lib/ai/prompt-size'
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const userId = await getSessionUserId()
@@ -33,6 +34,10 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     const experiences = await listEntities(userId, 'experiences')
     const projects = await listEntities(userId, 'projects')
     const skills = await listEntities(userId, 'skills')
+
+    // A prompt over the gateway's limit is refused here, with what to cut, before anything is reserved (#185).
+    const size = checkPromptSize(job.title, job.company, job.description, { experiences, projects, skills })
+    if (!size.ok) return Response.json({ error: size.message, code: 'prompt_too_large' }, { status: 413 })
 
     // The limits (per user, and the site's monthly cap) are checked and the call is written down
     // before the AI is asked; it is settled with the real tokens, or as a failure (#203).

@@ -6,13 +6,16 @@
 // from the environment (#203).
 //
 // Measured on the 45 real offers kept for the evaluation (`npm run eval:ranking -- --sizes`):
-// the longest offer is 9,332 characters. With the instructions (1,553) and a full library
-// (5,938), an offer at its limit keeps the AI prompt under the gateway's 30,000 characters.
+// the longest offer is 9,332 characters (the limit is 12,000), the author's library is 5,938 and the
+// instructions 1,553. Everything the user writes is sent whole to the AI, never cut (a keyword at
+// the end of a description must not be lost), so it has to fit the prompt limit (60,000
+// characters, #185). The limits on a description (1,000: more would not fit on a one-page resume)
+// and on the number of entries are chosen so that a full library and a long offer fit.
 
 export const LIMITS = {
-  job: { title: 150, company: 100, location: 100, url: 2000, description: 15000 },
-  experiences: { title: 150, company: 100, location: 100, period: 50, description: 5000 },
-  projects: { title: 150, description: 5000 },
+  job: { title: 150, company: 100, location: 100, url: 2000, description: 12000 },
+  experiences: { title: 150, company: 100, location: 100, period: 50, description: 1000 },
+  projects: { title: 150, description: 1000 },
   skills: { name: 150, category: 50 },
   education: { degree: 150, institution: 150, period: 50 },
   /** One keyword, and how many an entry or a job may have. */
@@ -34,3 +37,11 @@ export const MAX_BODY_BYTES = {
   default: 100 * 1024,
   resumeConfig: 200 * 1024,
 } as const
+
+/**
+ * How many entries of each kind a user may keep (#185). Sized for the AI prompt: the ranking sends
+ * every experience, project and skill whole, so a library at these caps, with descriptions at their
+ * limit and an offer at its limit, stays under the prompt limit (a test checks it). Someone already
+ * above a cap keeps what they have: only adding is refused.
+ */
+export const MAX_ENTRIES = { experiences: 10, projects: 20, skills: 10, education: 10 } as const

@@ -26,9 +26,9 @@ describe('POST /api/jobs', () => {
   })
 
   it('refuses a description over the limit and says which field and how much (#201)', async () => {
-    const res = await send({ ...job, description: 'a'.repeat(15001) })
+    const res = await send({ ...job, description: 'a'.repeat(12001) })
     expect(res.status).toBe(400)
-    expect(await res.json()).toMatchObject({ error: 'Description is too long: 15,000 characters at most.' })
+    expect(await res.json()).toMatchObject({ error: 'Description is too long: 12,000 characters at most.' })
     expect(createJob).not.toHaveBeenCalled()
   })
 

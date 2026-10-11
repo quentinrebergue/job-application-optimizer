@@ -53,7 +53,7 @@ describe('size limits (#201)', () => {
   it('says when a text is over its limit, and is silent at the limit', () => {
     const description = field('projects', 'description')
     expect(fieldError(description, 'a'.repeat(description.maxLength!))).toBeUndefined()
-    expect(fieldError(description, 'a'.repeat(description.maxLength! + 1))).toBe('Too long: 5,000 characters at most.')
+    expect(fieldError(description, 'a'.repeat(description.maxLength! + 1))).toBe('Too long: 1,000 characters at most.')
   })
 
   it('keeps the message for a required field left empty first', () => {

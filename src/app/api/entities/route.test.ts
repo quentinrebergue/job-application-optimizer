@@ -31,9 +31,9 @@ describe('POST /api/entities', () => {
   })
 
   it('refuses a description over the limit and says so (#201)', async () => {
-    const res = await send({ type: 'projects', title: 'Queue', description: 'a'.repeat(5001) })
+    const res = await send({ type: 'projects', title: 'Queue', description: 'a'.repeat(1001) })
     expect(res.status).toBe(400)
-    expect(await res.json()).toMatchObject({ error: 'Description is too long: 5,000 characters at most.' })
+    expect(await res.json()).toMatchObject({ error: 'Description is too long: 1,000 characters at most.' })
     expect(createEntity).not.toHaveBeenCalled()
   })
 
@@ -49,12 +49,22 @@ describe('POST /api/entities: how many and how fast (#202)', () => {
   const project = { type: 'projects', title: 'Queue' }
 
   it('refuses an entry when the user has the maximum of that kind, and says which', async () => {
-    countEntities.mockResolvedValue(50)
+    countEntities.mockResolvedValue(20)
     const res = await send(project)
     expect(res.status).toBe(403)
-    expect(await res.json()).toMatchObject({ code: 'limit_reached', error: 'You have reached the limit of 50 projects. Delete one to add another.' })
+    expect(await res.json()).toMatchObject({ code: 'limit_reached', error: 'You have reached the limit of 20 projects. Delete one to add another.' })
     expect(countEntities).toHaveBeenCalledWith('u1', 'projects')
     expect(createEntity).not.toHaveBeenCalled()
+  })
+
+  it('has a different maximum for each kind (the AI prompt must hold them all, #185)', async () => {
+    countEntities.mockResolvedValue(10)
+    expect((await send({ type: 'skills', name: 'N', category: 'C' })).status).toBe(403)
+    expect((await send({ type: 'education', degree: 'D', institution: 'I' })).status).toBe(403)
+    expect((await send({ type: 'experiences', title: 'T', company: 'C' })).status).toBe(403)
+    expect((await send({ type: 'projects', title: 'T' })).status).toBe(201)
+    countEntities.mockResolvedValue(20)
+    expect((await send({ type: 'projects', title: 'T' })).status).toBe(403)
   })
 
   it('counts creations per hour and per day, whatever the kind', async () => {

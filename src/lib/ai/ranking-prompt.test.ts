@@ -219,3 +219,16 @@ describe('buildRankingSchema', () => {
     expect(JSON.stringify(buildRankingSchema(buildRankingPrompt('T', 'C', 'D', big).labels)).length).toBeLessThan(8000)
   })
 })
+
+describe('entry sizes (#185)', () => {
+  it('reports the size of each entry line, so a check can name the biggest', () => {
+    const library = { experiences: [{ ...exp('exp-1', 'Firmware'), description: 'x'.repeat(900) }], projects: [proj('proj-1', 'Queue')], skills: [] }
+    const { sizes, prompt } = buildRankingPrompt('Dev', 'Acme', 'o', library)
+    expect(Object.keys(sizes)).toEqual(['E1', 'P1'])
+    expect(sizes.E1).toBeGreaterThan(900)
+    expect(sizes.P1).toBeLessThan(100)
+    // Nothing is cut: the AI reads the whole description
+    expect(prompt).toContain('x'.repeat(900))
+    expect(prompt).not.toContain('…')
+  })
+})

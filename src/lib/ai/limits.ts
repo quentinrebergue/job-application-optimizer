@@ -19,7 +19,7 @@ export function aiLimits() {
     /** The warning in the logs once the month's spending reaches this share of the cap. */
     warnAt: 0.8,
     /** The gateway's own limits (MAX_PROMPT_CHARS, MAX_OUTPUT_TOKENS): a call is reserved at the most they allow. */
-    maxPromptChars: number('AI_MAX_PROMPT_CHARS', 30000),
+    maxPromptChars: number('AI_MAX_PROMPT_CHARS', 60000),
     maxOutputTokens: number('AI_MAX_OUTPUT_TOKENS', 2000),
   }
 }

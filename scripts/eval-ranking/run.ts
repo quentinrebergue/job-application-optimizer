@@ -8,6 +8,7 @@ import { rankWithUsage } from '@/lib/ai'
 import type { PromptOptions } from '@/lib/ai/formats'
 import { helpText, parseArguments, type Args } from './args'
 import { loadCases, RESULTS_DIR, type EvalCase } from './cases'
+import { loadDistractors, padEntities } from './pad'
 import { formatSizes, measureSizes } from './sizes'
 import { overall, scoreRun, summarize, type RunRecord, type Summary } from './metrics'
 import { printAnswers, printComparison, printCost, printDetails, printFailures, printHeader, printHints, printMoney, printRequest, printStructure, printTable, type Saved } from './report'
@@ -58,14 +59,19 @@ async function main(args: Args) {
     args.libraryFormat !== 'text' && `library ${args.libraryFormat}`,
     !args.schema && 'no schema',
     args.cleanOffer && 'offer cleaned',
+    args.pad !== undefined && `library padded with ${args.pad} entries of each kind`,
   ].filter(Boolean).join(', ')
   const label = args.label ?? args.model ?? 'run'
 
   const all = await loadCases()
   const hasPrivate = all.some((c) => c.source === 'private')
-  const cases = all
+  let cases = all
     .filter((c) => !hasPrivate || c.source === 'private' || args.withExamples)
     .filter((c) => !args.case || c.name.includes(args.case))
+  if (args.pad !== undefined) {
+    const pool = await loadDistractors()
+    cases = cases.map((c) => ({ ...c, entities: padEntities(c.entities, pool, args.pad!) }))
+  }
   if (!cases.length) {
     console.error('No case found. Put some in eval/private/ (npm run eval:export -- <job id>) or eval/cases/.')
     process.exit(1)

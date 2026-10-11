@@ -116,6 +116,18 @@ describe('POST /api/jobs/[id]/rank', () => {
       expect(rankJobWithAI).not.toHaveBeenCalled()
     })
 
+    it('refuses a prompt that is too long with what to cut, before reserving anything (#185)', async () => {
+      getJob.mockResolvedValue({ id: 'job-1', title: 'Dev', company: 'Acme', description: 'x'.repeat(70_000) })
+      const res = await post()
+      expect(res.status).toBe(413)
+      const body = await res.json()
+      expect(body.code).toBe('prompt_too_large')
+      expect(body.error).toContain('too long for the AI to read in one go')
+      expect(body.error).toContain('Shorten the offer')
+      expect(reserveAiCall).not.toHaveBeenCalled()
+      expect(rankJobWithAI).not.toHaveBeenCalled()
+    })
+
     it('does not reserve for a job that is not the user\'s', async () => {
       getJob.mockResolvedValue(null)
       expect((await post()).status).toBe(404)

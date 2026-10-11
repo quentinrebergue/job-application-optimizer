@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { listEntities, createEntity, countEntities } from '@/lib/data'
-import { capReached, consumeCreation, quotas } from '@/lib/quotas'
+import { capReached, consumeCreation } from '@/lib/quotas'
+import { MAX_ENTRIES } from '@/config/limits'
 import { ENTITY_TYPE_IDS, getEntityTypeConfig } from '@/config'
 import type { EntityType } from '@/types'
 import { getSessionUserId } from '@/lib/auth/session'
@@ -33,8 +34,8 @@ export async function POST(request: Request) {
   if (!body.ok) return body.response
 
   const { type, ...data } = body.data
-  if ((await countEntities(userId, type)) >= quotas().maxEntitiesPerType) {
-    return capReached(quotas().maxEntitiesPerType, getEntityTypeConfig(type).label.toLowerCase())
+  if ((await countEntities(userId, type)) >= MAX_ENTRIES[type]) {
+    return capReached(MAX_ENTRIES[type], getEntityTypeConfig(type).label.toLowerCase())
   }
   const limited = await consumeCreation(userId, 'entity')
   if (limited) return limited
