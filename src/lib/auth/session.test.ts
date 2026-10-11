@@ -7,7 +7,7 @@ vi.mock('@/lib/db', () => ({ pool: { query: (...a: unknown[]) => query(...a) } }
 const store = { get: vi.fn(), set: vi.fn(), delete: vi.fn() }
 vi.mock('next/headers', () => ({ cookies: async () => store }))
 
-const { createSession, getSessionUserId, deleteSession, deleteAllSessions } = await import('./session')
+const { createSession, getSessionUserId, deleteSession, deleteAllSessions, clearStaleSession } = await import('./session')
 
 beforeEach(() => {
   query.mockReset().mockResolvedValue({ rows: [] })
@@ -107,5 +107,26 @@ describe('deleteAllSessions', () => {
   it('signs the user out of every device, which a password reset relies on', async () => {
     await deleteAllSessions('u1')
     expect(query).toHaveBeenCalledWith('DELETE FROM sessions WHERE user_id = $1', ['u1'])
+  })
+})
+
+describe('clearStaleSession (#178)', () => {
+  it('removes a cookie that points at no valid session', async () => {
+    store.get.mockReturnValue({ value: 'gone' })
+    query.mockResolvedValue({ rows: [] })
+    expect(await clearStaleSession()).toBe(true)
+    expect(store.delete).toHaveBeenCalledWith('session')
+  })
+
+  it('removes a cookie when there is none to find a session with', async () => {
+    store.get.mockReturnValue(undefined)
+    expect(await clearStaleSession()).toBe(true)
+  })
+
+  it('leaves a valid session alone: a link to the route signs nobody out', async () => {
+    store.get.mockReturnValue({ value: 'ok' })
+    query.mockResolvedValue({ rows: [{ user_id: 'u1' }] })
+    expect(await clearStaleSession()).toBe(false)
+    expect(store.delete).not.toHaveBeenCalled()
   })
 })

@@ -53,10 +53,10 @@ Each colour has a role. Colour never decorates.
 | `ink-muted` | `#4A413C` | Secondary text, captions |
 | `line` | `#EBD7B5` | Thin dividers in dense content, muted fills |
 | `accent` | `#FF4D50` | **The main action**: primary button fill, active navigation item. Always with ink text |
-| `accent-strong` | `#C4122F` | Red text and links on light backgrounds, focus ring |
+| `accent-strong` | `#C4122F` | Red text and links on light backgrounds |
 | `ai` | `#A388EE` | **AI actions only** ("Rank with AI"): a violet button with ink text, so the AI step is recognisable next to the red main action |
 | `info` | `#5294FF` | Status fill: in progress (applied) |
-| `warning` | `#FACC00` | Status fill: needs attention (interview) |
+| `warning` | `#FACC00` | Status fill: needs attention (interview). Also **keyboard focus** (#122): the focused control turns yellow and moves onto its shadow, like a press; a link gets the yellow background only. Chosen over a thin red outline, which read as a glitch after closing a menu with Escape |
 | `success` | `#05E17A` | Status fill: done, positive (offer) |
 | `danger` | `#B00020` | Errors (text) and destructive buttons (white text) |
 

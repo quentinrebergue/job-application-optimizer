@@ -59,7 +59,7 @@ export function SegmentedTabs<T extends string>({ label, items, value, onChange,
             className={cn(
               'flex flex-1 items-center justify-center px-2 leading-tight transition-colors',
               size === 'md' ? 'min-h-12 py-1 text-sm' : 'min-h-9 text-xs',
-              'focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-ink',
+              'focus-visible:bg-warning focus-visible:text-ink focus-visible:outline-2 focus-visible:outline-transparent',
               !first && 'border-l-2 border-ink',
               selected ? 'bg-accent font-semibold text-ink' : 'bg-surface font-normal text-ink hover:bg-canvas',
               'disabled:cursor-not-allowed disabled:bg-line disabled:text-ink-muted disabled:hover:bg-line',

@@ -6,9 +6,18 @@ export const pageWidth = 'mx-auto w-full max-w-7xl'
 /** A page's container: the page width and its padding. */
 export const page = 'mx-auto w-full max-w-7xl p-4 md:p-8'
 
-/** Visible keyboard focus, never shown on mouse click. */
-export const focusRing =
-  'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-strong'
+/**
+ * Visible keyboard focus, never shown on mouse click (#122): the control turns yellow and moves onto
+ * its shadow, like a press. The transparent outline is for forced-colours modes, which drop fills.
+ */
+export const focusRing = [
+  'focus-visible:outline-2 focus-visible:outline-transparent',
+  'focus-visible:bg-warning focus-visible:text-ink',
+  'focus-visible:translate-x-press focus-visible:translate-y-press focus-visible:shadow-none',
+].join(' ')
+
+/** The same for a link in running text or a footer: a yellow background, nothing moves. */
+export const focusLink = 'focus-visible:bg-warning focus-visible:text-ink focus-visible:outline-2 focus-visible:outline-transparent'
 
 /** Small capital label above a group ("STATUS", "DESCRIPTION"). */
 export const eyebrow = 'text-xs font-semibold uppercase tracking-wider text-ink-muted'
