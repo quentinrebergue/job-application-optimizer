@@ -43,7 +43,7 @@ spec:
             # | grep "csp violation"` for a few days, then set "enforce" (or remove this variable: enforce
             # is the default). Setting it back to "report-only" is the way to undo a policy that breaks a page.
             - name: CSP_MODE
-              value: "report-only"
+              value: "enforce"
           envFrom:
             - secretRef:
                 name: app-secrets
