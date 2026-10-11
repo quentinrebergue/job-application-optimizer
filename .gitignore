@@ -59,3 +59,6 @@ ansible/inventory.ini
 # AI ranking evaluation: real offers and library (personal data) and the results
 /eval/private/
 /eval/results/
+
+# What scripts/export-removed-modules.sql writes (content of users)
+removed-modules-*.json
