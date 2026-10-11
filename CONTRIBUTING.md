@@ -49,8 +49,9 @@ is closed.
 ### Running the tests
 
 ```bash
-npm test          # every test; the ones that need Postgres are skipped without a database
-npm run test:db   # only the ones that need Postgres (the *.db.test.ts files)
+npm test                # every test; the ones that need Postgres are skipped without a database
+npm run test:db         # only the ones that need Postgres (the *.db.test.ts files)
+npm run test:coverage   # every test, and what they execute: a summary, the files not fully covered, and coverage/index.html
 ```
 
 The tests that need Postgres (the quotas, the rate limits, the data layer, the sessions, the accounts, the schema) run the real SQL against a
@@ -62,6 +63,8 @@ docker run --rm -d --name pgtest -p 5434:5432 -e POSTGRES_PASSWORD=test postgres
 TEST_DATABASE_URL=postgres://postgres:test@localhost:5434/postgres npm run test:db
 docker stop pgtest
 ```
+
+Run `npm run test:coverage` with `TEST_DATABASE_URL` set too (about 16 seconds in all): without it the data layer reads as untested. It is a tool to look at from time to time, not a gate: no threshold, not in the CI.
 
 The suite refuses a database that is not on this machine (`TEST_DATABASE_URL` with another host fails before anything
 is created, unless `TEST_DATABASE_ALLOW_REMOTE=1`), and every step that empties tables first checks that the
