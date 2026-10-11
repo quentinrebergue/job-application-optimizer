@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { accountDeletedMessage, dataExportedMessage, passwordChangedMessage, resetPasswordMessage, verifyEmailMessage } from './messages'
+import { accountDeletedMessage, changeEmailMessage, emailChangeRequestedMessage, emailChangedMessage, emailAlreadyUsedMessage, dataExportedMessage, passwordChangedMessage, resetPasswordMessage, verifyEmailMessage } from './messages'
 
 describe('verifyEmailMessage', () => {
   const url = 'https://fastresume.tech/verify-email/confirm?token=abc'
@@ -52,5 +52,34 @@ describe('accountDeletedMessage', () => {
     expect(mail.subject).toBe('Your account was deleted')
     expect(mail.text).toContain('7 days')
     expect(mail.html).toContain('href="mailto:contact@fastresume.tech"')
+  })
+})
+
+describe('the mails of a change of address (#236)', () => {
+  it('sends the new address a link, valid 24 hours, that changes nothing unless opened', async () => {
+    const url = 'https://fastresume.tech/verify-email/change?token=abc'
+    const mail = await changeEmailMessage('new@b.c', url)
+    expect(mail.to).toBe('new@b.c')
+    expect(mail.html).toContain(`href="${url}"`)
+    expect(mail.text).toContain('24 hours')
+  })
+
+  it('tells the current address which address was asked, with a way to react', async () => {
+    const mail = await emailChangeRequestedMessage('old@b.c', 'new@b.c', 'https://fastresume.tech/forgot-password')
+    expect(mail.text).toContain('new@b.c')
+    expect(mail.html).toContain('href="https://fastresume.tech/forgot-password"')
+  })
+
+  it('tells the old address it no longer gives access, and whom to write to', async () => {
+    const mail = await emailChangedMessage('old@b.c', 'new@b.c', 'contact@fastresume.tech')
+    expect(mail.text).toContain('no longer gives access')
+    expect(mail.html).toContain('href="mailto:contact@fastresume.tech"')
+  })
+
+  it('tells an address that already has an account that someone tried to use it, and that nothing changed', async () => {
+    const mail = await emailAlreadyUsedMessage('taken@b.c')
+    expect(mail.to).toBe('taken@b.c')
+    expect(mail.subject).toBe('This address already has a FastResume account')
+    expect(mail.text).toContain('Nothing changed')
   })
 })

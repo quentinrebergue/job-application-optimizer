@@ -19,4 +19,6 @@ Next.js API route handlers. All routes return JSON, need a signed-in user, and o
 | `resume/templates/` | GET | List the templates (and their option schemas) offered by the renderer service |
 | `resume/defaults/` | GET, PUT | Read or write the user's resume profile (name, contact, default title and profile) |
 | `account/export/` | POST | The user's data as one JSON file to save: account, profile, library, jobs with their resume settings, AI calls. Body: `{ password }`; 10 attempts an hour; the owner gets a mail (#104) |
+| `account/password/` | POST | Changes the password. Body: `{ currentPassword, newPassword }`; the other devices are signed out; 5 attempts an hour; the owner gets a mail (#236) |
+| `account/email/` | POST | Asks to change the address. Body: `{ email, password }`; a link goes to the new address, the account changes when the button of the page it opens (`/verify-email/change`) is clicked; the answer is the same when the address already has an account (that address is told instead); 5 attempts an hour, 10 requests a day per user and `EMAIL_CHANGES_MAX_PER_DAY` (100) for the site (#236) |
 | `account/` | DELETE | Deletes the account and all its data. Body: `{ email, password }`, the account's own address typed again and its password; 5 attempts an hour (#104) |

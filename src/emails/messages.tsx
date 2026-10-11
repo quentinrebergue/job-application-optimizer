@@ -5,6 +5,10 @@ import { RESET_PASSWORD_SUBJECT, ResetPassword } from './ResetPassword'
 import { PASSWORD_CHANGED_SUBJECT, PasswordChanged } from './PasswordChanged'
 import { DATA_EXPORTED_SUBJECT, DataExported } from './DataExported'
 import { ACCOUNT_DELETED_SUBJECT, AccountDeleted } from './AccountDeleted'
+import { CHANGE_EMAIL_SUBJECT, ChangeEmail } from './ChangeEmail'
+import { EMAIL_CHANGE_REQUESTED_SUBJECT, EmailChangeRequested } from './EmailChangeRequested'
+import { EMAIL_CHANGED_SUBJECT, EmailChanged } from './EmailChanged'
+import { EMAIL_ALREADY_USED_SUBJECT, EmailAlreadyUsed } from './EmailAlreadyUsed'
 
 /**
  * Turns a mail component into what sendEmail() takes: HTML and the plain-text version.
@@ -36,4 +40,20 @@ export function dataExportedMessage(to: string, resetUrl: string): Promise<Email
 
 export function accountDeletedMessage(to: string, contact: string): Promise<Email> {
   return toEmail(to, ACCOUNT_DELETED_SUBJECT, <AccountDeleted contact={contact} />)
+}
+
+export function changeEmailMessage(to: string, url: string): Promise<Email> {
+  return toEmail(to, CHANGE_EMAIL_SUBJECT, <ChangeEmail url={url} />)
+}
+
+export function emailChangeRequestedMessage(to: string, newEmail: string, resetUrl: string): Promise<Email> {
+  return toEmail(to, EMAIL_CHANGE_REQUESTED_SUBJECT, <EmailChangeRequested newEmail={newEmail} resetUrl={resetUrl} />)
+}
+
+export function emailChangedMessage(to: string, newEmail: string, contact: string): Promise<Email> {
+  return toEmail(to, EMAIL_CHANGED_SUBJECT, <EmailChanged newEmail={newEmail} contact={contact} />)
+}
+
+export function emailAlreadyUsedMessage(to: string): Promise<Email> {
+  return toEmail(to, EMAIL_ALREADY_USED_SUBJECT, <EmailAlreadyUsed />)
 }

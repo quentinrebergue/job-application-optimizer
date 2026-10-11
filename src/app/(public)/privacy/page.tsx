@@ -30,15 +30,23 @@ export default function PrivacyPage() {
 
       <LegalSection title="Emails">
         <p>
-          We send only the emails the service needs: confirm your address, reset your password, tell you your password changed.
-          No newsletters, no marketing. They go through Brevo, a French email provider, which receives your address and the message.
+          We send only the emails the service needs: confirm your address (also when you change it), reset your password, tell you
+          your password or your address changed, tell you if someone tries to use your address for another account, tell you your
+          data was downloaded, tell you your account was deleted. No newsletters, no marketing. They go through
+          Brevo, a French email provider, which receives your address and the message.
+        </p>
+        <p>
+          Brevo rewrites the links of its emails to count clicks and cannot turn this off for our account: the links in our
+          emails, which carry a single-use token, therefore pass through a Brevo address before reaching our site. We do not use
+          these statistics, and the tokens work only once and expire (24 hours to confirm an address, 30 minutes to reset a password).
         </p>
       </LegalSection>
 
       <LegalSection title="No trackers, no ads, no selling">
         <p>
           No analytics, no advertising, no third-party cookies, no social-media widgets. Your data is never sold, rented or shared for
-          advertising, and never used to train an AI model.
+          advertising, and never used to train an AI model. The one thing we cannot switch off is the click counting of our email
+          provider, explained under Emails.
         </p>
       </LegalSection>
 
@@ -63,7 +71,10 @@ export default function PrivacyPage() {
       <LegalSection title="How long we keep it">
         <ul>
           <li>Your account and library: until you delete your account.</li>
-          <li>Sessions: they expire after 7 days. Password-reset links: 30 minutes.</li>
+          <li>
+            Sessions: they expire after 7 days. Links sent by mail: 24 hours to confirm an address, 30 minutes to reset a password; they
+            are deleted a day after they expire, with the address they carried.
+          </li>
           <li>Backups: 7 days, so deleted data disappears from them within a week.</li>
           <li>
             The log of AI ranking calls (date, tokens, cost): kept without your identity after you delete your account. It only

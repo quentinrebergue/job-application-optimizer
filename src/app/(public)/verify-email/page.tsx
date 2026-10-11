@@ -8,6 +8,8 @@ export const metadata = { title: 'Confirm your email' }
 
 const MESSAGES = {
   confirmed: { title: 'Email confirmed', text: 'Your address is confirmed. The AI ranking is unlocked.' },
+  'email-changed': { title: 'Email changed', text: 'Your new address is confirmed: it is now the address of your account. Use it the next time you log in.' },
+  'email-taken': { title: 'Address already used', text: 'Another account uses this address now. Your address was not changed.' },
   used: { title: 'Link already used', text: 'This link was already used: your address is probably confirmed already.' },
   expired: { title: 'Link expired', text: 'This link is more than 24 hours old. Ask for a new one.' },
   invalid: { title: 'Link not valid', text: 'This link is not valid. Open the latest mail we sent you, or ask for a new one.' },
@@ -24,7 +26,7 @@ export default async function VerifyEmailPage({ searchParams }: PageProps<'/veri
   const status = parseStatus((await searchParams).status)
   const { title, text } = MESSAGES[status]
   const user = await getCurrentUser()
-  const canResend = user !== null && !user.emailVerified && status !== 'confirmed'
+  const canResend = user !== null && !user.emailVerified && status !== 'confirmed' && status !== 'email-changed'
 
   return (
     <div className="flex flex-1 items-center justify-center px-4 py-12">
@@ -36,7 +38,7 @@ export default async function VerifyEmailPage({ searchParams }: PageProps<'/veri
           <Link href="/jobs" className={buttonClasses({ className: 'self-start' })}>Go to my jobs</Link>
         ) : (
           <Link href="/login" className={buttonClasses({ className: 'self-start' })}>
-            {status === 'confirmed' ? 'Log in' : 'Log in to get a new link'}
+            {status === 'confirmed' || status === 'email-changed' ? 'Log in' : 'Log in to get a new link'}
           </Link>
         )}
       </Card>
