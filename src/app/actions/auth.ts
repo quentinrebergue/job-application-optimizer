@@ -2,6 +2,8 @@
 
 import * as z from 'zod'
 import { pool } from '@/lib/db'
+import { after } from 'next/server'
+import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { createUser, findUserByEmail, type User } from '@/lib/data/users'
 import { sendVerificationEmail } from '@/lib/auth/email-verification'
@@ -9,6 +11,8 @@ import { verifyPassword } from '@/lib/auth/password'
 import { createSession, deleteSession } from '@/lib/auth/session'
 import { SignupSchema, LoginSchema } from '@/lib/validation/auth-schemas'
 import { safePath } from '@/lib/auth/return-to'
+import { checkSignup } from '@/lib/auth/signup-limit'
+import { clientIp, deleteExpiredRateLimits } from '@/lib/rate-limit'
 
 // `email` is sent back on failure so the form can show it again: React 19 resets
 // uncontrolled fields after an action (#68). The password is never sent back.
@@ -31,6 +35,12 @@ export async function signup(_prevState: AuthFormState, formData: FormData): Pro
   }
 
   const { email, password } = validated.data
+
+  // Counted once the form is valid (a mistyped form is not a sign-up) and before anything is created (#210).
+  const allowed = await checkSignup(clientIp(await headers()))
+  if (!allowed.ok) return { message: allowed.message, email }
+  after(() => deleteExpiredRateLimits().catch(() => {}))
+
   let user: User
   try {
     user = await createUser(email, password)

@@ -9,6 +9,8 @@ export interface RateLimitResult {
   allowed: boolean
   /** Time left before the window starts again */
   retryAfterMs: number
+  /** Hits in the current window, this one included */
+  count: number
 }
 
 /**
@@ -34,6 +36,7 @@ export async function consumeRateLimit(
   return {
     allowed: row.count <= limit,
     retryAfterMs: Math.max(0, row.reset_at.getTime() - now.getTime()),
+    count: row.count,
   }
 }
 
@@ -74,4 +77,20 @@ export function isPublicIp(ip: string): boolean {
   const v6 = ip.toLowerCase()
   if (v6 === '::1' || v6.startsWith('fc') || v6.startsWith('fd') || v6.startsWith('fe80')) return false
   return v6.includes(':')
+}
+
+/**
+ * What to count a visitor by: an IPv4 address as it is, an IPv6 address by its /64 prefix. One home or
+ * one school is given a whole /64, so counting the full address would let a bot on IPv6 change address
+ * at every request and never meet the limit. An IPv4-mapped address (::ffff:203.0.113.7) is the IPv4 one.
+ */
+export function ipRateKey(ip: string): string {
+  const v4 = ip.replace(/^::ffff:/i, '')
+  if (/^\d+\.\d+\.\d+\.\d+$/.test(v4)) return v4
+  const address = ip.toLowerCase().split('%')[0]
+  const [head, tail] = address.split('::')
+  const left = head ? head.split(':') : []
+  const right = tail ? tail.split(':') : []
+  const groups = address.includes('::') ? [...left, ...Array(Math.max(0, 8 - left.length - right.length)).fill('0'), ...right] : left
+  return `${groups.slice(0, 4).map((g) => g.replace(/^0+(?=.)/, '')).join(':')}::/64`
 }

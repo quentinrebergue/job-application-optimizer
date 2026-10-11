@@ -7,7 +7,7 @@ Server-side business logic. All functions are barrel-exported from `index.ts`. T
 | Directory | Description |
 |-----------|-------------|
 | `data/` | Data access on Postgres, scoped to the signed-in user |
-| `auth/` | Sessions, password hashing, email confirmation (`email-verification.ts`) and password reset (`password-reset.ts`) |
+| `auth/` | Sessions, password hashing, email confirmation (`email-verification.ts`), password reset (`password-reset.ts`) and the limit on sign-ups (`signup-limit.ts`: per address, IPv6 by its /64, 30 an hour and 60 a day; for the site a warning at 150 a day and a refusal only at 1,000; `SIGNUPS_PER_IP_PER_HOUR`, `SIGNUPS_PER_IP_PER_DAY`, `SIGNUPS_ALERT_PER_DAY`, `SIGNUPS_MAX_PER_DAY`; #210) |
 | `email/` | `sendEmail()` over SMTP through an ordered list of providers (primary, optional fallback); mails printed in the console in development |
 | `resume/` | Builds the render payload from entities and the user profile, and calls the resume-renderer service (Go + Typst) |
 | `ai/` | AI ranking of the library against a job offer |
@@ -23,6 +23,7 @@ Server-side business logic. All functions are barrel-exported from `index.ts`. T
 | `entity-filter.ts` | `LIBRARY_TABS` (no "All"), `parseLibraryTab()` (defaults to experiences), `parseEntityType()`, `libraryHref()` — the `?tab=` / `?type=` of the library in `/resume`. |
 | `rate-limit.ts` | `consumeRateLimit(key, limit, windowMs)` — fixed-window counters in the `rate_limits` table (Redis later, #141); `clientIp(headers)`, `isPublicIp(ip)` (private addresses are not limited: they are the load balancer, shared by everyone). |
 | `text-limit.ts` | `tooLong(value, max)`, `counterFor(value, max)`, `isLongText(max)`: what a form shows about the size of a text (#201). Client-safe. |
+| `env.ts` | `envNumber(name, fallback)`: a positive number from the environment, the default for a typo (so a typo cannot switch a limit off). Used by the quotas, the AI limits and the sign-up limit. |
 | `quotas.ts` | How much a user may create and how fast (#202): `quotas()` (the numbers, from the environment: `MAX_JOBS`, `JOBS_PER_HOUR`, `JOBS_PER_DAY`, `ENTITIES_PER_HOUR`, `ENTITIES_PER_DAY`, `PDFS_PER_HOUR`, `PDFS_PER_DAY`), `consumeCreation(userId, kind)` (the 429 to send, or null), `capReached()` (the 403 of a cap). A delete does not give a creation back. |
 | `validation/read-json.ts` | `readJson(request, schema, maxBytes)`: reads a JSON body without going over `maxBytes` (413 `body_too_large`), then checks it (400 naming the field and its limit). Used by every route that takes a body. |
 | `job-filter.ts` | `parseStatusFilter()` — the `?status=` filter of `/jobs`; `parseJobTab()` — the `?tab=` of a job page. |

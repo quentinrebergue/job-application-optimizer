@@ -10,7 +10,7 @@ import {
 } from '@/lib/data/email-tokens'
 import { findUserByEmail, findUserById, updatePassword } from '@/lib/data/users'
 import { deleteAllSessions } from '@/lib/auth/session'
-import { consumeRateLimit, deleteExpiredRateLimits, isPublicIp } from '@/lib/rate-limit'
+import { consumeRateLimit, deleteExpiredRateLimits, ipRateKey, isPublicIp } from '@/lib/rate-limit'
 import { appUrl } from '@/lib/email/providers'
 import { sendEmail } from '@/lib/email/send'
 import { passwordChangedMessage, resetPasswordMessage } from '@/emails/messages'
@@ -48,7 +48,7 @@ export type ResetRequest = 'sent' | 'too-many'
  */
 export async function requestPasswordReset(email: string, ip: string | null, now = new Date()): Promise<ResetRequest> {
   if (ip && isPublicIp(ip)) {
-    const { allowed } = await consumeRateLimit(`reset-ip:${ip}`, IP_MAX_PER_HOUR, HOUR_MS, now)
+    const { allowed } = await consumeRateLimit(`reset-ip:${ipRateKey(ip)}`, IP_MAX_PER_HOUR, HOUR_MS, now)
     if (!allowed) return 'too-many'
   }
   after(() => deleteExpiredRateLimits().catch(() => {}))

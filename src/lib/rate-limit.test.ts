@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 const query = vi.fn()
 vi.mock('@/lib/db', () => ({ pool: { query: (...args: unknown[]) => query(...args) } }))
 
-const { consumeRateLimit, clientIp, isPublicIp } = await import('./rate-limit')
+const { consumeRateLimit, clientIp, isPublicIp, ipRateKey } = await import('./rate-limit')
 
 const NOW = new Date('2026-10-07T12:00:00Z')
 const HOUR = 60 * 60 * 1000
@@ -15,12 +15,12 @@ beforeEach(() => {
 describe('consumeRateLimit', () => {
   it('allows hits up to the limit', async () => {
     query.mockResolvedValue({ rows: [{ count: 3, reset_at: new Date(NOW.getTime() + HOUR) }] })
-    expect(await consumeRateLimit('k', 3, HOUR, NOW)).toEqual({ allowed: true, retryAfterMs: HOUR })
+    expect(await consumeRateLimit('k', 3, HOUR, NOW)).toEqual({ allowed: true, retryAfterMs: HOUR, count: 3 })
   })
 
   it('refuses the hit after the limit and says when to retry', async () => {
     query.mockResolvedValue({ rows: [{ count: 4, reset_at: new Date(NOW.getTime() + 10 * 60_000) }] })
-    expect(await consumeRateLimit('k', 3, HOUR, NOW)).toEqual({ allowed: false, retryAfterMs: 10 * 60_000 })
+    expect(await consumeRateLimit('k', 3, HOUR, NOW)).toEqual({ allowed: false, retryAfterMs: 10 * 60_000, count: 4 })
   })
 
   it('sends the key, the end of a new window and the current time', async () => {
@@ -57,3 +57,26 @@ describe('isPublicIp', () => {
     }
   })
 })
+
+describe('ipRateKey', () => {
+  it('keeps an IPv4 address and unwraps an IPv4-mapped one', () => {
+    expect(ipRateKey('203.0.113.7')).toBe('203.0.113.7')
+    expect(ipRateKey('::ffff:203.0.113.7')).toBe('203.0.113.7')
+  })
+
+  it('counts an IPv6 address by its /64, so changing the last 64 bits changes nothing', () => {
+    const a = ipRateKey('2a01:cb00:1:2:aaaa:bbbb:cccc:dddd')
+    const b = ipRateKey('2a01:cb00:1:2:1111:2222:3333:4444')
+    expect(a).toBe('2a01:cb00:1:2::/64')
+    expect(b).toBe(a)
+    expect(ipRateKey('2a01:cb00:1:3::1')).not.toBe(a)
+  })
+
+  it('reads the compressed forms and ignores leading zeros and case', () => {
+    expect(ipRateKey('2001:db8::1')).toBe('2001:db8:0:0::/64')
+    expect(ipRateKey('2001:0DB8:0000:0000:0000:0000:0000:0001')).toBe('2001:db8:0:0::/64')
+    expect(ipRateKey('2001:db8:a::')).toBe('2001:db8:a:0::/64')
+    expect(ipRateKey('::1')).toBe('0:0:0:0::/64')
+  })
+})
+
