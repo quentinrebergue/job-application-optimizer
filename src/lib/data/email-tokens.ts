@@ -1,7 +1,7 @@
 import crypto from 'crypto'
 import { pool } from '@/lib/db'
 
-export type TokenPurpose = 'verify' | 'reset'
+export type TokenPurpose = 'verify' | 'reset' | 'change-email'
 
 /** Why a link was refused: unknown (or for another purpose), already used, or too old. */
 export type TokenFailure = 'invalid' | 'used' | 'expired'
@@ -10,12 +10,15 @@ export function hashToken(token: string): string {
   return crypto.createHash('sha256').update(token).digest('hex')
 }
 
-/** Creates a single-use token; returns the raw value, which only goes into the mail. */
-export async function createEmailToken(userId: string, purpose: TokenPurpose, ttlMs: number): Promise<string> {
+/**
+ * Creates a single-use token; returns the raw value, which only goes into the mail. A change of
+ * address carries the new address (#236): it becomes the address of the account when the link is used.
+ */
+export async function createEmailToken(userId: string, purpose: TokenPurpose, ttlMs: number, newEmail?: string): Promise<string> {
   const token = crypto.randomBytes(32).toString('base64url')
   await pool.query(
-    'INSERT INTO email_tokens (token_hash, user_id, purpose, expires_at) VALUES ($1, $2, $3, $4)',
-    [hashToken(token), userId, purpose, new Date(Date.now() + ttlMs)],
+    'INSERT INTO email_tokens (token_hash, user_id, purpose, expires_at, new_email) VALUES ($1, $2, $3, $4, $5)',
+    [hashToken(token), userId, purpose, new Date(Date.now() + ttlMs), newEmail ?? null],
   )
   return token
 }
@@ -37,6 +40,21 @@ export async function consumeEmailToken(
   )
   if (rows[0]) return { userId: rows[0].user_id }
   return { failure: await whyRefused(hash, purpose) }
+}
+
+/** Uses the link of a change of address: gives the user and the address it was made for (#236). */
+export async function consumeEmailChangeToken(
+  token: string,
+): Promise<{ userId: string; newEmail: string } | { failure: TokenFailure }> {
+  const hash = hashToken(token)
+  const { rows } = await pool.query<{ user_id: string; new_email: string }>(
+    `UPDATE email_tokens SET used_at = now()
+     WHERE token_hash = $1 AND purpose = 'change-email' AND used_at IS NULL AND expires_at > now() AND new_email IS NOT NULL
+     RETURNING user_id, new_email`,
+    [hash],
+  )
+  if (rows[0]) return { userId: rows[0].user_id, newEmail: rows[0].new_email }
+  return { failure: await whyRefused(hash, 'change-email') }
 }
 
 /** Why a token that cannot be used was refused. */

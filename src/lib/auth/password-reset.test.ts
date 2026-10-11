@@ -2,13 +2,11 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 const findUserByEmail = vi.fn()
 const findUserById = vi.fn()
-const updatePassword = vi.fn()
+const replacePassword = vi.fn()
 const countRecentTokens = vi.fn()
 const createEmailToken = vi.fn()
 const consumeEmailToken = vi.fn()
 const peekEmailToken = vi.fn()
-const invalidateEmailTokens = vi.fn()
-const deleteAllSessions = vi.fn()
 const consumeRateLimit = vi.fn()
 const sendEmail = vi.fn()
 /** Work scheduled with after(), run by the test when it wants. */
@@ -19,16 +17,14 @@ vi.mock('next/server', () => ({ after: (task: () => unknown) => scheduled.push(t
 vi.mock('@/lib/data/users', () => ({
   findUserByEmail: (...a: unknown[]) => findUserByEmail(...a),
   findUserById: (...a: unknown[]) => findUserById(...a),
-  updatePassword: (...a: unknown[]) => updatePassword(...a),
+  replacePassword: (...a: unknown[]) => replacePassword(...a),
 }))
 vi.mock('@/lib/data/email-tokens', () => ({
   countRecentTokens: (...a: unknown[]) => countRecentTokens(...a),
   createEmailToken: (...a: unknown[]) => createEmailToken(...a),
   consumeEmailToken: (...a: unknown[]) => consumeEmailToken(...a),
   peekEmailToken: (...a: unknown[]) => peekEmailToken(...a),
-  invalidateEmailTokens: (...a: unknown[]) => invalidateEmailTokens(...a),
 }))
-vi.mock('@/lib/auth/session', () => ({ deleteAllSessions: (...a: unknown[]) => deleteAllSessions(...a) }))
 vi.mock('@/lib/rate-limit', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@/lib/rate-limit')>()),
   consumeRateLimit: (...a: unknown[]) => consumeRateLimit(...a),
@@ -47,7 +43,7 @@ async function runScheduled() {
 
 beforeEach(() => {
   scheduled = []
-  for (const fn of [findUserByEmail, findUserById, updatePassword, countRecentTokens, createEmailToken, consumeEmailToken, peekEmailToken, invalidateEmailTokens, deleteAllSessions, consumeRateLimit, sendEmail]) fn.mockReset()
+  for (const fn of [findUserByEmail, findUserById, replacePassword, countRecentTokens, createEmailToken, consumeEmailToken, peekEmailToken, consumeRateLimit, sendEmail]) fn.mockReset()
   findUserByEmail.mockResolvedValue(USER)
   findUserById.mockResolvedValue(USER)
   countRecentTokens.mockResolvedValue({ count: 0, latest: null })
@@ -92,12 +88,10 @@ describe('requestPasswordReset', () => {
 })
 
 describe('resetPassword', () => {
-  it('sets the password, signs out everywhere, retires other links, mails the owner', async () => {
+  it('sets the password in one step (sessions closed, other links retired, change of address cancelled), mails the owner', async () => {
     consumeEmailToken.mockResolvedValue({ userId: 'u1' })
     expect(await resetPassword('tok', 'new-pass-1')).toEqual({ userId: 'u1' })
-    expect(updatePassword).toHaveBeenCalledWith('u1', 'new-pass-1')
-    expect(deleteAllSessions).toHaveBeenCalledWith('u1')
-    expect(invalidateEmailTokens).toHaveBeenCalledWith('u1', 'reset')
+    expect(replacePassword).toHaveBeenCalledWith('u1', 'new-pass-1')
     await runScheduled()
     expect(sendEmail.mock.calls[0][0].subject).toBe('Your password was changed')
   })
@@ -105,8 +99,7 @@ describe('resetPassword', () => {
   it('changes nothing with a used or expired link', async () => {
     consumeEmailToken.mockResolvedValue({ failure: 'used' })
     expect(await resetPassword('tok', 'new-pass-1')).toEqual({ failure: 'used' })
-    expect(updatePassword).not.toHaveBeenCalled()
-    expect(deleteAllSessions).not.toHaveBeenCalled()
+    expect(replacePassword).not.toHaveBeenCalled()
   })
 })
 

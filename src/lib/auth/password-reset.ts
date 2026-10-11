@@ -4,12 +4,10 @@ import {
   countRecentTokens,
   createEmailToken,
   consumeEmailToken,
-  invalidateEmailTokens,
   peekEmailToken,
   type TokenFailure,
 } from '@/lib/data/email-tokens'
-import { findUserByEmail, findUserById, updatePassword } from '@/lib/data/users'
-import { deleteAllSessions } from '@/lib/auth/session'
+import { findUserByEmail, findUserById, replacePassword } from '@/lib/data/users'
 import { consumeRateLimit, deleteExpiredRateLimits, ipRateKey, isPublicIp } from '@/lib/rate-limit'
 import { appUrl } from '@/lib/email/providers'
 import { sendEmail } from '@/lib/email/send'
@@ -74,16 +72,15 @@ export async function checkResetToken(token: string | null): Promise<'valid' | T
 
 /**
  * Sets the new password from a reset link: the link is used once, every
- * session of the user is closed, older reset links stop working, and the
- * owner of the address gets a "password changed" mail.
+ * session of the user is closed, older reset links and a pending change of
+ * address stop working (all in one step), and the owner of the address gets a
+ * "password changed" mail.
  */
 export async function resetPassword(token: string, password: string): Promise<{ userId: string } | { failure: TokenFailure }> {
   const result = await consumeEmailToken(token, 'reset')
   if ('failure' in result) return result
 
-  await updatePassword(result.userId, password)
-  await deleteAllSessions(result.userId)
-  await invalidateEmailTokens(result.userId, 'reset')
+  await replacePassword(result.userId, password)
 
   const user = await findUserById(result.userId)
   if (user) sendLater(() => passwordChangedMessage(user.email, `${appUrl()}/forgot-password`), 'password changed mail')

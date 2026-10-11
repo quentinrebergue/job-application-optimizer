@@ -136,6 +136,14 @@ describe('proxy: requests that change data must come from the site (#206)', () =
 })
 
 
+describe('proxy: the link of a change of address (#236)', () => {
+  it('opens for a visitor: the mail may be opened in another browser', () => {
+    const res = proxy(request('/verify-email/change'))
+    expect(res.headers.get('location')).toBeNull()
+    expect(res.status).toBe(200)
+  })
+})
+
 describe('proxy: stale session cookie (#178)', () => {
   it('lets a visitor with a cookie reach the cleaning route, where the cookie is checked', () => {
     const res = proxy(request('/session-expired', true))

@@ -15,7 +15,7 @@ const COLUMNS: Record<string, string[]> = {
   jobs: ['id', 'user_id', 'company', 'title', 'description', 'location', 'url', 'status', 'date_added', 'tags', 'ats_tags', 'ai_analysis', 'resume_config'],
   entities: ['id', 'user_id', 'type', 'tags', 'latex_snippet', 'data'],
   user_resume_profile: ['user_id', 'full_name', 'email', 'linkedin', 'phone', 'address', 'resume_title', 'profile_text', 'ai_context', 'updated_at'],
-  email_tokens: ['token_hash', 'user_id', 'purpose', 'expires_at', 'used_at', 'created_at'],
+  email_tokens: ['token_hash', 'user_id', 'purpose', 'expires_at', 'used_at', 'created_at', 'new_email'],
   login_attempts: ['email', 'count', 'reset_at'],
   rate_limits: ['key', 'count', 'reset_at'],
   ai_usage: ['id', 'user_id', 'feature', 'model', 'status', 'prompt_tokens', 'completion_tokens', 'cost_eur', 'created_at'],

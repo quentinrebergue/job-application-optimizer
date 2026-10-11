@@ -1,4 +1,6 @@
 import { redirect } from 'next/navigation'
+import { ChangeEmail } from '@/components/account/ChangeEmail'
+import { ChangePassword } from '@/components/account/ChangePassword'
 import { DeleteAccount } from '@/components/account/DeleteAccount'
 import { ExportButton } from '@/components/account/ExportButton'
 import { Card } from '@/components/ui/Card'
@@ -21,6 +23,18 @@ export default async function AccountPage() {
     <div className={cn(page, 'max-w-3xl')}>
       <PageHeader title="Account" subtitle={user.email} />
       <div className="flex flex-col gap-6">
+        <Card className="flex flex-col items-start gap-3">
+          <h2 className="text-lg font-extrabold tracking-tight">Password</h2>
+          <p className="text-sm text-ink-muted">Changing it signs out your other devices.</p>
+          <ChangePassword />
+        </Card>
+        <Card className="flex flex-col items-start gap-3">
+          <h2 className="text-lg font-extrabold tracking-tight">Email address</h2>
+          <p className="text-sm text-ink-muted">
+            It is the address you log in with and where we write to you. A link goes to the new address; nothing changes until you open it.
+          </p>
+          <ChangeEmail />
+        </Card>
         <Card className="flex flex-col items-start gap-3">
           <h2 className="text-lg font-extrabold tracking-tight">Your data</h2>
           <p className="text-sm text-ink-muted">

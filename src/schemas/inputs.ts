@@ -117,3 +117,15 @@ export const DeleteAccountSchema = z.object({
 
 /** The password, asked again before a copy of the data is given (#104). */
 export const ExportAccountSchema = z.object({ password: z.string().min(1, { error: 'Enter your password.' }).max(1000) })
+
+/** The password of an account changes: the current one, and the new one (its rules are those of the sign-up, checked in the lib). */
+export const ChangePasswordSchema = z.object({
+  currentPassword: z.string().min(1, { error: 'Enter your password.' }).max(1000),
+  newPassword: z.string().max(1000),
+})
+
+/** The address of an account changes: the new one (checked in the lib), and the password. */
+export const ChangeEmailSchema = z.object({
+  email: z.string().trim().max(254),
+  password: z.string().min(1, { error: 'Enter your password.' }).max(1000),
+})

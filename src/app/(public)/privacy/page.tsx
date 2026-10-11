@@ -30,8 +30,9 @@ export default function PrivacyPage() {
 
       <LegalSection title="Emails">
         <p>
-          We send only the emails the service needs: confirm your address, reset your password, tell you your password changed,
-          tell you your data was downloaded, tell you your account was deleted. No newsletters, no marketing. They go through
+          We send only the emails the service needs: confirm your address (also when you change it), reset your password, tell you
+          your password or your address changed, tell you if someone tries to use your address for another account, tell you your
+          data was downloaded, tell you your account was deleted. No newsletters, no marketing. They go through
           Brevo, a French email provider, which receives your address and the message.
         </p>
         <p>
