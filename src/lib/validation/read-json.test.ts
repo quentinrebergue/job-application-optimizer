@@ -89,6 +89,24 @@ describe('describeIssue', () => {
     expect(first({ title: 'a', tags: ['abcd'] })).toBe('An item of Tags is too long: 3 characters at most.')
   })
 
+  it('writes a field name for a person, from snake_case and camelCase', () => {
+    const s = z.object({ profile_text: z.string().max(1), entityIds: z.array(z.string()).max(1) })
+    const message = (value: unknown) => {
+      const parsed = s.safeParse(value)
+      if (parsed.success) throw new Error('expected an error')
+      return describeIssue(parsed.error.issues[0])
+    }
+    expect(message({ profile_text: 'ab', entityIds: [] })).toBe('Profile text is too long: 1 characters at most.')
+    expect(message({ profile_text: 'a', entityIds: ['a', 'b'] })).toBe('Entity ids has too many items: 1 at most.')
+  })
+
+  it('shows the message of a rule we wrote ourselves', () => {
+    const s = z.object({ a: z.string().optional(), b: z.string().optional() }).refine((v) => v.a || v.b, { error: 'Provide a or b', path: ['a'] })
+    const parsed = s.safeParse({})
+    if (parsed.success) throw new Error('expected an error')
+    expect(describeIssue(parsed.error.issues[0])).toBe('Provide a or b')
+  })
+
   it('writes the limit with a thousands separator', () => {
     const big = z.object({ description: z.string().max(15000) })
     const parsed = big.safeParse({ description: 'a'.repeat(15001) })

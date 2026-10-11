@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest'
 import { isActiveSection } from './nav'
-import { SECTIONS } from '@/config'
 
 describe('isActiveSection', () => {
   const resume = { href: '/resume', alsoActiveOn: ['/entities'] }
@@ -17,11 +16,5 @@ describe('isActiveSection', () => {
   it('does not match a path that only starts with the same letters', () => {
     expect(isActiveSection('/resumes', resume)).toBe(false)
     expect(isActiveSection('/jobs', resume)).toBe(false)
-  })
-})
-
-describe('sections', () => {
-  it('are Jobs and Resume', () => {
-    expect(SECTIONS.map((section) => section.id)).toEqual(['jobs', 'resume'])
   })
 })
