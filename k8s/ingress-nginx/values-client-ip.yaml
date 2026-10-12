@@ -1,0 +1,26 @@
+# What ingress-nginx must change so the application sees the visitor's address (#224).
+#
+# Today every request reaches nginx with the same address (146.59.241.129 on 2026-10-12: UptimeRobot, Googlebot
+# and a scanner alike), so each per-address limit of the application counts the whole site as one visitor.
+# The cause: the OVH load balancer hands the connection to the node, and kube-proxy rewrites the source address
+# (externalTrafficPolicy: Cluster). The fix, as OVH documents it: the load balancer sends the real address in the
+# PROXY protocol (v2), nginx reads it, and the traffic goes straight to the node that runs nginx.
+#
+# This file holds only what changes. It is applied on top of the values already in place:
+#   helm upgrade ingress-nginx ingress-nginx/ingress-nginx -n ingress-nginx --version 4.15.1 --reuse-values \
+#     -f k8s/ingress-nginx/values-client-ip.yaml
+# See README.md in this folder (order, check, way back).
+controller:
+  service:
+    # No rewriting of the source address by kube-proxy.
+    externalTrafficPolicy: Local
+    annotations:
+      # Both names OVH lists in its guide: the load balancer sends the PROXY protocol v2 header.
+      service.beta.kubernetes.io/ovh-loadbalancer-proxy-protocol: "v2"
+      loadbalancer.openstack.org/proxy-protocol: "v2"
+  config:
+    # nginx reads the PROXY header and takes the address from it, but only from the load balancer.
+    use-proxy-protocol: "true"
+    real-ip-header: "proxy_protocol"
+    # The address the load balancer connects from: the annotation loadbalancer.ovhcloud.com/egress-ips of the Service.
+    proxy-real-ip-cidr: "162.19.0.204/32"
