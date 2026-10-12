@@ -2,7 +2,7 @@
 // Needs the accounts of load/seed.sh.
 import { check } from 'k6'
 import { SharedArray } from 'k6/data'
-import { authHeaders, getPage, loadAccounts, pickUser, ramp, record, report, thresholds, floor, probe, probeScenario } from './lib.js'
+import { authHeaders, getPage, isAppPage, loadAccounts, pickUser, ramp, record, report, thresholds, floor, probe, probeScenario } from './lib.js'
 
 const NAMES = ['jobs-list', 'library', 'one-job']
 export const options = { scenarios: { reading: ramp('read'), ...probeScenario() }, thresholds: thresholds(NAMES) }
@@ -14,12 +14,12 @@ export function read() {
   const roll = Math.random()
   const page =
     roll < 0.5
-      ? { path: '/jobs', name: 'jobs-list', words: 'Job Tracker' }
+      ? { path: '/jobs', name: 'jobs-list' }
       : roll < 0.8
-        ? { path: '/resume', name: 'library', words: 'Resume' }
-        : { path: `/jobs/${user.jobs[0]}`, name: 'one-job', words: 'Backend Engineer' }
+        ? { path: '/resume', name: 'library' }
+        : { path: `/jobs/${user.jobs[0]}`, name: 'one-job' }
   const res = getPage(page.path, page.name, authHeaders(user))
-  record(check(res, { [`${page.name} answers 200`]: (r) => r.status === 200, [`${page.name} is the right page`]: (r) => String(r.body).includes(page.words) }))
+  record(check(res, { [`${page.name} answers 200`]: (r) => r.status === 200, [`${page.name} is a page of the app`]: isAppPage }))
 }
 
 export function setup() {

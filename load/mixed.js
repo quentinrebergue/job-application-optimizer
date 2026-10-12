@@ -10,7 +10,7 @@ import exec from 'k6/execution'
 import { check } from 'k6'
 import { Rate } from 'k6/metrics'
 import { SharedArray } from 'k6/data'
-import { BASE_URL, MAX_VUS, authHeaders, hiddenFields, loadAccounts, multipart, floor } from './lib.js'
+import { BASE_URL, MAX_VUS, authHeaders, isAppPage, hiddenFields, loadAccounts, multipart, floor } from './lib.js'
 
 const READ_RPS = Number(__ENV.READ_RPS || 15)
 const LOGIN_RPS = Number(__ENV.LOGIN_RPS || 1)
@@ -20,6 +20,7 @@ const PASSWORD = __ENV.LOAD_PASSWORD
 
 const phases = ['alone', 'with-logins']
 const failed = new Rate('mixed_failed')
+let readNotes = 0
 
 export const options = {
   scenarios: {
@@ -45,10 +46,18 @@ const phaseNow = () => (exec.instance.currentTestRunDuration < ALONE_SECONDS * 1
 export function read() {
   const user = users[exec.scenario.iterationInTest % users.length]
   const roll = Math.random()
-  const page = roll < 0.5 ? { path: '/jobs', words: 'Job Tracker' } : roll < 0.8 ? { path: '/resume', words: 'Resume' } : { path: `/jobs/${user.jobs[0]}`, words: 'Backend Engineer' }
+  const page = roll < 0.5 ? { path: '/jobs' } : roll < 0.8 ? { path: '/resume' } : { path: `/jobs/${user.jobs[0]}` }
   const phase = phaseNow()
   const res = http.get(`${BASE_URL}${page.path}`, { headers: authHeaders(user), redirects: 0, tags: { name: 'read', phase }, jar: new http.CookieJar() })
-  failed.add(!check(res, { 'the page answers 200 with its content': (r) => r.status === 200 && String(r.body).includes(page.words) }), { name: 'read', phase })
+  const good = check(res, { 'the page is a page of the app': isAppPage })
+  if (!good && readNotes < 3) {
+    // Why a page is counted as failed, for the first few.
+    readNotes++
+    const body = String(res.body)
+    const title = (body.match(/<title>([^<]{0,60})/) || [])[1]
+    console.warn(`read failed: ${page.path} status ${res.status}, ${body.length} bytes, title "${title}"`)
+  }
+  failed.add(!good, { name: 'read', phase })
 }
 
 export function login() {

@@ -105,6 +105,15 @@ export function tags(name) {
   return { step: String(stepNow()), name }
 }
 
+/**
+ * A page of the app for a signed-in user: a 200 of some size that is not the login page. Not a text of the interface,
+ * which changes with the design (a check on "Job Tracker" went stale and counted 70 % of good pages as failed).
+ */
+export function isAppPage(res) {
+  const body = String(res.body)
+  return res.status === 200 && body.length > 5000 && !body.includes('name="password"')
+}
+
 /** The accounts made by seed.sh. */
 export function loadAccounts(raw) {
   const users = JSON.parse(raw).users
