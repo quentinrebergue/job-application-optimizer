@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import { hashPassword, verifyPassword } from './password'
+import bcrypt from 'bcryptjs'
+import { hashPassword, SALT_ROUNDS, UNKNOWN_ACCOUNT_HASH, verifyPassword } from './password'
 
 describe('hashPassword / verifyPassword', () => {
   it('never returns the plain password as the hash', async () => {
@@ -21,5 +22,17 @@ describe('hashPassword / verifyPassword', () => {
   it('rejects an incorrect password', async () => {
     const hash = await hashPassword('mySecret123')
     expect(await verifyPassword('wrongPassword', hash)).toBe(false)
+  })
+})
+
+describe('UNKNOWN_ACCOUNT_HASH (#225)', () => {
+  it('costs as much as a real hash: if SALT_ROUNDS changes, the time of the answer would tell which accounts exist', async () => {
+    expect(bcrypt.getRounds(UNKNOWN_ACCOUNT_HASH)).toBe(SALT_ROUNDS)
+    expect(bcrypt.getRounds(await hashPassword('mySecret123'))).toBe(SALT_ROUNDS)
+  })
+
+  it('is a valid hash that no password matches', async () => {
+    expect(await verifyPassword('', UNKNOWN_ACCOUNT_HASH)).toBe(false)
+    expect(await verifyPassword('password', UNKNOWN_ACCOUNT_HASH)).toBe(false)
   })
 })

@@ -1,18 +1,19 @@
 'use server'
 
 import * as z from 'zod'
-import { pool } from '@/lib/db'
 import { after } from 'next/server'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { createUser, findUserByEmail, type User } from '@/lib/data/users'
 import { sendVerificationEmail } from '@/lib/auth/email-verification'
-import { verifyPassword } from '@/lib/auth/password'
+import { UNKNOWN_ACCOUNT_HASH, verifyPassword } from '@/lib/auth/password'
 import { createSession, deleteSession } from '@/lib/auth/session'
 import { SignupSchema, LoginSchema } from '@/lib/validation/auth-schemas'
 import { safePath } from '@/lib/auth/return-to'
+import { beginLoginAttempt, purgeExpiredLoginRecords } from '@/lib/auth/login-limit'
 import { checkSignup } from '@/lib/auth/signup-limit'
 import { deleteExpiredEmailTokens } from '@/lib/data/email-tokens'
+import { BusyError } from '@/lib/concurrency'
 import { clientIp, deleteExpiredRateLimits } from '@/lib/rate-limit'
 
 // `email` is sent back on failure so the form can show it again: React 19 resets
@@ -47,6 +48,7 @@ export async function signup(_prevState: AuthFormState, formData: FormData): Pro
     user = await createUser(email, password)
     await createSession(user.id)
   } catch (err) {
+    if (err instanceof BusyError) return { message: 'Sign-up is very busy right now. Try again in a moment.', email }
     const isDuplicate = err instanceof Error && 'code' in err && err.code === '23505'
     return { message: isDuplicate ? 'This email is already registered.' : 'Something went wrong. Try again.', email }
   }
@@ -62,31 +64,6 @@ export async function signup(_prevState: AuthFormState, formData: FormData): Pro
   redirect(safePath(formData.get('returnTo')))
 }
 
-const MAX_ATTEMPTS = 5
-const WINDOW_MS = 15 * 60 * 1000
-
-async function isRateLimited(email: string): Promise<boolean> {
-  const result = await pool.query<{ count: number; reset_at: Date }>(
-    `SELECT count, reset_at FROM login_attempts WHERE email = $1`,
-    [email]
-  )
-  const row = result.rows[0]
-  if (!row || row.reset_at < new Date()) return false
-  return row.count >= MAX_ATTEMPTS
-}
-
-async function recordFailedAttempt(email: string): Promise<void> {
-  const resetAt = new Date(Date.now() + WINDOW_MS)
-  await pool.query(
-    `INSERT INTO login_attempts (email, count, reset_at)
-     VALUES ($1, 1, $2)
-     ON CONFLICT (email) DO UPDATE SET
-       count = CASE WHEN login_attempts.reset_at < now() THEN 1 ELSE login_attempts.count + 1 END,
-       reset_at = CASE WHEN login_attempts.reset_at < now() THEN $2 ELSE login_attempts.reset_at END`,
-    [email, resetAt]
-  )
-}
-
 export async function login(_prevState: AuthFormState, formData: FormData): Promise<AuthFormState> {
   const validated = LoginSchema.safeParse({
     email: formData.get('email'),
@@ -98,17 +75,28 @@ export async function login(_prevState: AuthFormState, formData: FormData): Prom
 
   const { email, password } = validated.data
 
-  if (await isRateLimited(email)) {
-    return { message: 'Too many attempts. Try again in 15 minutes.', email }
-  }
+  // Counted before anything is checked against an account, and given back on a success (#225): see login-limit.ts.
+  const attempt = await beginLoginAttempt(clientIp(await headers()), email)
+  if (!attempt.ok) return { message: attempt.message, email }
 
   const user = await findUserByEmail(email)
-  const valid = user ? await verifyPassword(password, user.passwordHash) : false
+  // The hash is checked for an unknown address too, so the answer takes as long either way (#225).
+  let valid: boolean
+  try {
+    valid = await verifyPassword(password, user?.passwordHash ?? UNKNOWN_ACCOUNT_HASH)
+  } catch (err) {
+    if (!(err instanceof BusyError)) throw err
+    // So many checks are waiting that this one is refused: no password was checked, so nothing counts against anyone.
+    await attempt.finish('cancelled')
+    return { message: 'Sign-in is very busy right now. Try again in a moment.', email }
+  }
 
   if (!user || !valid) {
-    await recordFailedAttempt(email)
+    await attempt.finish('failure')
+    after(() => purgeExpiredLoginRecords().catch(() => {}))
     return { message: 'Wrong email or password.', email }
   }
+  await attempt.finish('success')
 
   await createSession(user.id)
   redirect(safePath(formData.get('returnTo')))
