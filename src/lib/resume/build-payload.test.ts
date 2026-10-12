@@ -3,6 +3,8 @@ import type { EducationMeta, EntityMeta, ExperienceMeta, ProjectMeta, SkillMeta 
 import type { ResumeProfile } from '@/schemas/resume-profile'
 import { applyOrder, buildPayload, endDateKey, sortByEndDate } from './build-payload'
 
+const ZWSP = '\u200B'
+
 const profile: ResumeProfile = {
   full_name: 'Ada Lovelace',
   email: 'ada@example.com',
@@ -185,5 +187,63 @@ describe('buildPayload', () => {
     const snapshot = structuredClone(input)
     buildPayload({ templateId: 'classic', profile, entities: input })
     expect(input).toEqual(snapshot)
+  })
+})
+
+describe('buildPayload: words too long for a line (the page is not overrun)', () => {
+  const long = 'a'.repeat(120)
+
+  it('adds break opportunities inside the long words of every free text, and only there', () => {
+    const payload = buildPayload({
+      templateId: 'compact',
+      profile: { ...profile, full_name: long, resume_title: long, profile_text: long, address: long },
+      entities: [
+        experience('e1', '2024 - Now', { title: long, company: long, location: long, description: `Led ${long} teams` }),
+        project('p1', { title: long, tech: [long, 'Go'], description: long }),
+        skill('s1', [long, 'Go']),
+        education('d1', '2020 - 2022'),
+      ] as EntityMeta[],
+    })
+    const texts = [
+      payload.profile.name, payload.profile.title, payload.profile.summary, payload.profile.address,
+      payload.sections.experiences[0].title, payload.sections.experiences[0].company, payload.sections.experiences[0].location,
+      payload.sections.experiences[0].description,
+      payload.sections.projects[0].title, payload.sections.projects[0].tech[0], payload.sections.projects[0].description,
+      payload.sections.skills[0].tags[0],
+    ]
+    for (const text of texts) expect(text).toContain(ZWSP)
+    expect(payload.sections.projects[0].tech[1]).toBe('Go')
+    expect(payload.sections.experiences[0].description.startsWith('Led ')).toBe(true)
+    expect(payload.sections.experiences[0].description.endsWith(' teams')).toBe(true)
+  })
+
+  it('also breaks a description replaced for this job', () => {
+    const payload = buildPayload({
+      templateId: 'compact',
+      profile,
+      config: { entity_description_overrides: { e1: long } },
+      entities: [experience('e1', '2024 - Now')] as EntityMeta[],
+    })
+    expect(payload.sections.experiences[0].description).toContain(ZWSP)
+  })
+
+  it('leaves the contact details exactly as they are: the e-mail and the LinkedIn address are the targets of links', () => {
+    const payload = buildPayload({
+      templateId: 'compact',
+      profile: { ...profile, email: `${long}@example.com`, linkedin: `linkedin.com/in/${long}`, phone: long },
+      entities: [],
+    })
+    expect(payload.profile.email).toBe(`${long}@example.com`)
+    expect(payload.profile.linkedin).toBe(`linkedin.com/in/${long}`)
+    expect(payload.profile.phone).toBe(long)
+  })
+
+  it('sends ordinary text untouched', () => {
+    const payload = buildPayload({
+      templateId: 'compact',
+      profile,
+      entities: [experience('e1', '2024 - Now', { description: 'Built a log subsystem and a gyroscope driver over I2C with FIFO reads.' })] as EntityMeta[],
+    })
+    expect(JSON.stringify(payload)).not.toContain(ZWSP)
   })
 })
