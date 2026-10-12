@@ -105,6 +105,8 @@ describe('beginLoginAttempt: counting before the password is checked (#225)', ()
     const result = await beginLoginAttempt(PUBLIC, EMAIL, NOW)
     expect(result).toEqual({ ok: false, message: 'Too many attempts. Try again in 15 minutes.' })
     expect(refundRateLimit).toHaveBeenCalledWith(`login-fail-ip:${PUBLIC}`, NOW)
+    // The refused attempt is given back to the email too, or a burst would keep the account locked with no failure behind it.
+    expect(query.mock.calls.at(-1)![0]).toContain('UPDATE login_attempts SET count = GREATEST(count - 1, 0)')
   })
 
   it('allows exactly 5 attempts on an email, and refuses the 6th', async () => {
