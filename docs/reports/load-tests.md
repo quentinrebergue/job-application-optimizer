@@ -31,8 +31,8 @@ to a hot path (login, the library, the payload of the renderer).
 ## What the runs on the real node say (2026-10-12)
 
 - **Capacity of ordinary pages: about 45 signed-in page views a second.** At one page every 10 seconds per person
-  (reading, then typing), that is **about 450 people active at the same moment**. A class of 30 or a school of 300 is
-  inside it. The first figure (24 a second) was a measure of a poor home connection, not of the site: the same server
+  (reading, then typing), that is **about 450 people active at the same moment**. That is far above ordinary traffic; a post that goes well is
+  the case to watch. The first figure (24 a second) was a measure of a poor home connection, not of the site: the same server
   answered in under 0.5 s on its side while k6 saw 7 s.
 - **The bottleneck is the single Node thread of the app.** At the break it holds 1,059 m (one core), while Postgres is at 97 m,
   nginx at 76 m, the node at 79 % and the steal at 0 %. The app costs about 16 ms of CPU a page view on the node (about 9 ms on

@@ -12,7 +12,8 @@ BEGIN;
 INSERT INTO users (email, password_hash, email_verified_at)
 SELECT 'loadtest-' || g || '@loadtest.invalid', :'pwhash', now()
 FROM generate_series(1, :count) g
-ON CONFLICT (email) DO NOTHING;
+-- A second seed with another LOAD_PASSWORD must change the password of the accounts already there.
+ON CONFLICT (email) DO UPDATE SET password_hash = EXCLUDED.password_hash;
 
 CREATE TEMP TABLE lt_users AS
   SELECT id, split_part(split_part(email, '-', 2), '@', 1) AS n, email

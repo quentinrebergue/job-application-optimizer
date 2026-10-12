@@ -12,6 +12,7 @@ export const options = { scenarios: { login: ramp('login'), ...probeScenario() }
 
 const users = new SharedArray('users', () => loadAccounts(open('./.accounts.json')))
 const PASSWORD = __ENV.LOAD_PASSWORD
+let failureNotes = 0
 
 export function login() {
   if (!PASSWORD) throw new Error('Give the password of the test accounts: -e LOAD_PASSWORD=...')
@@ -27,6 +28,12 @@ export function login() {
     jar,
   })
   const cookie = res.headers['Set-Cookie'] || ''
+  if (res.status !== 303 && failureNotes < 3) {
+    // Why a login fails, for the first few: a refusal by a limit and a wrong password look the same in the figures.
+    failureNotes++
+    const said = String(res.body).match(/(Wrong email or password\.|Too many [^"<\\]{0,80}|[^"<\\]{0,40}(?:busy|try again)[^"<\\]{0,60})/i)
+    console.warn(`login refused: status ${res.status}, ${said ? said[0] : 'no known message in the answer'}`)
+  }
   record(check(res, { 'the login redirects (303)': (r) => r.status === 303, 'the login gives a session cookie': () => cookie.includes('session=') }))
 }
 
