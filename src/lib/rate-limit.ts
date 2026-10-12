@@ -40,6 +40,14 @@ export async function consumeRateLimit(
   }
 }
 
+/**
+ * Gives back one hit of a window that is still running (the attempt turned out not to count: a login that
+ * succeeded). Never goes under zero, and does nothing once the window is over.
+ */
+export async function refundRateLimit(key: string, now = new Date()): Promise<void> {
+  await pool.query('UPDATE rate_limits SET count = GREATEST(count - 1, 0) WHERE key = $1 AND reset_at > $2', [key, now])
+}
+
 /** Removes the windows that are over; returns how many rows were deleted. */
 export async function deleteExpiredRateLimits(now = new Date()): Promise<number> {
   const { rowCount } = await pool.query('DELETE FROM rate_limits WHERE reset_at <= $1', [now])

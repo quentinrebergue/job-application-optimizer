@@ -3,7 +3,7 @@
 import { it, expect, beforeAll, beforeEach, afterAll } from 'vitest'
 import type { Pool } from 'pg'
 import { dbDescribe, getPool, resetData } from '@/tests/db/helpers'
-import { consumeRateLimit, deleteExpiredRateLimits } from './rate-limit'
+import { consumeRateLimit, deleteExpiredRateLimits, refundRateLimit } from './rate-limit'
 
 const HOUR = 60 * 60 * 1000
 const NOW = new Date('2026-10-15T12:00:00Z')
@@ -59,5 +59,24 @@ dbDescribe('rate limits on Postgres', () => {
     expect(await deleteExpiredRateLimits(NOW)).toBe(1)
     const { rows } = await pool.query('SELECT key FROM rate_limits')
     expect(rows).toEqual([{ key: 'live' }])
+  })
+
+  it('gives a hit back while the window runs, never under zero, and not once the window is over (#225)', async () => {
+    await consumeRateLimit('k', 3, HOUR, NOW)
+    await consumeRateLimit('k', 3, HOUR, NOW)
+    await refundRateLimit('k', new Date(NOW.getTime() + 10 * 60_000))
+    expect((await consumeRateLimit('k', 3, HOUR, new Date(NOW.getTime() + 11 * 60_000))).count).toBe(2)
+    await refundRateLimit('k', NOW)
+    await refundRateLimit('k', NOW)
+    await refundRateLimit('k', NOW)
+    expect((await pool.query("SELECT count FROM rate_limits WHERE key = 'k'")).rows[0].count).toBe(0)
+    // After the window, the counter is not touched: the next hit starts a new window at 1.
+    await refundRateLimit('k', new Date(NOW.getTime() + 2 * HOUR))
+    expect((await consumeRateLimit('k', 3, HOUR, new Date(NOW.getTime() + 2 * HOUR))).count).toBe(1)
+  })
+
+  it('counts attempts sent at the same moment in one step: no more than the limit slip through, whatever their number', async () => {
+    const results = await Promise.all(Array.from({ length: 50 }, () => consumeRateLimit('burst', 10, HOUR, NOW)))
+    expect(results.filter((r) => r.allowed)).toHaveLength(10)
   })
 })
