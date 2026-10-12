@@ -45,3 +45,12 @@ export const AI_TRAINING_OPTED_OUT = true
 export const AI_ZERO_RETENTION = false
 /** #104: account page with "export my data" and "delete my account". */
 export const ACCOUNT_TOOLS = true
+
+/**
+ * How many calendar months of AI calls are kept one by one (#213): the current one and the previous one. The
+ * limits per person need a week of them, the monthly budget of the site the current month, and the previous month
+ * stays whole to compare with the invoice of the provider. When a month leaves, its rows (who, when, which model,
+ * how many tokens, what it cost: never the content) are replaced by one total per model with no identity, which
+ * is kept. Written on the privacy page and enforced by lib/maintenance.ts: change it here.
+ */
+export const AI_USAGE_MONTHS_KEPT = 2
