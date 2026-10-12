@@ -34,6 +34,10 @@ spec:
               value: "postgres://app:$(POSTGRES_PASSWORD)@postgres:5432/job_optimizer"
             - name: RESUME_RENDERER_URL
               value: "http://resume-renderer"
+            # Passwords are hashed by this service, not on the thread that serves the pages (#254). Remove the line
+            # to hash in the app again: it also does so by itself when the service does not answer.
+            - name: PASSWORD_HASHER_URL
+              value: "http://password-hasher"
             - name: APP_URL
               value: "https://fastresume.tech"
             - name: AI_GATEWAY_URL
