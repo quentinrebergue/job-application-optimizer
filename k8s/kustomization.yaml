@@ -17,6 +17,9 @@ resources:
 - ai-gateway/deployment.yaml
 - ai-gateway/service.yaml
 - ai-gateway/networkpolicy.yaml
+- password-hasher/deployment.yaml
+- password-hasher/service.yaml
+- password-hasher/networkpolicy.yaml
 - cert-manager/cluster-issuer.yaml
 - argocd/application.yaml
 - db-migrator/job.yaml
