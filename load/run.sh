@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Runs one scenario of the load tests, in a container with everything installed (k6): load/run.sh <scenario>
-#   anonymous | signed-in-read | write-autosave | login | pdf | limits-probe
+#   anonymous | signed-in-read | write-autosave | login | pdf | limits-probe | mixed
 #
 # Against a site in the cluster (BASE_URL not local, and kubectl able to answer `kubectl top`), the run also
 # samples the cluster every 5 seconds and, when it ends, prints one table with both views side by side: what k6 saw
@@ -10,13 +10,13 @@
 #
 # The settings are read from the environment: BASE_URL (default http://localhost:3100), START_RPS, STEP_RPS, STEPS,
 # STEP_SECONDS, MAX_VUS, SLOW_MS, FAIL_RATE, LOAD_PASSWORD (login), MAX_PODS_MI, and for limits-probe: CLIENT_IP_HEADER,
-# LOGIN_LIMIT, RESET_LIMIT, FLOOD_RPS, FLOOD_SECONDS. Read load/README.md before aiming it at the production.
+# LOGIN_LIMIT, RESET_LIMIT, FLOOD_RPS, FLOOD_SECONDS, and for mixed: READ_RPS, LOGIN_RPS, ALONE_SECONDS, TOGETHER_SECONDS. Read load/README.md before aiming it at the production.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 # shellcheck source=load/tool.sh
 source load/tool.sh
 scenario="${1:-}"
-[ -f "load/${scenario}.js" ] || { echo "usage: load/run.sh <anonymous|signed-in-read|write-autosave|login|pdf|limits-probe>" >&2; exit 1; }
+[ -f "load/${scenario}.js" ] || { echo "usage: load/run.sh <anonymous|signed-in-read|write-autosave|login|pdf|limits-probe|mixed>" >&2; exit 1; }
 mkdir -p load/results
 
 remote=1
@@ -38,7 +38,7 @@ prom_service="${PROM_SERVICE:-monitoring-kube-prometheus-prometheus}"
 steal_query='sum(rate(node_cpu_seconds_total%7Bmode%3D%22steal%22%7D%5B1m%5D))%2Fsum(rate(node_cpu_seconds_total%5B1m%5D))'
 
 args=(-e "RESULT_FILE=$result")
-for name in BASE_URL START_RPS STEP_RPS STEPS STEP_SECONDS MAX_VUS SLOW_MS FAIL_RATE LOAD_PASSWORD CLIENT_IP_HEADER LOGIN_LIMIT RESET_LIMIT FLOOD_RPS FLOOD_SECONDS; do
+for name in BASE_URL START_RPS STEP_RPS STEPS STEP_SECONDS MAX_VUS SLOW_MS FAIL_RATE LOAD_PASSWORD CLIENT_IP_HEADER LOGIN_LIMIT RESET_LIMIT FLOOD_RPS FLOOD_SECONDS READ_RPS LOGIN_RPS ALONE_SECONDS TOGETHER_SECONDS; do
   [ -n "${!name:-}" ] && args+=(-e "$name=${!name}")
 done
 # In the container, "localhost" is the container itself: the site on this machine is host.docker.internal.
@@ -99,6 +99,7 @@ status=$?
 set -e
 
 kill "$gen_pid" 2>/dev/null || true
+wait "$gen_pid" 2>/dev/null || true
 cores="$(docker info --format '{{.NCPU}}' 2>/dev/null || echo 1)"
 peak="$(sort -n "$gen_cpu" | tail -1)"
 if [ -n "$peak" ]; then

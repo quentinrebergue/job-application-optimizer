@@ -24,6 +24,7 @@ that looks for the breaking point, that is the normal end.
 | `login.js` | The real login form (its hidden fields, then the post). A login costs a quarter of a second of computation, so this one gives way first. | 5 to 40 |
 | `pdf.js` | A resume download: reads the data and asks the renderer. | 5 to 40 |
 | `limits-probe.js` | Not a ramp: does the site limit one address, and does it see the visitor's real address? A flood of a cheap page (the edge), then the password-reset and failed-login limits until they refuse, then a forged address header. | one run, about a minute |
+| `mixed.js` | What a login costs the pages of everyone else (#254). Not a ramp: `READ_RPS` page reads a second (15) alone for `ALONE_SECONDS` (40), then the same reads plus `LOGIN_RPS` logins a second (1) for `TOGETHER_SECONDS` (80). The answer is the p95 of the reads in the two phases. Needs `LOAD_PASSWORD`. | about 2 minutes |
 
 `lib.js` holds what they share (the ramp, the thresholds, the report, the helpers for the forms), `seed.sh` and `seed.sql`
 make the test accounts, `cleanup.sql` removes them, `run.sh` runs a scenario, `Dockerfile` and `tool.sh` make the image
