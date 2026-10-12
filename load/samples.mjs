@@ -33,6 +33,7 @@ export function readSamples(samplesFile) {
         at: Number(head) * 1000,
         appCpu: app.cpu, appMem: app.mem,
         pgCpu: pick('job-optimizer', 'postgres-').cpu,
+        hasherCpu: pick('job-optimizer', 'password-hasher-').cpu,
         rendererCpu: pick('job-optimizer', 'resume-renderer-').cpu,
         nginxCpu: pods.filter((p) => p.ns === 'ingress-nginx').reduce((s, p) => s + p.cpu, 0),
         nodeCpuPercent: node ? node.cpuPercent : 0,

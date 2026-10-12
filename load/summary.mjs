@@ -18,9 +18,9 @@ for (const s of samples) {
   minutes.set(key, [...(minutes.get(key) || []), s])
 }
 console.log('\nThe cluster, a line a minute (the highest value in the minute)\n')
-console.log(' time     | app CPU m | app Mi | pg CPU m | nginx m | node CPU % | steal % | pods Mi')
-console.log('----------+-----------+--------+----------+---------+------------+---------+--------')
+console.log(' time     | app CPU m | app Mi | hasher m | pg CPU m | nginx m | node CPU % | steal % | pods Mi')
+console.log('----------+-----------+--------+----------+----------+---------+------------+---------+--------')
 for (const [key, list] of minutes) {
-  console.log(` ${time(key * 60000)} | ${pad(max(list, 'appCpu'), 9)} | ${pad(max(list, 'appMem'), 6)} | ${pad(max(list, 'pgCpu'), 8)} | ${pad(max(list, 'nginxCpu'), 7)} | ${pad(max(list, 'nodeCpuPercent'), 10)} | ${max(list, 'steal').toFixed(1).padStart(7)} | ${pad(max(list, 'podsMem'), 7)}`)
+  console.log(` ${time(key * 60000)} | ${pad(max(list, 'appCpu'), 9)} | ${pad(max(list, 'appMem'), 6)} | ${pad(max(list, 'hasherCpu'), 8)} | ${pad(max(list, 'pgCpu'), 8)} | ${pad(max(list, 'nginxCpu'), 7)} | ${pad(max(list, 'nodeCpuPercent'), 10)} | ${max(list, 'steal').toFixed(1).padStart(7)} | ${pad(max(list, 'podsMem'), 7)}`)
 }
-console.log(`\nPeaks: app ${Math.round(max(samples, 'appCpu'))} m, ${Math.round(max(samples, 'appMem'))} Mi; Postgres ${Math.round(max(samples, 'pgCpu'))} m; node ${Math.round(max(samples, 'nodeCpuPercent'))} %; steal ${max(samples, 'steal').toFixed(1)} %; all pods ${Math.round(max(samples, 'podsMem'))} Mi (stop above 1800).\n`)
+console.log(`\nPeaks: app ${Math.round(max(samples, 'appCpu'))} m, ${Math.round(max(samples, 'appMem'))} Mi; password-hasher ${Math.round(max(samples, 'hasherCpu'))} m; Postgres ${Math.round(max(samples, 'pgCpu'))} m; node ${Math.round(max(samples, 'nodeCpuPercent'))} %; steal ${max(samples, 'steal').toFixed(1)} %; all pods ${Math.round(max(samples, 'podsMem'))} Mi (stop above 1800).\n`)

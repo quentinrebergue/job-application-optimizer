@@ -26,7 +26,7 @@ const max = (list, key) => list.reduce((m, s) => Math.max(m, s[key]), 0)
 const rows = result.steps.map((step) => {
   const from = result.started_at + (step.step - 1) * stepMs
   const inside = samples.filter((s) => s.at - LAG_MS >= from && s.at - LAG_MS < from + stepMs)
-  return { step, n: inside.length, appCpu: max(inside, 'appCpu'), appMem: max(inside, 'appMem'), pgCpu: max(inside, 'pgCpu'), rendererCpu: max(inside, 'rendererCpu'), nginxCpu: max(inside, 'nginxCpu'), nodeCpuPercent: max(inside, 'nodeCpuPercent'), steal: max(inside, 'steal'), nodeMem: max(inside, 'nodeMem'), podsMem: max(inside, 'podsMem') }
+  return { step, n: inside.length, appCpu: max(inside, 'appCpu'), appMem: max(inside, 'appMem'), pgCpu: max(inside, 'pgCpu'), hasherCpu: max(inside, 'hasherCpu'), rendererCpu: max(inside, 'rendererCpu'), nginxCpu: max(inside, 'nginxCpu'), nodeCpuPercent: max(inside, 'nodeCpuPercent'), steal: max(inside, 'steal'), nodeMem: max(inside, 'nodeMem'), podsMem: max(inside, 'podsMem') }
 })
 
 const pad = (v, n) => String(Math.round(v)).padStart(n)
@@ -34,9 +34,9 @@ const lines = [
   '',
   'Together: what the site answered (k6) and what the cluster felt (kubectl top; the highest value of each step)',
   '',
-  ' step | target/s | reached/s |  p95 ms | failed % | app CPU m | app Mi | pg CPU m | nginx m | node CPU % | steal % | pods Mi',
-  '------+----------+-----------+---------+----------+-----------+--------+----------+---------+------------+---------+--------',
-  ...rows.map((r) => ` ${pad(r.step.step, 4)} | ${pad(r.step.target_rps, 8)} | ${String(r.step.achieved_rps).padStart(9)} | ${pad(r.step.p95_ms, 7)} | ${String(r.step.failed_percent).padStart(8)} | ${r.n ? pad(r.appCpu, 9) : '        -'} | ${r.n ? pad(r.appMem, 6) : '     -'} | ${r.n ? pad(r.pgCpu, 8) : '       -'} | ${r.n ? pad(r.nginxCpu, 7) : '      -'} | ${r.n ? pad(r.nodeCpuPercent, 10) : '         -'} | ${r.n ? r.steal.toFixed(1).padStart(7) : '      -'} | ${r.n ? pad(r.podsMem, 7) : '      -'}${r.step.broken ? '  <- broken' : ''}`),
+  ' step | target/s | reached/s |  p95 ms | failed % | app CPU m | app Mi | hasher m | pg CPU m | nginx m | node CPU % | steal % | pods Mi',
+  '------+----------+-----------+---------+----------+-----------+--------+----------+----------+---------+------------+---------+--------',
+  ...rows.map((r) => ` ${pad(r.step.step, 4)} | ${pad(r.step.target_rps, 8)} | ${String(r.step.achieved_rps).padStart(9)} | ${pad(r.step.p95_ms, 7)} | ${String(r.step.failed_percent).padStart(8)} | ${r.n ? pad(r.appCpu, 9) : '        -'} | ${r.n ? pad(r.appMem, 6) : '     -'} | ${r.n ? pad(r.hasherCpu, 8) : '       -'} | ${r.n ? pad(r.pgCpu, 8) : '       -'} | ${r.n ? pad(r.nginxCpu, 7) : '      -'} | ${r.n ? pad(r.nodeCpuPercent, 10) : '         -'} | ${r.n ? r.steal.toFixed(1).padStart(7) : '      -'} | ${r.n ? pad(r.podsMem, 7) : '      -'}${r.step.broken ? '  <- broken' : ''}`),
   '',
 ]
 
@@ -51,6 +51,7 @@ if (at.n > 0) {
   if (at.nodeCpuPercent >= 85) hints.push(`the node is at ${Math.round(at.nodeCpuPercent)} % of CPU: the machine itself is full, whatever runs on it`)
   if (at.appMem >= 330) hints.push(`the app holds ${Math.round(at.appMem)} Mi of its 384 Mi: the memory limit is near`)
   if (at.podsMem >= 1700) hints.push(`the pods hold ${Math.round(at.podsMem)} Mi together of the ~2,000 Mi the node allows them: memory is near the ceiling`)
+  if (at.hasherCpu >= 800) hints.push(`the password-hasher uses ${Math.round(at.hasherCpu)} m of CPU: one hash at a time is one core, the service is the limit of the logins (MAX_CONCURRENT)`)
   if (at.pgCpu >= 800) hints.push(`Postgres uses ${Math.round(at.pgCpu)} m of CPU: the database is the limit`)
   if (at.rendererCpu >= 800) hints.push(`the renderer uses ${Math.round(at.rendererCpu)} m of CPU: the PDF engine is the limit`)
 }
