@@ -28,9 +28,10 @@ export const options = {
     logins: { executor: 'constant-arrival-rate', rate: LOGIN_RPS, timeUnit: '1s', startTime: `${ALONE_SECONDS}s`, duration: `${TOGETHER_SECONDS}s`, preAllocatedVUs: 5, maxVUs: Math.min(MAX_VUS, 100), exec: 'login' },
   },
   thresholds: {
-    // The run stops by itself when the site is clearly down.
+    // The run stops by itself when the pages are clearly down. Only the reads are watched for time: the logins are
+    // meant to be pushed past what the service can do (they wait, and may take seconds), the pages must not follow.
     http_req_failed: [{ threshold: 'rate<0.05', abortOnFail: true, delayAbortEval: '10s' }],
-    http_req_duration: [{ threshold: 'p(95)<5000', abortOnFail: true, delayAbortEval: '10s' }],
+    'http_req_duration{name:read}': [{ threshold: 'p(95)<5000', abortOnFail: true, delayAbortEval: '10s' }],
     // Never failing ones, that make the figures of each phase appear in the summary.
     ...Object.fromEntries(phases.flatMap((phase) => [[`http_req_duration{name:read,phase:${phase}}`, ['p(95)<3600000']], [`http_reqs{name:read,phase:${phase}}`, ['count>=0']], [`mixed_failed{name:read,phase:${phase}}`, ['rate<=1']]])),
     'http_req_duration{name:login}': ['p(95)<3600000'],

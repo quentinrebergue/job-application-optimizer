@@ -27,6 +27,12 @@ to a hot path (login, the library, the payload of the renderer).
 | 2026-10-12 | `7451b5f` + working tree | same | Autosave | 300 / 281, 184 ms | 400 / 312, 1,370 ms | Not measured (the Node process, one core, shared with k6) | Writes in Postgres on the same machine |
 | 2026-10-12 | `7451b5f` + working tree | same | Signed-in reading | 200 / 183, 44 ms | 300 / 224, 2,570 ms | Not measured | `/jobs`, `/resume` and a job page: each reads the database |
 | 2026-10-12 | `7451b5f` + working tree | same | Anonymous | 200 / 180, 302 ms | 300 / 200, 3,551 ms | Not measured | Landing, login page, privacy page |
+| 2026-10-12 | `c9e3e70` + #256 (code, off) | **The production** (`d2-4`), k6 on a rented `d2-2` | Anonymous visitors, with the page's 16 scripts and styles | 15 / 14.2, 495 ms | 20 / 16.3, 1,537 ms | The app (693 m) and nginx (324 m) together, node 73 %; Postgres idle | A first visit is the page and ~16 files (270 KB) all served by the Node thread: about **15 first-time visitors a second**, three times fewer than the same page without its files |
+| 2026-10-12 | `c9e3e70` (hashing in the app) | same | Login, 1 to 6 a second | 1 / 1, 655 ms | 2 / 1.9, 5,744 ms | The Node thread of the app (785 m): a hash is 567 ms of it (laptop: 270 ms) | One login a second is clean, two break; the login page itself, which hashes nothing, answered in 799 ms instead of 22 |
+| 2026-10-12 | same | same | **Pages read while people log in** (15 reads and 1 login a second) | reads alone: p95 34 ms | with 1 login a second: reads p95 697 ms (x20), p50 21 -> 278 ms | The app at 732 m: the hash takes the thread of the pages | Server log and k6 agree (30 ms -> 692 ms). A login costs every page of everybody |
+| 2026-10-12 | #256 + #257 (**hashing in the password-hasher**) | same | Pages read while people log in (same settings) | reads alone: p95 47 ms | with 1 login a second: reads p95 **51 ms** (x1.1), p50 25 -> 24 ms | App 382 m, password-hasher 257 m | The logins no longer slow the pages; a login is 386 ms instead of 751 |
+| 2026-10-12 | same | same | Login, 1 to 6 a second | 3 / 2.9, 488 ms | **4** / 3.6, 6,763 ms | **The password-hasher** (866 m, one hash at a time, 314 ms each); app 140 m, Postgres 12 m | The break moved from 2 to 4 logins a second (+100 %) |
+| 2026-10-12 | same | same | Pages read during an overload of logins (15 reads, 5 logins a second asked) | reads alone: p95 37 ms | reads p95 179 ms (x4.8), 0 failed; **logins wait 8.8 s (p50), 14.7 s (p95)** | The password-hasher full; the 2 cores shared by everything (58 %) | The pages stay fast while the service is saturated; the logins queue for as long as the 150 places of the app's queue allow (up to ~47 s), which is too long to wait: see `BCRYPT_QUEUE` |
 
 ## What the runs on the real node say (2026-10-12)
 
@@ -44,7 +50,12 @@ to a hot path (login, the library, the payload of the renderer).
 - **How to measure from a poor connection**: a probe on `/api/livez` once a second ("network p95", which also slows when the
   app is full: not a pure network figure), and the access log of the ingress cut by step ("The server's side"): requests that
   arrived, and the p95 of the app's own time.
-- **Not measured yet**: login (bcrypt), autosave and PDF on the production; limits per address (`limits-probe`).
+- **Hashing was the weakest point, and is fixed (#254).** Moved from the app to a small Go service
+  (`services/password-hasher`, a 6.8 MB image, 1 to 2 MB of memory): a login no longer slows the pages (p95 of the reads
+  with one login a second: 697 ms -> 51 ms), a hash takes 314 ms instead of 567 ms, and the logins hold up to 3 a second
+  instead of 1. The service holds one hash at a time (`MAX_CONCURRENT`), so past ~3 logins a second they queue in the app,
+  for too long (see the row above).
+- **Not measured yet**: autosave and PDF on the production; limits per address (`limits-probe`).
 
 Estimates made on 2026-10-12 before the run, and what became of them: 500 to 1,000 people active at the same time (now
 about 240); 1 to 2 logins a second (bcrypt, not measured on the node yet); 4 PDFs at the same instant (the renderer's limit);
