@@ -1,0 +1,22 @@
+# The passwords of the visitors cross this service: only the app may call it, and it calls nobody.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: password-hasher
+  namespace: job-optimizer
+spec:
+  podSelector:
+    matchLabels:
+      app: password-hasher
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: job-optimizer
+      ports:
+        - protocol: TCP
+          port: 8080
+  egress: []

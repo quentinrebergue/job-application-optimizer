@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: password-hasher
+  namespace: job-optimizer
+  annotations:
+    # Second wave, like the renderer: Argo CD waits for the app (wave 0) to be healthy first, so the rollouts
+    # never run side by side on the single node (memory, see #171).
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  replicas: 1
+  # Old ReplicaSets kept for a rollback (the default is 10, a long list in Argo CD).
+  revisionHistoryLimit: 3
+  # The old pod stops before the new one starts: no surge pod. Logins and sign-ups fail for a few seconds during
+  # a rollout (the app retries once), the pages are served as usual.
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: password-hasher
+  template:
+    metadata:
+      labels:
+        app: password-hasher
+    spec:
+      priorityClassName: workload-critical
+      imagePullSecrets:
+        - name: ghcr-pull-secret
+      terminationGracePeriodSeconds: 35
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: password-hasher
+          # The tag is set by k8s/kustomization.yaml (CD writes it): this one does not exist on purpose.
+          image: ghcr.io/quentinrebergue/password-hasher:set-by-kustomize
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            # Cost 12 like the hashes already stored; a hash is about 240 ms of one core.
+            - name: BCRYPT_COST
+              value: "12"
+            # One hash at a time: it keeps the second core for the pages. The others wait in a queue of 8, past
+            # it they are refused at once (503) and the app asks again or tells the visitor to retry.
+            - name: MAX_CONCURRENT
+              value: "1"
+            - name: MAX_QUEUE
+              value: "8"
+            - name: SHUTDOWN_DELAY
+              value: "5s"
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            periodSeconds: 5
+            failureThreshold: 2
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            failureThreshold: 3
+          # The process holds about 2 MB under load (measured in the image, 6 clients at once). The memory
+          # request is the least the scheduler counts; the limit sits above GOMEMLIMIT (24 MiB, set in the image).
+          # The CPU request is small on purpose: when the node is busy, the CPU is shared in proportion to the
+          # requests (the app asks for 50m), so the pages win over the hashes. The limit is one core: one hash
+          # at a time cannot use more.
+          resources:
+            requests:
+              cpu: 10m
+              memory: 8Mi
+            limits:
+              cpu: "1"
+              memory: 32Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]

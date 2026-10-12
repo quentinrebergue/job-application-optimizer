@@ -87,6 +87,7 @@ jobs:
           check resume-renderer services/resume-renderer '^services/resume-renderer/'
           check db-migrator services/db-migrator '^services/db-migrator/'
           check ai-gateway services/ai-gateway '^services/ai-gateway/'
+          check password-hasher services/password-hasher '^services/password-hasher/'
 
           echo "images=[$items]" >> "$GITHUB_OUTPUT"
           echo "Images to build: [$items]"
