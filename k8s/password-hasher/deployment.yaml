@@ -5,7 +5,8 @@ metadata:
   namespace: job-optimizer
   annotations:
     # Second wave, like the renderer: Argo CD waits for the app (wave 0) to be healthy first, so the rollouts
-    # never run side by side on the single node (memory, see #171).
+    # never run side by side on the single node (memory, see #171). The app does not need this service up to start:
+    # it only calls it at a login or a sign-up, asks twice, and hashes by itself if the service does not answer.
     argocd.argoproj.io/sync-wave: "1"
 spec:
   replicas: 1
