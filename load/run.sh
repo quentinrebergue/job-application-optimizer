@@ -84,12 +84,27 @@ fi
 access="load/results/${stamp}-${scenario}-access.log"
 started_iso="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
+# The machine that runs k6 has limits too: a generator that is full reports slow answers that the site never gave. Its CPU
+# is read every 3 seconds (docker stats: 100 % is one core) and the peak is printed at the end.
+gen_cpu="load/results/${stamp}-${scenario}-generator-cpu.txt"
+: > "$gen_cpu"
+( while true; do { docker stats --no-stream --format '{{.CPUPerc}}' "$container" 2>/dev/null | tr -d '%' >> "$gen_cpu"; } || true; sleep 3; done ) &
+gen_pid=$!
+
 # ---- The run. The scripts are mounted, not copied: a change is taken at once. Results go to load/results here.
 set +e
 docker run --rm -i --name "$container" --add-host=host.docker.internal:host-gateway -v "$PWD/load:/load" -w / "${args[@]}" \
   "$IMAGE" k6 run --quiet "/load/${scenario}.js"
 status=$?
 set -e
+
+kill "$gen_pid" 2>/dev/null || true
+cores="$(docker info --format '{{.NCPU}}' 2>/dev/null || echo 1)"
+peak="$(sort -n "$gen_cpu" | tail -1)"
+if [ -n "$peak" ]; then
+  echo "The machine that runs k6: peak CPU ${peak} % of ${cores} cores ($(awk -v p="$peak" -v c="$cores" 'BEGIN { printf "%d", p / c }') % of the machine)."
+  awk -v p="$peak" -v c="$cores" 'BEGIN { if (p / c > 70) print "WARNING: the generator was over 70 % busy: the figures above may understate the site (slower answers, dropped iterations). Run from a bigger machine." }'
+fi
 
 if [ -n "$sampler_pid" ]; then
   { kill "$sampler_pid" && wait "$sampler_pid"; } 2>/dev/null || true
