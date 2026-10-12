@@ -13,3 +13,10 @@ Root source directory for the Next.js application.
 | `lib/` | Server-side business logic — data access, resume rendering, AI ranking |
 | `schemas/` | Zod validation schemas mirroring each TypeScript type |
 | `types/` | TypeScript type definitions for the entire application |
+
+## Files
+
+| File | Description |
+|------|-------------|
+| `proxy.ts` | Runs before every request: the Content Security Policy with its nonce, the check of the origin of API requests, the redirects of signed-out visitors. |
+| `instrumentation.ts` | Runs once when the Node.js server starts (a Next.js convention): starts the cleanup of expired data (`lib/maintenance.ts`, #213). |

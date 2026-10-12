@@ -24,7 +24,7 @@ export default function PrivacyPage() {
           <li><strong>Your account:</strong> your email address and your password. The password is never stored: only a one-way hash (bcrypt). We use them to let you sign in and to send you the emails below.</li>
           <li><strong>Your library and your jobs:</strong> the experiences, projects, skills and education you write, your resume profile (name, contact details), and the job offers you add with the resumes you configure for them. We use them to build your resumes, and only for that.</li>
           <li><strong>A session cookie:</strong> one random identifier that keeps you signed in for 7 days. It is the only cookie, it is necessary for the service, and it is not used to follow you.</li>
-          <li><strong>Your IP address, briefly:</strong> to slow down abuse (too many sign-in or password-reset attempts), it is kept for at most one hour. Like any web server, ours also log requests (including the IP address); these logs are rotated automatically and used only to fix problems.</li>
+          <li><strong>Your IP address, briefly:</strong> to slow down abuse (too many sign-in, sign-up or password-reset attempts), it is kept in a counter for about an hour, and the email address typed in a failed sign-in for 15 minutes. Like any web server, ours also log requests (including the IP address); these logs are rotated automatically and used only to fix problems.</li>
         </ul>
       </LegalSection>
 

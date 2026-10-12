@@ -28,6 +28,7 @@ export function aiPrivacy(
     flags.trainingOptedOut
       ? 'We opted out of training: Mistral does not use these requests to train its models.'
       : 'Mistral’s terms let it use these requests to train its models unless the customer opts out.',
+    'For each ranking we also record, on our side, the date, the model, the number of tokens and the cost, never the content. They serve the limits per person and the monthly budget of the site. We keep them for the current and the previous month; after that each month is replaced by a total (calls, tokens, cost) with no identity in it. If you delete your account, your records stay until then without your identity.',
     'The AI chooses and orders what you wrote; it never adds an experience, a skill or a number you did not write.',
   ]
 }

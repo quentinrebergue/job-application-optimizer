@@ -18,6 +18,19 @@ describe('aiPrivacy', () => {
     expect(text).toMatch(/never its US one/)
   })
 
+  it('says what is recorded for each AI call, why, for how long, and what happens when the account is deleted (#213)', () => {
+    const text = aiPrivacy(on).join(' ')
+    expect(text).toMatch(/record, on our side, the date, the model, the number of tokens and the cost, never the content/)
+    expect(text).toMatch(/limits per person and the monthly budget/)
+    expect(text).toMatch(/current and the previous month/)
+    expect(text).toMatch(/replaced by a total \(calls, tokens, cost\) with no identity in it/)
+    expect(text).toMatch(/delete your account, your records stay until then without your identity/)
+  })
+
+  it('says nothing of records while there is no AI feature, since nothing is recorded', () => {
+    expect(aiPrivacy({ ...on, onMistral: false }).join(' ')).not.toMatch(/record|tokens/)
+  })
+
   it('does not claim the requests are not stored unless zero data retention is approved', () => {
     expect(aiPrivacy({ ...on, zeroRetention: false }).join(' ')).toMatch(/abuse monitoring.*may be kept/)
     expect(aiPrivacy({ ...on, zeroRetention: false }).join(' ')).not.toMatch(/does not store/)

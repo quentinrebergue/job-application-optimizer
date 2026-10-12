@@ -19,6 +19,7 @@ const COLUMNS: Record<string, string[]> = {
   login_attempts: ['email', 'count', 'reset_at'],
   rate_limits: ['key', 'count', 'reset_at'],
   ai_usage: ['id', 'user_id', 'feature', 'model', 'status', 'prompt_tokens', 'completion_tokens', 'cost_eur', 'created_at'],
+  ai_usage_monthly: ['month', 'model', 'calls', 'prompt_tokens', 'completion_tokens', 'cost_eur'],
 }
 
 dbDescribe('the schema of the migrations', () => {

@@ -32,6 +32,7 @@ const OTHER_TABLES: Record<string, string> = {
   rate_limits: 'keyed by a string that names the visitor or the address',
   login_attempts: 'keyed by the email being tried',
   ai_usage: 'accounting rows of the site, written and settled by id',
+  ai_usage_monthly: 'totals per month and model, no user in them: what ai_usage becomes when a month leaves (#213)',
 }
 
 // The code of the tests themselves (src/tests) is not the app: its queries read the catalog of Postgres.
