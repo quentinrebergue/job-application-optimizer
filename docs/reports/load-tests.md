@@ -35,6 +35,7 @@ to a hot path (login, the library, the payload of the renderer).
 | 2026-10-12 | same | same | Pages read during an overload of logins (15 reads, 5 logins a second asked) | reads alone: p95 37 ms | reads p95 179 ms (x4.8), 0 failed; **logins wait 8.8 s (p50), 14.7 s (p95)** | The password-hasher full; the 2 cores shared by everything (58 %) | The pages stay fast while the service is saturated; the logins queue for as long as the 150 places of the app's queue allow (up to ~47 s), which is too long to wait: see `BCRYPT_QUEUE` |
 | 2026-10-13 | #256 + #257 (deployed) | **The production** (`d2-4`), k6 on a rented `d2-2`, started from the laptop with `LOAD_HOST` | Autosave (50 accounts), 20 to 120 saves a second | 120 / 117.9, 117 ms | none: no step broke | Nothing full: app 529 m, Postgres 134 m, node 53 %, steal 0 % | A save costs about 4 ms of the app. 120 a second is 120 people typing at once; the p95 starts to bend at the last step (55 -> 118 ms), so the break is probably at 150 to 200. Server log and k6 agree |
 | 2026-10-13 | #256 + #257 (deployed) | **The production**, k6 on a rented `d2-2` (`LOAD_HOST`) | PDF (50 accounts), 1 to 6 a second | 6 / 5.9, 109 ms | none: no step broke | Nothing full: node 27 %, app 80 m, Postgres 21 m | A PDF is about 70 ms end to end, 617 PDFs and no failure (every answer starts with `%PDF`). The per-user quota (30 an hour) caps 1,000 users at about 8 a second, inside what was tested |
+| 2026-10-13 | #256 + #257 (deployed) | **The production**, from a rented `d2-2` (its own address) | Limits per address (`limits-probe`) | password reset refused from the 11th (limit 10); failed logins refused from the 61st (limit 60) | no limit at the edge: 601 requests in 15 s (40 a second) all answered | The ingress has no limit on ordinary traffic yet (#224, part 2) | The app sees the real address of the visitor through the load balancer; three attempts with a forged `X-Real-IP` / `X-Forwarded-For` after the limit were still refused: a visitor cannot invent its address. A first visit sends about 17 requests in a second: a limit per address at the edge must be wide (30 to 50 a second with a burst) |
 
 ## What the runs on the real node say (2026-10-12)
 
@@ -58,7 +59,9 @@ to a hot path (login, the library, the payload of the renderer).
   instead of 1. The service holds one hash at a time (`MAX_CONCURRENT`), so past ~3 logins a second they queue in the app,
   for too long (see the row above).
 - **Writes are cheap**: 120 autosaves a second without a break (app 529 m, Postgres 134 m). The PDF holds 6 a second (about 70 ms
-  each) without a break. Not measured on the production yet: limits per address (`limits-probe`).
+  each) without a break. The limits per address (reset 10 an
+  hour, failed logins 60 an hour) work on the production, and a forged address header changes nothing; there is no limit at the
+  edge for ordinary traffic yet (#224, part 2).
 
 Estimates made on 2026-10-12 before the run, and what became of them: 500 to 1,000 people active at the same time (now
 about 240); 1 to 2 logins a second (bcrypt, not measured on the node yet); 4 PDFs at the same instant (the renderer's limit);
