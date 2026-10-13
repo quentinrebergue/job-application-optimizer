@@ -4,7 +4,9 @@
 #
 #   1, 2  first-time visitors (the page and its ~16 scripts and styles), a ramp, run twice: the noise between two runs
 #   3     the same visitors without the files (ASSETS=0): the share of the files
-#   4     a steady 10 visitors a second for 2 minutes: the CPU of the app and of nginx for one visit, read at a fixed rate
+#   4, 5  a steady 10 visitors a second for 2 minutes, twice: the CPU of the app and of nginx for one visit, read at a fixed
+#         rate (the mean of the samples), and the noise between two runs. This is the figure the decision rests on: a ramp
+#         moves in steps of 5 visitors, too coarse to see a gain of 30 %.
 #
 # It uses run.sh, so LOAD_HOST=user@host and BASE_URL work as usual (against the production, from a rented server). It waits
 # between the runs for the node to cool down, and prints the lines that matter at the end. The full output of each run is
@@ -30,6 +32,7 @@ run ramp-1 $ramp
 run ramp-2 $ramp
 run no-files START_RPS=10 STEP_RPS=10 STEPS=6 MAX_VUS=500 ASSETS=0
 run plateau START_RPS=10 STEPS=1 STEP_SECONDS=120 MAX_VUS=300
+run plateau-2 START_RPS=10 STEPS=1 STEP_SECONDS=120 MAX_VUS=300
 
 echo
 echo "=================== $label: what matters ==================="
@@ -37,5 +40,7 @@ for name in ramp-1 ramp-2 no-files; do
   printf '%-9s ' "$name"
   grep -h -E "^Breaking point|^No step broke" "load/results/static-${label}-${name}.txt" | head -1
 done
-echo "plateau (10 visitors a second, the highest value of the step):"
-grep -h -E "^ step \| target/s \| reached/s|^    1 \|" "load/results/static-${label}-plateau.txt" | tail -2
+for name in plateau plateau-2; do
+  echo "$name (10 visitors a second):"
+  grep -h -E "^Steady state" "load/results/static-${label}-${name}.txt" | sed 's/^/  /'
+done

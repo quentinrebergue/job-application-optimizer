@@ -17,6 +17,20 @@ const total = PAGES.reduce((sum, p) => sum + p.weight, 0)
 
 export const options = { scenarios: { anonymous: ramp('visit'), ...probeScenario() }, thresholds: thresholds(NAMES) }
 
+/**
+ * What a browser fetches for a page: its scripts and styles, and the fonts it preloads. A script marked noModule is the
+ * polyfill for old browsers: a modern browser does not download it, so a visitor of the test does not either.
+ */
+function assetsOf(html) {
+  const found = []
+  for (const tag of html.matchAll(/<(?:script|link)\b[^>]*>/g)) {
+    if (/\bnoModule\b/i.test(tag[0])) continue
+    const url = tag[0].match(/(?:src|href)="(\/_next\/static\/[^"]+\.(?:js|css|woff2))"/)
+    if (url) found.push(url[1])
+  }
+  return found
+}
+
 export function visit() {
   let pick = Math.random() * total
   const page = PAGES.find((p) => (pick -= p.weight) < 0) || PAGES[0]
@@ -24,9 +38,15 @@ export function visit() {
   let ok = check(res, { [`${page.name} answers 200`]: (r) => r.status === 200, [`${page.name} is the right page`]: (r) => String(r.body).includes(page.words) })
   if (ASSETS && res.status === 200) {
     // Tagged apart (step 'asset'): they load the server but are not counted as page views of the step.
-    const links = [...new Set([...String(res.body).matchAll(/(?:src|href)="(\/_next\/static\/[^"]+\.(?:js|css))"/g)].map((m) => m[1]))].slice(0, MAX_ASSETS)
+    const links = [...new Set(assetsOf(String(res.body)))].slice(0, MAX_ASSETS)
     const answers = http.batch(links.map((link) => ['GET', `${BASE_URL}${link}`, null, { redirects: 0, tags: { name: 'asset', step: 'asset' } }]))
     ok = check(answers, { 'assets answer 200': (rs) => rs.every((r) => r.status === 200) }) && ok
+    // The fonts are named in the styles, so a browser asks for them once the styles have arrived.
+    const fonts = [...new Set(answers.flatMap((r) => (String(r.url).endsWith('.css') ? [...String(r.body).matchAll(/url\((\/_next\/static\/media\/[^)"']+\.woff2)\)/g)].map((m) => m[1]) : [])))].slice(0, 3)
+    if (fonts.length > 0) {
+      const fontAnswers = http.batch(fonts.map((font) => ['GET', `${BASE_URL}${font}`, null, { redirects: 0, tags: { name: 'asset', step: 'asset' } }]))
+      ok = check(fontAnswers, { 'fonts answer 200': (rs) => rs.every((r) => r.status === 200) }) && ok
+    }
   }
   record(ok)
 }

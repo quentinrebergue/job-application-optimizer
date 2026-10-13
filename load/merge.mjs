@@ -26,7 +26,7 @@ const max = (list, key) => list.reduce((m, s) => Math.max(m, s[key]), 0)
 const rows = result.steps.map((step) => {
   const from = result.started_at + (step.step - 1) * stepMs
   const inside = samples.filter((s) => s.at - LAG_MS >= from && s.at - LAG_MS < from + stepMs)
-  return { step, n: inside.length, appCpu: max(inside, 'appCpu'), appMem: max(inside, 'appMem'), pgCpu: max(inside, 'pgCpu'), hasherCpu: max(inside, 'hasherCpu'), rendererCpu: max(inside, 'rendererCpu'), nginxCpu: max(inside, 'nginxCpu'), nodeCpuPercent: max(inside, 'nodeCpuPercent'), steal: max(inside, 'steal'), nodeMem: max(inside, 'nodeMem'), podsMem: max(inside, 'podsMem') }
+  return { step, inside, n: inside.length, appCpu: max(inside, 'appCpu'), appMem: max(inside, 'appMem'), pgCpu: max(inside, 'pgCpu'), hasherCpu: max(inside, 'hasherCpu'), rendererCpu: max(inside, 'rendererCpu'), nginxCpu: max(inside, 'nginxCpu'), nodeCpuPercent: max(inside, 'nodeCpuPercent'), steal: max(inside, 'steal'), nodeMem: max(inside, 'nodeMem'), podsMem: max(inside, 'podsMem') }
 })
 
 const pad = (v, n) => String(Math.round(v)).padStart(n)
@@ -99,6 +99,18 @@ if (requests.length > 0) {
   lines.push(
     '',
     'Read it so: the app p95 is the site\'s own answer. If it stays low where k6 p95 climbs, the slowness is on the way (see "network p95"), and the step says nothing about the capacity of the site. If it climbs with k6, the site is the limit.',
+    '',
+  )
+}
+
+// A run of one step (a steady plateau) is read at a fixed rate: the mean of the samples says more than the highest
+// value, which one spike of the 15 seconds of kubectl top can set.
+if (rows.length === 1 && rows[0].n >= 3) {
+  const inside = rows[0].inside
+  const mean = (key) => inside.reduce((sum, x) => sum + x[key], 0) / inside.length
+  const median = (key) => [...inside].map((x) => x[key]).sort((a, b) => a - b)[inside.length >> 1]
+  lines.push(
+    `Steady state, ${inside.length} samples (mean / median): app ${Math.round(mean('appCpu'))} / ${Math.round(median('appCpu'))} m, nginx ${Math.round(mean('nginxCpu'))} / ${Math.round(median('nginxCpu'))} m, password-hasher ${Math.round(mean('hasherCpu'))} m, node ${Math.round(mean('nodeCpuPercent'))} / ${Math.round(median('nodeCpuPercent'))} %, pods ${Math.round(mean('podsMem'))} Mi`,
     '',
   )
 }
