@@ -42,6 +42,20 @@ beforeEach(() => {
 })
 afterEach(() => vi.unstubAllEnvs())
 
+describe('worst case of an import', () => {
+  it('prices the longer answer of an import (4000 tokens, not 2000)', () => {
+    // 30000 tokens at 0.13 + 4000 tokens at 0.51, per million
+    expect(worstCaseCost('mistral-small-2603', 'import')).toBeCloseTo(0.0039 + 0.00204, 6)
+    expect(worstCaseCost('mistral-small-2603', 'rank')).toBeCloseTo(0.0039 + 0.00102, 6)
+    expect(worstCaseCost('mistral-small-2603', 'import')).toBeGreaterThan(worstCaseCost('mistral-small-2603'))
+  })
+
+  it('follows AI_MAX_OUTPUT_TOKENS_IMPORT, like the gateway follows MAX_OUTPUT_TOKENS_IMPORT', () => {
+    vi.stubEnv('AI_MAX_OUTPUT_TOKENS_IMPORT', '6000')
+    expect(worstCaseCost('mistral-small-2603', 'import')).toBeCloseTo(0.0039 + 0.00306, 6)
+  })
+})
+
 describe('worst case', () => {
   it('prices the biggest prompt and answer at the dearest model when none is known', () => {
     // 60000 chars / 2 = 30000 tokens at 1.28 + 2000 tokens at 6.38, per million

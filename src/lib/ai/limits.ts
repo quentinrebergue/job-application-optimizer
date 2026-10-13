@@ -17,5 +17,7 @@ export function aiLimits() {
     /** The gateway's own limits (MAX_PROMPT_CHARS, MAX_OUTPUT_TOKENS): a call is reserved at the most they allow. */
     maxPromptChars: envNumber('AI_MAX_PROMPT_CHARS', 60000),
     maxOutputTokens: envNumber('AI_MAX_OUTPUT_TOKENS', 2000),
+    /** The same for an import (MAX_OUTPUT_TOKENS_IMPORT): a whole resume as JSON is longer than a ranking. */
+    maxOutputTokensImport: envNumber('AI_MAX_OUTPUT_TOKENS_IMPORT', 4000),
   }
 }

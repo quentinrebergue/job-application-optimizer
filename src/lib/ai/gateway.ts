@@ -16,7 +16,7 @@ export class AiGatewayError extends Error {
 }
 
 export interface GatewayRequest {
-  feature: 'rank'
+  feature: 'rank' | 'import'
   userId: string
   system: string
   prompt: string

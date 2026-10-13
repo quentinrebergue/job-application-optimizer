@@ -8,6 +8,7 @@ resources:
 - app/service.yaml
 - app/ingress.yaml
 - app/ingress-static.yaml
+- app/ingress-import.yaml
 - postgres/statefulset.yaml
 - postgres/service.yaml
 - postgres/backup-pvc.yaml

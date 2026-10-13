@@ -1,0 +1,43 @@
+# The import of a resume (#267): the same service as the pages, with room for a PDF on this one path.
+# nginx refuses a body over 1 MB by default, and a resume may weigh 2 MB (the app and the pdf-text service
+# refuse more than that, so this only has to let it through). The rest of the site keeps the default.
+# This is the first path of the site that takes a file: the limit stays here, not on the whole site.
+#
+# It has no cert-manager annotation: the certificate (app-tls) is made by the Ingress "app"; this one only uses it.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-import
+  namespace: job-optimizer
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "3m"
+    # Reading the PDF (8 s at the most) and the AI (45 s at the most) come one after the other.
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "120"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - fastresume.tech
+        - www.fastresume.tech
+      secretName: app-tls
+  rules:
+    - host: fastresume.tech
+      http:
+        paths:
+          - path: /api/import/resume
+            pathType: Exact
+            backend:
+              service:
+                name: app
+                port:
+                  number: 80
+    - host: www.fastresume.tech
+      http:
+        paths:
+          - path: /api/import/resume
+            pathType: Exact
+            backend:
+              service:
+                name: app
+                port:
+                  number: 80

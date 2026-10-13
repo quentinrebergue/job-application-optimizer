@@ -15,7 +15,7 @@ import { consumeRateLimit } from '@/lib/rate-limit'
 const HOUR_MS = 60 * 60 * 1000
 const DAY_MS = 24 * HOUR_MS
 
-export type QuotaKind = 'job' | 'entity' | 'pdf'
+export type QuotaKind = 'job' | 'entity' | 'pdf' | 'import'
 
 /** The numbers, read each time so a change of environment applies without a restart of the tests. */
 export function quotas() {
@@ -25,16 +25,19 @@ export function quotas() {
       job: envNumber('JOBS_PER_HOUR', 15),
       entity: envNumber('ENTITIES_PER_HOUR', 30),
       pdf: envNumber('PDFS_PER_HOUR', 30),
+      // Importing a resume is done once by most people (#267): a few tries, in case the first file is a picture.
+      import: envNumber('IMPORTS_PER_HOUR', 3),
     },
     perDay: {
       job: envNumber('JOBS_PER_DAY', 40),
       entity: envNumber('ENTITIES_PER_DAY', 100),
       pdf: envNumber('PDFS_PER_DAY', 100),
+      import: envNumber('IMPORTS_PER_DAY', 3),
     },
   }
 }
 
-const NOUNS: Record<QuotaKind, string> = { job: 'jobs', entity: 'entries', pdf: 'PDFs' }
+const NOUNS: Record<QuotaKind, string> = { job: 'jobs', entity: 'entries', pdf: 'PDFs', import: 'imports' }
 
 /** "3 minutes", "about 2 hours": how long to wait, never less than a minute. */
 export function waitFor(ms: number): string {
