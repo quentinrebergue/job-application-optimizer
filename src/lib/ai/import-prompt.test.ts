@@ -46,6 +46,8 @@ describe('buildImportPrompt', () => {
     expect(prompt).toMatch(/description_from, description_to/)
     expect(prompt).toMatch(/If the text has none, the list is empty/)
     expect(prompt).toMatch(/Never repeat an entry/)
+    expect(prompt).toMatch(/can come before the line that names it/)
+    expect(prompt).toMatch(/never an entry of its own/)
   })
 })
 
@@ -106,6 +108,24 @@ describe('parseImportAnswer', () => {
     expect(ok.entries.experiences).toHaveLength(1)
     // "Jav" is not a word of the text, only the start of one.
     expect(parseImportAnswer(answer({ skills: [{ name: 'Jav', category: 'Languages', level: 'beginner', tags: [] }] }), lines).entries.skills).toEqual([])
+  })
+
+  it('keeps one entry for a job the model split in bullets: the same company over the same period is the same job', () => {
+    const split = [experience, { ...experience, title: 'Migration d’un monolithe PHP vers des services Go', description_from: 0, description_to: 0 }]
+    const { entries, dropped } = parseImportAnswer(answer({ experiences: split }), lines)
+    expect(entries.experiences).toHaveLength(1)
+    expect(entries.experiences[0].title).toBe('Ingénieure backend senior')
+    expect(dropped).toBe(1)
+  })
+
+  it('keeps two jobs at the same company over different periods, and two without a period', () => {
+    const text = ['Dev, Acme | 2018 – 2020', 'Lead, Acme | 2020 – 2022', 'Tester, Acme', 'Writer, Acme']
+    const job = (title: string, period: string) => ({ title, company: 'Acme', location: '', period, description_from: 0, description_to: 0, tags: [] })
+    const { entries } = parseImportAnswer(
+      answer({ experiences: [job('Dev', '2018 – 2020'), job('Lead', '2020 – 2022'), job('Tester', ''), job('Writer', '')] }),
+      text,
+    )
+    expect(entries.experiences.map((e) => e.title)).toEqual(['Dev', 'Lead', 'Tester', 'Writer'])
   })
 
   it('removes a place, a period or a keyword the text does not hold, and keeps the entry', () => {

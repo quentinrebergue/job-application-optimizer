@@ -11,6 +11,7 @@
     "test:db": "vitest run --project db",
     "test:coverage": "vitest run --coverage",
     "eval:ranking": "node --env-file-if-exists=.env.local --import tsx scripts/eval-ranking/run.ts",
+    "eval:import": "node --env-file-if-exists=.env.local --import tsx scripts/eval-import/run.ts",
     "eval:compare": "node --import tsx scripts/eval-ranking/compare.ts",
     "eval:export": "node --env-file-if-exists=.env.local --import tsx scripts/eval-ranking/export.ts"
   },

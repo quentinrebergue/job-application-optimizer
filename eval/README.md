@@ -58,3 +58,23 @@ A change counts as better or worse only beyond the noise: 0.01 on the ratios, 10
 | `results/` | **no** | One file per run, and `baseline.json` |
 
 The code is in `scripts/eval-ranking/` (`metrics.ts` is tested without any AI call).
+
+## The import of a resume (#267)
+
+A functional test of `api/import/resume`: real PDFs through the real chain (the pdf-text service, the AI gateway, the checks of the app), several times, with what each run gave against what is expected. Nothing is saved (the save is tested on Postgres in `src/lib/import/save.db.test.ts`): this answers "does it read my resumes right?", and "the same every time?".
+
+```
+docker run --rm -p 8095:8080 pdf-text:dev            # or a port-forward of the service
+# .env.local: PDF_TEXT_URL=http://localhost:8095 and AI_GATEWAY_URL (a gateway with the "import" feature)
+npm run eval:import                                  # every case, 3 runs each
+npm run eval:import -- --case two-columns --runs 5 --show
+npm run eval:import -- --dry-run                     # the text as the model reads it, and the request: no AI
+```
+
+A case is a file in `import/` (fictional resumes of the repository, versioned) or in `private/import/` (yours, **not versioned**: personal data; when there are some, only those run):
+
+```json
+{ "pdf": "/path/to/resume.pdf", "expected": { "experiences": 1, "education": 2, "projects": { "max": 3 }, "skills": { "min": 3 } } }
+```
+
+A number is an exact count, `{ "min", "max" }` a range; a kind left out is not checked. The exit code is 1 when a run did not give what was expected, or failed.

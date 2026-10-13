@@ -1,0 +1,4 @@
+{
+  "pdf": "services/pdf-text/internal/reader/testdata/two-columns.pdf",
+  "expected": { "experiences": 2, "education": 2, "projects": 1, "skills": { "min": 3, "max": 10 } }
+}

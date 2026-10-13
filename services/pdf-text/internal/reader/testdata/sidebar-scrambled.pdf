@@ -1,0 +1,55 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 1287 >>
+stream
+BT /F1 10 Tf 220 500 Td (- Migration d'un monolithe PHP vers des services Go) Tj ET
+BT /F1 10 Tf 220 516 Td (- Conception d'une API de suivi de colis) Tj ET
+BT /F1 10 Tf 220 484 Td (- Mise en place de la supervision et d'une astreinte) Tj ET
+BT /F2 12 Tf 220 540 Td (Ingenieure backend senior - Logistix, Lyon | 2022 - Present) Tj ET
+BT /F2 14 Tf 220 570 Td (EXPERIENCE) Tj ET
+BT /F1 10 Tf 220 430 Td (- Module de remboursement \(Java, Spring\)) Tj ET
+BT /F1 10 Tf 220 446 Td (- Reduction de 60 % des echecs de paiement) Tj ET
+BT /F2 12 Tf 220 466 Td (Ingenieure backend - PayFlow, Paris | 2019 - 2022) Tj ET
+BT /F1 10 Tf 30 540 Td (Docker, Kubernetes, Terraform) Tj ET
+BT /F1 10 Tf 30 556 Td (Go, Java, TypeScript, SQL) Tj ET
+BT /F2 14 Tf 30 580 Td (COMPETENCES) Tj ET
+BT /F1 10 Tf 30 420 Td (camille.moreau@example.com) Tj ET
+BT /F2 14 Tf 30 436 Td (CONTACT) Tj ET
+BT /F2 24 Tf 30 740 Td (Camille Moreau) Tj ET
+BT /F1 12 Tf 30 712 Td (Ingenieure backend) Tj ET
+BT /F1 10 Tf 220 330 Td (- Mention Bien) Tj ET
+BT /F2 12 Tf 220 346 Td (Baccalaureat scientifique, Lycee du Parc | 2013) Tj ET
+BT /F1 10 Tf 220 362 Td (- Option mathematiques expertes) Tj ET
+BT /F2 14 Tf 220 398 Td (FORMATION) Tj ET
+BT /F2 12 Tf 220 378 Td (Diplome d'ingenieure, informatique, INSA Lyon | 2013 - 2018) Tj ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000251 00000 n 
+0000001590 00000 n 
+0000001687 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+1789
+%%EOF
