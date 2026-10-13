@@ -1,0 +1,101 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pdf-text
+  namespace: job-optimizer
+  annotations:
+    # Second wave, like the renderer and the hasher: Argo CD waits for the app (wave 0) to be healthy first, so the rollouts
+    # never run side by side on the single node (memory, see #171). The app does not need this service up to start.
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  replicas: 1
+  # Old ReplicaSets kept for a rollback (the default is 10, a long list in Argo CD).
+  revisionHistoryLimit: 3
+  # The old pod stops before the new one starts: no surge pod. The import of a resume is unavailable for a few seconds during a
+  # rollout (the app says "try again"), the pages are served as usual.
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: pdf-text
+  template:
+    metadata:
+      labels:
+        app: pdf-text
+    spec:
+      priorityClassName: workload-critical
+      imagePullSecrets:
+        - name: ghcr-pull-secret
+      # A file may be read for TIMEOUT, behind a short queue; then the server stops.
+      terminationGracePeriodSeconds: 30
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: pdf-text
+          # The tag is set by k8s/kustomization.yaml (CD writes it): this one does not exist on purpose.
+          image: ghcr.io/quentinrebergue/pdf-text:set-by-kustomize
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            # A resume is far under 2 MB; the first 5 pages are read; a file may take 5 s; one at a time, 4 waiting, then 503.
+            - name: MAX_BYTES
+              value: "2097152"
+            - name: MAX_PAGES
+              value: "5"
+            - name: TIMEOUT
+              value: "5s"
+            - name: MAX_QUEUE
+              value: "4"
+            - name: SHUTDOWN_DELAY
+              value: "5s"
+            # The compiled module of pdfium, kept between two starts of the container (the emptyDir below).
+            - name: CACHE_DIR
+              value: /cache
+          # Ready only once pdfium is loaded (a few seconds the first time in a pod, about a second with the cache).
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            periodSeconds: 5
+            failureThreshold: 2
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            failureThreshold: 3
+          # Memory, measured by smoke.sh: about 47 MiB at work on arm64 and 83 MiB on amd64 (the CI, the architecture of the
+          # node), so the request is 96 Mi. The first start in a pod compiles pdfium and takes 200 to 235 MB for a few seconds,
+          # whatever GOMEMLIMIT says; 256 MB was not enough in the test (the process was killed), 384 MB is. A limit is not a
+          # reservation: only the request is counted to place the pod. With the cache, a restart of the container fits under
+          # 128 MB. The CPU limit is a whole core for the compile.
+          resources:
+            requests:
+              cpu: 20m
+              memory: 96Mi
+            limits:
+              cpu: "1"
+              memory: 384Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - name: cache
+              mountPath: /cache
+      volumes:
+        # On the disk of the node, not in memory: it holds the compiled module (about 20 MB).
+        - name: cache
+          emptyDir:
+            sizeLimit: 64Mi

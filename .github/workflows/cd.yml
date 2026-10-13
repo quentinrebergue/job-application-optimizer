@@ -89,6 +89,7 @@ jobs:
           check db-migrator services/db-migrator '^services/db-migrator/'
           check ai-gateway services/ai-gateway '^services/ai-gateway/'
           check password-hasher services/password-hasher '^services/password-hasher/'
+          check pdf-text services/pdf-text '^services/pdf-text/'
 
           echo "images=[$items]" >> "$GITHUB_OUTPUT"
           echo "Images to build: [$items]"

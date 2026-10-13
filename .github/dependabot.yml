@@ -10,6 +10,8 @@ updates:
       - /services/db-migrator
       - /services/resume-renderer
       - /services/ai-gateway
+      - /services/password-hasher
+      - /services/pdf-text
     schedule:
       interval: weekly
     ignore:
@@ -56,6 +58,8 @@ updates:
     directories:
       - /services/db-migrator
       - /services/resume-renderer
+      - /services/password-hasher
+      - /services/pdf-text
     schedule:
       interval: weekly
     groups:
