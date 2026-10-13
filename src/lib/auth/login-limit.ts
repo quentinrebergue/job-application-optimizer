@@ -88,8 +88,11 @@ export async function beginLoginAttempt(ip: string | null, email: string, now = 
   }
 
   if (!(await countEmail(email, now))) {
-    // Not a failure of the password, so it does not count against the address.
+    // Not a failure of the password, so it counts for nobody: not against the address, and not against the email
+    // either. Left in, the refused attempts of a burst on one account (a double click, a flood) would keep it
+    // locked after the burst, with no failure behind it.
     if (ip && limitedByAddress) await refundRateLimit(ipKey(ip), now)
+    await refundEmail(email, now)
     return { ok: false, message: 'Too many attempts. Try again in 15 minutes.' }
   }
 

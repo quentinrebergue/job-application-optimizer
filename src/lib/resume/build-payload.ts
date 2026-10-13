@@ -1,11 +1,14 @@
 import type { EducationMeta, EntityMeta, ExperienceMeta, ProjectMeta, ResumeConfig, SkillMeta } from '@/types'
 import type { ResumeProfile } from '@/schemas/resume-profile'
+import { softBreaks } from './soft-breaks'
 
 /**
  * The JSON sent to the resume-renderer service (POST /render). It mirrors the
  * Go model in services/resume-renderer/internal/model: every field is present
  * (empty string / empty array rather than undefined) and lists are already
- * selected, ordered and overridden, so the service only has to draw.
+ * selected, ordered and overridden, so the service only has to draw. The free text gets break opportunities
+ * inside the words too long to fit a line (soft-breaks.ts); the contact details are left exactly as they are, since
+ * the e-mail and the LinkedIn address are also the targets of links.
  */
 export interface RenderPayload {
   schema_version: 1
@@ -121,33 +124,33 @@ export function buildPayload(input: BuildPayloadInput): RenderPayload {
     template: { id: input.templateId },
     options: input.options ?? {},
     profile: {
-      name: profile.full_name,
-      title: config.resume_title?.trim() || profile.resume_title,
+      name: softBreaks(profile.full_name),
+      title: softBreaks(config.resume_title?.trim() || profile.resume_title),
       email: profile.email,
       linkedin: profile.linkedin,
       phone: profile.phone,
-      address: profile.address,
-      summary: config.profile_text?.trim() || profile.profile_text,
+      address: softBreaks(profile.address),
+      summary: softBreaks(config.profile_text?.trim() || profile.profile_text),
     },
     sections: {
       experiences: applyOrder(sortByEndDate(experiences), config.experience_order).map((e) => ({
-        title: e.title,
-        company: e.company,
-        location: e.location ?? '',
+        title: softBreaks(e.title),
+        company: softBreaks(e.company),
+        location: softBreaks(e.location ?? ''),
         period: e.period,
-        description: descriptionOverrides[e.id] ?? e.description,
+        description: softBreaks(descriptionOverrides[e.id] ?? e.description),
       })),
       projects: applyOrder(projects, config.project_order).map((p) => ({
-        title: p.title,
-        tech: p.tech,
-        description: descriptionOverrides[p.id] ?? p.description,
+        title: softBreaks(p.title),
+        tech: p.tech.map(softBreaks),
+        description: softBreaks(descriptionOverrides[p.id] ?? p.description),
       })),
       skills: skills
-        .map((s) => ({ name: s.name, tags: tagOverrides[s.id] ?? s.tags }))
+        .map((s) => ({ name: softBreaks(s.name), tags: (tagOverrides[s.id] ?? s.tags).map(softBreaks) }))
         .filter((s) => s.tags.length > 0),
       education: sortByEndDate(education).map((e) => ({
-        degree: e.degree,
-        institution: e.institution,
+        degree: softBreaks(e.degree),
+        institution: softBreaks(e.institution),
         period: e.period,
       })),
     },

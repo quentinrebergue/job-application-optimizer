@@ -6,3 +6,4 @@ Measured reports: what a change did, with the commands run and their results, so
 |---|---|
 | [2026-10-06-frontend-cleanup-sizes.md](2026-10-06-frontend-cleanup-sizes.md) | Frontend cleanup (#100): CSS, JS and image sizes before and after |
 | [2026-10-09-ai-ranking-case-study.md](2026-10-09-ai-ranking-case-study.md) | AI ranking (#44, #184, #192): from 3-10 EUR to 0.60 EUR per 1,000 rankings, the Go gateway, the evaluation tool, what worked, what did not, why more offers mattered, the stress test with big libraries, and the protections around the feature |
+| [load-tests.md](load-tests.md) | The load tests (#49): the history of the breaking point of each scenario, run after run, and how to read it |

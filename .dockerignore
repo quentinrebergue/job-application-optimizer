@@ -18,6 +18,8 @@ data
 # Other parts of the repository, built or applied separately
 services
 k8s
+# The load tests (k6 scripts, results, and the sessions of the test accounts in load/.accounts.json)
+load
 terraform
 ansible
 scripts

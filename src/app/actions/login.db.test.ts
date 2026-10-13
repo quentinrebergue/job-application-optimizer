@@ -160,6 +160,16 @@ dbDescribe('failed logins on Postgres', () => {
       const answers = await Promise.all(Array.from({ length: 20 }, () => login(undefined, form('ada@example.test', 'wrong-password-1'))))
       expect(answers.filter((a) => a?.message === 'Wrong email or password.')).toHaveLength(5)
       expect(answers.filter((a) => a?.message === 'Too many attempts. Try again in 15 minutes.')).toHaveLength(15)
+      // The refused ones are not counted: the count is the 5 real failures, not the 20 attempts.
+      expect(await attempts('ada@example.test')).toBe(5)
+    })
+
+    it('does not leave an account locked after a burst of successful logins: 12 at once, then one more', async () => {
+      const answers = await Promise.all(Array.from({ length: 12 }, () => login(undefined, form('ada@example.test', 'right-password-1')).catch((e) => String(e))))
+      expect(answers.filter((a) => typeof a === 'string' && a.includes('REDIRECT'))).toHaveLength(5)
+      // What was refused counted for nothing, what succeeded was given back: nothing is left, the account is free.
+      expect(await attempts('ada@example.test')).toBe(0)
+      await expect(login(undefined, form('ada@example.test', 'right-password-1'))).rejects.toThrow('REDIRECT /')
     })
 
     it('gives a success its point back: failures, then the right password, leave the count at the failures', async () => {

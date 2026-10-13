@@ -5,6 +5,7 @@ on:
     branches: [master]
     paths-ignore:
       - 'k8s/**'
+      - 'load/**'
       - '**.md'
   # Manual run from the Actions tab: rebuilds and deploys every image.
   workflow_dispatch:
@@ -72,7 +73,7 @@ jobs:
             elif [ "$files" = "__all__" ]; then
               echo "$1: rebuild (no deployed commit to compare with, or manual run)"
               add "{\"image\":\"$1\",\"context\":\"$2\"}"
-            elif [ "$3" = "app" ] && printf '%s\n' "$files" | grep -Evq '^(services|k8s|docs|terraform|ansible|scripts)/|\.md$|^\.github/|^$'; then
+            elif [ "$3" = "app" ] && printf '%s\n' "$files" | grep -Evq '^(services|k8s|docs|terraform|ansible|scripts|load)/|\.md$|^\.github/|^$'; then
               echo "$1: rebuild, changed since its deploy:"; printf '%s\n' "$files" | sed 's/^/  /'
               add "{\"image\":\"$1\",\"context\":\"$2\"}"
             elif [ "$3" != "app" ] && printf '%s\n' "$files" | grep -Eq "$3"; then

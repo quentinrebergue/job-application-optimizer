@@ -62,3 +62,7 @@ ansible/inventory.ini
 
 # What scripts/export-removed-modules.sql writes (content of users)
 removed-modules-*.json
+
+# The accounts and the raw results of the load tests (sessions, run summaries)
+/load/.accounts.json
+/load/results/

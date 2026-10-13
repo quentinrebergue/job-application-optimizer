@@ -36,7 +36,7 @@ jobs:
 
           ci=$(matches '^\.github/workflows/ci\.yml$')
           cd=$(matches '^\.github/workflows/cd\.yml$')
-          app=$(outside '^(services|k8s|docs|terraform|ansible|scripts)/|\.md$|^\.github/(workflows/cd\.yml|ISSUE_TEMPLATE/)')
+          app=$(outside '^(services|k8s|docs|terraform|ansible|scripts|load)/|\.md$|^\.github/(workflows/cd\.yml|ISSUE_TEMPLATE/)')
           renderer=$(matches '^services/resume-renderer/')
           migrator=$(matches '^services/db-migrator/')
           # The tests of the app run its SQL against the real migrations (#221): a new migration
