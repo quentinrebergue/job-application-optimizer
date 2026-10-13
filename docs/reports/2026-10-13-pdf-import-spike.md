@@ -17,49 +17,88 @@ None is a real person's resume: they were made by our own tools, with a fictitio
 
 ## Tools tried
 
-| | poppler `pdftotext` 25.12 | Go library `ledongthuc/pdf` |
-|---|---|---|
-| One column (classic, compact) | clean text, lines and bullets kept | the lines are glued together ("...Lyon, FranceCamille Moreau...") |
-| Two columns, default order | **mixed**: the title "Ingénieure backend" falls between "Expérience" and "Contact", the skills slip into the experience | the left column then the right one, by luck of the order inside the file |
-| Two columns, `-layout` | **the columns side by side, readable** | not available |
-| Scan | 1 character: easy to detect | 0 characters |
-| Truncated, random, empty | exit code 1 and a clear message | |
-| Time, memory | 0.01 to 0.04 s, 9 MB | 10 ms, 1 to 2 MB of heap |
-| From the standard input, no file written | **yes** (`pdftotext -layout -enc UTF-8 -l 5 - -`) | |
-| Cap on the pages | **yes** (`-l 5`: 510 characters instead of 6,223 on 60 pages) | |
-| Image with the tool (Alpine 3.24 + `poppler-utils`) | **32.9 MB** (Alpine alone 8.3 MB) | about 7 MB (a static Go binary) |
+Two more test files: `hard.pdf` (the same two columns, but the main column is written first in the file and the sidebar after
+it, placed on the left: the order of the file is not the order of the page) and the PDFs of the first table.
 
-pdfjs (a JavaScript library) was not tried: it would run inside the app, on the thread that serves the pages, on an
-untrusted file, which the hashing (#254) and the security of the upload both argue against.
+| Tool (licence) | One column | Two columns (`two.pdf`) | `hard.pdf` (file order is not page order) | Scan | Time | Memory | Image |
+|---|---|---|---|---|---|---|---|
+| **poppler `pdftotext -layout`** (GPL, run as a process) | clean | side by side, readable | side by side, follows the page | 1 char | 10-40 ms | 9 MB per file | 33 MB (Alpine + poppler) |
+| poppler, default order | clean | **mixed** | **mixed** | | | | |
+| **pdfminer.six** (MIT, Python) | clean | one block per column, by geometry | one block per column, by geometry | 1 char | 33-50 ms | 40 MB (Python) | large (Python) |
+| **pdfium** (BSD, via `pypdfium2`) | clean | a block per column, file order | a block per column, file order | 1 char | 4-8 ms | | |
+| **pdfium as WebAssembly in Go** (`go-pdfium` + wazero, no C) | clean | a block per column, file order | a block per column, file order | 1 char | ~8 ms a file | **~55 MB** steady, 295 MB while compiling (the garbage is freed with `debug.FreeOSMemory()` after the start) | **11 MB** (static binary) |
+| MuPDF `mutool` (**AGPL**) | clean | a block per column | a block per column, file order | | | | |
+| pdfjs (Apache, Node) | clean | file order | file order | 0 chars | 87-111 ms, **1.25 s the first time** | heavy runtime | |
+| Go library `ledongthuc/pdf` (MIT) | **lines glued** | file order, glued | file order, glued | 0 chars | 10 ms | 1-2 MB | 7 MB |
+
+Broken files: poppler exits with code 1 and a clear message (truncated, random bytes, empty); pdfium as WebAssembly returns an
+error ("incorrect format") on a truncated file. Page cap: `pdftotext -l 5` gave 510 characters out of 6,223 on 60 pages.
 
 ## What it means
 
-- Reading a text PDF costs almost nothing (tens of milliseconds, under 10 MB). The load is not the problem; the **trust** is:
-  a PDF is a file made by someone else and the reader is a C library.
-- `-layout` is the mode to use: it keeps the structure the AI needs, including two columns. The AI step has to be told that
-  a line can hold two columns side by side.
-- A resume that is a picture gives no text: the user is told to export a PDF with text (no OCR at first).
+- **Quality no longer separates the tools.** For an AI that sorts a text into sections, what matters is that a column is not
+  mixed with the other one: four tools of five keep each column whole. Only poppler in its default order mixes them, and the Go
+  library loses the lines. Poppler `-layout` keeps the page, with the columns side by side (the AI has to be told).
+- What separates them is the **licence** (MuPDF is AGPL: avoided), the **runtime** (pdfjs and pdfminer bring Node or Python and
+  start slowly), the **size and memory**, and the **safety of the reader**.
+- Two tools read the file in the order it is written (pdfium, MuPDF, pdfjs); two read the geometry of the page (poppler
+  `-layout`, pdfminer). A PDF made by Word, LaTeX or Canva can write its text in another order than the one it shows: this
+  is the case our own test files cannot settle, which is why real PDFs are needed (below).
+- Reading a text PDF costs almost nothing. The load is not the problem; the **trust** is: a PDF is a file made by someone
+  else and the reader is a C or C++ library.
 
-## Recommendation
+## Two finalists
 
-A **small separate service** (`pdf-text`), the pattern of the password-hasher and the renderer: a Go wrapper that runs
-`pdftotext` on the bytes it receives, with
+| | A. poppler `-layout` in a small hardened container | B. pdfium as WebAssembly in a Go binary |
+|---|---|---|
+| Reader | poppler (C++, GPL, run as a separate process) | pdfium (C++ compiled to WebAssembly, run by wazero) |
+| Sandbox | the container: no network, read-only file system, non-root, memory and time limits | the container **and** the WebAssembly memory sandbox inside the process |
+| Image | about 33 MB | about 11 MB |
+| Memory | about 15 to 25 MiB at work | about 55 MiB steady |
+| Start | instant | about 4 s (compiles the module once; the pod is ready after) |
+| Order of the text | by the geometry of the page | the order of the file |
+| Maintenance | poppler is in every distribution, updated with the base image | a Go dependency (`go-pdfium`, `wazero`), updated with ours |
 
-- the file size capped (2 MB) and the pages capped (5), a time limit per file (a few seconds), a few files at once;
-- no network at all (network policy: only the app may call it, nothing goes out), no service-account token, a read-only
-  file system, non-root, the default seccomp profile, a memory limit: a poppler flaw would find nothing to reach;
-- nothing written to disk, nothing logged of the text.
+## Three real PDFs (no personal content in this report)
 
-The cost is an image of about 33 MB and about 15 to 25 MiB of memory at work, which fits in the margin of the node
-(docs/reports/2026-10-13-node-memory.md). The app never opens a PDF.
+Three resumes of real people, supplied by the owner, read on this machine with `scripts/pdf-compare.sh`: `a` (one page, a text
+with bullets), `b` (a graphic layout with a sidebar, 644 KB), `c` (LaTeX, pdfTeX, two pages).
+
+| Measure | poppler `-layout` | pdfium (file order) | poppler default | pdfminer |
+|---|---|---|---|---|
+| Lines with a date that also hold the title (a, b, c) | 6/6, 7/7, 9/9 | **6/6, 7/7, 9/9** | 1/6, 7/7, 5/9 | 1/6, 7/7, 5/9 |
+| Garbage characters (U+FFFD, private use) | 0 | 0 | 0 | 0 |
+| `b`, the graphic layout | **16 of 54 lines hold two columns side by side**: the AI has to separate them | the columns stay whole, in blocks | | blocks, but the title is cut from its date |
+| `a`, `c` | clean | clean | the title is cut from its date | the title is cut from its date |
+
+- A reader that cuts a position from its dates (poppler's default order and pdfminer, in half of the cases) is out.
+- Between the two finalists the real PDFs favour **pdfium**: it keeps the columns whole where `-layout` leaves two columns on the
+  same lines. Three files are a small sample; poppler stays the fallback.
+
+## Choice
+
+**B, pdfium as WebAssembly in a small static Go binary**: 11 MB image, about 55 MiB of memory at work, about 4 s to start (the
+module is compiled once; the pod is ready after), about 8 ms a file, a second sandbox (WebAssembly memory) inside the
+container. The risk is the dependency (`go-pdfium`, `wazero`): pin the versions and let Dependabot propose updates. Memory
+note: compiling the module takes ~295 MB for a moment; `debug.FreeOSMemory()` right after the start brings it to ~50 MB, and
+`GOMEMLIMIT` bounds the rest.
+
+Then, whichever is chosen, the pattern is the one of the password-hasher and the renderer: a small separate service, with the
+size of the file capped (2 MB), the pages capped (5), a time limit, a few files at once, no network at all, no token, nothing
+written to disk, nothing logged of the text. The app never opens a PDF.
 
 ## Next, in order
 
-1. The service `pdf-text` (Go, Dockerfile, manifests, network policy, CI), deployed with nothing calling it, as for the
-   hasher; measured with a scenario of `load/`.
-2. The app: upload (size and type checks, a limit per user), call to the service, then the AI structures the text into
-   entries (strict schema, the quotas of #203: an import is one AI call), nothing saved yet.
-3. The page: the review list (keep, edit, drop each entry) and the save; offered on the empty library.
+1. (Done) Compare real PDFs, choose B.
+2. The service `pdf-text` (Go, Dockerfile, manifests, network policy, CI), deployed with nothing calling it, as for the hasher;
+   measured with a scenario of `load/`.
+3. The app: upload (size and type checks, a limit per user), call to the service, then the AI structures the text into entries
+   (strict schema, the quotas of #203: an import is one AI call), nothing saved yet.
+4. The page: the review list (keep, edit, drop each entry) and the save; offered on the empty library.
+
+Not tried: handing the PDF to a model that reads documents (Mistral OCR or a vision model). It would read scans and odd layouts
+well, but the whole resume would leave for a third party, which is against the privacy line of the project, and it costs per
+page. To weigh later if scans matter.
 
 ## To reproduce
 
@@ -68,6 +107,6 @@ The cost is an image of about 33 MB and about 15 to 25 MiB of memory at work, wh
 curl -s -X POST localhost:8090/render -H 'Content-Type: application/json' --data-binary @req-classic.json -o classic.pdf
 docker run --rm -v "$PWD":/w -w /w --entrypoint typst jobapplicationoptimizer-resume-renderer \
   compile --font-path /usr/share/fonts/liberation two.typ two.pdf
-# the reading
-docker run --rm -v "$PWD":/w -w /w alpine:3.24.2 sh -c 'apk add -q poppler-utils; pdftotext -layout two.pdf -'
+# the tools on one file
+scripts/pdf-compare.sh two.pdf
 ```
