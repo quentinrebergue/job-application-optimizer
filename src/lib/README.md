@@ -23,6 +23,7 @@ Server-side business logic. All functions are barrel-exported from `index.ts`. T
 | `cn.ts` | `cn()` — joins class names (clsx + tailwind-merge aware of the design tokens). Client-safe. |
 | `format.ts` | `formatDate(iso, style)` — dates in UTC so server and browser render the same text. Client-safe. |
 | `http.ts` | `fetchJson(url, { json })` — client fetch that throws `HttpError` (with the server's message) when the response is not ok. |
+| `import-resume.ts` | The import of a resume, apart from its screen (#268): `checkFile` (PDF, not empty, 2 MB, before sending), `sendResume` (the PDF as the body of `POST /api/import/resume`, every outcome turned into something to show), `report` (what was added and what was not, and why), `errorMessage`. Tested in `import-resume.test.ts`. |
 | `entity-filter.ts` | `LIBRARY_TABS` (no "All"), `parseLibraryTab()` (defaults to experiences), `parseEntityType()`, `libraryHref()` — the `?tab=` / `?type=` of the library in `/resume`. |
 | `rate-limit.ts` | `consumeRateLimit(key, limit, windowMs)` and `refundRateLimit(key)` (gives a hit back) — fixed-window counters in the `rate_limits` table (Redis later, #141); `clientIp(headers)`, `isPublicIp(ip)` (private addresses are not limited: they are the load balancer, shared by everyone). |
 | `text-limit.ts` | `tooLong(value, max)`, `counterFor(value, max)`, `isLongText(max)`: what a form shows about the size of a text (#201). Client-safe. |
