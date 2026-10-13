@@ -15,7 +15,7 @@ import { saveImportedEntries } from '@/lib/import/save'
 // The steps, cheapest first, so a refused file costs nothing:
 //   the session and a confirmed address (the AI costs money) -> the size and the first bytes ->
 //   the limit of imports -> the text of the PDF (pdf-text) -> the limits of the AI -> the AI turns
-//   the text into entries -> every entry is checked -> what is new is saved.
+//   the text into entries -> every entry is checked against the text -> what is new is saved.
 // The file is never written to disk, and neither the file nor its text is kept or logged: they are
 // personal data. Only the entries the user can see and delete in the library are saved.
 
@@ -49,7 +49,7 @@ export async function POST(request: Request) {
       throw error
     }
 
-    const prompt = buildImportPrompt(read.text)
+    const { prompt, lines } = buildImportPrompt(read.text)
     if ([...IMPORT_SYSTEM_PROMPT].length + [...prompt].length > aiLimits().maxPromptChars) {
       return reply('This resume holds too much text to import. Try a shorter PDF.', 413, 'prompt_too_large')
     }
@@ -75,7 +75,7 @@ export async function POST(request: Request) {
       completionTokens: answer.usage.completion_tokens,
     })
 
-    const { entries, dropped } = parseImportAnswer(answer.content)
+    const { entries, dropped } = parseImportAnswer(answer.content, lines)
     if (IMPORT_TYPES.every((type) => entries[type].length === 0)) {
       return reply('No experience, project, education or skill could be read in this resume.', 422, 'nothing_found')
     }
