@@ -26,7 +26,7 @@ const max = (list, key) => list.reduce((m, s) => Math.max(m, s[key]), 0)
 const rows = result.steps.map((step) => {
   const from = result.started_at + (step.step - 1) * stepMs
   const inside = samples.filter((s) => s.at - LAG_MS >= from && s.at - LAG_MS < from + stepMs)
-  return { step, inside, n: inside.length, appCpu: max(inside, 'appCpu'), appMem: max(inside, 'appMem'), pgCpu: max(inside, 'pgCpu'), hasherCpu: max(inside, 'hasherCpu'), rendererCpu: max(inside, 'rendererCpu'), nginxCpu: max(inside, 'nginxCpu'), nodeCpuPercent: max(inside, 'nodeCpuPercent'), steal: max(inside, 'steal'), nodeMem: max(inside, 'nodeMem'), podsMem: max(inside, 'podsMem') }
+  return { step, inside, n: inside.length, appCpu: max(inside, 'appCpu'), appMem: max(inside, 'appMem'), pgCpu: max(inside, 'pgCpu'), hasherCpu: max(inside, 'hasherCpu'), rendererCpu: max(inside, 'rendererCpu'), nginxCpu: max(inside, 'nginxCpu'), nodeCpuPercent: max(inside, 'nodeCpuPercent'), steal: inside.some((x) => x.steal !== null) ? max(inside.filter((x) => x.steal !== null), 'steal') : null, nodeMem: max(inside, 'nodeMem'), podsMem: max(inside, 'podsMem') }
 })
 
 const pad = (v, n) => String(Math.round(v)).padStart(n)
@@ -36,7 +36,7 @@ const lines = [
   '',
   ' step | target/s | reached/s |  p95 ms | failed % | app CPU m | app Mi | hasher m | pg CPU m | nginx m | node CPU % | steal % | pods Mi',
   '------+----------+-----------+---------+----------+-----------+--------+----------+----------+---------+------------+---------+--------',
-  ...rows.map((r) => ` ${pad(r.step.step, 4)} | ${pad(r.step.target_rps, 8)} | ${String(r.step.achieved_rps).padStart(9)} | ${pad(r.step.p95_ms, 7)} | ${String(r.step.failed_percent).padStart(8)} | ${r.n ? pad(r.appCpu, 9) : '        -'} | ${r.n ? pad(r.appMem, 6) : '     -'} | ${r.n ? pad(r.hasherCpu, 8) : '       -'} | ${r.n ? pad(r.pgCpu, 8) : '       -'} | ${r.n ? pad(r.nginxCpu, 7) : '      -'} | ${r.n ? pad(r.nodeCpuPercent, 10) : '         -'} | ${r.n ? r.steal.toFixed(1).padStart(7) : '      -'} | ${r.n ? pad(r.podsMem, 7) : '      -'}${r.step.broken ? '  <- broken' : ''}`),
+  ...rows.map((r) => ` ${pad(r.step.step, 4)} | ${pad(r.step.target_rps, 8)} | ${String(r.step.achieved_rps).padStart(9)} | ${pad(r.step.p95_ms, 7)} | ${String(r.step.failed_percent).padStart(8)} | ${r.n ? pad(r.appCpu, 9) : '        -'} | ${r.n ? pad(r.appMem, 6) : '     -'} | ${r.n ? pad(r.hasherCpu, 8) : '       -'} | ${r.n ? pad(r.pgCpu, 8) : '       -'} | ${r.n ? pad(r.nginxCpu, 7) : '      -'} | ${r.n ? pad(r.nodeCpuPercent, 10) : '         -'} | ${r.n && r.steal !== null ? r.steal.toFixed(1).padStart(7) : '      -'} | ${r.n ? pad(r.podsMem, 7) : '      -'}${r.step.broken ? '  <- broken' : ''}`),
   '',
 ]
 
@@ -47,7 +47,7 @@ const at = broken || rows[rows.length - 1]
 const hints = []
 if (at.n > 0) {
   if (at.appCpu >= 800) hints.push(`the app uses ${Math.round(at.appCpu)} m of CPU: one core is almost full, the Node thread is the limit (it cannot use the second core)`)
-  if (at.steal >= 8) hints.push(`the hypervisor takes ${at.steal.toFixed(1)} % of the node's CPU time (steal): the vCPU is shared, the pods look idle and the answers are slow. This is what an instance with shared resources (Discovery) does under load: the figures of CPU above understate what the machine really lacks`)
+  if (at.steal !== null && at.steal >= 8) hints.push(`the hypervisor takes ${at.steal.toFixed(1)} % of the node's CPU time (steal): the vCPU is shared, the pods look idle and the answers are slow. This is what an instance with shared resources (Discovery) does under load: the figures of CPU above understate what the machine really lacks`)
   if (at.nodeCpuPercent >= 85) hints.push(`the node is at ${Math.round(at.nodeCpuPercent)} % of CPU: the machine itself is full, whatever runs on it`)
   if (at.appMem >= 330) hints.push(`the app holds ${Math.round(at.appMem)} Mi of its 384 Mi: the memory limit is near`)
   if (at.podsMem >= 1700) hints.push(`the pods hold ${Math.round(at.podsMem)} Mi together of the ~2,000 Mi the node allows them: memory is near the ceiling`)
@@ -113,6 +113,24 @@ if (rows.length === 1 && rows[0].n >= 3) {
     `Steady state, ${inside.length} samples (mean / median): app ${Math.round(mean('appCpu'))} / ${Math.round(median('appCpu'))} m, nginx ${Math.round(mean('nginxCpu'))} / ${Math.round(median('nginxCpu'))} m, password-hasher ${Math.round(mean('hasherCpu'))} m, node ${Math.round(mean('nodeCpuPercent'))} / ${Math.round(median('nodeCpuPercent'))} %, pods ${Math.round(mean('podsMem'))} Mi`,
     '',
   )
+  // The CPU of the whole node for one visitor a second: what limits the site when the visits are first visits, whatever
+  // the app does. The cores of the node by kind say where it goes (the kernel's own work belongs to no pod).
+  const rate = rows[0].step.target_rps
+  // The whole node, from the counters of the kernel (every 5 s) when there are some; kubectl top only changes about once a
+  // minute and is only a fallback. A node of two cores: 1 % of its time is 20 m.
+  const kindSamples = inside.filter((x) => x.kinds)
+  const fromKernel = kindSamples.length > 0
+  const nodeMilli = fromKernel
+    ? (kindSamples.reduce((sum, x) => sum + (100 - x.kinds.idle - x.kinds.iowait), 0) / kindSamples.length) * 20
+    : (mean('nodeCpuPercent') / 100) * 2000
+  lines.splice(lines.length - 1, 0, `The node as a whole${fromKernel ? '' : ' (kubectl top: delayed, indicative only)'}: ${Math.round(nodeMilli)} m for ${rate} visits a second, ${(nodeMilli / rate).toFixed(0)} m per visit a second (the app ${(mean('appCpu') / rate).toFixed(0)}, nginx ${(mean('nginxCpu') / rate).toFixed(0)}, the rest ${((nodeMilli - mean('appCpu') - mean('nginxCpu')) / rate).toFixed(0)}). Assumes 2 cores.`)
+  const withKinds = inside.filter((x) => x.kinds)
+  if (withKinds.length > 0) {
+    // Each kind as a share of the node's CPU time, in m of a node of two cores (1 % = 20 m).
+    const kinds = ['user', 'system', 'softirq', 'irq', 'iowait', 'steal']
+    const mean2 = (k) => withKinds.reduce((sum, x) => sum + x.kinds[k], 0) / withKinds.length
+    lines.splice(lines.length - 1, 0, `By kind (mean of ${withKinds.length} samples, m of the node): ${kinds.map((k) => `${k} ${Math.round(mean2(k) * 20)}`).join(', ')}; steal ${mean2('steal').toFixed(1)} % of the node`)
+  }
 }
 
 const out = lines.join('\n')
