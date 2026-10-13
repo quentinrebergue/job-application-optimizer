@@ -36,6 +36,8 @@ export const LONG_TEXT_FROM = 1000
 export const MAX_BODY_BYTES = {
   default: 100 * 1024,
   resumeConfig: 200 * 1024,
+  /** The PDF of a resume to import (#267); the pdf-text service and the Ingress of the route refuse more as well. */
+  resumePdf: 2 * 1024 * 1024,
 } as const
 
 /**

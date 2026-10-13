@@ -38,6 +38,9 @@ spec:
             # to hash in the app again: it also does so by itself when the service does not answer.
             - name: PASSWORD_HASHER_URL
               value: "http://password-hasher"
+            # The service that reads the text of a PDF, for the import of a resume (#267).
+            - name: PDF_TEXT_URL
+              value: "http://pdf-text"
             - name: APP_URL
               value: "https://fastresume.tech"
             - name: AI_GATEWAY_URL

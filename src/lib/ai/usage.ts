@@ -31,15 +31,16 @@ export type Denial = {
 export type Reservation = { denied?: false; id: number; model?: string }
 
 /**
- * What a call costs at most, before it is made: the biggest prompt and answer. At the price of the
+ * What a call costs at most, before it is made: the biggest prompt and answer (an import's answer may be longer). At the price of the
  * model that answered last (the gateway does not say which one it will use), or the dearest known
  * price when no call has been made yet or the model is not in the table.
  */
-export function worstCaseCost(model?: string): number {
-  const { maxPromptChars, maxOutputTokens } = aiLimits()
+export function worstCaseCost(model?: string, feature?: string): number {
+  const limits = aiLimits()
+  const outputTokens = feature === 'import' ? limits.maxOutputTokensImport : limits.maxOutputTokens
   const price = priceOf(model) ?? DEAREST_PRICE
-  const input = (maxPromptChars / CHARS_PER_TOKEN_FLOOR) * price.input
-  return (input + maxOutputTokens * price.output) / 1e6
+  const input = (limits.maxPromptChars / CHARS_PER_TOKEN_FLOOR) * price.input
+  return (input + outputTokens * price.output) / 1e6
 }
 
 /** What a call that timed out costs: its prompt, which the provider may have billed, and no answer. */
@@ -68,7 +69,7 @@ export async function reserveAiCall(userId: string, feature: string, now = new D
       "SELECT model FROM ai_usage WHERE status = 'done' AND model IS NOT NULL ORDER BY id DESC LIMIT 1",
     )
     const model = last.rows[0]?.model
-    const reserved = worstCaseCost(model)
+    const reserved = worstCaseCost(model, feature)
 
     const spent = await client.query<{ eur: string }>(
       'SELECT coalesce(sum(cost_eur), 0) AS eur FROM ai_usage WHERE created_at >= $1',
