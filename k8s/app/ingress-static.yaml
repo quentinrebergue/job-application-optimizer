@@ -1,0 +1,40 @@
+# The files of /_next/static: the same service as the pages, but with the buffering of nginx turned on for this path, so
+# that nginx can keep them (the cache itself is set in k8s/ingress-nginx/values-static-cache.yaml, #253). ingress-nginx
+# turns buffering off for every location, and nginx does not cache what is not buffered.
+#
+# It has no cert-manager annotation: the certificate (app-tls) is made by the Ingress "app"; this one only uses it.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-static
+  namespace: job-optimizer
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-buffering: "on"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - fastresume.tech
+        - www.fastresume.tech
+      secretName: app-tls
+  rules:
+    - host: fastresume.tech
+      http:
+        paths:
+          - path: /_next/static
+            pathType: Prefix
+            backend:
+              service:
+                name: app
+                port:
+                  number: 80
+    - host: www.fastresume.tech
+      http:
+        paths:
+          - path: /_next/static
+            pathType: Prefix
+            backend:
+              service:
+                name: app
+                port:
+                  number: 80

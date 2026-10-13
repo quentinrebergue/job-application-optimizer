@@ -29,7 +29,7 @@ remote=1
 [[ "${BASE_URL:-http://localhost}" == http://localhost* ]] && remote=0
 load_host="${LOAD_HOST:-}"
 # One SSH connection for all the calls of a run (a passphrase is asked once, not four times); it closes by itself.
-ssh_opts=(-o ControlMaster=auto -o "ControlPath=/tmp/fastresume-load-%C" -o ControlPersist=60 -o ServerAliveInterval=15)
+ssh_opts=(-o ControlMaster=auto -o "ControlPath=/tmp/fastresume-load-%C" -o ControlPersist=600 -o ServerAliveInterval=15)
 if [ -n "$load_host" ] && [ "$remote" = 0 ]; then
   echo "LOAD_HOST runs k6 on another machine, which cannot reach a site on this one: give BASE_URL a public address." >&2
   exit 1
@@ -59,7 +59,7 @@ prom_service="${PROM_SERVICE:-monitoring-kube-prometheus-prometheus}"
 steal_query='sum(rate(node_cpu_seconds_total%7Bmode%3D%22steal%22%7D%5B1m%5D))%2Fsum(rate(node_cpu_seconds_total%5B1m%5D))'
 
 args=(-e "RESULT_FILE=$result")
-for name in BASE_URL START_RPS STEP_RPS STEPS STEP_SECONDS MAX_VUS SLOW_MS FAIL_RATE LOAD_PASSWORD CLIENT_IP_HEADER LOGIN_LIMIT RESET_LIMIT FLOOD_RPS FLOOD_SECONDS READ_RPS LOGIN_RPS ALONE_SECONDS TOGETHER_SECONDS; do
+for name in BASE_URL START_RPS STEP_RPS STEPS STEP_SECONDS MAX_VUS SLOW_MS FAIL_RATE LOAD_PASSWORD CLIENT_IP_HEADER LOGIN_LIMIT RESET_LIMIT FLOOD_RPS FLOOD_SECONDS READ_RPS LOGIN_RPS ALONE_SECONDS TOGETHER_SECONDS ASSETS; do
   [ -n "${!name:-}" ] && args+=(-e "$name=${!name}")
 done
 # In the container, "localhost" is the container itself: the site on this machine is host.docker.internal.
@@ -111,15 +111,24 @@ fi
 # Whatever ends this script (the end of the run, Ctrl-C), the sampling stops, and so does k6 on the other machine.
 cleanup() {
   [ -n "$sampler_pid" ] && { kill "$sampler_pid" && wait "$sampler_pid"; } 2>/dev/null || true
+  [ -n "${access_pid:-}" ] && { kill "$access_pid" && wait "$access_pid"; } 2>/dev/null || true
   [ -n "$load_host" ] && stop_generator
   return 0
 }
 trap cleanup EXIT
 trap 'exit 130' INT TERM
 
-# The access log of the ingress for the length of the run: what the server saw, with no network of ours in it.
+# The access log of the ingress for the length of the run: what the server saw, with no network of ours in it. It is
+# followed while the run goes: Kubernetes rotates a log file at 10 MB, and a run with the page's files (hundreds of
+# requests a second) fills that in minutes, so a log read at the end has lost the beginning.
 access="load/results/${stamp}-${scenario}-access.log"
 started_iso="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+access_pid=""
+if [ -n "$sampler_pid" ]; then
+  : > "$access"
+  kubectl -n ingress-nginx logs -f deploy/ingress-nginx-controller --since-time="$started_iso" >> "$access" 2>/dev/null &
+  access_pid=$!
+fi
 
 # The machine that runs k6 has limits too: a generator that is full reports slow answers that the site never gave. Its CPU
 # is read every 3 seconds (docker stats: 100 % is one core) and the peak is printed at the end.
@@ -138,7 +147,7 @@ if [ -n "$load_host" ]; then
   echo "Running on $load_host: copying load/, then $scenario" >&2
   tar -C load --exclude=./results -cf - . | ssh -T "${ssh_opts[@]}" "$load_host" 'mkdir -p load && tar -C load -xf -'
   envs=()
-  for name in BASE_URL START_RPS STEP_RPS STEPS STEP_SECONDS MAX_VUS SLOW_MS FAIL_RATE CLIENT_IP_HEADER LOGIN_LIMIT RESET_LIMIT FLOOD_RPS FLOOD_SECONDS READ_RPS LOGIN_RPS ALONE_SECONDS TOGETHER_SECONDS; do
+  for name in BASE_URL START_RPS STEP_RPS STEPS STEP_SECONDS MAX_VUS SLOW_MS FAIL_RATE CLIENT_IP_HEADER LOGIN_LIMIT RESET_LIMIT FLOOD_RPS FLOOD_SECONDS READ_RPS LOGIN_RPS ALONE_SECONDS TOGETHER_SECONDS ASSETS; do
     [ -n "${!name:-}" ] && envs+=("$name=$(printf %q "${!name}")")
   done
   # The password comes on the standard input; k6 in its container reads nothing else from it.
@@ -170,7 +179,8 @@ fi
 
 if [ -n "$sampler_pid" ]; then
   { kill "$sampler_pid" && wait "$sampler_pid"; } 2>/dev/null || true
-  kubectl -n ingress-nginx logs deploy/ingress-nginx-controller --since-time="$started_iso" > "$access" 2>/dev/null || : > "$access"
+  sleep 2 # the last lines of the log
+  [ -n "$access_pid" ] && { kill "$access_pid" && wait "$access_pid"; } 2>/dev/null || true
   [ -f "$result" ] && docker run --rm -v "$PWD/load:/load" -w / "$IMAGE" node /load/merge.mjs "/$result" "/$samples" "/$access" || true
 fi
 exit "$status"
