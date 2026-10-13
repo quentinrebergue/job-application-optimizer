@@ -41,10 +41,11 @@ func run(logger *slog.Logger) error {
 		logger.Warn("the AI is disabled (AI_ENABLED=false): every completion is refused")
 	}
 	srv := api.New(client, api.Limits{
-		Disabled:        !cfg.Enabled,
-		MaxPromptChars:  cfg.MaxPromptChars,
-		MaxOutputTokens: cfg.MaxOutputTokens,
-		Timeout:         cfg.RequestTimeout,
+		Disabled:              !cfg.Enabled,
+		MaxPromptChars:        cfg.MaxPromptChars,
+		MaxOutputTokens:       cfg.MaxOutputTokens,
+		ImportMaxOutputTokens: cfg.ImportMaxOutputTokens,
+		Timeout:               cfg.RequestTimeout,
 	}, logger)
 
 	httpServer := &http.Server{

@@ -159,3 +159,29 @@ func TestCompleteStillRefusesTextThatIsNotJSONByDefault(t *testing.T) {
 		t.Fatalf("got %d", rec.Code)
 	}
 }
+
+func TestImportHasItsOwnOutputCap(t *testing.T) {
+	for feature, want := range map[string]int{"rank": 50, "import": 400} {
+		rec := &recordingLLM{}
+		srv := New(rec, Limits{MaxPromptChars: 100, MaxOutputTokens: 50, ImportMaxOutputTokens: 400, Timeout: time.Second},
+			slog.New(slog.NewTextHandler(io.Discard, nil)))
+		w := httptest.NewRecorder()
+		body := `{"feature":"` + feature + `","user_id":"u1","prompt":"hi"}`
+		srv.Handler().ServeHTTP(w, httptest.NewRequest(http.MethodPost, "/v1/complete", strings.NewReader(body)))
+		if w.Code != http.StatusOK || rec.got.MaxTokens != want {
+			t.Fatalf("%s: got %d, max tokens %d, want %d", feature, w.Code, rec.got.MaxTokens, want)
+		}
+	}
+}
+
+func TestImportFallsBackToTheCommonCapWhenNoneIsSet(t *testing.T) {
+	rec := &recordingLLM{}
+	srv := New(rec, Limits{MaxPromptChars: 100, MaxOutputTokens: 50, Timeout: time.Second},
+		slog.New(slog.NewTextHandler(io.Discard, nil)))
+	w := httptest.NewRecorder()
+	body := `{"feature":"import","user_id":"u1","prompt":"hi"}`
+	srv.Handler().ServeHTTP(w, httptest.NewRequest(http.MethodPost, "/v1/complete", strings.NewReader(body)))
+	if w.Code != http.StatusOK || rec.got.MaxTokens != 50 {
+		t.Fatalf("got %d, max tokens %d", w.Code, rec.got.MaxTokens)
+	}
+}
