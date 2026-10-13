@@ -101,6 +101,30 @@ func TestTwoColumnsStayWholeWhateverTheOrderOfTheFile(t *testing.T) {
 	}
 }
 
+// The file of a design tool: the content is in no reading order (the bullets of a job before its title, the skills
+// before the name). The text must come out the way a person reads the page: a sidebar, then the main column.
+func TestAResumeWrittenInNoReadingOrderIsReadInReadingOrder(t *testing.T) {
+	res := read(t, "sidebar-scrambled.pdf")
+	text := res.Text
+	order := []string{
+		"Camille Moreau", "COMPETENCES", "Go, Java, TypeScript, SQL", "CONTACT",
+		"EXPERIENCE", "Ingenieure backend senior - Logistix", "- Conception d'une API", "- Migration d'un monolithe",
+		"Ingenieure backend - PayFlow", "- Reduction de 60 %", "FORMATION", "Diplome d'ingenieure", "- Option mathematiques", "Baccalaureat scientifique",
+	}
+	last := -1
+	for _, want := range order {
+		i := strings.Index(text, want)
+		if i < 0 || i < last {
+			t.Fatalf("%q is not where a person reads it (at %d, after %d):\n%s", want, i, last, text)
+		}
+		last = i
+	}
+	// The bullets stay under their own title, not under the one of the next job.
+	if job := text[strings.Index(text, "Logistix"):strings.Index(text, "PayFlow")]; !strings.Contains(job, "supervision") || strings.Contains(job, "remboursement") {
+		t.Errorf("the bullets are not with their job:\n%s", text)
+	}
+}
+
 func TestAPictureIsNotAText(t *testing.T) {
 	if _, err := shared.Text(context.Background(), file(t, "picture.pdf")); !errors.Is(err, ErrNoText) {
 		t.Errorf("err = %v, want ErrNoText", err)

@@ -20,6 +20,7 @@ import (
 	"unicode"
 
 	pdfium "github.com/klippa-app/go-pdfium"
+	"github.com/klippa-app/go-pdfium/references"
 	"github.com/klippa-app/go-pdfium/requests"
 	"github.com/klippa-app/go-pdfium/webassembly"
 	"github.com/tetratelabs/wazero"
@@ -211,12 +212,12 @@ func (r *Reader) extract(inst pdfium.Pdfium, data []byte) (Result, error) {
 	read := min(count.PageCount, r.opt.MaxPages)
 	var sb strings.Builder
 	for i := 0; i < read; i++ {
-		page, err := inst.GetPageText(&requests.GetPageText{Page: requests.Page{ByIndex: &requests.PageByIndex{Document: doc.Document, Index: i}}})
+		text, err := pageText(inst, doc.Document, i)
 		if err != nil {
 			return Result{}, ErrUnreadable
 		}
-		sb.WriteString(page.Text)
-		sb.WriteString("\n")
+		sb.WriteString(text)
+		sb.WriteString("\n\n")
 	}
 	text := tidy(sb.String())
 	if letters(text) < r.opt.MinTextChars {
@@ -228,6 +229,34 @@ func (r *Reader) extract(inst pdfium.Pdfium, data []byte) (Result, error) {
 		truncated = true
 	}
 	return Result{Text: text, Pages: count.PageCount, PagesRead: read, Truncated: truncated}, nil
+}
+
+// pageText is the text of a page in reading order, from the place of each fragment on it (layout.go). When the
+// places are not there, or give next to nothing, it is the text as the file stores it: a worse order is better
+// than no text.
+func pageText(inst pdfium.Pdfium, doc references.FPDF_DOCUMENT, index int) (string, error) {
+	ref := requests.Page{ByIndex: &requests.PageByIndex{Document: doc, Index: index}}
+	structured, err := inst.GetPageTextStructured(&requests.GetPageTextStructured{
+		Page: ref, Mode: requests.GetPageTextStructuredModeRects, CollectFontInformation: true,
+	})
+	if err == nil {
+		frags := make([]fragment, 0, len(structured.Rects))
+		for _, r := range structured.Rects {
+			f := fragment{text: r.Text, left: r.PointPosition.Left, right: r.PointPosition.Right, bottom: r.PointPosition.Bottom, top: r.PointPosition.Top}
+			if r.FontInformation != nil {
+				f.size = r.FontInformation.RenderedSize
+			}
+			frags = append(frags, f)
+		}
+		if text := layoutText(frags); letters(text) >= 30 {
+			return text, nil
+		}
+	}
+	page, err := inst.GetPageText(&requests.GetPageText{Page: ref})
+	if err != nil {
+		return "", err
+	}
+	return page.Text, nil
 }
 
 var (
