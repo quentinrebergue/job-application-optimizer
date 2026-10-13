@@ -29,7 +29,7 @@ remote=1
 [[ "${BASE_URL:-http://localhost}" == http://localhost* ]] && remote=0
 load_host="${LOAD_HOST:-}"
 # One SSH connection for all the calls of a run (a passphrase is asked once, not four times); it closes by itself.
-ssh_opts=(-o ControlMaster=auto -o "ControlPath=/tmp/fastresume-load-%C" -o ControlPersist=60 -o ServerAliveInterval=15)
+ssh_opts=(-o ControlMaster=auto -o "ControlPath=/tmp/fastresume-load-%C" -o ControlPersist=600 -o ServerAliveInterval=15)
 if [ -n "$load_host" ] && [ "$remote" = 0 ]; then
   echo "LOAD_HOST runs k6 on another machine, which cannot reach a site on this one: give BASE_URL a public address." >&2
   exit 1
@@ -59,7 +59,7 @@ prom_service="${PROM_SERVICE:-monitoring-kube-prometheus-prometheus}"
 steal_query='sum(rate(node_cpu_seconds_total%7Bmode%3D%22steal%22%7D%5B1m%5D))%2Fsum(rate(node_cpu_seconds_total%5B1m%5D))'
 
 args=(-e "RESULT_FILE=$result")
-for name in BASE_URL START_RPS STEP_RPS STEPS STEP_SECONDS MAX_VUS SLOW_MS FAIL_RATE LOAD_PASSWORD CLIENT_IP_HEADER LOGIN_LIMIT RESET_LIMIT FLOOD_RPS FLOOD_SECONDS READ_RPS LOGIN_RPS ALONE_SECONDS TOGETHER_SECONDS; do
+for name in BASE_URL START_RPS STEP_RPS STEPS STEP_SECONDS MAX_VUS SLOW_MS FAIL_RATE LOAD_PASSWORD CLIENT_IP_HEADER LOGIN_LIMIT RESET_LIMIT FLOOD_RPS FLOOD_SECONDS READ_RPS LOGIN_RPS ALONE_SECONDS TOGETHER_SECONDS ASSETS; do
   [ -n "${!name:-}" ] && args+=(-e "$name=${!name}")
 done
 # In the container, "localhost" is the container itself: the site on this machine is host.docker.internal.
@@ -138,7 +138,7 @@ if [ -n "$load_host" ]; then
   echo "Running on $load_host: copying load/, then $scenario" >&2
   tar -C load --exclude=./results -cf - . | ssh -T "${ssh_opts[@]}" "$load_host" 'mkdir -p load && tar -C load -xf -'
   envs=()
-  for name in BASE_URL START_RPS STEP_RPS STEPS STEP_SECONDS MAX_VUS SLOW_MS FAIL_RATE CLIENT_IP_HEADER LOGIN_LIMIT RESET_LIMIT FLOOD_RPS FLOOD_SECONDS READ_RPS LOGIN_RPS ALONE_SECONDS TOGETHER_SECONDS; do
+  for name in BASE_URL START_RPS STEP_RPS STEPS STEP_SECONDS MAX_VUS SLOW_MS FAIL_RATE CLIENT_IP_HEADER LOGIN_LIMIT RESET_LIMIT FLOOD_RPS FLOOD_SECONDS READ_RPS LOGIN_RPS ALONE_SECONDS TOGETHER_SECONDS ASSETS; do
     [ -n "${!name:-}" ] && envs+=("$name=$(printf %q "${!name}")")
   done
   # The password comes on the standard input; k6 in its container reads nothing else from it.
