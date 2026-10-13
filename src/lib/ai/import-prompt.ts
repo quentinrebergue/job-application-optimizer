@@ -19,7 +19,8 @@ export const IMPORT_SYSTEM_PROMPT =
 const RULES = `Extract the entries of this resume. Every line of the text starts with its number, like [12].
 - Copy, never write: a title, a company, a place, a period, a degree, a school, a project or skill name is copied exactly as the text writes it. Never invent a company, a date, a skill or a number. A field the text does not give is an empty string.
 - Never write a description. Give the number of its first line and of its last line (description_from, description_to): the lines that say what was done or achieved, and no other (not the title line, not a line of another entry). 0 and 0 when there is none.
-- The text comes from a PDF and may have two columns: a sidebar (contact, skills, languages) can sit before, between or after the main column. Put each line with the entry it belongs to.
+- The text comes from a PDF and may have two columns: a sidebar (contact, skills, languages) can sit before, between or after the main column. Put each line with the entry it belongs to. The lines of a job, a degree or a project can come before the line that names it.
+- A bullet, a sentence about what was done or studied, or a grade is part of the entry it belongs to: it is never an entry of its own. A job or a project has one entry, not one per bullet; a degree is a title ("Master in physics"), not a sentence.
 - experiences: one per job. title, company, location, period as written ("2022 – Present"), tags (up to 8 keywords, technologies and domains, found in the lines of the job).
 - projects: personal or side projects only, never jobs. If the text has none, the list is empty. title, tech (the technologies named), tags.
 - education: degree, institution, period as written.
@@ -157,11 +158,26 @@ export function parseImportAnswer(content: unknown, lines: string[]): ParsedImpo
   for (const type of IMPORT_TYPES) {
     const raw = (content as Record<string, unknown>)[type]
     if (!Array.isArray(raw)) continue
+    const jobs = new Set<string>()
     for (const item of raw) {
       const candidate = typeof item === 'object' && item !== null && !Array.isArray(item) ? shape[type](item as Record<string, unknown>) : null
       const parsed = candidate === null ? null : EntityCreateSchemas[type].safeParse(candidate)
-      if (parsed?.success) (entries[type] as unknown[]).push(parsed.data)
-      else dropped++
+      if (!parsed?.success) {
+        dropped++
+        continue
+      }
+      // The same company over the same period is one job: a model that makes an entry of each bullet gives the
+      // same company and period every time. The first is kept (the one that names the job comes first).
+      if (type === 'experiences') {
+        const { company, period } = parsed.data as { company: string; period?: string }
+        const job = period ? `${normalize(company)}|${normalize(period)}` : null
+        if (job !== null && jobs.has(job)) {
+          dropped++
+          continue
+        }
+        if (job !== null) jobs.add(job)
+      }
+      ;(entries[type] as unknown[]).push(parsed.data)
     }
   }
   return { entries, dropped }
