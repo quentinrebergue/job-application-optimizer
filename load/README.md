@@ -73,6 +73,12 @@ SSH), then the result is fetched and the table of both views is printed. `LOAD_P
 the standard input of SSH, never in a command line. Ctrl-C stops k6 on the other machine too. A `BASE_URL` on your own
 machine is refused: the server cannot reach it.
 
+**What uses the CPU of the node outside the pods**: `NODE_TOP=1` (with the cluster sampled) starts a small pod 45 seconds into
+the run (`NODE_TOP_AFTER`) that shares the process space of the node, takes `top` twice, and prints the processes that use
+the most CPU at the end of the report (percent of the whole node, 1 % is 20 m on a node of two cores). It shows `kubelet`,
+`containerd`, Prometheus, the network of the cluster, which neither `kubectl top` (pods only) nor the counters of the cgroups
+can show. The pod is removed afterwards.
+
 ## Finding the bottleneck
 
 The breaking point says *when* the site gives way; the bottleneck is *what* gives way first. The method is the same for any
