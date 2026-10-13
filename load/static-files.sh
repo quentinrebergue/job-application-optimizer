@@ -15,10 +15,13 @@ label="${1:?usage: load/static-files.sh <label>   (before | after)}"
 : "${BASE_URL:?give BASE_URL, e.g. https://fastresume.tech}"
 mkdir -p load/results
 
+# SKIP="ramp-1 ramp-2" leaves out runs already done (their files stay as they are).
 run() {
   local name="$1"; shift
+  case " ${SKIP:-} " in *" $name "*) echo "=== $label / $name: skipped ===" >&2; return 0 ;; esac
   echo "=== $label / $name: $* ===" >&2
-  env "$@" load/run.sh anonymous 2>&1 | tee "load/results/static-${label}-${name}.txt"
+  # A ramp that breaks makes run.sh answer with an error on purpose (k6 says a threshold was crossed): not a reason to stop.
+  env "$@" load/run.sh anonymous 2>&1 | tee "load/results/static-${label}-${name}.txt" || true
   sleep "${COOL_DOWN:-30}"
 }
 

@@ -111,15 +111,24 @@ fi
 # Whatever ends this script (the end of the run, Ctrl-C), the sampling stops, and so does k6 on the other machine.
 cleanup() {
   [ -n "$sampler_pid" ] && { kill "$sampler_pid" && wait "$sampler_pid"; } 2>/dev/null || true
+  [ -n "${access_pid:-}" ] && { kill "$access_pid" && wait "$access_pid"; } 2>/dev/null || true
   [ -n "$load_host" ] && stop_generator
   return 0
 }
 trap cleanup EXIT
 trap 'exit 130' INT TERM
 
-# The access log of the ingress for the length of the run: what the server saw, with no network of ours in it.
+# The access log of the ingress for the length of the run: what the server saw, with no network of ours in it. It is
+# followed while the run goes: Kubernetes rotates a log file at 10 MB, and a run with the page's files (hundreds of
+# requests a second) fills that in minutes, so a log read at the end has lost the beginning.
 access="load/results/${stamp}-${scenario}-access.log"
 started_iso="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+access_pid=""
+if [ -n "$sampler_pid" ]; then
+  : > "$access"
+  kubectl -n ingress-nginx logs -f deploy/ingress-nginx-controller --since-time="$started_iso" >> "$access" 2>/dev/null &
+  access_pid=$!
+fi
 
 # The machine that runs k6 has limits too: a generator that is full reports slow answers that the site never gave. Its CPU
 # is read every 3 seconds (docker stats: 100 % is one core) and the peak is printed at the end.
@@ -170,7 +179,8 @@ fi
 
 if [ -n "$sampler_pid" ]; then
   { kill "$sampler_pid" && wait "$sampler_pid"; } 2>/dev/null || true
-  kubectl -n ingress-nginx logs deploy/ingress-nginx-controller --since-time="$started_iso" > "$access" 2>/dev/null || : > "$access"
+  sleep 2 # the last lines of the log
+  [ -n "$access_pid" ] && { kill "$access_pid" && wait "$access_pid"; } 2>/dev/null || true
   [ -f "$result" ] && docker run --rm -v "$PWD/load:/load" -w / "$IMAGE" node /load/merge.mjs "/$result" "/$samples" "/$access" || true
 fi
 exit "$status"
