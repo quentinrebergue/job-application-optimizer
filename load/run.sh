@@ -34,8 +34,10 @@ if [ -n "$load_host" ] && [ "$remote" = 0 ]; then
   echo "LOAD_HOST runs k6 on another machine, which cannot reach a site on this one: give BASE_URL a public address." >&2
   exit 1
 fi
-if [ "$scenario" = limits-probe ] && [ "$remote" = 1 ]; then
-  echo "limits-probe uses up the limits of ${load_host:+the machine $load_host, not yours, on }THIS machine's address on ${BASE_URL}: for about an hour, logins and password resets from it are refused (nobody else's)."
+# limits-probe uses up the limits of the address it runs from: it asks first, here. A run on another machine is told
+# (LOAD_CONFIRMED) that the question was answered: its standard input is taken by the password.
+if [ "$scenario" = limits-probe ] && [ "$remote" = 1 ] && [ -z "${LOAD_CONFIRMED:-}" ]; then
+  echo "limits-probe uses up the limits of the address it runs from${load_host:+ ($load_host, not yours)} on ${BASE_URL}: for about an hour, logins and password resets from that address are refused (nobody else's)."
   read -r -p "Type 'probe' to go on: " answer
   [ "$answer" = probe ] || { echo "cancelled" >&2; exit 1; }
 fi
@@ -136,10 +138,13 @@ if [ -n "$load_host" ]; then
   done
   # The password comes on the standard input; k6 in its container reads nothing else from it.
   printf '%s\n' "${LOAD_PASSWORD:-}" | ssh -T "${ssh_opts[@]}" "$load_host" \
-    "read -r LOAD_PASSWORD; export LOAD_PASSWORD; sudo --preserve-env=LOAD_PASSWORD env -u LOAD_HOST OBSERVE=0 LOAD_RESULT=$(printf %q "$result") ${envs[*]:-} ./load/run.sh $scenario"
+    "read -r LOAD_PASSWORD; export LOAD_PASSWORD; sudo --preserve-env=LOAD_PASSWORD env -u LOAD_HOST OBSERVE=0 LOAD_CONFIRMED=1 LOAD_RESULT=$(printf %q "$result") ${envs[*]:-} ./load/run.sh $scenario"
   status=$?
   mkdir -p "$(dirname "$result")"
-  scp -q "${ssh_opts[@]}" "$load_host:$result" "$result" 2>/dev/null || echo "No result file to bring back from $load_host." >&2
+  # limits-probe prints its verdict and writes no result file.
+  if [ "$scenario" != limits-probe ]; then
+    scp -q "${ssh_opts[@]}" "$load_host:$result" "$result" 2>/dev/null || echo "No result file to bring back from $load_host." >&2
+  fi
 else
   docker run --rm -i --name "$container" --add-host=host.docker.internal:host-gateway -v "$PWD/load:/load" -w / "${args[@]}" \
     "$IMAGE" k6 run --quiet "/load/${scenario}.js"
