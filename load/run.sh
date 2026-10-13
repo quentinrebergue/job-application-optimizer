@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Runs one scenario of the load tests, in a container with everything installed (k6): load/run.sh <scenario>
-#   anonymous | signed-in-read | write-autosave | login | pdf | limits-probe | mixed
+#   anonymous | signed-in-read | write-autosave | login | pdf | limits-probe | mixed | signup
 #
 # Against a site in the cluster (BASE_URL not local, and kubectl able to answer `kubectl top`), the run also
 # samples the cluster every 5 seconds and, when it ends, prints one table with both views side by side: what k6 saw
@@ -22,7 +22,7 @@ cd "$(dirname "$0")/.."
 # shellcheck source=load/tool.sh
 source load/tool.sh
 scenario="${1:-}"
-[ -f "load/${scenario}.js" ] || { echo "usage: load/run.sh <anonymous|signed-in-read|write-autosave|login|pdf|limits-probe|mixed>" >&2; exit 1; }
+[ -f "load/${scenario}.js" ] || { echo "usage: load/run.sh <anonymous|signed-in-read|write-autosave|login|pdf|limits-probe|mixed|signup>" >&2; exit 1; }
 mkdir -p load/results
 
 remote=1
@@ -32,6 +32,11 @@ load_host="${LOAD_HOST:-}"
 ssh_opts=(-o ControlMaster=auto -o "ControlPath=/tmp/fastresume-load-%C" -o ControlPersist=60 -o ServerAliveInterval=15)
 if [ -n "$load_host" ] && [ "$remote" = 0 ]; then
   echo "LOAD_HOST runs k6 on another machine, which cannot reach a site on this one: give BASE_URL a public address." >&2
+  exit 1
+fi
+# signup creates accounts and tries to send a mail to each: against a real site, to addresses that do not exist (bounces).
+if [ "$scenario" = signup ] && [ "$remote" = 1 ]; then
+  echo "signup is for a site on this machine only: on a real site it would create accounts and send a mail to addresses that do not exist (see load/signup.js)." >&2
   exit 1
 fi
 # limits-probe uses up the limits of the address it runs from: it asks first, here. A run on another machine is told

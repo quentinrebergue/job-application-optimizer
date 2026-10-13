@@ -25,6 +25,7 @@ that looks for the breaking point, that is the normal end.
 | `pdf.js` | A resume download: reads the data and asks the renderer. | 5 to 40 |
 | `limits-probe.js` | Not a ramp: does the site limit one address, and does it see the visitor's real address? A flood of a cheap page (the edge), then the password-reset and failed-login limits until they refuse, then a forged address header. | one run, about a minute |
 | `mixed.js` | What a login costs the pages of everyone else (#254). Not a ramp: `READ_RPS` page reads a second (15) alone for `ALONE_SECONDS` (40), then the same reads plus `LOGIN_RPS` logins a second (1) for `TOGETHER_SECONDS` (80). The answer is the p95 of the reads in the two phases. Needs `LOAD_PASSWORD`. | about 2 minutes |
+| `signup.js` | A visitor signing up with the real form (new `loadtest-signup-*` accounts). **Local only**: `run.sh` refuses a real site, where it would create accounts and send a mail to addresses that do not exist. Start the server with no `SMTP_` variable and the sign-up limits raised (`SIGNUPS_PER_IP_PER_HOUR`, `SIGNUPS_PER_IP_PER_DAY`, `SIGNUPS_MAX_PER_DAY`, `SIGNUPS_ALERT_PER_DAY` at 100000), and `PASSWORD_HASHER_URL` to try the service. | 3 to 4 a second |
 
 `lib.js` holds what they share (the ramp, the thresholds, the report, the helpers for the forms), `seed.sh` and `seed.sql`
 make the test accounts, `cleanup.sql` removes them, `run.sh` runs a scenario, `Dockerfile` and `tool.sh` make the image
