@@ -32,7 +32,7 @@ resources:
 images:
 - name: ghcr.io/quentinrebergue/ai-gateway
   newName: ghcr.io/quentinrebergue/ai-gateway
-  newTag: "2006119"
+  newTag: 16adea6
 - name: ghcr.io/quentinrebergue/db-migrator
   newName: ghcr.io/quentinrebergue/db-migrator
   newTag: "2006119"
