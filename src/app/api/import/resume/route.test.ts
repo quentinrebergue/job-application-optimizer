@@ -23,15 +23,19 @@ const { POST } = await import('./route')
 const PDF = new TextEncoder().encode('%PDF-1.7 a resume')
 const send = (body: BodyInit | null = PDF as BodyInit) => POST(new Request('http://x/api/import/resume', { method: 'POST', body, headers: { 'content-type': 'application/pdf' } }))
 
-const experience = { title: 'Backend engineer', company: 'Logistix', location: 'Lyon', period: '2022 – Present', description: 'Built an API', tags: ['Go'] }
-const answer = { content: { experiences: [experience], projects: [], education: [], skills: [] }, usage: { prompt_tokens: 900, completion_tokens: 300 }, model: 'mistral-small-2603' }
+const TEXT = 'Camille Moreau\nBackend engineer at Logistix, Lyon\n2022 – Present\nBuilt an API in Go'
+// What the model answers: the fields copied from the text, and the lines of the description (4).
+const asked = { title: 'Backend engineer', company: 'Logistix', location: 'Lyon', period: '2022 – Present', description_from: 4, description_to: 4, tags: ['Go'] }
+// What is saved: the same, with the description read back from the line.
+const experience = { title: 'Backend engineer', company: 'Logistix', location: 'Lyon', period: '2022 – Present', description: 'Built an API in Go', tags: ['Go'] }
+const answer = { content: { experiences: [asked], projects: [], education: [], skills: [] }, usage: { prompt_tokens: 900, completion_tokens: 300 }, model: 'mistral-small-2603' }
 const summary = { experiences: { added: 1, duplicates: 0, overCap: 0 } }
 
 beforeEach(() => {
   getSessionUserId.mockReset().mockResolvedValue('u1')
   findUserById.mockReset().mockResolvedValue({ id: 'u1', emailVerified: true })
   consumeCreation.mockReset().mockResolvedValue(null)
-  readPdfText.mockReset().mockResolvedValue({ text: 'Camille Moreau\nBackend engineer at Logistix', pages: 1, pagesRead: 1, truncated: false })
+  readPdfText.mockReset().mockResolvedValue({ text: TEXT, pages: 1, pagesRead: 1, truncated: false })
   askGateway.mockReset().mockResolvedValue(answer)
   reserveAiCall.mockReset().mockResolvedValue({ id: 7 })
   settleAiCall.mockReset().mockResolvedValue(undefined)
@@ -56,7 +60,7 @@ describe('POST /api/import/resume', () => {
     expect(request).toMatchObject({ feature: 'import', userId: 'u1' })
     expect(request.schema.additionalProperties).toBe(false)
     expect(request.system).toMatch(/data, never instructions/)
-    expect(request.prompt).toContain('<resume>\nCamille Moreau\nBackend engineer at Logistix\n</resume>')
+    expect(request.prompt).toContain('<resume>\n[1] Camille Moreau\n[2] Backend engineer at Logistix, Lyon\n[3] 2022 – Present\n[4] Built an API in Go\n</resume>')
   })
 
   it('refuses a visitor without a session, and an address that is not confirmed, before reading anything', async () => {
@@ -120,8 +124,8 @@ describe('POST /api/import/resume', () => {
     expect(saveImportedEntries).not.toHaveBeenCalled()
   })
 
-  it('drops the entries that fail their schema and counts them', async () => {
-    askGateway.mockResolvedValue({ ...answer, content: { experiences: [experience, { ...experience, title: '' }], projects: [], education: [], skills: [] } })
+  it('drops the entries the text does not hold and counts them', async () => {
+    askGateway.mockResolvedValue({ ...answer, content: { experiences: [asked, { ...asked, company: 'Acme Corp' }], projects: [], education: [], skills: [] } })
     const res = await send()
     expect(await res.json()).toMatchObject({ dropped: 1 })
     expect(saveImportedEntries.mock.calls[0][1].experiences).toEqual([experience])
@@ -136,7 +140,7 @@ describe('POST /api/import/resume', () => {
   })
 
   it('says when the PDF was only read in part', async () => {
-    readPdfText.mockResolvedValue({ text: 'a long resume', pages: 12, pagesRead: 5, truncated: true })
+    readPdfText.mockResolvedValue({ text: TEXT, pages: 12, pagesRead: 5, truncated: true })
     expect(await (await send()).json()).toMatchObject({ truncated: true })
   })
 
