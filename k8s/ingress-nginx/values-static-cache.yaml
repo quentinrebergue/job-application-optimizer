@@ -1,0 +1,46 @@
+# A cache in nginx for the files of the front end that never change (#253): /_next/static/ (scripts, styles, fonts).
+#
+# Their names carry a hash of their content, so a file is the same for everybody for ever. nginx keeps the first answer
+# of the app and serves the next ones itself: the app no longer reads, compresses and sends the ~14 files of a visit
+# (about 80 % of its CPU for a first-time visitor, measured in docs/reports/load-tests.md).
+#
+# Two parts. This file is the first: the cache and its folder, applied with Helm. The second is
+# k8s/app/ingress-static.yaml, applied by Argo CD: the Ingress of /_next/static, which turns the buffering of nginx on for
+# that path only. ingress-nginx turns it off everywhere (the pages are streamed), and nginx does not cache an answer that
+# is not buffered. Without the second part nothing is cached; without this one the second part changes nothing.
+#
+# Only /_next/static/ is cached: the map below answers "do not cache" for every other address, so a page of a signed-in
+# user can never enter the cache. This file is applied on top of the values already in place:
+#   helm upgrade ingress-nginx ingress-nginx/ingress-nginx -n ingress-nginx --version 4.15.1 --reuse-values \
+#     -f k8s/ingress-nginx/values-static-cache.yaml
+# See README.md in this folder (order, check, way back).
+controller:
+  config:
+    http-snippet: |
+      # 64 MB at most (a build is a few MB; the oldest files go first), a file not asked for in 7 days goes.
+      proxy_cache_path /var/cache/nginx-static levels=1:2 keys_zone=static_files:10m max_size=64m inactive=7d use_temp_path=off;
+      map $uri $static_no_cache {
+        default 1;
+        ~^/_next/static/ 0;
+      }
+    location-snippet: |
+      proxy_cache static_files;
+      # The host and the path, not the query string and not the cookies: the files are the same for everybody.
+      proxy_cache_key $host$uri;
+      proxy_cache_valid 200 7d;
+      # A hundred visitors asking for the same file at once (an empty cache) make one call to the app, not a hundred.
+      proxy_cache_lock on;
+      proxy_cache_lock_timeout 5s;
+      # While the app restarts (a deploy), the files already kept are still served.
+      proxy_cache_use_stale error timeout updating http_500 http_502 http_503 http_504;
+      proxy_no_cache $static_no_cache;
+      proxy_cache_bypass $static_no_cache;
+      # HIT, MISS or BYPASS (a page): to check that it works.
+      add_header X-Cache $upstream_cache_status always;
+  extraVolumes:
+    - name: static-cache
+      emptyDir:
+        sizeLimit: 128Mi
+  extraVolumeMounts:
+    - name: static-cache
+      mountPath: /var/cache/nginx-static
