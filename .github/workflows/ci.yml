@@ -15,6 +15,7 @@ jobs:
       migrator: ${{ steps.filter.outputs.migrator }}
       gateway: ${{ steps.filter.outputs.gateway }}
       hasher: ${{ steps.filter.outputs.hasher }}
+      pdftext: ${{ steps.filter.outputs.pdftext }}
       images: ${{ steps.filter.outputs.images }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -44,9 +45,10 @@ jobs:
           migrations=$(matches '^services/db-migrator/migrations/')
           gateway=$(matches '^services/ai-gateway/')
           hasher=$(matches '^services/password-hasher/')
+          pdftext=$(matches '^services/pdf-text/')
 
           # If the CI itself changed, check everything.
-          if [ "$ci" = true ]; then app=true; renderer=true; migrator=true; gateway=true; hasher=true; fi
+          if [ "$ci" = true ]; then app=true; renderer=true; migrator=true; gateway=true; hasher=true; pdftext=true; fi
           if [ "$migrations" = true ]; then app=true; fi
 
           # Images to build (not pushed): the ones whose files changed, and all
@@ -58,6 +60,7 @@ jobs:
           { [ "$migrator" = true ] || [ "$cd" = true ]; } && add '{"image":"db-migrator","context":"services/db-migrator"}'
           { [ "$gateway" = true ] || [ "$cd" = true ]; } && add '{"image":"ai-gateway","context":"services/ai-gateway"}'
           { [ "$hasher" = true ] || [ "$cd" = true ]; } && add '{"image":"password-hasher","context":"services/password-hasher"}'
+          { [ "$pdftext" = true ] || [ "$cd" = true ]; } && add '{"image":"pdf-text","context":"services/pdf-text"}'
           echo "Images to build: [$items]"
 
           {
@@ -67,6 +70,7 @@ jobs:
             echo "images=[$items]"
             echo "gateway=$gateway"
             echo "hasher=$hasher"
+            echo "pdftext=$pdftext"
           } >> "$GITHUB_OUTPUT"
   test:
     needs: changes
@@ -256,3 +260,34 @@ jobs:
       - run: go vet ./...
 
       - run: go test -race -count=1 ./...
+
+  pdf-text:
+    needs: changes
+    if: needs.changes.outputs.pdftext == 'true'
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: services/pdf-text
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: services/pdf-text/go.mod
+          cache-dependency-path: services/pdf-text/go.sum
+
+      - name: gofmt
+        run: test -z "$(gofmt -l .)"
+
+      - run: go vet ./...
+
+      # pdfium runs as WebAssembly: the tests read real PDFs, no C library to install. The first test compiles the module (a few
+      # seconds), the rest reuse it.
+      - run: go test -race -count=1 ./...
+
+      # The limits of the pod are not a guess: the image is started the way the pod starts it (384 MB, read-only file system,
+      # no capability), reads PDFs, and restarts from its cache under 128 MB.
+      - name: Start the image under the limits of the pod
+        run: |
+          docker build -t pdf-text:ci .
+          ./smoke.sh pdf-text:ci

@@ -21,6 +21,9 @@ resources:
 - password-hasher/deployment.yaml
 - password-hasher/service.yaml
 - password-hasher/networkpolicy.yaml
+- pdf-text/deployment.yaml
+- pdf-text/service.yaml
+- pdf-text/networkpolicy.yaml
 - cert-manager/cluster-issuer.yaml
 - argocd/application.yaml
 - db-migrator/job.yaml
