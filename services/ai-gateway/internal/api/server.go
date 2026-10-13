@@ -20,7 +20,18 @@ type Limits struct {
 	// MaxPromptChars caps system + prompt, counted in characters (a "é" is one, not two).
 	MaxPromptChars  int
 	MaxOutputTokens int
-	Timeout         time.Duration
+	// ImportMaxOutputTokens is the answer cap of the "import" feature: a whole resume as JSON is
+	// longer than a ranking. Zero means the same cap as the other features.
+	ImportMaxOutputTokens int
+	Timeout               time.Duration
+}
+
+// outputTokens is the most the model may write for a feature.
+func (l Limits) outputTokens(feature string) int {
+	if feature == "import" && l.ImportMaxOutputTokens > 0 {
+		return l.ImportMaxOutputTokens
+	}
+	return l.MaxOutputTokens
 }
 
 // maxSchemaBytes caps the JSON Schema an app may send along with a prompt.
@@ -43,7 +54,7 @@ const (
 const maxBytesPerChar = 6
 
 // features is the list of things the app may ask for. Unknown ones are refused.
-var features = map[string]bool{"rank": true}
+var features = map[string]bool{"rank": true, "import": true}
 
 type Server struct {
 	llm    llm.Completer
@@ -137,7 +148,7 @@ func (s *Server) complete(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), s.limits.Timeout)
 	defer cancel()
 	res, err := s.llm.Complete(ctx, llm.Request{
-		System: in.System, Prompt: in.Prompt, MaxTokens: s.limits.MaxOutputTokens, Schema: in.Schema, Text: in.Format == "text",
+		System: in.System, Prompt: in.Prompt, MaxTokens: s.limits.outputTokens(in.Feature), Schema: in.Schema, Text: in.Format == "text",
 	})
 	if err != nil {
 		s.logger.Error("completion failed", "feature", in.Feature, "error", err)

@@ -59,6 +59,10 @@ spec:
               value: "5s"
             - name: MAX_OUTPUT_TOKENS
               value: "2000"
+            # The "import" feature (a whole resume as JSON, #267) writes more than a ranking: its own cap.
+            # The app prices an import at this (AI_MAX_OUTPUT_TOKENS_IMPORT in k8s/app): change them together.
+            - name: MAX_OUTPUT_TOKENS_IMPORT
+              value: "4000"
             # System + prompt, in characters. A library at its caps (10 experiences, 20 projects, 10
             # skills, descriptions at their 1,000 limit) with an offer at its 12,000 limit is about
             # 48,000: this leaves room.

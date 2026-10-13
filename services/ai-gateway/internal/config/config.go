@@ -20,7 +20,9 @@ type Config struct {
 	MaxRetries     int
 
 	MaxOutputTokens int
-	MaxPromptChars  int
+	// ImportMaxOutputTokens is the answer cap of the "import" feature (a whole resume as JSON).
+	ImportMaxOutputTokens int
+	MaxPromptChars        int
 
 	// Enabled is the kill switch: AI_ENABLED=false refuses every call with a 503, until it is
 	// set back and the pod restarted. No rebuild.
@@ -60,23 +62,24 @@ func Load(lookup func(string) (string, bool)) (Config, error) {
 	}
 
 	cfg := Config{
-		Addr:            str("ADDR", ":8080"),
-		BaseURL:         str("AI_BASE_URL", "https://oai.endpoints.kepler.ai.cloud.ovh.net/v1"),
-		Token:           str("AI_TOKEN", ""),
-		Model:           str("AI_MODEL", "Meta-Llama-3_3-70B-Instruct"),
-		RequestTimeout:  dur("REQUEST_TIMEOUT", "60s"),
-		AttemptTimeout:  dur("ATTEMPT_TIMEOUT", "30s"),
-		MaxRetries:      num("MAX_RETRIES", 2),
-		MaxOutputTokens: num("MAX_OUTPUT_TOKENS", 2000),
-		MaxPromptChars:  num("MAX_PROMPT_CHARS", 60000),
-		Enabled:         flag("AI_ENABLED", true),
-		ShutdownDelay:   dur("SHUTDOWN_DELAY", "5s"),
+		Addr:                  str("ADDR", ":8080"),
+		BaseURL:               str("AI_BASE_URL", "https://oai.endpoints.kepler.ai.cloud.ovh.net/v1"),
+		Token:                 str("AI_TOKEN", ""),
+		Model:                 str("AI_MODEL", "Meta-Llama-3_3-70B-Instruct"),
+		RequestTimeout:        dur("REQUEST_TIMEOUT", "60s"),
+		AttemptTimeout:        dur("ATTEMPT_TIMEOUT", "30s"),
+		MaxRetries:            num("MAX_RETRIES", 2),
+		MaxOutputTokens:       num("MAX_OUTPUT_TOKENS", 2000),
+		ImportMaxOutputTokens: num("MAX_OUTPUT_TOKENS_IMPORT", 4000),
+		MaxPromptChars:        num("MAX_PROMPT_CHARS", 60000),
+		Enabled:               flag("AI_ENABLED", true),
+		ShutdownDelay:         dur("SHUTDOWN_DELAY", "5s"),
 	}
 	if cfg.Token == "" {
 		errs = append(errs, errors.New("AI_TOKEN is required"))
 	}
-	if cfg.MaxOutputTokens == 0 || cfg.MaxPromptChars == 0 {
-		errs = append(errs, errors.New("MAX_OUTPUT_TOKENS and MAX_PROMPT_CHARS must be above 0"))
+	if cfg.MaxOutputTokens == 0 || cfg.ImportMaxOutputTokens == 0 || cfg.MaxPromptChars == 0 {
+		errs = append(errs, errors.New("MAX_OUTPUT_TOKENS, MAX_OUTPUT_TOKENS_IMPORT and MAX_PROMPT_CHARS must be above 0"))
 	}
 	return cfg, errors.Join(errs...)
 }

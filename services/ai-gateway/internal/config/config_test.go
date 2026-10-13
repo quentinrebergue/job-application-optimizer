@@ -11,7 +11,7 @@ func TestLoadDefaults(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if cfg.Addr != ":8080" || cfg.MaxRetries != 2 || cfg.MaxOutputTokens != 2000 || cfg.RequestTimeout.Seconds() != 60 {
+	if cfg.Addr != ":8080" || cfg.MaxRetries != 2 || cfg.MaxOutputTokens != 2000 || cfg.ImportMaxOutputTokens != 4000 || cfg.RequestTimeout.Seconds() != 60 {
 		t.Fatalf("unexpected defaults: %+v", cfg)
 	}
 }
@@ -60,4 +60,14 @@ func contains(s, sub string) bool {
 		}
 	}
 	return false
+}
+
+func TestLoadImportOutputTokens(t *testing.T) {
+	cfg, err := Load(lookupFrom(map[string]string{"AI_TOKEN": "t", "MAX_OUTPUT_TOKENS_IMPORT": "6000"}))
+	if err != nil || cfg.ImportMaxOutputTokens != 6000 {
+		t.Fatalf("got %+v, %v", cfg, err)
+	}
+	if _, err := Load(lookupFrom(map[string]string{"AI_TOKEN": "t", "MAX_OUTPUT_TOKENS_IMPORT": "0"})); err == nil {
+		t.Fatal("expected an error for MAX_OUTPUT_TOKENS_IMPORT=0")
+	}
 }
