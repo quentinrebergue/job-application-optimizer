@@ -39,13 +39,13 @@ images:
   newTag: "2006119"
 - name: ghcr.io/quentinrebergue/job-application-optimizer
   newName: ghcr.io/quentinrebergue/job-application-optimizer
-  newTag: c4cf0cf
+  newTag: 9a9a1c8
 - name: ghcr.io/quentinrebergue/password-hasher
   newName: ghcr.io/quentinrebergue/password-hasher
   newTag: "2006119"
 - name: ghcr.io/quentinrebergue/pdf-text
   newName: ghcr.io/quentinrebergue/pdf-text
-  newTag: "2006119"
+  newTag: 9a9a1c8
 - name: ghcr.io/quentinrebergue/resume-renderer
   newName: ghcr.io/quentinrebergue/resume-renderer
   newTag: "2006119"
