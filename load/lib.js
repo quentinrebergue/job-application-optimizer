@@ -114,6 +114,17 @@ export function isAppPage(res) {
   return res.status === 200 && body.length > 5000 && !body.includes('name="password"')
 }
 
+/**
+ * Why a request counted as failed, for the first few of the run: the status and the start of the answer. A refusal of a
+ * limit, an expired session (401, a redirect to the login) and a broken page look the same in the figures.
+ */
+let explained = 0
+export function explain(res, what) {
+  if (explained >= 3) return
+  explained++
+  console.warn(`${what} failed: status ${res.status}, ${String(res.body).slice(0, 120).replace(/\s+/g, ' ')}`)
+}
+
 /** The accounts made by seed.sh. */
 export function loadAccounts(raw) {
   const users = JSON.parse(raw).users

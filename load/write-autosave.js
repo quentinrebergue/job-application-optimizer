@@ -5,7 +5,7 @@
 import http from 'k6/http'
 import { check } from 'k6'
 import { SharedArray } from 'k6/data'
-import { BASE_URL, authHeaders, loadAccounts, pickUser, ramp, record, report, tags, thresholds, floor, probe, probeScenario } from './lib.js'
+import { BASE_URL, authHeaders, explain, loadAccounts, pickUser, ramp, record, report, tags, thresholds, floor, probe, probeScenario } from './lib.js'
 
 const NAMES = ['save-entry', 'save-job']
 export const options = { scenarios: { autosave: ramp('save'), ...probeScenario() }, thresholds: thresholds(NAMES) }
@@ -21,7 +21,9 @@ export function save() {
   const url = entity ? `${BASE_URL}/api/entities/projects/${user.projects[0]}` : `${BASE_URL}/api/jobs/${user.jobs[0]}`
   const body = JSON.stringify({ description: text() })
   const res = http.put(url, body, { headers: authHeaders(user, true), tags: tags(entity ? 'save-entry' : 'save-job'), jar: new http.CookieJar() })
-  record(check(res, { 'the save answers 200': (r) => r.status === 200 }))
+  const ok = check(res, { 'the save answers 200': (r) => r.status === 200 })
+  if (!ok) explain(res, 'save')
+  record(ok)
 }
 
 export function setup() {

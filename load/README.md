@@ -57,6 +57,21 @@ variables: `BASE_URL` (default `http://localhost:3100`), `START_RPS`, `STEP_RPS`
 `STEP_SECONDS`, `MAX_VUS` (the ceiling of simultaneous virtual users, 100), `SLOW_MS`, `FAIL_RATE`. The raw result of a
 run is written to `load/results/` (not versioned); what is worth keeping goes into the report.
 
+### From a rented server, in one command
+
+A home connection is not a generator: its noise ends up in the figures. Run k6 on a rented machine (Docker, tar and sudo
+are all it needs) and everything else from your laptop, in one terminal:
+
+```bash
+LOAD_HOST=ubuntu@1.2.3.4 BASE_URL=https://fastresume.tech START_RPS=10 STEP_RPS=5 STEPS=6 load/run.sh signed-in-read
+```
+
+The scripts and the accounts are copied there (`load/results` is not), k6 runs there and its output comes back to your
+terminal, the cluster is sampled from your laptop with the same safety (over 1800 Mi for all the pods, k6 is stopped over
+SSH), then the result is fetched and the table of both views is printed. `LOAD_PASSWORD` (login, mixed) goes through
+the standard input of SSH, never in a command line. Ctrl-C stops k6 on the other machine too. A `BASE_URL` on your own
+machine is refused: the server cannot reach it.
+
 ## Finding the bottleneck
 
 The breaking point says *when* the site gives way; the bottleneck is *what* gives way first. The method is the same for any
