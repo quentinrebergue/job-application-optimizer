@@ -74,14 +74,15 @@ spec:
             initialDelaySeconds: 15
             periodSeconds: 10
             failureThreshold: 3
-          # Memory, measured (docs/reports/2026-10-13-pdf-import-spike.md, smoke.sh): about 48 MiB at work. The first start in a
-          # pod compiles pdfium and takes 200 to 235 MB for a few seconds, whatever GOMEMLIMIT says; 256 MB was not enough in the
-          # test (the process was killed), 384 MB is. A limit is not a reservation: only the request (48 Mi) is counted to place
-          # the pod. With the cache, a restart of the container fits under 128 MB. The CPU limit is a whole core for the compile.
+          # Memory, measured by smoke.sh: about 47 MiB at work on arm64 and 83 MiB on amd64 (the CI, the architecture of the
+          # node), so the request is 96 Mi. The first start in a pod compiles pdfium and takes 200 to 235 MB for a few seconds,
+          # whatever GOMEMLIMIT says; 256 MB was not enough in the test (the process was killed), 384 MB is. A limit is not a
+          # reservation: only the request is counted to place the pod. With the cache, a restart of the container fits under
+          # 128 MB. The CPU limit is a whole core for the compile.
           resources:
             requests:
               cpu: 20m
-              memory: 48Mi
+              memory: 96Mi
             limits:
               cpu: "1"
               memory: 384Mi

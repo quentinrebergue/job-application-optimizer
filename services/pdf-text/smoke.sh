@@ -16,7 +16,13 @@ name="pdf-text-smoke-$$"
 port="${SMOKE_PORT:-18090}"
 # The cache is a folder on the disk, as the emptyDir of the pod: a tmpfs would be counted as memory by the container.
 cache="$(mktemp -d)"; chmod 777 "$cache"
-cleanup() { docker rm -f "$name" >/dev/null 2>&1 || true; rm -rf "$cache"; }
+# The container (user 10001) made the cache folders, with rights the user of the CI cannot remove: a container removes them.
+cleanup() {
+  docker rm -f "$name" >/dev/null 2>&1 || true
+  docker run --rm -v "$cache:/c" alpine:3.24.2@sha256:294b683cb724975bec92580e1e685676bd4b50bda910ddb8c51d4cabeaec77e6 \
+    sh -c 'rm -rf /c/* /c/.[!.]* 2>/dev/null' >/dev/null 2>&1 || true
+  rm -rf "$cache" 2>/dev/null || true
+}
 trap cleanup EXIT
 
 docker run -d --name "$name" --memory=384m --memory-swap=384m --read-only --cap-drop=ALL --security-opt no-new-privileges \
