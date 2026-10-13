@@ -33,6 +33,7 @@ to a hot path (login, the library, the payload of the renderer).
 | 2026-10-12 | #256 + #257 (**hashing in the password-hasher**) | same | Pages read while people log in (same settings) | reads alone: p95 47 ms | with 1 login a second: reads p95 **51 ms** (x1.1), p50 25 -> 24 ms | App 382 m, password-hasher 257 m | The logins no longer slow the pages; a login is 386 ms instead of 751 |
 | 2026-10-12 | same | same | Login, 1 to 6 a second | 3 / 2.9, 488 ms | **4** / 3.6, 6,763 ms | **The password-hasher** (866 m, one hash at a time, 314 ms each); app 140 m, Postgres 12 m | The break moved from 2 to 4 logins a second (+100 %) |
 | 2026-10-12 | same | same | Pages read during an overload of logins (15 reads, 5 logins a second asked) | reads alone: p95 37 ms | reads p95 179 ms (x4.8), 0 failed; **logins wait 8.8 s (p50), 14.7 s (p95)** | The password-hasher full; the 2 cores shared by everything (58 %) | The pages stay fast while the service is saturated; the logins queue for as long as the 150 places of the app's queue allow (up to ~47 s), which is too long to wait: see `BCRYPT_QUEUE` |
+| 2026-10-13 | #256 + #257 (deployed) | **The production** (`d2-4`), k6 on a rented `d2-2`, started from the laptop with `LOAD_HOST` | Autosave (50 accounts), 20 to 120 saves a second | 120 / 117.9, 117 ms | none: no step broke | Nothing full: app 529 m, Postgres 134 m, node 53 %, steal 0 % | A save costs about 4 ms of the app. 120 a second is 120 people typing at once; the p95 starts to bend at the last step (55 -> 118 ms), so the break is probably at 150 to 200. Server log and k6 agree |
 
 ## What the runs on the real node say (2026-10-12)
 
@@ -55,7 +56,8 @@ to a hot path (login, the library, the payload of the renderer).
   with one login a second: 697 ms -> 51 ms), a hash takes 314 ms instead of 567 ms, and the logins hold up to 3 a second
   instead of 1. The service holds one hash at a time (`MAX_CONCURRENT`), so past ~3 logins a second they queue in the app,
   for too long (see the row above).
-- **Not measured yet**: autosave and PDF on the production; limits per address (`limits-probe`).
+- **Writes are cheap**: 120 autosaves a second without a break (app 529 m, Postgres 134 m). Not measured on the production yet:
+  the PDF; limits per address (`limits-probe`).
 
 Estimates made on 2026-10-12 before the run, and what became of them: 500 to 1,000 people active at the same time (now
 about 240); 1 to 2 logins a second (bcrypt, not measured on the node yet); 4 PDFs at the same instant (the renderer's limit);
