@@ -6,6 +6,7 @@ import { looksLikePdf, readBytes } from '@/lib/validation/read-bytes'
 import { PdfTextError, readPdfText } from '@/lib/pdf/text-client'
 import { askGateway, AiGatewayError } from '@/lib/ai/gateway'
 import { aiLimits } from '@/lib/ai/limits'
+import { debugExchange } from '@/lib/ai/debug'
 import { reserveAiCall, settleAiCall } from '@/lib/ai/usage'
 import { outcomeOfFailure } from '@/lib/ai/failure'
 import { IMPORT_SCHEMA, IMPORT_SYSTEM_PROMPT, IMPORT_TYPES, buildImportPrompt, parseImportAnswer } from '@/lib/ai/import-prompt'
@@ -49,6 +50,7 @@ export async function POST(request: Request) {
       throw error
     }
 
+    debugExchange('import, read by pdf-text', { pages: `${read.pagesRead} of ${read.pages}, cut: ${read.truncated}`, text: read.text })
     const { prompt, lines } = buildImportPrompt(read.text)
     if ([...IMPORT_SYSTEM_PROMPT].length + [...prompt].length > aiLimits().maxPromptChars) {
       return reply('This resume holds too much text to import. Try a shorter PDF.', 413, 'prompt_too_large')
@@ -61,6 +63,7 @@ export async function POST(request: Request) {
       return reply(reservation.message, reservation.status, reservation.code, reservation.retryAfterSeconds ? { 'Retry-After': String(reservation.retryAfterSeconds) } : undefined)
     }
 
+    debugExchange('import, sent', { system: IMPORT_SYSTEM_PROMPT, prompt })
     let answer
     try {
       answer = await askGateway({ feature: 'import', userId, system: IMPORT_SYSTEM_PROMPT, prompt, schema: IMPORT_SCHEMA })
@@ -76,6 +79,7 @@ export async function POST(request: Request) {
     })
 
     const { entries, dropped } = parseImportAnswer(answer.content, lines)
+    debugExchange('import, received', { model: answer.model, usage: answer.usage, answer: answer.content, kept: entries, dropped })
     if (IMPORT_TYPES.every((type) => entries[type].length === 0)) {
       return reply('No experience, project, education or skill could be read in this resume.', 422, 'nothing_found')
     }
