@@ -20,20 +20,26 @@ func (f fragment) midX() float64 { return (f.left + f.right) / 2 }
 const (
 	// A gap this wide, with no text across it, between two parts of the page makes them two columns...
 	minColumnGap = 10.0
-	// ...if each side holds at least this share of the text (a column of dates is not a column).
-	minColumnShare = 0.2
+	// ...if each side holds at least this share of the text: a sidebar can be short (contact details, a few skills),
+	// a column of dates beside the titles of jobs holds less...
+	minColumnShare = 0.1
 	// ...and on at least this many lines (a date beside a title is on one line).
 	minColumnLines = 3
+	// A band is still empty when no more lines than this cross it (a title across the page, a line cut in pieces):
+	// a few lines, or this share of them.
+	maxCrossingLines = 2
+	maxCrossingShare = 0.04
 	// A line starts a new block when it is further from the previous one than this, in times the usual distance
 	// between two lines of the column.
 	paragraphGap = 1.5
 	// A line this much bigger than the usual text is a heading.
 	headingScale = 1.15
-	// A line whose fragments are no further apart than this share of their height is one line.
+	// Two fragments are on one line when their heights overlap over this share of the smaller one.
 	sameLine = 0.5
-	// Two fragments that do not touch are two words when the space between them is at least this share of their size
-	// (a hyphen set in another font sits a point away from the word: that is not a space).
-	wordGap = 0.15
+	// pdfium puts the spaces of the text in its fragments ("Stage ", "f "): a space is only added between two fragments
+	// further apart than this share of their size, a jump on the line (a title, then its dates far to the right). A
+	// smaller gap is the spacing of the letters: some PDFs place every letter on its own, a little apart.
+	wordGap = 0.5
 )
 
 // layoutText reads a page the way a person does: the columns one after the other, each from top to bottom, a line
@@ -140,37 +146,43 @@ func usualSize(frags []fragment) float64 {
 
 func roundHalf(v float64) float64 { return float64(int(v*2+0.5)) / 2 }
 
-// findCuts finds where the page is cut into columns: the empty vertical bands wide enough, between two parts that
-// each hold a real share of the text, on several lines. Fragments wider than most of the page (a title across it)
-// do not count when looking for a band, nor in the shares: they would hide it.
+// findCuts finds where the page is cut into columns: vertical bands wide enough that almost no line crosses, between
+// two parts that each hold a real share of the text, on several lines. "Almost": a title across the page, or a line
+// some program cut into pieces, crosses the band without making the page one column; what crosses a cut is read
+// apart, as a band of its own (see layoutText).
 func findCuts(frags []fragment) []float64 {
 	minL, maxR := frags[0].left, frags[0].right
 	for _, f := range frags {
 		minL, maxR = min(minL, f.left), max(maxR, f.right)
 	}
-	width := maxR - minL
-	var narrow []fragment
-	total := 0
-	for _, f := range frags {
-		if f.right-f.left < 0.6*width {
-			narrow = append(narrow, f)
-			total += len([]rune(f.text))
-		}
-	}
-	sort.Slice(narrow, func(i, j int) bool { return narrow[i].left < narrow[j].left })
+	lines := baselines(frags)
+	allowed := max(maxCrossingLines, int(maxCrossingShare*float64(lines)))
 
-	// The union of the horizontal extents; the gaps between its pieces are the candidate cuts.
+	// For every point across the page, how many lines have text over it.
+	crossing := func(x float64) int {
+		seen := map[int]bool{}
+		for _, f := range frags {
+			if f.left < x && f.right > x {
+				seen[int(f.midY()/3)] = true
+			}
+		}
+		return len(seen)
+	}
+
+	// The bands where few enough lines cross, wide enough and not at the edge of the text, give the candidate cuts.
 	var cuts []float64
-	reach := 0.0
-	for i, f := range narrow {
-		if i == 0 {
-			reach = f.right
+	start := -1.0
+	for x := minL + 1; x < maxR; x++ {
+		if crossing(x) <= allowed {
+			if start < 0 {
+				start = x
+			}
 			continue
 		}
-		if f.left-reach >= minColumnGap {
-			cuts = append(cuts, (reach+f.left)/2)
+		if start >= 0 && x-start >= minColumnGap && start > minL+1 {
+			cuts = append(cuts, (start+x)/2)
 		}
-		reach = max(reach, f.right)
+		start = -1
 	}
 
 	// Keep the cuts that leave a real share of the text, on several lines, on each side.
@@ -178,19 +190,22 @@ func findCuts(frags []fragment) []float64 {
 	for _, cut := range cuts {
 		var left, right []fragment
 		leftChars, rightChars := 0, 0
-		for _, f := range narrow {
+		for _, f := range frags {
+			if f.left < cut && f.right > cut {
+				continue
+			}
 			if f.midX() < cut {
 				left, leftChars = append(left, f), leftChars+len([]rune(f.text))
 			} else {
 				right, rightChars = append(right, f), rightChars+len([]rune(f.text))
 			}
 		}
-		if float64(leftChars) >= minColumnShare*float64(total) && float64(rightChars) >= minColumnShare*float64(total) &&
+		total := float64(leftChars + rightChars)
+		if float64(leftChars) >= minColumnShare*total && float64(rightChars) >= minColumnShare*total &&
 			baselines(left) >= minColumnLines && baselines(right) >= minColumnLines {
 			kept = append(kept, cut)
 		}
 	}
-
 	return kept
 }
 
@@ -223,6 +238,8 @@ func rowsOf(frags []fragment) [][]fragment {
 	for _, f := range frags {
 		if n := len(rows); n > 0 {
 			ref := rows[n-1][0]
+			// Same line when they overlap over half the smaller height: a comma or a superscript sits lower or higher
+			// than the letters, inside their height.
 			if abs(f.midY()-ref.midY()) <= sameLine*(ref.top-ref.bottom) {
 				rows[n-1] = append(rows[n-1], f)
 				continue
@@ -239,12 +256,13 @@ func columnText(frags []fragment, usual float64) string {
 	lines := make([]line, 0, len(rows))
 	for _, row := range rows {
 		sort.SliceStable(row, func(i, j int) bool { return row[i].left < row[j].left })
+		row = withoutDoubles(row)
 		var sb strings.Builder
 		l := line{y: row[0].midY()}
 		prevRight := row[0].left
 		for i, f := range row {
 			// A space between two fragments that do not touch and carry none themselves.
-			if i > 0 && f.left-prevRight > wordGap*f.size && !strings.HasSuffix(sb.String(), " ") && !strings.HasPrefix(f.text, " ") {
+			if i > 0 && f.left-prevRight > wordGap*sizeOf(f) && !strings.HasSuffix(sb.String(), " ") && !strings.HasPrefix(f.text, " ") {
 				sb.WriteByte(' ')
 			}
 			sb.WriteString(f.text)
@@ -272,6 +290,37 @@ func columnText(frags []fragment, usual float64) string {
 		sb.WriteString(l.text)
 	}
 	return sb.String()
+}
+
+// withoutDoubles drops a fragment drawn a second time over another (some programs draw the text twice, a little
+// apart, to make it look bold): the same text over most of the same width is one fragment.
+func withoutDoubles(row []fragment) []fragment {
+	kept := row[:0:0]
+	for _, f := range row {
+		double := false
+		for _, k := range kept {
+			if strings.TrimSpace(k.text) != strings.TrimSpace(f.text) {
+				continue
+			}
+			overlap := min(k.right, f.right) - max(k.left, f.left)
+			if overlap > 0.5*min(k.right-k.left, f.right-f.left) {
+				double = true
+				break
+			}
+		}
+		if !double {
+			kept = append(kept, f)
+		}
+	}
+	return kept
+}
+
+// sizeOf is the size of a fragment's font, or its height when pdfium gave none.
+func sizeOf(f fragment) float64 {
+	if f.size > 0 {
+		return f.size
+	}
+	return f.top - f.bottom
 }
 
 // usualPitch is the median distance between two consecutive lines of the column: its line spacing.
