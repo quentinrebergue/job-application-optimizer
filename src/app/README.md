@@ -19,7 +19,7 @@ Next.js App Router root. Contains the document layout, two route groups (their n
 | Directory | Description |
 |-----------|-------------|
 | `(app)/resume/` | Resume page: the profile and the library (`?tab=` kind) |
-| `(app)/entities/` | Entry page and new entry; `/entities` and `/entities/[type]` redirect to the library in `/resume` |
+| `(app)/entities/` | Old addresses only: `/entities`, `/entities/[type]`, `/entities/[type]/[id]` and `/entities/new` all redirect to the library in `/resume` (an entry opens and is made in a dialog there, `?entry=` and `?new=`) |
 | `(app)/jobs/` | Job Application Tracker pages |
 | `(app)/account/` | The account page: password, email address, data export and account deletion (#104, #236) |
 | `(app)/ui/` | Catalogue of the UI components (for development) |

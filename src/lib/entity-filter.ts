@@ -19,7 +19,36 @@ export function parseLibraryTab(value: string | string[] | undefined): EntityTyp
   return parseEntityType(value) ?? 'experiences'
 }
 
-/** Where the library shows one kind of entry. */
-export function libraryHref(type: EntityType): string {
-  return type === 'experiences' ? '/resume' : `/resume?tab=${type}`
+/** What the address of the library says: the kind shown, the entry open in its dialog, the kind being created. */
+export interface LibraryState {
+  tab: EntityType
+  /** The id of the entry open in its dialog (?entry=). */
+  entry?: string
+  /** The kind of the entry being created in its dialog (?new=). */
+  creating?: EntityType
+}
+
+type Params = { get(name: string): string | null }
+
+/** The state of the library from its address; anything unknown is ignored. */
+export function readLibraryState(params: Params): LibraryState {
+  const entry = params.get('entry')
+  return {
+    tab: parseLibraryTab(params.get('tab') ?? undefined),
+    entry: entry ? entry : undefined,
+    creating: parseEntityType(params.get('new') ?? undefined),
+  }
+}
+
+/**
+ * The address of the library for a state: `/resume` on the experiences, `?tab=` on another kind, and `?entry=` or
+ * `?new=` while a dialog is open. One dialog at a time: an entry wins over a creation.
+ */
+export function libraryHref(type: EntityType, dialog: { entry?: string; creating?: EntityType } = {}): string {
+  const query = new URLSearchParams()
+  if (type !== 'experiences') query.set('tab', type)
+  if (dialog.entry) query.set('entry', dialog.entry)
+  else if (dialog.creating) query.set('new', dialog.creating)
+  const text = query.toString()
+  return text ? `/resume?${text}` : '/resume'
 }

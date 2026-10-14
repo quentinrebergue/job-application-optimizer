@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { EntityMeta, EntityType } from '@/types'
 import { Alert } from '@/components/ui/Alert'
 import { Button } from '@/components/ui/Button'
@@ -18,10 +18,14 @@ interface Props {
   onSaveStateChange?: (state: SaveState) => void
 }
 
-/** A library entry, always editable: each field saves itself (like the offer of a job). */
+/** A library entry, always editable: each field saves itself (like the offer of a job). Deleting asks first, in place. */
 export function EntityEditor({ entity, onSaved, onDelete, deleting, onSaveStateChange }: Props) {
   const type = entity.type as EntityType
   const fields = ENTITY_FIELDS[type]
+  const [confirming, setConfirming] = useState(false)
+  const confirmRef = useRef<HTMLDivElement>(null)
+  // In a drawer on a phone the question appears below the fields, off the screen: bring it into view.
+  useEffect(() => { if (confirming) confirmRef.current?.scrollIntoView({ block: 'nearest' }) }, [confirming])
   const { values, errors, state, failure, edit } = useFieldAutosave({
     initial: toValues(type, entity),
     validate: (key, value) => {
@@ -40,11 +44,25 @@ export function EntityEditor({ entity, onSaved, onDelete, deleting, onSaveStateC
     <div className="flex flex-col gap-4">
       {failure && <Alert>Not saved: {failure}</Alert>}
       <EntityFields type={type} values={values} errors={errors} onChange={edit} />
-      <div className="mt-2 flex justify-end">
-        <Button variant="danger" size="sm" onClick={onDelete} disabled={deleting}>
-          {deleting ? 'Deleting…' : 'Delete'}
-        </Button>
-      </div>
+      {/* Confirmed here, not in a drawer on top: a dialog hides the page behind it, drawers included. */}
+      {confirming ? (
+        <div ref={confirmRef} role="alert" className="mt-2 flex flex-col gap-3 rounded-control border-2 border-ink bg-surface p-3 text-sm">
+          <p className="font-semibold">Delete this entry?</p>
+          <p className="text-ink-muted">It is removed from your library and from the resumes of your jobs. This cannot be undone.</p>
+          <div className="flex justify-end gap-3">
+            <Button variant="secondary" size="sm" onClick={() => setConfirming(false)}>Cancel</Button>
+            <Button variant="danger" size="sm" onClick={() => { setConfirming(false); onDelete() }} disabled={deleting}>
+              {deleting ? 'Deleting…' : 'Delete'}
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <div className="mt-2 flex justify-end">
+          <Button variant="danger" size="sm" onClick={() => setConfirming(true)} disabled={deleting}>
+            {deleting ? 'Deleting…' : 'Delete'}
+          </Button>
+        </div>
+      )}
     </div>
   )
 }

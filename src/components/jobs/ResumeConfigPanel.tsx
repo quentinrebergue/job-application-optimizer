@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { formatDate } from '@/lib/format'
+import { libraryHref } from '@/lib/entity-filter'
 import Link from 'next/link'
 import type { SkillMeta } from '@/types'
 import type { AIAnalysisResult } from '@/types/job'
@@ -126,7 +127,7 @@ export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClea
       {entities.length === 0 && (
         <p className="text-sm text-ink-muted">
           Your library is empty.{' '}
-          <Link href="/entities/new" className="font-semibold text-accent-strong underline underline-offset-4">Add an entry</Link>.
+          <Link href={libraryHref('experiences', { creating: 'experiences' })} className="font-semibold text-accent-strong underline underline-offset-4">Add an entry</Link>.
         </p>
       )}
 
