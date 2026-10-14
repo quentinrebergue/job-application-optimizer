@@ -17,6 +17,8 @@ export interface FieldDef {
   options?: { value: string; label: string }[]
   /** Takes the full row width in a two-column grid */
   wide?: boolean
+  /** Shares a row with the next short field even on a phone (a place and a period), instead of taking the row alone */
+  short?: boolean
   /** Other keys saved with the same value (e.g. a project's technologies are also its tags) */
   mirrors?: string[]
   /** The most characters it takes (config/limits.ts); a list has its own limits instead */
@@ -33,8 +35,8 @@ export const ENTITY_FIELDS: Record<EntityType, FieldDef[]> = {
   experiences: [
     { key: 'title', label: 'Title', kind: 'text', required: true, placeholder: 'Sales Assistant', maxLength: LIMITS.experiences.title },
     { key: 'company', label: 'Company', kind: 'text', required: true, placeholder: 'Example Company', maxLength: LIMITS.experiences.company },
-    { key: 'location', label: 'Location', kind: 'text', placeholder: 'City, Country', maxLength: LIMITS.experiences.location },
-    { key: 'period', label: 'Period', kind: 'text', placeholder: 'Jun 2022 – Sep 2023', maxLength: LIMITS.experiences.period },
+    { key: 'location', label: 'Location', kind: 'text', short: true, placeholder: 'City, Country', maxLength: LIMITS.experiences.location },
+    { key: 'period', label: 'Period', kind: 'text', short: true, placeholder: 'Jun 2022 – Sep 2023', maxLength: LIMITS.experiences.period },
     { key: 'description', label: 'Description', kind: 'textarea', wide: true, placeholder: 'What you did and what you achieved.', maxLength: LIMITS.experiences.description },
     KEYWORDS,
   ],
@@ -48,8 +50,8 @@ export const ENTITY_FIELDS: Record<EntityType, FieldDef[]> = {
     { key: 'description', label: 'Description', kind: 'textarea', wide: true, placeholder: 'What the project was and your part in it.', maxLength: LIMITS.projects.description },
   ],
   skills: [
-    { key: 'name', label: 'Name', kind: 'text', required: true, placeholder: 'Office tools', maxLength: LIMITS.skills.name },
-    { key: 'category', label: 'Category', kind: 'text', required: true, placeholder: 'Tools', maxLength: LIMITS.skills.category },
+    { key: 'name', label: 'Name', kind: 'text', short: true, required: true, placeholder: 'Office tools', maxLength: LIMITS.skills.name },
+    { key: 'category', label: 'Category', kind: 'text', short: true, required: true, placeholder: 'Tools', maxLength: LIMITS.skills.category },
     {
       key: 'tags', label: 'Skills', kind: 'list', wide: true,
       placeholder: 'Spreadsheets, presentations, scheduling', hint: 'Comma-separated. Printed after the name of the group.',

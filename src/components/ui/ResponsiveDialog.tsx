@@ -47,7 +47,8 @@ export function ResponsiveDialog({ open, onClose, title, children }: Props) {
   return (
     <Drawer open={open && entered} onOpenChange={(next) => { if (!next) onClose() }}>
       <DrawerContent className="max-h-[90dvh] overflow-y-auto">
-        <DrawerTitle>{title}</DrawerTitle>
+        {/* Named for assistive technology only: on a narrow screen the room goes to the fields. */}
+        <DrawerTitle className="sr-only">{title}</DrawerTitle>
         {children}
       </DrawerContent>
     </Drawer>

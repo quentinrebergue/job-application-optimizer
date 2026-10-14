@@ -24,7 +24,7 @@ interface Props {
  * straight into the library (nothing to review: what is not wanted is deleted afterwards), and the dialog says what
  * was added and what was not, and why.
  */
-export function ImportResume({ variant = 'primary', label = 'Import data from my resume' }: Props) {
+export function ImportResume({ variant = 'primary', label = 'Import a resume' }: Props) {
   const router = useRouter()
   const inputId = useId()
   const [open, setOpen] = useState(false)
@@ -77,7 +77,7 @@ export function ImportResume({ variant = 'primary', label = 'Import data from my
         {label}
       </Button>
 
-      <Modal open={open} onClose={close} title="Import data from my resume" className="max-w-lg">
+      <Modal open={open} onClose={close} title="Import a resume" className="max-w-lg">
         <div className="flex flex-col gap-4 p-5">
           {phase.name === 'done' ? (
             <>

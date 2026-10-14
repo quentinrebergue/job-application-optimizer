@@ -116,11 +116,12 @@ export function JobDetailClient({ initialJob, initialTab }: Props) {
           </div>
         </div>
         <div className="min-w-0">
-          <h1 className="text-2xl font-extrabold leading-tight tracking-tight sm:text-3xl">{job.title}</h1>
-          <p className="mt-1 font-semibold">{job.company}</p>
+          {/* On a phone: the title on one line and the date; the company and the place are in the Offer tab. */}
+          <h1 className="truncate text-2xl font-extrabold leading-tight tracking-tight sm:overflow-visible sm:whitespace-normal sm:text-3xl">{job.title}</h1>
+          <p className="mt-1 hidden font-semibold sm:block">{job.company}</p>
           <p className="text-sm text-ink-muted">
             Added <span className="tabular-nums">{formatDate(job.date_added)}</span>
-            {job.location && <> · {job.location}</>}
+            {job.location && <span className="hidden sm:inline"> · {job.location}</span>}
           </p>
         </div>
         {error && <Alert>{error}</Alert>}
@@ -191,7 +192,12 @@ function PanelCard({ title, tabs, desktopHeader, scrollBody, className, children
   children: React.ReactNode
 }) {
   return (
-    <section aria-label={title} className={cn('rounded-control border-2 border-ink bg-panel shadow-hard', scrollBody && 'lg:flex-col', className)}>
+    <section aria-label={title} className={cn(
+        // Below desktop the card gives way to the page: edge to edge, tabs on top, the tint directly on the page (a phone is narrow), down to the footer, whose own stroke closes it.
+        'border-ink bg-panel max-lg:-mx-4 max-lg:-mb-4 max-lg:border-t-2 md:max-lg:-mx-8 md:max-lg:-mb-8 lg:rounded-control lg:border-2 lg:shadow-hard',
+        scrollBody && 'lg:flex-col',
+        className,
+      )}>
       <div className="lg:hidden">{tabs}</div>
       {desktopHeader ? (
         <div className="hidden shrink-0 lg:block">{desktopHeader}</div>

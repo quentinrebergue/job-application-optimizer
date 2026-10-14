@@ -20,7 +20,7 @@ export function AppHeader({ userEmail }: { userEmail: string | null }) {
   const pathname = usePathname()
 
   return (
-    <header className="sticky top-0 z-40 border-b-2 border-ink bg-canvas">
+    <header className="sticky top-0 z-40 border-y-2 border-ink bg-canvas">
       <div className={cn(pageWidth, 'flex h-16 items-center gap-4 px-3 sm:gap-6 sm:px-4 md:px-8')}>
         {/* The name sits in its own cell, closed by a full-height stroke: it is not a section. */}
         <div className="flex self-stretch items-center border-r-2 border-ink pr-4 sm:pr-6">

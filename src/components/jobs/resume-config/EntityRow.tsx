@@ -61,10 +61,17 @@ export function EntityRow({ entity, state, onToggle, onExpand, children }: Props
           {sub && <p className="truncate text-xs text-ink-muted">{sub}</p>}
           {(state.recommended || state.level !== null || state.score !== null || state.tagCount) && (
             <div className="flex flex-wrap items-center gap-2">
-              {state.recommended && <Badge label="Recommended" variant="accent" />}
+              {/* A recommended entry says how well it matches in the tag itself; the others say it in plain text. */}
               {state.level !== null
-                ? <span className="text-xs font-semibold">{MATCH_LABELS[state.level]}</span>
-                : state.score !== null && <span className="text-xs font-semibold tabular-nums">{state.score}% match</span>}
+                ? state.recommended
+                  ? <Badge label={MATCH_LABELS[state.level]} variant="accent" />
+                  : <span className="text-xs font-semibold">{MATCH_LABELS[state.level]}</span>
+                : (
+                  <>
+                    {state.recommended && <Badge label="Recommended" variant="accent" />}
+                    {state.score !== null && <span className="text-xs font-semibold tabular-nums">{state.score}% match</span>}
+                  </>
+                )}
               {state.tagCount && <Badge label={state.tagCount} variant="muted" />}
             </div>
           )}

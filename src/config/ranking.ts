@@ -13,4 +13,4 @@ export const RANKING_LIMITS = {
 /** Levels: 3 strong, 2 good, 1 weak, 0 none. From this level on, an entry is recommended. */
 export const RECOMMEND_FROM_LEVEL = 2
 
-export const MATCH_LABELS = ['No match', 'Weak match', 'Good match', 'Strong match'] as const
+export const MATCH_LABELS = ['No match', 'Fair match', 'Good match', 'Excellent match'] as const
