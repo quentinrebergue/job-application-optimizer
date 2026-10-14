@@ -46,11 +46,13 @@ spec:
             - name: http
               containerPort: 8080
           env:
-            # A resume is far under 2 MB; the first 5 pages are read; a file may take 5 s; one at a time, 4 waiting, then 503.
+            # A resume is far under 2 MB; only its first page is read (the import fills a library from the page that holds
+            # the essentials: a second page is often the same resume in another language); a file may take 5 s; one at a
+            # time, 4 waiting, then 503.
             - name: MAX_BYTES
               value: "2097152"
             - name: MAX_PAGES
-              value: "5"
+              value: "1"
             - name: TIMEOUT
               value: "5s"
             - name: MAX_QUEUE

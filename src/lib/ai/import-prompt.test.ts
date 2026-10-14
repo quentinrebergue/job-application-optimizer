@@ -5,6 +5,8 @@ import { LIMITS, MAX_ENTRIES } from '@/config/limits'
 const TEXT = [
   'Camille Moreau',
   'Ingénieure backend',
+  'camille.moreau@example.com | +33 6 12 34 56 78 | Lyon, France | linkedin.com/in/camille-moreau',
+  'Six ans sur des plateformes de paiement et de logistique.',
   'Compétences',
   'Go, Java, TypeScript, SQL',
   'Formation',
@@ -22,7 +24,7 @@ const TEXT = [
 // Line numbers of TEXT, from 1.
 const { lines } = buildImportPrompt(TEXT)
 
-const experience = { title: 'Ingénieure backend senior', company: 'Logistix', location: 'Lyon', period: '2022 – Présent', description_from: 11, description_to: 12, tags: ['Go', 'PHP'] }
+const experience = { title: 'Ingénieure backend senior', company: 'Logistix', location: 'Lyon', period: '2022 – Présent', description_from: 13, description_to: 14, tags: ['Go', 'PHP'] }
 const answer = (over: Record<string, unknown> = {}) => ({ experiences: [], projects: [], education: [], skills: [], ...over })
 
 describe('buildImportPrompt', () => {
@@ -68,7 +70,7 @@ describe('buildImportPrompt', () => {
 describe('IMPORT_SCHEMA', () => {
   it('asks for the four kinds, nothing else, with the caps of the library, and no description to write', () => {
     const s = IMPORT_SCHEMA as { required: string[]; additionalProperties: boolean; properties: Record<string, { maxItems: number; items: { properties: Record<string, unknown> } }> }
-    expect(s.required).toEqual(['experiences', 'projects', 'education', 'skills'])
+    expect(s.required).toEqual(['profile', 'experiences', 'projects', 'education', 'skills'])
     expect(s.additionalProperties).toBe(false)
     expect(s.properties.experiences.maxItems).toBe(MAX_ENTRIES.experiences)
     expect(s.properties.skills.maxItems).toBe(MAX_ENTRIES.skills)
@@ -77,12 +79,33 @@ describe('IMPORT_SCHEMA', () => {
   })
 })
 
+describe('parseImportAnswer: the profile', () => {
+  const person = { address: 'Lyon, France', resume_title: 'Ingénieure backend', summary_from: 4, summary_to: 4 }
+
+  it('keeps the city, the headline and the summary the text holds; the name and contact details are not asked', () => {
+    const { profile } = parseImportAnswer(answer({ profile: person }), lines)
+    expect(profile).toEqual({ address: 'Lyon, France', resume_title: 'Ingénieure backend', profile_text: 'Six ans sur des plateformes de paiement et de logistique.' })
+  })
+
+  it('leaves out a value the text does not hold, an empty one, and a placeholder', () => {
+    const text = [...lines, 'Contact [name], [email]']
+    const { profile } = parseImportAnswer(answer({ profile: { address: 'Berlin', resume_title: '[name]', summary_from: 0, summary_to: 0 } }), text)
+    expect(profile).toEqual({})
+  })
+
+  it('asks the model for no name, email, phone or link', () => {
+    const s = IMPORT_SCHEMA as { required: string[]; properties: { profile: { required: string[] } } }
+    expect(s.required).toContain('profile')
+    expect(s.properties.profile.required).toEqual(['address', 'resume_title', 'summary_from', 'summary_to'])
+  })
+})
+
 describe('parseImportAnswer', () => {
   it('keeps the entries the text holds, and reads the description back from the lines it points at', () => {
     const { entries, dropped } = parseImportAnswer(
       answer({
         experiences: [experience],
-        projects: [{ title: 'Outil de revue d’incidents', tech: ['Go', 'SQLite'], description_from: 15, description_to: 15, tags: [] }],
+        projects: [{ title: 'Outil de revue d’incidents', tech: ['Go', 'SQLite'], description_from: 17, description_to: 17, tags: [] }],
         education: [{ degree: 'Diplôme d’ingénieure, informatique', institution: 'INSA Lyon', period: '2013 – 2018' }],
         skills: [{ name: 'Go', category: 'Languages', level: 'advanced', tags: ['Java'] }],
       }),
@@ -116,6 +139,13 @@ describe('parseImportAnswer', () => {
     expect(entries.education).toEqual([])
     expect(entries.skills).toEqual([])
     expect(dropped).toBe(4)
+  })
+
+  it('finds a long title whose one word the PDF garbled, and still not an invented one', () => {
+    const text = ['FinArch – 2D Serious Game Development Projoject', 'THM University of Applied Sciences']
+    const project = (title: string) => ({ title, tech: [], description_from: 0, description_to: 0, tags: [] })
+    const { entries } = parseImportAnswer(answer({ projects: [project('FinArch – 2D Serious Game Development Project'), project('Mobile Banking Application Redesign')] }), text)
+    expect(entries.projects.map((p) => p.title)).toEqual(['FinArch – 2D Serious Game Development Project'])
   })
 
   it('compares without case, accents or punctuation, and by whole words', () => {
@@ -214,8 +244,14 @@ describe('parseImportAnswer', () => {
     expect(Object.keys(entries.experiences[0]).sort()).toEqual(['company', 'description', 'location', 'period', 'tags', 'title'])
   })
 
+  it('gives a skill group its name as category: the text has none, and the form needs one', () => {
+    const { entries } = parseImportAnswer(answer({ skills: [{ name: 'Go, Java, TypeScript, SQL', tags: ['Go'] }] }), lines)
+    expect(entries.skills[0]).toMatchObject({ name: 'Go, Java, TypeScript, SQL', category: 'Go, Java, TypeScript, SQL' })
+  })
+
   it('drops an entry that then fails the schema of the form', () => {
-    const { entries, dropped } = parseImportAnswer(answer({ skills: [{ name: 'Go', category: 'x'.repeat(LIMITS.skills.category + 1), tags: [] }] }), lines)
+    const long = 'x'.repeat(LIMITS.tag + 1)
+    const { entries, dropped } = parseImportAnswer(answer({ skills: [{ name: 'Go', tags: [long] }] }), [...lines, long])
     expect(entries.skills).toEqual([])
     expect(dropped).toBe(1)
   })
@@ -224,6 +260,10 @@ describe('parseImportAnswer', () => {
     const { entries, dropped } = parseImportAnswer(content, lines)
     expect(entries).toEqual({ experiences: [], projects: [], education: [], skills: [] })
     expect(dropped).toBe(0)
+  })
+
+  it('gives no profile for an answer without one', () => {
+    expect(parseImportAnswer(answer(), lines).profile).toEqual({})
   })
 
   it('drops an item that is not an object', () => {

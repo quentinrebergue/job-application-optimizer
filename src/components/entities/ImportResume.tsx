@@ -9,6 +9,7 @@ import { Modal } from '@/components/ui/Modal'
 import { focusRing } from '@/components/ui/styles'
 import { cn } from '@/lib/cn'
 import { IMPORT_MAX_MB, checkFile, report, sendResume, type Report } from '@/lib/import-resume'
+import { importNotice } from '@/components/legal/ai-privacy'
 
 type Phase = { name: 'choose' } | { name: 'sending' } | { name: 'done'; report: Report } | { name: 'failed'; message: string }
 
@@ -115,6 +116,10 @@ export function ImportResume({ variant = 'primary', label = 'Import data from my
                   )}
                 />
               </div>
+              <p className="text-xs text-ink-muted">
+                {importNotice()}{' '}
+                <a href="/privacy#import" target="_blank" rel="noopener" className="underline underline-offset-2">Privacy policy</a>
+              </p>
               {problem && <Alert>{problem}</Alert>}
               {phase.name === 'failed' && <Alert>{phase.message}</Alert>}
               {sending && (

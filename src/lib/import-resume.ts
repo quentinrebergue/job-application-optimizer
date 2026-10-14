@@ -18,6 +18,8 @@ export interface KindSummary {
 /** The answer of POST /api/import/resume. */
 export interface ImportResult {
   summary: Record<Kind, KindSummary>
+  /** The fields of the profile the import filled (only empty ones are). */
+  profile?: string[]
   dropped: number
   truncated: boolean
 }
@@ -28,6 +30,9 @@ const NOUN: Record<Kind, [one: string, many: string]> = {
   projects: ['project', 'projects'],
   education: ['degree', 'degrees'],
   skills: ['skill', 'skills'],
+}
+const PROFILE_LABEL: Record<string, string> = {
+  full_name: 'name', email: 'email', phone: 'phone', linkedin: 'LinkedIn', address: 'address', resume_title: 'title', profile_text: 'summary',
 }
 const count = (n: number, kind: Kind) => `${n} ${NOUN[kind][n === 1 ? 0 : 1]}`
 
@@ -56,6 +61,8 @@ export function report(result: ImportResult): Report {
       : `Added ${added.length > 1 ? `${added.slice(0, -1).join(', ')} and ${added.at(-1)}` : added[0]}.`
 
   const notes: string[] = []
+  const filled = (result.profile ?? []).map((field) => PROFILE_LABEL[field] ?? field)
+  if (filled.length > 0) notes.push(`Your profile: ${filled.length > 1 ? `${filled.slice(0, -1).join(', ')} and ${filled.at(-1)}` : filled[0]} filled in.`)
   const duplicates = KINDS.reduce((sum, k) => sum + result.summary[k].duplicates, 0)
   if (duplicates > 0) notes.push(`${duplicates} already in your library, not added again.`)
   for (const k of KINDS) {
@@ -64,7 +71,7 @@ export function report(result: ImportResult): Report {
   }
   // `dropped` (what the checks refused: an entry the text does not hold, a bullet taken for a job) is not said: it is
   // mostly noise of the model, the user cannot act on a count, and what really is missing is seen in the library.
-  if (result.truncated) notes.push('Only the beginning of the PDF was read (the first 5 pages).')
+  if (result.truncated) notes.push('Only the first page of the PDF was read.')
   return { headline, total, notes }
 }
 

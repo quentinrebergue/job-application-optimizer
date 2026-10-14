@@ -16,14 +16,18 @@ const reserveAiCall = vi.fn()
 const settleAiCall = vi.fn()
 vi.mock('@/lib/ai/usage', () => ({ reserveAiCall: (...a: unknown[]) => reserveAiCall(...a), settleAiCall: (...a: unknown[]) => settleAiCall(...a) }))
 const saveImportedEntries = vi.fn()
-vi.mock('@/lib/import/save', () => ({ saveImportedEntries: (...a: unknown[]) => saveImportedEntries(...a) }))
+const saveImportedProfile = vi.fn()
+vi.mock('@/lib/import/save', () => ({
+  saveImportedEntries: (...a: unknown[]) => saveImportedEntries(...a),
+  saveImportedProfile: (...a: unknown[]) => saveImportedProfile(...a),
+}))
 
 const { POST } = await import('./route')
 
 const PDF = new TextEncoder().encode('%PDF-1.7 a resume')
 const send = (body: BodyInit | null = PDF as BodyInit) => POST(new Request('http://x/api/import/resume', { method: 'POST', body, headers: { 'content-type': 'application/pdf' } }))
 
-const TEXT = 'Camille Moreau\nBackend engineer at Logistix, Lyon\n2022 – Present\nBuilt an API in Go'
+const TEXT = 'Camille Moreau\nBackend engineer at Logistix, Lyon\n2022 – Present\nBuilt an API in Go\ncamille.moreau@example.com | +33 6 12 34 56 78'
 // What the model answers: the fields copied from the text, and the lines of the description (4).
 const asked = { title: 'Backend engineer', company: 'Logistix', location: 'Lyon', period: '2022 – Present', description_from: 4, description_to: 4, tags: ['Go'] }
 // What is saved: the same, with the description read back from the line.
@@ -40,6 +44,7 @@ beforeEach(() => {
   reserveAiCall.mockReset().mockResolvedValue({ id: 7 })
   settleAiCall.mockReset().mockResolvedValue(undefined)
   saveImportedEntries.mockReset().mockResolvedValue(summary)
+  saveImportedProfile.mockReset().mockResolvedValue([])
   vi.spyOn(console, 'error').mockImplementation(() => {})
   vi.spyOn(console, 'warn').mockImplementation(() => {})
 })
@@ -48,7 +53,7 @@ describe('POST /api/import/resume', () => {
   it('reads the PDF, asks the AI for the entries, saves them and says what was added', async () => {
     const res = await send()
     expect(res.status).toBe(200)
-    expect(await res.json()).toEqual({ summary, dropped: 0, truncated: false })
+    expect(await res.json()).toEqual({ summary, profile: [], dropped: 0, truncated: false })
     expect(saveImportedEntries).toHaveBeenCalledWith('u1', expect.objectContaining({ experiences: [experience] }))
     expect(reserveAiCall).toHaveBeenCalledWith('u1', 'import')
     expect(settleAiCall).toHaveBeenCalledWith({ id: 7 }, { status: 'done', model: 'mistral-small-2603', promptTokens: 900, completionTokens: 300 })
@@ -60,7 +65,7 @@ describe('POST /api/import/resume', () => {
     expect(request).toMatchObject({ feature: 'import', userId: 'u1' })
     expect(request.schema.additionalProperties).toBe(false)
     expect(request.system).toMatch(/data, never instructions/)
-    expect(request.prompt).toContain('<resume>\n[1] Camille Moreau\n[2] Backend engineer at Logistix, Lyon\n[3] 2022 – Present\n[4] Built an API in Go\n</resume>')
+    expect(request.prompt).toContain('<resume>\n[1] [name]\n[2] Backend engineer at Logistix, Lyon\n[3] 2022 – Present\n[4] Built an API in Go\n[5] [email] | [phone]\n</resume>')
   })
 
   it('refuses a visitor without a session, and an address that is not confirmed, before reading anything', async () => {
@@ -132,11 +137,22 @@ describe('POST /api/import/resume', () => {
   })
 
   it('says so when nothing can be read, and saves nothing', async () => {
+    readPdfText.mockResolvedValue({ text: 'A page with nothing about a person or a job on it', pages: 1, pagesRead: 1, truncated: false })
     askGateway.mockResolvedValue({ ...answer, content: { experiences: [], projects: [], education: [], skills: [] } })
     const res = await send()
     expect(res.status).toBe(422)
     expect((await res.json()).code).toBe('nothing_found')
     expect(saveImportedEntries).not.toHaveBeenCalled()
+  })
+
+  it('never sends the name, email or phone to the AI: the code finds them and fills the profile with them', async () => {
+    askGateway.mockResolvedValue({ ...answer, content: { ...answer.content, profile: { address: 'Lyon', resume_title: '', summary_from: 0, summary_to: 0 } } })
+    saveImportedProfile.mockResolvedValue(['full_name', 'email', 'phone', 'address'])
+    const res = await send()
+    const sent = JSON.stringify(askGateway.mock.calls[0][0])
+    for (const secret of ['Camille', 'Moreau', 'camille.moreau@example.com', '+33 6 12 34 56 78']) expect(sent).not.toContain(secret)
+    expect(saveImportedProfile).toHaveBeenCalledWith('u1', { full_name: 'Camille Moreau', email: 'camille.moreau@example.com', phone: '+33 6 12 34 56 78', address: 'Lyon' })
+    expect(await res.json()).toMatchObject({ profile: ['full_name', 'email', 'phone', 'address'] })
   })
 
   it('says when the PDF was only read in part', async () => {

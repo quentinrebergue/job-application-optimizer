@@ -2,6 +2,7 @@ import { z } from 'zod'
 import { EntityCreateSchemas } from '@/schemas/inputs'
 import { LIMITS, MAX_ENTRIES } from '@/config/limits'
 import type { EntityType } from '@/types'
+import { ResumeProfileSchema, type ResumeProfile } from '@/schemas/resume-profile'
 
 /**
  * The prompt, the schema and the checks of the resume import (#267): the text of a PDF goes in, entries
@@ -22,10 +23,12 @@ const RULES = `Extract the entries of this resume. Every line of the text starts
 - Never write a description. Give the number of its first line and of its last line (description_from, description_to): the lines that say what was done or achieved, and no other (not a line of another entry). When the description is on the same line as the title, give that line: the part after the title is kept. 0 and 0 when there is none.
 - The text comes from a PDF and may have two columns: a sidebar (contact, skills, languages) can sit before, between or after the main column. Put each line with the entry it belongs to. The lines of a job, a degree or a project can come before the line that names it.
 - A bullet, a sentence about what was done or studied, or a grade is part of the entry it belongs to: it is never an entry of its own. A job or a project has one entry, not one per bullet; a degree is a title ("Master in physics"), not a sentence.
-- experiences: one per job. title, company, location, period as written ("2022 – Present"), tags (up to 8 keywords, technologies and domains, found in the lines of the job).
+- experiences: one per job; volunteering and roles in an association count as experiences. title, company, location, period as written ("2022 – Present"), tags (up to 8 keywords, technologies and domains, found in the lines of the job).
 - projects: personal or side projects only, never jobs. If the text has none, the list is empty. title, tech (the technologies named), tags.
-- education: degree, institution, period as written.
-- skills: at most ${MAX_ENTRIES.skills} entries, the most important ones; group related skills in one entry. name, category (for example "Languages", "Tools"), tags (the related keywords of the text).
+- education: degree, institution, period as written; a certification or a course (a language course, a training) counts as education, its name is the degree. A bullet under a degree is not a degree.
+- skills: at most ${MAX_ENTRIES.skills} entries, the most important ones; group related skills in one entry. name (the name of the group, as written), tags (the skills of the group, as written).
+- The name, email, phone, links and date of birth of the person were taken out of the text: [name], [email], [phone], [link], [date of birth] stand in their place. Never copy them.
+- profile: copied as written: address (the city, the country), resume_title (the headline under the name: the job sought or held), and the lines of the paragraph that presents the person, if any (summary_from, summary_to). Empty strings, and 0 and 0, for what the text does not give.
 - Never repeat an entry. Most recent first. Never put the name, email, phone number or address of the person in an entry.`
 
 export interface ImportPrompt {
@@ -61,15 +64,23 @@ const list = (maxItems: number, properties: Schema): Schema => ({
 export const IMPORT_SCHEMA: Schema = {
   type: 'object',
   properties: {
+    profile: {
+      type: 'object',
+      // Not the name, email, phone or links: the code takes them out of the text before it is sent (import/personal.ts).
+      properties: { address: string, resume_title: string, summary_from: lineNumber, summary_to: lineNumber },
+      required: ['address', 'resume_title', 'summary_from', 'summary_to'],
+      additionalProperties: false,
+    },
     experiences: list(MAX_ENTRIES.experiences, {
       title: string, company: string, location: string, period: string, description_from: lineNumber, description_to: lineNumber, tags: strings,
     }),
     projects: list(MAX_ENTRIES.projects, { title: string, tech: strings, description_from: lineNumber, description_to: lineNumber, tags: strings }),
     education: list(MAX_ENTRIES.education, { degree: string, institution: string, period: string }),
-    // No level: the app neither asks for it nor shows it (#65), so it is not worth an output token.
-    skills: list(MAX_ENTRIES.skills, { name: string, category: string, tags: strings }),
+    // No level (the app neither asks for it nor shows it, #65) and no category: it is not in the text of a resume,
+    // and a model asked for it either invents one or leaves it empty, which the form refuses. The code gives the name.
+    skills: list(MAX_ENTRIES.skills, { name: string, tags: strings }),
   },
-  required: ['experiences', 'projects', 'education', 'skills'],
+  required: ['profile', 'experiences', 'projects', 'education', 'skills'],
   additionalProperties: false,
 }
 
@@ -78,14 +89,21 @@ export const IMPORT_TYPES = ['experiences', 'projects', 'education', 'skills'] a
 export type ImportedEntry<T extends EntityType = EntityType> = z.infer<(typeof EntityCreateSchemas)[T]>
 export type ImportedEntries = { [T in (typeof IMPORT_TYPES)[number]]: ImportedEntry<T>[] }
 
+/** The fields of the resume profile an import may fill: the code finds the first four, the AI the last three. */
+export const PROFILE_FIELDS = ['full_name', 'email', 'phone', 'linkedin', 'address', 'resume_title', 'profile_text'] as const
+const AI_PROFILE_FIELDS = ['address', 'resume_title', 'profile_text'] as const
+export type ImportedProfile = Partial<Pick<ResumeProfile, (typeof PROFILE_FIELDS)[number]>>
+
 export interface ParsedImport {
+  /** What the text says of the person, each value found in it and within the limits of the profile form. */
+  profile: ImportedProfile
   entries: ImportedEntries
   /** Entries the model wrote that the text does not support or the schemas of the forms refused: dropped, not repaired. */
   dropped: number
 }
 
 /** Without case, accents, dashes or punctuation, one space between words: "Ingénieure — Logistix," is "ingenieure logistix". */
-function normalize(text: string): string {
+export function normalize(text: string): string {
   return text
     .normalize('NFD')
     .replace(/\p{M}/gu, '')
@@ -96,6 +114,8 @@ function normalize(text: string): string {
 
 /** The most lines a description may take (and the characters it may hold are the limit of a description). */
 const MAX_DESCRIPTION_LINES = 30
+/** The share of the words of a long title that must be in the text when the title as a whole is not. */
+const LOOSE_SHARE = 0.75
 const BULLET = /^[•·▪◦‣⁃*\-–—]\s*/
 /** What separates a title from its description on one line: a list of technologies in brackets, a dash, a colon... */
 const AFTER_TITLE = /^\s*(\([^)]*\))?\s*[—–\-:|,.]*\s*/
@@ -113,14 +133,24 @@ const AFTER_TITLE = /^\s*(\([^)]*\))?\s*[—–\-:|,.]*\s*/
  */
 export function parseImportAnswer(content: unknown, lines: string[]): ParsedImport {
   const entries: ImportedEntries = { experiences: [], projects: [], education: [], skills: [] }
+  const profile: ImportedProfile = {}
   let dropped = 0
-  if (typeof content !== 'object' || content === null) return { entries, dropped }
+  if (typeof content !== 'object' || content === null) return { profile, entries, dropped }
 
   const source = ` ${normalize(lines.join('\n'))} `
   const found = (value: unknown): value is string => {
     if (typeof value !== 'string') return false
     const wanted = normalize(value)
     return wanted !== '' && source.includes(` ${wanted} `)
+  }
+  // A title of three words or more is also found when nearly all its words are in the text: some PDFs garble a word
+  // ("Projoject"), and the model writes it right. An invented entry has few of its words in the text.
+  const sourceWords = new Set(source.split(' ').filter(Boolean))
+  const foundLoosely = (value: unknown): value is string => {
+    if (found(value)) return true
+    if (typeof value !== 'string') return false
+    const words = normalize(value).split(' ').filter((w) => w.length >= 3)
+    return words.length >= 3 && words.filter((w) => sourceWords.has(w)).length >= LOOSE_SHARE * words.length
   }
   /** The value when the text holds it, else nothing. */
   const ifFound = (value: unknown) => (found(value) ? (value as string).trim() : undefined)
@@ -147,19 +177,23 @@ export function parseImportAnswer(content: unknown, lines: string[]): ParsedImpo
 
   const shape: Record<(typeof IMPORT_TYPES)[number], (item: Record<string, unknown>) => unknown | null> = {
     experiences: (e) =>
-      found(e.title) && found(e.company)
+      foundLoosely(e.title) && foundLoosely(e.company)
         ? {
             title: e.title, company: e.company, location: ifFound(e.location) ?? '', period: ifFound(e.period) ?? '',
             description: description(e.description_from, e.description_to, String(e.title)) ?? '', tags: keywords(e.tags),
           }
         : null,
     projects: (e) =>
-      found(e.title)
+      foundLoosely(e.title)
         ? { title: e.title, tech: keywords(e.tech), description: description(e.description_from, e.description_to, String(e.title)) ?? '', tags: keywords(e.tags) }
         : null,
-    education: (e) => (found(e.degree) && found(e.institution) ? { degree: e.degree, institution: e.institution, period: ifFound(e.period) ?? '' } : null),
+    education: (e) => (foundLoosely(e.degree) && foundLoosely(e.institution) ? { degree: e.degree, institution: e.institution, period: ifFound(e.period) ?? '' } : null),
     // The level the forms give a new skill (it is not asked: entity-fields.ts).
-    skills: (e) => (found(e.name) ? { name: e.name, category: e.category, level: 'intermediate', tags: keywords(e.tags) } : null),
+    // The category is the name of the group, cut to the limit of the field: the text gives nothing else for it.
+    skills: (e) =>
+      found(e.name)
+        ? { name: e.name, category: String(e.name).trim().slice(0, LIMITS.skills.category), level: 'intermediate', tags: keywords(e.tags) }
+        : null,
   }
 
   for (const type of IMPORT_TYPES) {
@@ -187,5 +221,19 @@ export function parseImportAnswer(content: unknown, lines: string[]): ParsedImpo
       ;(entries[type] as unknown[]).push(parsed.data)
     }
   }
-  return { entries, dropped }
+  // The person: a value is kept when the text holds it and the profile form accepts it (its limit, a real email).
+  const person = (content as Record<string, unknown>).profile
+  if (typeof person === 'object' && person !== null && !Array.isArray(person)) {
+    const p = person as Record<string, unknown>
+    const candidates: ImportedProfile = {
+      address: ifFound(p.address), resume_title: ifFound(p.resume_title), profile_text: description(p.summary_from, p.summary_to, ''),
+    }
+    for (const field of AI_PROFILE_FIELDS) {
+      const value = candidates[field]
+      // A placeholder ("[name]") is not a value: the detail it stands for was never sent.
+      if (value && !/\[(name|email|phone|link|date of birth)\]/.test(value) && ResumeProfileSchema.shape[field].safeParse(value).success) profile[field] = value
+    }
+  }
+
+  return { profile, entries, dropped }
 }

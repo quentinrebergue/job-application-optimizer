@@ -2,10 +2,10 @@
 import { it, expect, beforeAll, beforeEach, afterAll } from 'vitest'
 import type { Pool } from 'pg'
 import { dbDescribe, getPool, makeUser, resetData } from '@/tests/db/helpers'
-import { countEntities, createEntity, listEntities } from '@/lib/data'
+import { countEntities, createEntity, getResumeProfile, listEntities, saveResumeProfile } from '@/lib/data'
 import { MAX_ENTRIES } from '@/config/limits'
 import type { ImportedEntries } from '@/lib/ai/import-prompt'
-import { saveImportedEntries } from './save'
+import { saveImportedEntries, saveImportedProfile } from './save'
 
 let pool: Pool
 let alice: string
@@ -71,5 +71,20 @@ dbDescribe('importing a resume on Postgres', () => {
     const summary = await saveImportedEntries(alice, { ...none, skills: [{ name: 'Go', category: 'Languages', level: 'expert', tags: [] }] })
     expect(summary.skills).toEqual({ added: 0, duplicates: 0, overCap: 1 })
     expect(await countEntities(alice, 'skills')).toBe(MAX_ENTRIES.skills + 2)
+  })
+
+  it('fills the empty fields of the profile and never the ones the user typed', async () => {
+    const empty = await getResumeProfile(alice)
+    await saveResumeProfile(alice, { ...empty, full_name: 'Alice as she typed it', phone: '' })
+    const filled = await saveImportedProfile(alice, { full_name: 'Camille Moreau', phone: '+33 6 12 34 56 78', email: 'camille@example.com' })
+    expect(filled.sort()).toEqual(['email', 'phone'])
+    expect(await getResumeProfile(alice)).toMatchObject({ full_name: 'Alice as she typed it', phone: '+33 6 12 34 56 78', email: 'camille@example.com' })
+    expect((await getResumeProfile(bob)).email).toBe('')
+  })
+
+  it('writes nothing when there is nothing to fill', async () => {
+    expect(await saveImportedProfile(alice, {})).toEqual([])
+    const { rows } = await pool.query('SELECT count(*)::int AS n FROM user_resume_profile WHERE user_id = $1', [alice])
+    expect(rows[0].n).toBe(0)
   })
 })

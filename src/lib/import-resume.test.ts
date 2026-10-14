@@ -50,8 +50,13 @@ describe('report', () => {
     ])
   })
 
-  it('says when only the beginning of the PDF was read', () => {
-    expect(report(result({}, { truncated: true })).notes).toEqual(['Only the beginning of the PDF was read (the first 5 pages).'])
+  it('says when only the first page of the PDF was read', () => {
+    expect(report(result({}, { truncated: true })).notes).toEqual(['Only the first page of the PDF was read.'])
+  })
+
+  it('says which fields of the profile were filled', () => {
+    const r = report(result({ experiences: { ...none, added: 1 } }, { profile: ['full_name', 'phone', 'linkedin'] }))
+    expect(r.notes).toEqual(['Your profile: name, phone and LinkedIn filled in.'])
   })
 
   it('does not report what the checks dropped: a count the user cannot act on', () => {
