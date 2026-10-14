@@ -26,39 +26,39 @@ export interface FieldDef {
 /** Keywords of an experience or a degree (tag taxonomy); not printed, not sent to the AI ranking. */
 const KEYWORDS: FieldDef = {
   key: 'tags', label: 'Skills & technologies', kind: 'list', wide: true,
-  placeholder: 'C, Linux, team lead', hint: 'Comma-separated keywords for this entry; they are not printed.',
+  placeholder: 'Teamwork, scheduling, customer service', hint: 'Comma-separated keywords for this entry; they are not printed.',
 }
 
 export const ENTITY_FIELDS: Record<EntityType, FieldDef[]> = {
   experiences: [
-    { key: 'title', label: 'Title', kind: 'text', required: true, placeholder: 'Software Engineer Intern', maxLength: LIMITS.experiences.title },
-    { key: 'company', label: 'Company', kind: 'text', required: true, placeholder: 'Acme Corp', maxLength: LIMITS.experiences.company },
-    { key: 'location', label: 'Location', kind: 'text', placeholder: 'Paris', maxLength: LIMITS.experiences.location },
-    { key: 'period', label: 'Period', kind: 'text', placeholder: '06/2024 – 09/2024', maxLength: LIMITS.experiences.period },
-    { key: 'description', label: 'Description', kind: 'textarea', wide: true, placeholder: 'Your role and what you achieved.', maxLength: LIMITS.experiences.description },
+    { key: 'title', label: 'Title', kind: 'text', required: true, placeholder: 'Sales Assistant', maxLength: LIMITS.experiences.title },
+    { key: 'company', label: 'Company', kind: 'text', required: true, placeholder: 'Example Company', maxLength: LIMITS.experiences.company },
+    { key: 'location', label: 'Location', kind: 'text', placeholder: 'City, Country', maxLength: LIMITS.experiences.location },
+    { key: 'period', label: 'Period', kind: 'text', placeholder: 'Jun 2022 – Sep 2023', maxLength: LIMITS.experiences.period },
+    { key: 'description', label: 'Description', kind: 'textarea', wide: true, placeholder: 'What you did and what you achieved.', maxLength: LIMITS.experiences.description },
     KEYWORDS,
   ],
   projects: [
-    { key: 'title', label: 'Title', kind: 'text', required: true, placeholder: 'Distributed Task Queue', maxLength: LIMITS.projects.title },
+    { key: 'title', label: 'Title', kind: 'text', required: true, placeholder: 'Neighbourhood Clean-up Day', maxLength: LIMITS.projects.title },
     // One list for a project: printed in the resume and matched by the AI (saved as its tags too).
     {
       key: 'tech', label: 'Technologies', kind: 'list', mirrors: ['tags'],
-      placeholder: 'Python, Redis, Docker', hint: 'Comma-separated. Printed in the resume and used by the AI to match a job.',
+      placeholder: 'Spreadsheets, budgeting, teamwork', hint: 'Comma-separated. Printed in the resume and used by the AI to match a job.',
     },
-    { key: 'description', label: 'Description', kind: 'textarea', wide: true, placeholder: 'The project and your part in it.', maxLength: LIMITS.projects.description },
+    { key: 'description', label: 'Description', kind: 'textarea', wide: true, placeholder: 'What the project was and your part in it.', maxLength: LIMITS.projects.description },
   ],
   skills: [
-    { key: 'name', label: 'Name', kind: 'text', required: true, placeholder: 'Programming languages', maxLength: LIMITS.skills.name },
-    { key: 'category', label: 'Category', kind: 'text', required: true, placeholder: 'Languages', maxLength: LIMITS.skills.category },
+    { key: 'name', label: 'Name', kind: 'text', required: true, placeholder: 'Office tools', maxLength: LIMITS.skills.name },
+    { key: 'category', label: 'Category', kind: 'text', required: true, placeholder: 'Tools', maxLength: LIMITS.skills.category },
     {
       key: 'tags', label: 'Skills', kind: 'list', wide: true,
-      placeholder: 'C, Rust, Go', hint: 'Comma-separated. Printed after the name of the group.',
+      placeholder: 'Spreadsheets, presentations, scheduling', hint: 'Comma-separated. Printed after the name of the group.',
     },
   ],
   education: [
-    { key: 'degree', label: 'Degree', kind: 'text', required: true, placeholder: 'MSc Computer Engineering', maxLength: LIMITS.education.degree },
-    { key: 'institution', label: 'Institution', kind: 'text', required: true, placeholder: 'EPITA', maxLength: LIMITS.education.institution },
-    { key: 'period', label: 'Period', kind: 'text', placeholder: '2020 – 2026', maxLength: LIMITS.education.period },
+    { key: 'degree', label: 'Degree', kind: 'text', required: true, placeholder: 'Bachelor of Arts', maxLength: LIMITS.education.degree },
+    { key: 'institution', label: 'Institution', kind: 'text', required: true, placeholder: 'Example University', maxLength: LIMITS.education.institution },
+    { key: 'period', label: 'Period', kind: 'text', placeholder: '2018 – 2022', maxLength: LIMITS.education.period },
     KEYWORDS,
   ],
 }

@@ -25,7 +25,7 @@ export function DrawerContent({ className, children, ...props }: React.Component
       <DrawerPrimitive.Viewport className="pointer-events-none fixed inset-0 z-50 flex items-end justify-center">
         <DrawerPrimitive.Popup
           className={cn(
-            'pointer-events-auto w-full rounded-t-control border-2 border-b-0 border-ink bg-surface p-6 text-ink outline-none',
+            'pointer-events-auto w-full rounded-t-control border-2 border-b-0 border-ink bg-panel p-6 text-ink outline-none',
             'pb-[max(1.5rem,env(safe-area-inset-bottom))]',
             // Follows the finger while swiping, slides in and out otherwise.
             'translate-y-(--drawer-swipe-movement-y,0px) transition-transform duration-300',

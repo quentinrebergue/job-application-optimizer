@@ -1,19 +1,8 @@
-import { getEntity } from '@/lib/data'
-import { notFound } from 'next/navigation'
-import { ENTITY_TYPE_IDS } from '@/config'
-import { EntityDetailClient } from '@/components/entities/EntityDetailClient'
-import type { EntityType } from '@/types'
-import { verifySession } from '@/lib/auth/dal'
+import { redirect } from 'next/navigation'
+import { libraryHref, parseEntityType } from '@/lib/entity-filter'
 
-type Props = { params: Promise<{ type: string; id: string }> }
-
-export const dynamic = 'force-dynamic'
-
-export default async function EntityDetailPage({ params }: Props) {
-  const { userId } = await verifySession()
+// An entry opens in a dialog of the library now; an old address (a bookmark, a mail) still leads to it.
+export default async function EntityDetailPage({ params }: PageProps<'/entities/[type]/[id]'>) {
   const { type, id } = await params
-  if (!ENTITY_TYPE_IDS.includes(type as EntityType)) notFound()
-  const entity = await getEntity(userId, type as EntityType, id)
-  if (!entity) notFound()
-  return <EntityDetailClient initialEntity={entity} />
+  redirect(libraryHref(parseEntityType(type) ?? 'experiences', { entry: id }))
 }

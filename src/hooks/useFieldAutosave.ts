@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { PendingSaves } from '@/lib/pending-saves'
 
 export type SaveState = 'idle' | 'saving' | 'saved' | 'error'
 
@@ -17,19 +18,23 @@ interface Options<V extends Record<string, string>> {
 /**
  * Form fields that save themselves 0.8 s after the user stops typing, one
  * request per field. A field that fails `validate` shows its message and is
- * not saved. Same behaviour as the offer of a job.
+ * not saved. Same behaviour as the offer of a job. Leaving (a dialog closed,
+ * another page) saves what was typed in the last 0.8 s instead of dropping it.
  */
 export function useFieldAutosave<V extends Record<string, string>>({ initial, save, validate }: Options<V>) {
   const [values, setValues] = useState<V>(initial)
   const [errors, setErrors] = useState<Partial<Record<keyof V, string>>>({})
   const [state, setState] = useState<SaveState>('idle')
   const [failure, setFailure] = useState<string | null>(null)
-  const timers = useRef<Partial<Record<keyof V, ReturnType<typeof setTimeout>>>>({})
+  const pending = useRef(new PendingSaves<keyof V & string>())
   const inFlight = useRef(0)
+  // The latest `save`, for the one made on leaving (the one of the first render would hold old values).
+  const saveRef = useRef(save)
+  useEffect(() => { saveRef.current = save })
 
   useEffect(() => {
-    const pending = timers.current
-    return () => { for (const t of Object.values(pending)) clearTimeout(t as ReturnType<typeof setTimeout>) }
+    const waiting = pending.current
+    return () => waiting.flush((field, value) => { void saveRef.current(field, value).catch(() => {}) })
   }, [])
 
   async function run(field: keyof V & string, value: string) {
@@ -38,7 +43,7 @@ export function useFieldAutosave<V extends Record<string, string>>({ initial, sa
       await save(field, value)
       setFailure(null)
       inFlight.current -= 1
-      if (inFlight.current === 0 && Object.keys(timers.current).length === 0) setState('saved')
+      if (inFlight.current === 0 && !pending.current.waiting) setState('saved')
     } catch (err) {
       inFlight.current -= 1
       setFailure(err instanceof Error ? err.message : 'Something went wrong. Try again.')
@@ -48,19 +53,14 @@ export function useFieldAutosave<V extends Record<string, string>>({ initial, sa
 
   function edit(field: keyof V & string, value: string) {
     setValues((v) => ({ ...v, [field]: value }))
-    const pending = timers.current[field]
-    if (pending) clearTimeout(pending)
-    delete timers.current[field]
+    pending.current.cancel(field)
 
     const message = validate?.(field, value)
     setErrors((e) => ({ ...e, [field]: message }))
     if (message) return
 
     setState('saving')
-    timers.current[field] = setTimeout(() => {
-      delete timers.current[field]
-      void run(field, value)
-    }, SAVE_DELAY_MS)
+    pending.current.schedule(field, value, SAVE_DELAY_MS, (f, v) => { void run(f, v) })
   }
 
   return { values, errors, state, failure, edit }

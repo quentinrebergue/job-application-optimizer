@@ -4,7 +4,6 @@ import { ENTITY_TYPE_IDS } from '@/config'
 import { ResumeDefaultsEditor } from '@/components/resume/ResumeDefaultsEditor'
 import { LibraryPanel } from '@/components/entities/LibraryPanel'
 import { ImportResume } from '@/components/entities/ImportResume'
-import { parseLibraryTab } from '@/lib/entity-filter'
 import { verifySession } from '@/lib/auth/dal'
 import { page } from '@/components/ui/styles'
 
@@ -22,12 +21,9 @@ function Section({ id, title, children }: { id: string; title: string; children:
 }
 
 /** Your profile and your library: what every tailored resume is made of. */
-export default async function ResumePage({ searchParams }: PageProps<'/resume'>) {
+export default async function ResumePage() {
   const { userId } = await verifySession()
-  const [lists, { tab }] = await Promise.all([
-    Promise.all(ENTITY_TYPE_IDS.map((t) => listEntities(userId, t))),
-    searchParams,
-  ])
+  const lists = await Promise.all(ENTITY_TYPE_IDS.map((t) => listEntities(userId, t)))
 
   return (
     <div className={page}>
@@ -41,7 +37,7 @@ export default async function ResumePage({ searchParams }: PageProps<'/resume'>)
         </Section>
 
         <Section id="library" title="Library">
-          <LibraryPanel entities={lists.flat()} initialTab={parseLibraryTab(tab)} />
+          <LibraryPanel entities={lists.flat()} />
         </Section>
       </div>
     </div>
