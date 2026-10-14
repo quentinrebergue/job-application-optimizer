@@ -72,12 +72,23 @@ export function likeness(a: string, b: string): number {
   return inShorter >= 0.8 ? Math.max(jaccard, inShorter * 0.6) : jaccard
 }
 
-/** Two values are the same when one holds the other, without case, accents or punctuation. */
+/** The numbers of a value (years, months, days): what a period says whatever its words ("From 2024 to 2026"). */
+const numbersOf = (value: string) => normalize(value).split(' ').filter((w) => /\d/.test(w)).join(' ')
+
+/**
+ * Two values are the same when one holds the other, or they have the same words in another order ("UPES (University)"
+ * and "University (UPES)"), or they give the same numbers ("From Oct 2025 to Feb 2026" and "October 2025 – February 2026"),
+ * without case, accents or punctuation.
+ */
 export function sameValue(got: string, want: string): boolean {
   const g = normalize(got)
   const w = normalize(want)
   if (w === '') return g === ''
-  return g !== '' && (g === w || g.includes(w) || w.includes(g))
+  if (g === '') return false
+  if (g === w || g.includes(w) || w.includes(g)) return true
+  if (likeness(got, want) >= 0.8) return true
+  const n = numbersOf(want)
+  return n !== '' && n === numbersOf(got) && /^(from|de|depuis|du)?\s*[\d\p{L}\s.–-]*$/u.test(w) && words(got).size <= words(want).size + 3
 }
 
 function matches(got: string | undefined, spec: ValueSpec): boolean | null {

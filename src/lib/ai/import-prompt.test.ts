@@ -148,6 +148,13 @@ describe('parseImportAnswer', () => {
     expect(entries.projects.map((p) => p.title)).toEqual(['FinArch – 2D Serious Game Development Project'])
   })
 
+  it('does not find a title made of words picked here and there in the text', () => {
+    const text = ['Europa-Park AI Projoject - DALIM', 'Built a Python AI pipeline for face detection and facial recognition', 'for the Kafka system']
+    const job = (title: string) => ({ title, company: 'DALIM', location: '', period: '', description_from: 0, description_to: 0, tags: [] })
+    const invented = parseImportAnswer(answer({ experiences: [job('AI Pipeline Developer for Face Detection and Recognition System')] }), text)
+    expect(invented.entries.experiences).toEqual([])
+  })
+
   it('compares without case, accents or punctuation, and by whole words', () => {
     const ok = parseImportAnswer(answer({ experiences: [{ ...experience, title: 'INGENIEURE  Backend — Senior', company: 'logistix' }] }), lines)
     expect(ok.entries.experiences).toHaveLength(1)
@@ -171,6 +178,18 @@ describe('parseImportAnswer', () => {
       text,
     )
     expect(entries.experiences.map((e) => e.title)).toEqual(['Dev', 'Lead', 'Tester', 'Writer'])
+  })
+
+  it('accepts a period written in another format when all its numbers are in the text, not one with a year the text lacks', () => {
+    const text = ['Web developer, Acme', 'From January 2025 to April 2025', 'Intern, Beta', '09/2021 – 03/2024']
+    const job = (title: string, company: string, period: string) => ({ title, company, location: '', period, description_from: 0, description_to: 0, tags: [] })
+    const { entries } = parseImportAnswer(
+      answer({ experiences: [job('Web developer', 'Acme', 'January 2025 – April 2025'), job('Intern', 'Beta', 'Sep 2021 - Mar 2024'), job('Intern', 'Beta', '09/2021 – 03/2024')] }),
+      text,
+    )
+    expect(entries.experiences.map((e) => e.period)).toEqual(['January 2025 – April 2025', 'Sep 2021 - Mar 2024', '09/2021 – 03/2024'])
+    const invented = parseImportAnswer(answer({ experiences: [job('Web developer', 'Acme', 'January 1999 – April 2025')] }), text)
+    expect(invented.entries.experiences[0].period).toBe('')
   })
 
   it('removes a place, a period or a keyword the text does not hold, and keeps the entry', () => {

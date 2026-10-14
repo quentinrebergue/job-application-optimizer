@@ -114,8 +114,22 @@ export function normalize(text: string): string {
 
 /** The most lines a description may take (and the characters it may hold are the limit of a description). */
 const MAX_DESCRIPTION_LINES = 30
-/** The share of the words of a long title that must be in the text when the title as a whole is not. */
-const LOOSE_SHARE = 0.75
+/** Two words are nearly the same when they are, or are at most 2 letters apart (and long enough for that to mean it). */
+function nearlyTheSame(a: string, b: string): boolean {
+  if (a === b) return true
+  if (a.length < 5 || b.length < 5 || Math.abs(a.length - b.length) > 2) return false
+  const row = Array.from({ length: b.length + 1 }, (_, j) => j)
+  for (let i = 1; i <= a.length; i++) {
+    let diagonal = row[0]
+    row[0] = i
+    for (let j = 1; j <= b.length; j++) {
+      const above = row[j]
+      row[j] = Math.min(row[j] + 1, row[j - 1] + 1, diagonal + (a[i - 1] === b[j - 1] ? 0 : 1))
+      diagonal = above
+    }
+  }
+  return row[b.length] <= 2
+}
 const BULLET = /^[•·▪◦‣⁃*\-–—]\s*/
 /** What separates a title from its description on one line: a list of technologies in brackets, a dash, a colon... */
 const AFTER_TITLE = /^\s*(\([^)]*\))?\s*[—–\-:|,.]*\s*/
@@ -143,14 +157,30 @@ export function parseImportAnswer(content: unknown, lines: string[]): ParsedImpo
     const wanted = normalize(value)
     return wanted !== '' && source.includes(` ${wanted} `)
   }
-  // A title of three words or more is also found when nearly all its words are in the text: some PDFs garble a word
-  // ("Projoject"), and the model writes it right. An invented entry has few of its words in the text.
-  const sourceWords = new Set(source.split(' ').filter(Boolean))
+  // A title of three words or more is also found when it matches a stretch of the text but for one word, itself nearly
+  // the same: some PDFs garble a word ("Projoject") and the model writes it right. A title built from words picked
+  // here and there in the text, an invented one, matches no stretch of it.
+  const sourceList = source.split(' ').filter(Boolean)
   const foundLoosely = (value: unknown): value is string => {
     if (found(value)) return true
     if (typeof value !== 'string') return false
-    const words = normalize(value).split(' ').filter((w) => w.length >= 3)
-    return words.length >= 3 && words.filter((w) => sourceWords.has(w)).length >= LOOSE_SHARE * words.length
+    const words = normalize(value).split(' ').filter(Boolean)
+    if (words.length < 3) return false
+    for (let start = 0; start + words.length <= sourceList.length; start++) {
+      let different = 0
+      for (let i = 0; i < words.length && different <= 1; i++) if (!nearlyTheSame(words[i], sourceList[start + i])) different++
+      if (different <= 1) return true
+    }
+    return false
+  }
+  // A period is found when every number in it (year, month, day) is in the text: the model writes "January 2025 –
+  // April 2025" for "From January 2025 to April 2025", and a date in another format is still the same dates. A year
+  // the text does not hold, or a period with no number, is not found.
+  const periodIfFound = (value: unknown): string | undefined => {
+    if (found(value)) return (value as string).trim()
+    if (typeof value !== 'string') return undefined
+    const numbers = normalize(value).split(' ').filter((w) => /\d/.test(w))
+    return numbers.length > 0 && numbers.every((n) => sourceList.includes(n)) ? value.trim() : undefined
   }
   /** The value when the text holds it, else nothing. */
   const ifFound = (value: unknown) => (found(value) ? (value as string).trim() : undefined)
@@ -179,7 +209,7 @@ export function parseImportAnswer(content: unknown, lines: string[]): ParsedImpo
     experiences: (e) =>
       foundLoosely(e.title) && foundLoosely(e.company)
         ? {
-            title: e.title, company: e.company, location: ifFound(e.location) ?? '', period: ifFound(e.period) ?? '',
+            title: e.title, company: e.company, location: ifFound(e.location) ?? '', period: periodIfFound(e.period) ?? '',
             description: description(e.description_from, e.description_to, String(e.title)) ?? '', tags: keywords(e.tags),
           }
         : null,
@@ -187,7 +217,7 @@ export function parseImportAnswer(content: unknown, lines: string[]): ParsedImpo
       foundLoosely(e.title)
         ? { title: e.title, tech: keywords(e.tech), description: description(e.description_from, e.description_to, String(e.title)) ?? '', tags: keywords(e.tags) }
         : null,
-    education: (e) => (foundLoosely(e.degree) && foundLoosely(e.institution) ? { degree: e.degree, institution: e.institution, period: ifFound(e.period) ?? '' } : null),
+    education: (e) => (foundLoosely(e.degree) && foundLoosely(e.institution) ? { degree: e.degree, institution: e.institution, period: periodIfFound(e.period) ?? '' } : null),
     // The level the forms give a new skill (it is not asked: entity-fields.ts).
     // The category is the name of the group, cut to the limit of the field: the text gives nothing else for it.
     skills: (e) =>
