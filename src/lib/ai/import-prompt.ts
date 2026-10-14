@@ -105,7 +105,8 @@ const BULLET = /^[•·▪◦‣⁃*\-–—]\s*/
  * source of truth:
  *  - what is copied (a title, a company, a degree, a name) must be found in the text, else the entry is
  *    dropped: a project the resume does not hold does not get through;
- *  - what is optional (a place, a period, a keyword) is removed when the text does not hold it;
+ *  - what is optional (a place, a period, a keyword) is left empty when the text does not hold it (an empty string, as
+ *    the forms save it: the rest of the app reads every field of an entry as a string);
  *  - a description is read back from the lines the model pointed at, never written by it; a range that
  *    does not exist gives no description.
  * An entry that then fails the schemas of the forms is dropped too. Nothing is repaired by guessing.
@@ -143,15 +144,15 @@ export function parseImportAnswer(content: unknown, lines: string[]): ParsedImpo
     experiences: (e) =>
       found(e.title) && found(e.company)
         ? {
-            title: e.title, company: e.company, location: ifFound(e.location), period: ifFound(e.period),
-            description: description(e.description_from, e.description_to), tags: keywords(e.tags),
+            title: e.title, company: e.company, location: ifFound(e.location) ?? '', period: ifFound(e.period) ?? '',
+            description: description(e.description_from, e.description_to) ?? '', tags: keywords(e.tags),
           }
         : null,
     projects: (e) =>
       found(e.title)
-        ? { title: e.title, tech: keywords(e.tech), description: description(e.description_from, e.description_to), tags: keywords(e.tags) }
+        ? { title: e.title, tech: keywords(e.tech), description: description(e.description_from, e.description_to) ?? '', tags: keywords(e.tags) }
         : null,
-    education: (e) => (found(e.degree) && found(e.institution) ? { degree: e.degree, institution: e.institution, period: ifFound(e.period) } : null),
+    education: (e) => (found(e.degree) && found(e.institution) ? { degree: e.degree, institution: e.institution, period: ifFound(e.period) ?? '' } : null),
     skills: (e) => (found(e.name) ? { name: e.name, category: e.category, level: e.level, tags: keywords(e.tags) } : null),
   }
 

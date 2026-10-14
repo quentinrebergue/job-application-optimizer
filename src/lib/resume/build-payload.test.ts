@@ -190,6 +190,25 @@ describe('buildPayload', () => {
   })
 })
 
+describe('buildPayload: entries saved without every field', () => {
+  // What an import made before every field was written saved: no place, period, description, technologies or tags.
+  const bare = {
+    experiences: { id: 'e1', type: 'experiences', title: 'Stage technicien', company: 'Acme' },
+    projects: { id: 'p1', type: 'projects', title: 'A project' },
+    skills: { id: 's1', type: 'skills', name: 'Go', category: 'Languages', level: 'advanced' },
+    education: { id: 'ed1', type: 'education', degree: 'Diplôme', institution: 'EPITA' },
+  } as unknown as EntityMeta[]
+
+  it('reads the missing fields as empty instead of failing: the PDF is still made', () => {
+    const entities = Object.values(bare) as unknown as EntityMeta[]
+    const payload = buildPayload({ templateId: 'classic', profile, entities })
+    expect(payload.sections.experiences).toEqual([{ title: 'Stage technicien', company: 'Acme', location: '', period: '', description: '' }])
+    expect(payload.sections.projects).toEqual([{ title: 'A project', tech: [], description: '' }])
+    expect(payload.sections.skills).toEqual([])
+    expect(payload.sections.education).toEqual([{ degree: 'Diplôme', institution: 'EPITA', period: '' }])
+  })
+})
+
 describe('buildPayload: words too long for a line (the page is not overrun)', () => {
   const long = 'a'.repeat(120)
 

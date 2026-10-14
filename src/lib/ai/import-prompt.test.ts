@@ -134,8 +134,8 @@ describe('parseImportAnswer', () => {
       lines,
     )
     expect(dropped).toBe(0)
-    expect(entries.experiences[0].location).toBeUndefined()
-    expect(entries.experiences[0].period).toBeUndefined()
+    expect(entries.experiences[0].location).toBe('')
+    expect(entries.experiences[0].period).toBe('')
     expect(entries.experiences[0].tags).toEqual(['Go'])
   })
 
@@ -147,7 +147,7 @@ describe('parseImportAnswer', () => {
   ])('gives no description for %s, and keeps the entry', (_name, from, to) => {
     const { entries } = parseImportAnswer(answer({ experiences: [{ ...experience, description_from: from, description_to: to }] }), lines)
     expect(entries.experiences).toHaveLength(1)
-    expect(entries.experiences[0].description).toBeUndefined()
+    expect(entries.experiences[0].description).toBe('')
   })
 
   it('keeps a description under the limit by whole lines, not cut in the middle', () => {
@@ -161,6 +161,21 @@ describe('parseImportAnswer', () => {
     expect(dropped).toBe(0)
     expect(description.length).toBeLessThanOrEqual(LIMITS.experiences.description)
     expect(description.split('\n').every((line) => /^Line \d+ x{150}$/.test(line))).toBe(true)
+  })
+
+  it('gives every field of an entry as the forms do, empty when the text has nothing: the app reads them all as strings', () => {
+    const { entries } = parseImportAnswer(
+      answer({
+        experiences: [{ title: 'Ingénieure backend senior', company: 'Logistix', location: '', period: '', description_from: 0, description_to: 0, tags: [] }],
+        projects: [{ title: 'Outil de revue d’incidents', tech: [], description_from: 0, description_to: 0, tags: [] }],
+        education: [{ degree: 'Diplôme d’ingénieure, informatique', institution: 'INSA Lyon', period: '' }],
+        skills: [{ name: 'Go', category: 'Languages', level: 'advanced', tags: [] }],
+      }),
+      lines,
+    )
+    expect(entries.experiences[0]).toEqual({ title: 'Ingénieure backend senior', company: 'Logistix', location: '', period: '', description: '', tags: [] })
+    expect(entries.projects[0]).toEqual({ title: 'Outil de revue d’incidents', tech: [], description: '', tags: [] })
+    expect(entries.education[0]).toEqual({ degree: 'Diplôme d’ingénieure, informatique', institution: 'INSA Lyon', period: '' })
   })
 
   it('writes nothing it does not know: unknown keys never reach the database', () => {
