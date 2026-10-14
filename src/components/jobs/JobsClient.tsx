@@ -40,7 +40,6 @@ export function JobsClient({ initialJobs, initialFilter }: Props) {
     <div className={page}>
       <PageHeader
         title="Job Tracker"
-        subtitle="Track your applications from saved to offer."
       >
         <Link
           href="/jobs/new"

@@ -12,13 +12,10 @@ export const dynamic = 'force-dynamic'
 
 export const metadata = { title: 'Resume' }
 
-function Section({ id, title, action, children }: { id: string; title: string; action?: React.ReactNode; children: React.ReactNode }) {
+function Section({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
   return (
     <section aria-labelledby={id} className="relative rounded-control border-2 border-ink bg-panel p-4 shadow-hard md:p-6">
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <h2 id={id} className="text-xl font-extrabold tracking-tight">{title}</h2>
-        {action}
-      </div>
+      <h2 id={id} className="mb-4 text-xl font-extrabold tracking-tight">{title}</h2>
       {children}
     </section>
   )
@@ -34,14 +31,16 @@ export default async function ResumePage({ searchParams }: PageProps<'/resume'>)
 
   return (
     <div className={page}>
-      <PageHeader title="Resume" subtitle="Your profile and your library: what every tailored resume is made of." />
+      <PageHeader title="Resume">
+        <ImportResume />
+      </PageHeader>
 
       <div className="flex flex-col gap-8">
         <Section id="profile" title="Profile">
           <ResumeDefaultsEditor />
         </Section>
 
-        <Section id="library" title="Library" action={<ImportResume />}>
+        <Section id="library" title="Library">
           <LibraryPanel entities={lists.flat()} initialTab={parseLibraryTab(tab)} />
         </Section>
       </div>
