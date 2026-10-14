@@ -10,6 +10,8 @@ import { EntityEditor } from './EntityEditor'
 import { TYPE_SINGULAR, entityTitle } from './entity-fields'
 
 interface Props {
+  /** False while it slides out: the entry stays drawn until the animation is over. */
+  open: boolean
   entity: EntityMeta
   onClose: () => void
   /** Called with the entry as it was last saved, on every save. */
@@ -18,7 +20,7 @@ interface Props {
 }
 
 /** A library entry in a dialog (a drawer on a phone): its fields, saved as you type, and its deletion. */
-export function EntryDialog({ entity, onClose, onSaved, onDeleted }: Props) {
+export function EntryDialog({ open, entity, onClose, onSaved, onDeleted }: Props) {
   const type = entity.type as EntityType
   const [deleting, setDeleting] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -37,7 +39,7 @@ export function EntryDialog({ entity, onClose, onSaved, onDeleted }: Props) {
   }
 
   return (
-    <ResponsiveDialog open onClose={onClose} title={`${TYPE_SINGULAR[type]}: ${entityTitle(entity) || 'Untitled'}`}>
+    <ResponsiveDialog open={open} onClose={onClose} title={`${TYPE_SINGULAR[type]}: ${entityTitle(entity) || 'Untitled'}`}>
       <p aria-live="polite" className="-mt-2 text-xs text-ink-muted">{saveState === 'saving' ? 'Saving…' : saveState === 'saved' ? 'Saved' : ' '}</p>
       {error && <Alert>{error}</Alert>}
       <EntityEditor entity={entity} onSaved={onSaved} onDelete={handleDelete} deleting={deleting} onSaveStateChange={setSaveState} />

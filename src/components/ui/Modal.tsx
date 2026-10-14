@@ -36,7 +36,7 @@ export function Modal({ open, onClose, title, children, className }: Props) {
       // A click on the dialog element itself (not its content) is a click on the backdrop.
       onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
       className={cn(
-        'm-auto max-h-[90vh] w-[calc(100%-2rem)] max-w-5xl flex-col rounded-control border-2 border-ink bg-surface p-0 text-ink shadow-hard open:flex',
+        'm-auto max-h-[90vh] w-[calc(100%-2rem)] max-w-5xl flex-col rounded-control border-2 border-ink bg-panel p-0 text-ink shadow-hard open:flex',
         'backdrop:bg-ink/60',
         className,
       )}

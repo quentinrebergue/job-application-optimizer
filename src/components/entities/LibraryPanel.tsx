@@ -11,8 +11,12 @@ import { getEntityTypeConfig } from '@/config'
 import { cn } from '@/lib/cn'
 import { LIBRARY_TABS, libraryHref, readLibraryState } from '@/lib/entity-filter'
 import { EntityCard } from './EntityCard'
+import { useHeld } from '@/hooks/useHeld'
 import { EntryDialog } from './EntryDialog'
 import { NewEntryDialog } from './NewEntryDialog'
+
+/** A little longer than the slide of a drawer (300 ms). */
+const SLIDE_OUT_MS = 400
 
 const ADD_LABEL: Record<EntityType, string> = {
   experiences: 'Add an experience',
@@ -50,6 +54,9 @@ export function LibraryPanel({ entities }: Props) {
   const max = MAX_ENTRIES[tab]
   const full = shown.length >= max
   const open = entry ? items.find((e) => e.id === entry) : undefined
+  // A dialog stays drawn while it slides out, with what it showed.
+  const heldEntry = useHeld(open, SLIDE_OUT_MS)
+  const heldCreating = useHeld(open ? undefined : creating, SLIDE_OUT_MS)
 
   const openEntry = (e: EntityMeta) => go(libraryHref(tab, { entry: e.id }), 'push')
   const openNew = () => go(libraryHref(tab, { creating: tab }), 'push')
@@ -98,12 +105,13 @@ export function LibraryPanel({ entities }: Props) {
         {shown.map((e) => <EntityCard key={e.id} entity={e} href={libraryHref(tab, { entry: e.id })} onOpen={openEntry} />)}
       </div>
 
-      {open && (
+      {heldEntry && (
         <EntryDialog
-          key={open.id}
-          entity={open}
+          key={heldEntry.id}
+          open={!!open}
+          entity={heldEntry}
           onClose={close}
-          onSaved={(updated) => setEdits((prev) => ({ ...prev, [updated.id]: { ...(prev[updated.id] ?? open), ...updated } }))}
+          onSaved={(updated) => setEdits((prev) => ({ ...prev, [updated.id]: { ...(prev[updated.id] ?? heldEntry), ...updated } }))}
           onDeleted={(deleted) => {
             setRemoved((prev) => new Set(prev).add(deleted.id))
             go(libraryHref(tab), 'replace')
@@ -111,9 +119,10 @@ export function LibraryPanel({ entities }: Props) {
           }}
         />
       )}
-      {!open && creating && (
+      {!heldEntry && heldCreating && (
         <NewEntryDialog
-          initialType={creating}
+          open={!!creating}
+          initialType={heldCreating}
           onClose={close}
           onCreated={(created) => {
             setAdded((prev) => [...prev, created])

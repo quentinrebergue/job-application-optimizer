@@ -24,7 +24,7 @@ is shown with its variants on `/ui` (development only).
 | `IconButton.tsx` | `<IconButton aria-label>` — small square button for an icon or glyph; the accessible name is required. |
 | `InfoTip.tsx` | `<InfoTip label>` — a small "i" that opens a short note on hover, focus and tap (Base UI popover); for a sentence or two, never for something needed to use the page. |
 | `Modal.tsx` | `<Modal open onClose title>` — native `<dialog>` (top layer, inert page behind, focus moved in, Escape and backdrop click close it), named close button. |
-| `ResponsiveDialog.tsx` | `<ResponsiveDialog open onClose title>` — a narrow `Modal` from 768 px of width, a `Drawer` (the bottom sheet, which scrolls) below; nothing is drawn before the page is on the screen (the width is not known to the server). |
+| `ResponsiveDialog.tsx` | `<ResponsiveDialog open onClose title>` — a narrow `Modal` from 768 px of width, a `Drawer` (the bottom sheet, which scrolls) below; nothing is drawn before the page is on the screen (the width is not known to the server), and it is drawn closed then opened a moment later so that the drawer slides in. |
 | `PageHeader.tsx` | `<PageHeader title subtitle? children?>` — page heading with an action slot; actions wrap under the title on phones. |
 | `styles.ts` | Shared class strings: `page` and `pageWidth` (the one page width, 1280px, also the top bar's), `focusRing` and `focusLink` (keyboard focus: yellow, and pressed for a control), `eyebrow` (small capital label), `stroke` (2px ink, 5px radius), `pressable` (hard shadow, moves onto it on hover, or on tap on phones; off with reduced motion). |
 

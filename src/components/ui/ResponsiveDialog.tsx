@@ -1,6 +1,6 @@
 'use client'
 
-import { useSyncExternalStore } from 'react'
+import { useEffect, useState, useSyncExternalStore } from 'react'
 import { Drawer, DrawerContent, DrawerTitle } from './Drawer'
 import { Modal } from './Modal'
 
@@ -29,17 +29,23 @@ interface Props {
 export function ResponsiveDialog({ open, onClose, title, children }: Props) {
   const mounted = useSyncExternalStore(never, () => true, () => false)
   const wide = useSyncExternalStore(subscribe, isWide, () => true)
+  // A drawer that is drawn already open does not slide in: it is drawn closed, then opened a moment later.
+  const [entered, setEntered] = useState(false)
+  useEffect(() => {
+    const timer = setTimeout(() => setEntered(true), 20)
+    return () => clearTimeout(timer)
+  }, [])
   if (!mounted) return null
 
   if (wide) {
     return (
-      <Modal open={open} onClose={onClose} title={title} className="max-w-lg">
+      <Modal open={open && entered} onClose={onClose} title={title} className="max-w-lg">
         <div className="flex flex-col gap-4 p-5">{children}</div>
       </Modal>
     )
   }
   return (
-    <Drawer open={open} onOpenChange={(next) => { if (!next) onClose() }}>
+    <Drawer open={open && entered} onOpenChange={(next) => { if (!next) onClose() }}>
       <DrawerContent className="max-h-[90dvh] overflow-y-auto">
         <DrawerTitle>{title}</DrawerTitle>
         {children}

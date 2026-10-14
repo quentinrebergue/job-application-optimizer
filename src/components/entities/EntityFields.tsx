@@ -32,7 +32,7 @@ export function EntityFields({ type, values, errors = {}, onChange }: Props) {
           className={cn(field.wide && 'sm:col-span-2')}
         >
           {field.kind === 'textarea' ? (
-            <Textarea value={values[field.key] ?? ''} onChange={(e) => onChange(field.key, e.target.value)} placeholder={field.placeholder} autoGrow />
+            <Textarea value={values[field.key] ?? ''} onChange={(e) => onChange(field.key, e.target.value)} placeholder={field.placeholder} autoGrow className="min-h-52" />
           ) : field.kind === 'select' ? (
             <Select value={values[field.key] ?? ''} onChange={(e) => onChange(field.key, e.target.value)}>
               {field.options?.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
