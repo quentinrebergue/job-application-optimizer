@@ -23,7 +23,10 @@ export const focusRing = [
 export const focusLink = 'focus-visible:bg-warning focus-visible:text-ink focus-visible:outline-2 focus-visible:outline-transparent'
 
 /** Small capital label above a group ("STATUS", "DESCRIPTION"). */
-export const eyebrow = 'text-xs font-semibold uppercase tracking-wider text-ink-muted'
+export const eyebrow = 'text-label uppercase tracking-wider text-ink-muted'
+
+/** The same in ink, for a sticker or a tab bar drawn in capitals. */
+export const stickerText = 'text-label uppercase tracking-wider text-ink'
 
 /** 2px ink stroke and small radius: the outline of every sticker-like element. */
 export const stroke = 'rounded-control border-2 border-ink'

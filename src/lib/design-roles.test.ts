@@ -9,7 +9,8 @@ import path from 'node:path'
 // Not covered by a role, so left raw: 1, 1.5 and 2 (an icon beside its text, a chip row, a hairline), sizes of controls
 // (h-*, w-*), and the weights used inside a sentence (font-semibold on a name).
 
-const OUT_OF_SCOPE = ['src/components/landing', 'src/components/legal', 'src/components/catalogue', 'src/app/(public)/welcome', 'src/app/(public)/legal']
+// Every page is in scope: the app, the landing page, the legal pages and the catalogue.
+const OUT_OF_SCOPE: string[] = []
 
 // Raw values that stay, each with its reason. A line is `file: class`.
 const ALLOWED = new Set<string>([
@@ -70,9 +71,9 @@ describe('the design roles', () => {
     expect([...new Set(raw)].sort()).toEqual([])
   })
 
-  it('keep the weight and the capitals of titles and labels in their roles', () => {
-    // font-extrabold is the weight of a title role (text-title, text-item...); tracking and capitals are the eyebrow's.
-    // What is left is emphasis inside a line, or a logo.
+  it('keep the tracking and the capitals of labels in their roles (eyebrow, stickerText)', () => {
+    // Tracking and capitals are the eyebrow's (`eyebrow`, `stickerText` in ui/styles.ts); a heavy word inside a line
+    // (font-extrabold on a name or a sticker) is emphasis, and the size of a title is caught by the roles above.
     const ALLOWED_HEAVY = new Set([
       'src/components/layout/Wordmark.tsx',
       'src/components/layout/SiteFooter.tsx',
@@ -87,7 +88,6 @@ describe('the design roles', () => {
       if (file.endsWith('ui/styles.ts')) continue
       for (const line of fs.readFileSync(file, 'utf8').split('\n')) {
         if (/^\s*(\/\/|\*|\/\*)/.test(line)) continue
-        if (/(?<![\w-])font-extrabold(?![\w-])/.test(line) && !ALLOWED_HEAVY.has(file)) found.push(`${file}: font-extrabold`)
         if (/(?<![\w-])(uppercase|tracking-(tight|tighter|wide|wider|widest))(?![\w-])/.test(line) && !ALLOWED_HEAVY.has(file)) found.push(`${file}: tracking or capitals`)
       }
     }

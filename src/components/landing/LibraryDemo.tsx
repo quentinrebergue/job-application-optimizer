@@ -22,7 +22,7 @@ function EntryCard({ title, subtitle, chips }: { title: string; subtitle: string
   return (
     <div className={cardClasses({ className: 'flex flex-col gap-1' })}>
       <span className="font-extrabold leading-tight">{title}</span>
-      <p className="truncate text-sm text-ink-muted">{subtitle}</p>
+      <p className="truncate text-small text-ink-muted">{subtitle}</p>
       {chips && <div className="flex flex-wrap gap-1.5 pt-1">{chips.map((chip) => <Badge key={chip} label={chip} variant="muted" />)}</div>}
     </div>
   )
@@ -96,12 +96,12 @@ export function LibraryDemo() {
       header={<DrawnTabs items={TABS} current={shown.tab} />}
     >
       {shown.tab === 'experiences' && !shown.form && (
-        <div className="flex flex-col gap-3">
-          <div className="flex items-center justify-between gap-3">
+        <div className="flex flex-col gap-inline">
+          <div className="flex items-center justify-between gap-inline">
             <p className={eyebrow}>Experiences</p>
             <span data-target="add" className={cn(drawnButton, 'bg-accent', demo.lift('add'))}>Add an experience</span>
           </div>
-          {shown.saved ? <EntryCard title={EXPERIENCE.title} subtitle={`${EXPERIENCE.company} · ${EXPERIENCE.period}`} /> : <p className="text-sm text-ink-muted">Nothing here yet.</p>}
+          {shown.saved ? <EntryCard title={EXPERIENCE.title} subtitle={`${EXPERIENCE.company} · ${EXPERIENCE.period}`} /> : <p className="text-small text-ink-muted">Nothing here yet.</p>}
         </div>
       )}
       {shown.tab === 'experiences' && shown.form && (
@@ -114,15 +114,15 @@ export function LibraryDemo() {
         </div>
       )}
       {shown.tab === 'projects' && (
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-inline">
           <p className={eyebrow}>Projects</p>
-          {shown.project ? <EntryCard title="Booking service in Go" subtitle="Used by 40 studios" chips={['Go', 'PostgreSQL']} /> : <p className="text-sm text-ink-muted">Nothing here yet.</p>}
+          {shown.project ? <EntryCard title="Booking service in Go" subtitle="Used by 40 studios" chips={['Go', 'PostgreSQL']} /> : <p className="text-small text-ink-muted">Nothing here yet.</p>}
         </div>
       )}
       {shown.tab === 'education' && (
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-inline">
           <p className={eyebrow}>Education</p>
-          {shown.degree ? <EntryCard title="MSc Computer Science" subtitle="Université de Lyon · 2018" /> : <p className="text-sm text-ink-muted">Nothing here yet.</p>}
+          {shown.degree ? <EntryCard title="MSc Computer Science" subtitle="Université de Lyon · 2018" /> : <p className="text-small text-ink-muted">Nothing here yet.</p>}
         </div>
       )}
     </DemoStage>

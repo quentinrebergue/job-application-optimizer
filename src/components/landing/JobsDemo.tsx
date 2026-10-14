@@ -19,13 +19,13 @@ const OTHERS = [
 function JobCard({ title, company, status, target }: { title: string; company: string; status: string; target?: string }) {
   return (
     <div className={cardClasses({ className: 'flex flex-col gap-1' })}>
-      <div className="flex items-start justify-between gap-3">
+      <div className="flex items-start justify-between gap-inline">
         <span className="font-extrabold leading-tight">{title}</span>
         <span data-target={target}>
           <Badge label={APPLICATION_STATUS_LABELS[status]} variant={APPLICATION_STATUS_BADGES[status]} className="w-20 justify-center" />
         </span>
       </div>
-      <p className="truncate text-sm text-ink-muted">{company}</p>
+      <p className="truncate text-small text-ink-muted">{company}</p>
     </div>
   )
 }
@@ -89,8 +89,8 @@ export function JobsDemo() {
       widthClass="max-w-sm"
     >
       {!shown.form ? (
-        <div className="flex flex-col gap-3">
-          <div className="flex items-center justify-between gap-3">
+        <div className="flex flex-col gap-inline">
+          <div className="flex items-center justify-between gap-inline">
             <p className={eyebrow}>Jobs</p>
             <span data-target="add" className={cn(drawnButton, 'bg-accent', demo.lift('add'))}>Add a job</span>
           </div>

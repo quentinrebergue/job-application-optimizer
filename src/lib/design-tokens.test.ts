@@ -42,4 +42,25 @@ describe('the roles of globals.css', () => {
     }
     expect(bad).toEqual([])
   })
+
+  it('take their values from the two scales (spacing 4 8 12 16 24 32 48 64 96, text 12 14 16 18 20 24 32 36 48 72)', () => {
+    const SPACING = [4, 8, 12, 16, 24, 32, 48, 64, 96]
+    const TEXT = [12, 14, 16, 18, 20, 24, 32, 36, 48, 72]
+    const px = (v: string) => (v.endsWith('rem') ? parseFloat(v) * 16 : parseFloat(v))
+    const off: string[] = []
+    for (const m of css.matchAll(/^\s*--spacing-([a-z-]+):\s*([\d.]+(?:rem|px))/gm)) {
+      if (m[1] !== 'press' && !SPACING.includes(px(m[2]))) off.push(`--spacing-${m[1]}: ${m[2]}`)
+    }
+    for (const m of css.matchAll(/^\s*--text-([a-z-]+):\s*([\d.]+rem)/gm)) {
+      if (!m[1].includes('--') && !TEXT.includes(px(m[2]))) off.push(`--text-${m[1]}: ${m[2]}`)
+    }
+    expect(off).toEqual([])
+  })
+
+  it('are all shown in the UI catalogue, so a role is seen where it is chosen', () => {
+    const catalogue = fs.readFileSync('src/components/catalogue/UiCatalogue.tsx', 'utf8')
+    const missing = [...spacing.filter((r) => r !== 'press').map((r) => `spacing ${r}`), ...text.filter((t) => !t.includes('--')).map((t) => `text ${t}`)]
+      .filter((entry) => !catalogue.includes(`'${entry.split(' ')[1]}'`))
+    expect(missing).toEqual([])
+  })
 })

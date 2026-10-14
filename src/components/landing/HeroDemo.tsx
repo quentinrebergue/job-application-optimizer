@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { cn } from '@/lib/cn'
-import { eyebrow, stroke } from '@/components/ui/styles'
+import { eyebrow, stroke, stickerText } from '@/components/ui/styles'
 import { DemoStage } from './demo/DemoStage'
 import { CompactRankRow } from './demo/drawn'
 import { useDemo } from './demo/useDemo'
@@ -22,8 +22,8 @@ const RESULTS = [
 const STEPS = ['Import', 'Rank', 'Download'] as const
 const ACTIVE_STEP: Record<Screen, number> = { offer: 0, rank: 1, resume: 2 }
 
-const field = cn(stroke, 'bg-surface px-3 py-2 text-sm')
-const chip = cn(stroke, 'px-3 py-1.5 text-xs font-semibold')
+const field = cn(stroke, 'bg-surface px-control py-2 text-small')
+const chip = cn(stroke, 'px-control py-1.5 text-caption font-semibold')
 
 /**
  * The three clicks, played on a made-up job: a cursor adds an offer, ranks it
@@ -82,9 +82,9 @@ export function HeroDemo() {
       heightClass="h-[30rem]"
       widthClass="max-w-md md:max-w-[22rem] lg:max-w-md"
       header={
-        <ol className="flex border-b-2 border-ink text-xs font-extrabold uppercase tracking-wider">
+        <ol className={cn(stickerText, 'flex border-b-2 border-ink')}>
           {STEPS.map((name, index) => (
-            <li key={name} className={cn('flex-1 whitespace-nowrap px-1.5 py-2.5 text-center text-[11px] sm:text-xs', index > 0 && 'border-l-2 border-ink', ACTIVE_STEP[shown] === index ? 'bg-accent' : 'bg-surface text-ink-muted')}>
+            <li key={name} className={cn('flex-1 whitespace-nowrap px-1.5 py-2.5 text-center text-[11px] sm:text-caption', index > 0 && 'border-l-2 border-ink', ACTIVE_STEP[shown] === index ? 'bg-accent' : 'bg-surface text-ink-muted')}>
               {index + 1} · {name}
             </li>
           ))}
@@ -92,7 +92,7 @@ export function HeroDemo() {
       }
     >
       {shown === 'offer' && (
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-inline">
           <p className={eyebrow}>New job</p>
           <div data-target="title" className={field}>{title || <span className="text-ink-muted">Title and company</span>}</div>
           <div data-target="description" className={cn(field, 'h-32 overflow-hidden leading-snug')}>{description || <span className="text-ink-muted">Description</span>}</div>
@@ -101,9 +101,9 @@ export function HeroDemo() {
       )}
 
       {shown === 'rank' && (
-        <div className="flex flex-col gap-3">
-          <div className="flex items-start justify-between gap-3">
-            <p className="text-sm font-extrabold leading-tight sm:text-base">{TITLE}</p>
+        <div className="flex flex-col gap-inline">
+          <div className="flex items-start justify-between gap-inline">
+            <p className="text-small font-extrabold leading-tight sm:text-body">{TITLE}</p>
             <span data-target="rank" className={cn(chip, 'shrink-0 bg-ai', demo.lift('rank'))}>{ranking ? 'Ranking…' : 'Rank with AI'}</span>
           </div>
           <div className="flex min-h-[11.5rem] flex-col gap-2">
@@ -115,7 +115,7 @@ export function HeroDemo() {
         </div>
       )}
 
-      {shown === 'resume' && <ResumeExample showCaption={false} className="max-w-none" paperClassName="p-4 text-[10px] shadow-none sm:p-4 sm:text-[11px]" />}
+      {shown === 'resume' && <ResumeExample showCaption={false} className="max-w-none" paperClassName="p-card text-[10px] shadow-none sm:text-[11px]" />}
     </DemoStage>
   )
 }

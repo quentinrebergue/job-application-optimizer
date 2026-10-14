@@ -18,36 +18,36 @@ const EDUCATION = { name: 'MSc Computer Science', where: 'Université de Lyon', 
 export function ResumeExample({ className, paperClassName, showCaption = true }: { className?: string; paperClassName?: string; showCaption?: boolean }) {
   return (
     <figure className={cn('mx-auto w-full max-w-md', className)}>
-      <div aria-hidden="true" className={cn(stroke, 'bg-surface p-5 text-[11px] leading-snug shadow-hard sm:p-6 sm:text-xs', paperClassName)}>
-        <p className="text-lg font-extrabold tracking-tight sm:text-xl">Alex Martin</p>
+      <div aria-hidden="true" className={cn(stroke, 'bg-surface p-panel text-[11px] leading-snug shadow-hard sm:text-caption', paperClassName)}>
+        <p className="text-subsection">Alex Martin</p>
         <p className="font-semibold">Backend engineer</p>
         <p className="text-ink-muted">alex@example.com · Lyon, France</p>
 
-        <p className={cn(eyebrow, 'mt-4 border-b border-ink pb-1')}>Profile</p>
+        <p className={cn(eyebrow, 'mt-heading border-b border-ink pb-1')}>Profile</p>
         <p className="mt-1.5">Seven years building reliable APIs for logistics and booking.</p>
 
-        <p className={cn(eyebrow, 'mt-4 border-b border-ink pb-1')}>Experience</p>
+        <p className={cn(eyebrow, 'mt-heading border-b border-ink pb-1')}>Experience</p>
         <div className="mt-2">
           <p className="flex justify-between gap-2 font-semibold">
             <span>{EXPERIENCE.role}, {EXPERIENCE.where}</span>
             <span className="shrink-0 tabular-nums text-ink-muted">{EXPERIENCE.when}</span>
           </p>
-          <ul className="mt-0.5 list-disc pl-4">
+          <ul className="mt-0.5 list-disc pl-indent">
             {EXPERIENCE.points.map((point) => <li key={point}>{point}</li>)}
           </ul>
         </div>
 
-        <p className={cn(eyebrow, 'mt-4 border-b border-ink pb-1')}>Projects</p>
+        <p className={cn(eyebrow, 'mt-heading border-b border-ink pb-1')}>Projects</p>
         <p className="mt-2"><span className="font-semibold">{PROJECT.name}.</span> {PROJECT.text}</p>
 
-        <p className={cn(eyebrow, 'mt-4 border-b border-ink pb-1')}>Education</p>
+        <p className={cn(eyebrow, 'mt-heading border-b border-ink pb-1')}>Education</p>
         <p className="mt-2 flex justify-between gap-2 font-semibold">
           <span>{EDUCATION.name}, {EDUCATION.where}</span>
           <span className="shrink-0 tabular-nums text-ink-muted">{EDUCATION.when}</span>
         </p>
       </div>
       {showCaption && (
-        <figcaption className="mt-3 text-sm text-ink-muted">
+        <figcaption className="mt-heading text-small text-ink-muted">
           Example of a generated resume, for a made-up person. The PDF keeps this sober layout.
         </figcaption>
       )}

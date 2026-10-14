@@ -40,29 +40,62 @@ recipe we adapt.
 Dense screens (the resume configuration panel) keep their content readable:
 thick strokes frame the blocks and the controls, not every row.
 
+## Design system rules
+
+How the app stays coherent, in order of what to reach for first:
+
+1. **Roles, not numbers.** A gap, a padding, a margin or a text style that has a role is written with the role
+   (`gap-field`, `p-panel`, `text-small`), never with a raw value. The roles live in one place, `globals.css`.
+2. **Two scales.** Every role takes its value from one of two scales, so no in-between value can creep in:
+   spacing **4 · 8 · 12 · 16 · 24 · 32 · 48 · 64 · 96 px**, text sizes **12 · 14 · 16 · 18 · 20 · 24 · 32 · 36 · 48 · 72 px**
+   (the last three, and 96 px, only for the landing page),
+   and three weights, **400 · 600 · 800**.
+3. **A role may differ between a phone and a computer** (the overrides from 768 px), never between two places of the
+   same view.
+4. **One page width** (`--container-page`, 80 rem) for the content, the header, the banner and the footer, the gutter
+   inside it. Only a short text under a title has a narrower measure (`--container-measure`, 40 rem).
+5. **Add a role, do not bend one.** If no role fits, add one to `globals.css` with a comment saying where it is
+   used, a value from the scale, and its line in the tables below and in the UI catalogue (`/ui`, which draws every
+   role from the page's own computed values).
+6. **Tests keep the rules**, so they do not rest on a review: `design-roles.test.ts` (no raw value where a role
+   exists, no private width), `design-tokens.test.ts` (no role name that Tailwind reads as something else, values on
+   the scales, every role in the catalogue), `cn.test.ts` (the class merger knows every role).
+
+Raw values remain for what has no role: 1 to 2 px of an icon beside its text or a chip row, and the size of a control.
+The landing and legal pages follow the same rules, with a few roles of their own (`band`, `hero`, `chapter`, `columns`,
+`showcase`, `display`, `statement`, `pitch`, `lead`): no page is out of scope of the tests.
+
 ## Spacing
 
-Spacing has **roles**, declared once in `globals.css` (`--spacing-*`), so that every gap of one role has one value
-(#285). A role may differ between a phone and a computer (the overrides from 768 px), never between two places of
-the same view. Use the role utilities (`gap-field`, `p-panel`, `mt-actions`...), not a number, wherever a role fits.
+Spacing has **roles**, declared once in `globals.css` (`--spacing-*`) (#285).
 
 | Role | Phone | Computer | Where |
 |---|---|---|---|
-| `label` | 4 px | 4 px | a label and its control, a control and its hint (`Field`) |
-| `field` | 16 px | 16 px | between the fields of a form |
-| `stack` | 16 px | 16 px | between the blocks inside one section, card or dialog; between the cards of a grid |
-| `actions` | 8 px | 8 px | extra room above the buttons that end a form or a card |
-| `inline` | 12 px | 12 px | between items side by side on one row: buttons, a title and its badge |
-| `heading` | 12 px | 16 px | a section title and what it introduces |
-| `section` | 24 px | 32 px | between the sections of a page, a panel or a dialog; under a page header |
-| `panel` | 16 px | 24 px | inside a large panel (a section of a page, a job's offer or resume) |
-| `card` | 16 px | 16 px | inside a card |
-| `row` | 12 px | 12 px | inside a dense row, between the rows of a list |
-| `dialog` | 16 px | 20 px | inside a dialog or a drawer |
-| `gutter` | 16 px | 32 px | the sides of every page, and of the header, the banner and the footer |
-| `control` | 12 px | 12 px | the sides inside a field, a menu, an alert or a tab |
-
-Raw values stay for what has no role: an icon beside its text, a row of chips, the size of a button.
+| `label` | 4 | 4 | a label and its control, a control and its hint (`Field`) |
+| `actions` | 8 | 8 | extra room above the buttons that end a form or a card |
+| `inline` | 12 | 12 | between items side by side on one row: buttons, a title and its badge |
+| `row` | 12 | 12 | inside a dense row, between the rows of a list |
+| `control` | 12 | 12 | the sides inside a field, a menu, an alert or a tab |
+| `bar` | 12 | 12 | the top and bottom of a strip: a dialog header, a panel title, the banner |
+| `heading` | 12 | 16 | a section title and what it introduces |
+| `field` | 16 | 16 | between the fields of a form |
+| `stack` | 16 | 16 | between the blocks inside one section, card or dialog; between the cards of a grid |
+| `card` | 16 | 16 | inside a card |
+| `button` | 16 | 16 | the sides inside a button |
+| `nav` | 16 | 24 | between the parts of the top bar |
+| `links` | 16 | 16 | between the links of a footer |
+| `panel` | 16 | 24 | inside a large panel (a section of a page, a job's offer or resume) |
+| `dialog` | 16 | 24 | inside a dialog or a drawer |
+| `section` | 24 | 32 | between the sections of a page, a panel or a dialog; under a page header |
+| `indent` | 24 | 24 | the indent of a list |
+| `footer` | 24 | 24 | the top and bottom of the footer |
+| `gutter` | 16 | 32 | the sides of every page, and of the header, the banner and the footer |
+| `centered` | 48 | 64 | above and below a card or a message centred on its own page |
+| `band` | 48 | 64 | the top and bottom of a band of the landing or of a legal page |
+| `hero` | 48 | 64 (96 from 1024) | above and below the first screen of the landing page |
+| `chapter` | 64 | 96 | between the big blocks of the landing page |
+| `columns` | 32 | 48 | between the columns (or the rows, once stacked) of a landing block |
+| `showcase` | 32 | 64 | inside the big call-to-action card |
 
 **A role name must not be the value of another utility.** `--spacing-block` once made Tailwind read `inline-block`
 as `inline-size: 1rem` and crushed the landing page: `src/lib/design-tokens.test.ts` fails on such a collision.
@@ -70,23 +103,26 @@ as `inline-size: 1rem` and crushed the landing page: `src/lib/design-tokens.test
 ## Text styles
 
 A text style is one class, `text-<role>`: size, line height, weight and tracking together; the colour stays apart
-(`text-ink`, `text-ink-muted`). Three weights only: 400 text, 600 labels, 800 titles.
+(`text-ink`, `text-ink-muted`). `small`, `caption` and `body` carry no weight, so an explicit `font-normal` or
+`font-semibold` next to them always wins.
 
-| Role | Size | Weight | Where |
-|---|---|---|---|
-| `title` | 24 px (30 px from 768 px) | 800 | the title of a page (`PageHeader`, a job) |
-| `heading` | 24 px | 800 | a title on a small card (sign in), a big figure |
-| `section` | 20 px | 800 | a section of a page (`SectionTitle level="page"`) |
-| `subsection` | 18 px | 800 | a part of a panel or a card, the title of a dialog (`SectionTitle`) |
-| `item` | 16 px | 800 | the title of a card or of a row of a list |
-| `small` | 14 px | 400 | secondary text, most of the interface |
-| `small-strong` | 14 px | 600 | the same, emphasised: a link, a message, a name |
-| `caption` | 12 px | 400 | a hint, a count, a date |
-| `label` | 12 px | 600 | the label of a field, a badge |
-| `eyebrow` (styles.ts) | 12 px | 600, capitals | the small label above a group |
-
-`small` and `caption` carry no weight, so an explicit `font-normal` or `font-semibold` next to them always wins. The
-landing page keeps its own large, fluid sizes.
+| Role | Phone | Computer | Weight | Where |
+|---|---|---|---|---|
+| `display` | 48 | 48 (72 from 1024) | 800 | the first line of the landing page |
+| `statement` | 36 | 48 | 800 | the title of a block of the landing page, the title of a legal page |
+| `pitch` | 20 | 32 | 400 | the sentence the landing page is about |
+| `lead` | 18 | 20 | 400 | the paragraph that introduces a block |
+| `title` | 24 | 32 | 800 | the title of a page (`PageHeader`, a job), of a step of the landing page |
+| `heading` | 24 | 24 | 800 | a title on a small card (sign in), the heading of a legal section: it does not grow with the screen |
+| `section` | 20 | 20 | 800 | a section of a page (`SectionTitle level="page"`) |
+| `subsection` | 18 | 18 | 800 | a part of a panel or card, the title of a dialog (`SectionTitle`) |
+| `item` | 16 | 16 | 800 | the title of a card or of a row of a list |
+| `body` | 16 | 16 | - | the links of the top bar |
+| `small` | 14 | 14 | - | secondary text, most of the interface |
+| `small-strong` | 14 | 14 | 600 | the same, emphasised: a link, a message, a name |
+| `caption` | 12 | 12 | - | a hint, a count, a date |
+| `label` | 12 | 12 | 600 | the label of a field, a badge |
+| `eyebrow` (`styles.ts`) | 12 | 12 | 600, capitals | the small label above a group (`stickerText`: the same, in ink, on a sticker or a tab bar) |
 
 ## Color
 

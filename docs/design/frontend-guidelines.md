@@ -22,6 +22,7 @@ a color; a primitive never knows about jobs or resumes.
 
 ## 2. Tokens, not palette classes
 
+- Spacing and text styles are **roles on two scales**, guarded by tests: see "Design system rules" in `identity.md`.
 - Colors, fonts, radius and spacing are defined once in `@theme` with
   **semantic** names (`canvas`, `surface`, `ink`, `ink-muted`, `line`, `accent`,
   `accent-strong`, `info`, `success`, `warning`, `danger`), plus the
