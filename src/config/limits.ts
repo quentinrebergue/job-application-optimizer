@@ -12,10 +12,19 @@
 // characters, #185). The limits on a description (1,000: more would not fit on a one-page resume)
 // and on the number of entries are chosen so that a full library and a long offer fit.
 
+// A block of prose on a one-page resume (the description of an experience or a project, the profile paragraph under
+// the name): one number. The library, the forms, the AI prompt and what an offer's resume may use in their place all
+// read it, so they cannot drift apart. (The resume-renderer refuses any field over 5,000: a ceiling for safety, not
+// what a page holds.)
+const BLOCK_OF_TEXT = 1000
+
+const experiences = { title: 150, company: 100, location: 100, period: 50, description: BLOCK_OF_TEXT } as const
+const projects = { title: 150, description: BLOCK_OF_TEXT } as const
+
 export const LIMITS = {
   job: { title: 150, company: 100, location: 100, url: 2000, description: 12000 },
-  experiences: { title: 150, company: 100, location: 100, period: 50, description: 1000 },
-  projects: { title: 150, description: 1000 },
+  experiences,
+  projects,
   skills: { name: 150, category: 50 },
   education: { degree: 150, institution: 150, period: 50 },
   /** One keyword, and how many an entry or a job may have. */
@@ -24,9 +33,13 @@ export const LIMITS = {
   /** Hand-written LaTeX kept with an entry. */
   latexSnippet: 5000,
   /** The profile of the user, also the defaults of every resume (src/schemas/resume-profile.ts). */
-  profile: { full_name: 200, email: 320, linkedin: 300, phone: 50, address: 300, resume_title: 200, profile_text: 5000, ai_context: 5000 },
-  /** The resume of one job: its title, profile text and AI context have the profile's limits. */
-  resume: { entityDescription: 5000, items: 500, id: 100, optionKeys: 50, optionValue: 100 },
+  profile: { full_name: 200, email: 320, linkedin: 300, phone: 50, address: 300, resume_title: 200, profile_text: BLOCK_OF_TEXT, ai_context: 5000 },
+  /**
+   * The resume of one job: its title, profile text and AI context have the profile's limits. The description of an
+   * entry written for this job only is held to the same limit as the entry itself, the larger of the two kinds
+   * (the key is the id of an entry: the schema does not know its kind).
+   */
+  resume: { entityDescription: Math.max(experiences.description, projects.description), items: 500, id: 100, optionKeys: 50, optionValue: 100 },
 } as const
 
 /** A field allowed this many characters or more is a long text: the form shows a counter. */

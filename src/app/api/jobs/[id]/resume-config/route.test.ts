@@ -1,3 +1,4 @@
+import { LIMITS } from '@/config/limits'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 const getJob = vi.fn()
@@ -52,14 +53,14 @@ describe('PUT /api/jobs/[id]/resume-config (#201, #220)', () => {
   })
 
   it('refuses a text over its limit, naming the field', async () => {
-    const res = await put({ ...config, profile_text: 'a'.repeat(5001) })
+    const res = await put({ ...config, profile_text: 'a'.repeat(LIMITS.profile.profile_text + 1) })
     expect(res.status).toBe(400)
-    expect(await res.json()).toMatchObject({ error: 'Profile text is too long: 5,000 characters at most.' })
+    expect(await res.json()).toMatchObject({ error: `Profile text is too long: ${LIMITS.profile.profile_text.toLocaleString('en-US')} characters at most.` })
     expect(saveResumeConfig).not.toHaveBeenCalled()
   })
 
   it('refuses a custom description over its limit and too many ids', async () => {
-    expect((await put({ ...config, entity_description_overrides: { 'exp-1': 'a'.repeat(5001) } })).status).toBe(400)
+    expect((await put({ ...config, entity_description_overrides: { 'exp-1': 'a'.repeat(LIMITS.resume.entityDescription + 1) } })).status).toBe(400)
     expect((await put({ ...config, selected_entity_ids: Array(501).fill('x') })).status).toBe(400)
   })
 
