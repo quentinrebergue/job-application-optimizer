@@ -1,5 +1,6 @@
 'use client'
 
+import { SectionTitle } from '@/components/ui/SectionTitle'
 import { useEffect, useState } from 'react'
 import { formatDate } from '@/lib/format'
 import { libraryHref } from '@/lib/entity-filter'
@@ -63,7 +64,7 @@ function usePdf(jobId: string) {
 }
 
 /** The floating actions share one size. */
-const ACTION = 'h-11 px-3 text-sm sm:h-12 sm:px-5 sm:text-base'
+const ACTION = 'h-11 px-control text-small sm:h-12 sm:px-5 sm:text-body'
 
 /**
  * "Resume for this job": the header, the library by type, the template; at the
@@ -78,7 +79,7 @@ export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClea
   const { entities, config, drafts, defaults } = panel
   useEffect(() => { onSavingChange?.(panel.saving) }, [panel.saving, onSavingChange])
 
-  if (panel.loading) return <p className="text-sm text-ink-muted">Loading your library…</p>
+  if (panel.loading) return <p className="text-small text-ink-muted">Loading your library…</p>
 
   const groups = groupEntities(entities, config, aiAnalysis)
   const libraryTags = [...new Set((entities.filter((e) => e.type === 'skills') as SkillMeta[]).flatMap((s) => s.tags))].sort()
@@ -103,7 +104,7 @@ export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClea
   }
 
   return (
-    <div className="flex flex-col gap-10">
+    <div className="flex flex-col gap-section">
       {panel.error && <Alert>{panel.error}</Alert>}
 
       <ContentFields
@@ -125,14 +126,14 @@ export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClea
       />
 
       {entities.length === 0 && (
-        <p className="text-sm text-ink-muted">
+        <p className="text-small text-ink-muted">
           Your library is empty.{' '}
           <Link href={libraryHref('experiences', { creating: 'experiences' })} className="font-semibold text-accent-strong underline underline-offset-4">Add an entry</Link>.
         </p>
       )}
 
-      <section aria-labelledby="section-template" className="flex flex-col gap-4">
-        <h4 id="section-template" className="text-lg font-extrabold">Template</h4>
+      <section aria-labelledby="section-template" className="flex flex-col gap-heading">
+        <SectionTitle as="h4" id="section-template">Template</SectionTitle>
         <TemplatePicker
           templates={templates}
           value={templateChoice}
@@ -147,7 +148,7 @@ export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClea
         {ai.error && <Alert className="self-stretch">Ranking failed: {ai.error}</Alert>}
         {pdf.error && <Alert className="self-stretch">{pdf.error}</Alert>}
         {/* Three actions of the same size; shorter labels on phones so they fit on one row. */}
-        <div className="flex flex-wrap justify-end gap-2 sm:gap-3">
+        <div className="flex flex-wrap justify-end gap-2 sm:gap-inline">
           <Button variant="secondary" onClick={() => setConfirmReset(true)} aria-label="Reset to defaults" className={ACTION}>
             <span className="sm:hidden">Reset</span>
             <span className="hidden sm:inline">Reset to defaults</span>

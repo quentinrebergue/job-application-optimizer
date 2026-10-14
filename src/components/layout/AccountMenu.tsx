@@ -21,7 +21,7 @@ export function AccountMenu({ email }: { email: string }) {
       <Menu.Trigger
         aria-label={`Account (${email})`}
         className={cn(
-          'flex size-9 items-center justify-center rounded-control border-2 border-ink bg-surface text-base font-extrabold text-ink',
+          'flex size-9 items-center justify-center rounded-control border-2 border-ink bg-surface text-body font-extrabold text-ink',
           pressable,
           'data-popup-open:translate-x-press data-popup-open:translate-y-press data-popup-open:shadow-none',
           focusRing,
@@ -32,14 +32,14 @@ export function AccountMenu({ email }: { email: string }) {
       <Menu.Portal>
         <Menu.Positioner side="bottom" align="end" sideOffset={8} className="isolate z-50">
           <Menu.Popup className="min-w-56 max-w-[calc(100vw-2rem)] rounded-control border-2 border-ink bg-surface p-1 text-ink shadow-hard outline-none">
-            <div className="border-b-2 border-ink px-3 pb-2 pt-1.5">
-              <p className="text-xs text-ink-muted">Signed in as</p>
-              <p className="truncate text-sm font-semibold" title={email}>{email}</p>
+            <div className="border-b-2 border-ink px-control pb-2 pt-1.5">
+              <p className="text-caption text-ink-muted">Signed in as</p>
+              <p className="text-small-strong truncate" title={email}>{email}</p>
             </div>
             <Menu.LinkItem
               render={<Link href="/account" />}
               className={cn(
-                'mt-1 flex cursor-default items-center rounded-control border-2 border-transparent px-3 py-1.5 text-sm outline-none',
+                'mt-1 flex cursor-default items-center rounded-control border-2 border-transparent px-control py-1.5 text-small outline-none',
                 'data-highlighted:border-ink data-highlighted:bg-accent',
               )}
             >
@@ -49,7 +49,7 @@ export function AccountMenu({ email }: { email: string }) {
               disabled={pending}
               onClick={() => startTransition(() => logout())}
               className={cn(
-                'flex cursor-default items-center rounded-control border-2 border-transparent px-3 py-1.5 text-sm outline-none',
+                'flex cursor-default items-center rounded-control border-2 border-transparent px-control py-1.5 text-small outline-none',
                 'data-highlighted:border-ink data-highlighted:bg-accent data-disabled:opacity-50',
               )}
             >

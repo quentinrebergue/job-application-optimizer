@@ -1,4 +1,6 @@
 import { MAX_BODY_BYTES } from '@/config/limits'
+import type { EntityMeta } from '@/types'
+import type { ResumeProfile } from '@/schemas/resume-profile'
 
 // What the page that imports a resume needs apart from the screen (#268): the checks made before the PDF
 // leaves the browser, the call to the API, and the sentences that say what happened. Pure and tested; the
@@ -18,8 +20,14 @@ export interface KindSummary {
 /** The answer of POST /api/import/resume. */
 export interface ImportResult {
   summary: Record<Kind, KindSummary>
+  /** The entries this import created, to be checked and fixed in the dialog (#281). */
+  entries: EntityMeta[]
+  /** Entries of the library that the resume holds again (not added twice). */
+  existing: EntityMeta[]
   /** The fields of the profile the import filled (only empty ones are). */
   profile?: string[]
+  /** Fields where the profile holds something else than the resume says: field -> what the resume says. */
+  profileFound?: Record<string, string>
   dropped: number
   truncated: boolean
 }
@@ -31,8 +39,14 @@ const NOUN: Record<Kind, [one: string, many: string]> = {
   education: ['degree', 'degrees'],
   skills: ['skill', 'skills'],
 }
-const PROFILE_LABEL: Record<string, string> = {
-  full_name: 'name', email: 'email', phone: 'phone', linkedin: 'LinkedIn', address: 'address', resume_title: 'title', profile_text: 'summary',
+const PROFILE_ORDER = ['full_name', 'email', 'phone', 'linkedin', 'address', 'resume_title', 'profile_text'] as const
+type ProfileKey = (typeof PROFILE_ORDER)[number]
+const PROFILE_LABEL: Record<ProfileKey, string> = {
+  full_name: 'Name', email: 'Email', phone: 'Phone', linkedin: 'LinkedIn', address: 'Address', resume_title: 'Resume title', profile_text: 'Profile',
+}
+/** The profile as lines to read, in the order of the form; a field left empty is null. */
+export function profileRows(profile: ResumeProfile): { key: ProfileKey; label: string; value: string | null }[] {
+  return PROFILE_ORDER.map((field) => ({ key: field, label: PROFILE_LABEL[field], value: profile[field]?.trim() ? profile[field] : null }))
 }
 const count = (n: number, kind: Kind) => `${n} ${NOUN[kind][n === 1 ? 0 : 1]}`
 
@@ -52,6 +66,20 @@ export interface Report {
   notes: string[]
 }
 
+/** The entries created, one group per kind in the order of the library, empty kinds left out. */
+export function groupByKind(entries: EntityMeta[]): { kind: Kind; entries: EntityMeta[] }[] {
+  return KINDS.map((kind) => ({ kind, entries: entries.filter((e) => e.type === kind) })).filter((g) => g.entries.length > 0)
+}
+
+/** The heading of a group: "2 experiences". */
+export const groupTitle = (kind: Kind, n: number) => count(n, kind)
+
+/** The list after an entry was deleted. */
+export const withoutEntry = (entries: EntityMeta[], id: string) => entries.filter((e) => e.id !== id)
+
+/** The list after an entry was saved: the entry as the server last gave it replaces the one shown. */
+export const withEntry = (entries: EntityMeta[], saved: EntityMeta) => entries.map((e) => (e.id === saved.id ? { ...e, ...saved } : e))
+
 export function report(result: ImportResult): Report {
   const added = KINDS.filter((k) => result.summary[k].added > 0).map((k) => count(result.summary[k].added, k))
   const total = KINDS.reduce((sum, k) => sum + result.summary[k].added, 0)
@@ -61,17 +89,12 @@ export function report(result: ImportResult): Report {
       : `Added ${added.length > 1 ? `${added.slice(0, -1).join(', ')} and ${added.at(-1)}` : added[0]}.`
 
   const notes: string[] = []
-  const filled = (result.profile ?? []).map((field) => PROFILE_LABEL[field] ?? field)
-  if (filled.length > 0) notes.push(`Your profile: ${filled.length > 1 ? `${filled.slice(0, -1).join(', ')} and ${filled.at(-1)}` : filled[0]} filled in.`)
-  const duplicates = KINDS.reduce((sum, k) => sum + result.summary[k].duplicates, 0)
-  if (duplicates > 0) notes.push(`${duplicates} already in your library, not added again.`)
   for (const k of KINDS) {
     const over = result.summary[k].overCap
     if (over > 0) notes.push(`Your library is full for ${NOUN[k][1]}: ${over} not added. Delete some to make room.`)
   }
   // `dropped` (what the checks refused: an entry the text does not hold, a bullet taken for a job) is not said: it is
   // mostly noise of the model, the user cannot act on a count, and what really is missing is seen in the library.
-  if (result.truncated) notes.push('Only the first page of the PDF was read.')
   return { headline, total, notes }
 }
 

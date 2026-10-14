@@ -1,5 +1,6 @@
 'use client'
 
+import { SectionTitle } from '@/components/ui/SectionTitle'
 import { useState } from 'react'
 import type { EntityMeta, ResumeConfig, SkillMeta } from '@/types'
 import type { AIAnalysisResult } from '@/types/job'
@@ -55,9 +56,9 @@ export function EntitySection({ type, group, panel, ai, libraryTags }: Props) {
   const canReorder = orderable && included.length > 1
 
   return (
-    <section aria-labelledby={`section-${type}`} className="flex flex-col gap-3">
+    <section aria-labelledby={`section-${type}`} className="flex flex-col gap-heading">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h4 id={`section-${type}`} className="text-lg font-extrabold">{TYPE_LABELS[type]}</h4>
+        <SectionTitle as="h4" id={`section-${type}`}>{TYPE_LABELS[type]}</SectionTitle>
         <div className="flex flex-wrap gap-2">
           {reordering && hasScores && (
             <Button variant="secondary" size="sm" onClick={() => update((c) => applyAiOrder(c, entities, type))}>
@@ -77,7 +78,7 @@ export function EntitySection({ type, group, panel, ai, libraryTags }: Props) {
           onMove={(id, direction) => update((c) => (orderable ? moveEntity(c, type, id, direction) : c))}
         />
       ) : (
-      <ul className="flex flex-col gap-3">
+      <ul className="flex flex-col gap-row">
         {group.map((entity) => {
           const state = rowState(entity, config, expanded, ai)
           const editor = editorFor(entity, panel, ai, libraryTags)

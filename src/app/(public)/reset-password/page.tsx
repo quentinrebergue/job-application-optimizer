@@ -22,10 +22,10 @@ export default async function ResetPasswordPage({ searchParams }: PageProps<'/re
 
   const { title, text } = REFUSED[status === 'valid' ? 'invalid' : status]
   return (
-    <div className="flex flex-1 items-center justify-center px-4 py-12">
-      <Card className="flex w-full max-w-sm flex-col gap-4 p-6">
-        <h1 className="text-2xl font-extrabold tracking-tight">{title}</h1>
-        <p className="text-sm">{text}</p>
+    <div className="flex flex-1 items-center justify-center px-gutter py-centered">
+      <Card className="flex w-full max-w-sm flex-col gap-stack p-panel">
+        <h1 className="text-heading">{title}</h1>
+        <p className="text-small">{text}</p>
         <Link href="/forgot-password" className={buttonClasses({ className: 'self-start' })}>Ask for a new link</Link>
       </Card>
     </div>

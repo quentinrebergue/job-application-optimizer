@@ -35,7 +35,7 @@ export function EntityForm({ type, saving, onSave, onCancel }: Props) {
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="flex flex-1 flex-col gap-4">
+    <form onSubmit={handleSubmit} noValidate className="flex flex-1 flex-col gap-field">
       {failure && <Alert>{failure}</Alert>}
       <EntityFields
         type={type}
@@ -46,7 +46,7 @@ export function EntityForm({ type, saving, onSave, onCancel }: Props) {
           setErrors((e) => ({ ...e, [key]: '' }))
         }}
       />
-      <div className="mt-auto flex items-center gap-3 pt-2">
+      <div className="mt-auto flex items-center gap-inline pt-actions">
         <Button type="submit" disabled={saving}>{saving ? 'Saving…' : 'Save'}</Button>
         {onCancel && <Button variant="secondary" onClick={onCancel}>Cancel</Button>}
       </div>

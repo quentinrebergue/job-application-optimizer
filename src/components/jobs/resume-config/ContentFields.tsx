@@ -1,5 +1,6 @@
 'use client'
 
+import { SectionTitle } from '@/components/ui/SectionTitle'
 import { Button } from '@/components/ui/Button'
 import { Field } from '@/components/ui/Field'
 import { Input, Textarea } from '@/components/ui/Input'
@@ -32,9 +33,9 @@ export function ContentFields({ drafts, defaults, saved, onChange }: Props) {
     ) : null
 
   return (
-    <section aria-labelledby="section-header" className="flex flex-col gap-4">
-      <h4 id="section-header" className="text-lg font-extrabold">Header</h4>
-      <div className="flex flex-col gap-1">
+    <section aria-labelledby="section-header" className="flex flex-col gap-heading">
+      <SectionTitle as="h4" id="section-header">Header</SectionTitle>
+      <div className="flex flex-col gap-label">
         <Field label="Resume title" hint={hint('resume_title', 'Shown under your name.')}>
           <Input
             value={drafts.resume_title}
@@ -45,7 +46,7 @@ export function ContentFields({ drafts, defaults, saved, onChange }: Props) {
         </Field>
         {useDefault('resume_title')}
       </div>
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-label">
         <Field
           label="Profile"
           hint={hint('profile_text', 'The short paragraph at the top of the resume.')}

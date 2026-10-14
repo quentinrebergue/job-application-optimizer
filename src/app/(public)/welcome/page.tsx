@@ -43,13 +43,13 @@ export default function WelcomePage() {
             <span className="inline-block">One job.</span> <span className="inline-block">One resume.</span>{' '}
             <span className="mt-2 inline-block -rotate-1 rounded-control border-2 border-ink bg-accent px-3 shadow-hard md:mt-3">Three clicks.</span>
           </h1>
-          <p className="mt-5 max-w-xl text-lg text-ink-muted sm:mt-6 sm:text-xl">
+          <p className="mt-5 max-w-measure text-lg text-ink-muted sm:mt-6 sm:text-xl">
             Import a job offer, let the AI pick what fits best from your library, and download the PDF of a resume tailored to it.
           </p>
           <div className="mt-8">
             <Link href="/signup" className={buttonClasses({ className: bigButton })}>Sign up</Link>
           </div>
-          <p className="mb-6 mt-6 max-w-xl text-sm text-ink/65 md:text-base">
+          <p className="mb-6 mt-6 max-w-measure text-sm text-ink/65 md:text-base">
             <strong className="font-extrabold text-ink">Your data stays yours:</strong> {DATA_SENTENCE}
           </p>
         </div>
@@ -75,7 +75,7 @@ export default function WelcomePage() {
           <div className="flex flex-col items-center gap-8 rounded-control border-2 border-ink bg-canvas p-8 text-center shadow-hard md:p-16">
             <div>
               <h2 id="start-title" className="mx-auto max-w-3xl text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">Start with your next application</h2>
-              <p className="mx-auto mt-4 max-w-xl text-lg text-ink-muted">
+              <p className="mx-auto mt-4 max-w-measure text-lg text-ink-muted">
                 Fill your library once. After that, every job offer is three clicks away from a tailored resume.
               </p>
             </div>

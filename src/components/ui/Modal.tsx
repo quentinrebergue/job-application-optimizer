@@ -41,8 +41,8 @@ export function Modal({ open, onClose, title, children, className }: Props) {
         className,
       )}
     >
-      <div className="flex shrink-0 items-center justify-between gap-4 border-b-2 border-ink px-5 py-3">
-        <h2 id={titleId} className="font-extrabold">{title}</h2>
+      <div className="flex shrink-0 items-center justify-between gap-inline border-b-2 border-ink px-dialog py-bar">
+        <h2 id={titleId} className="text-subsection">{title}</h2>
         <button
           type="button"
           onClick={onClose}

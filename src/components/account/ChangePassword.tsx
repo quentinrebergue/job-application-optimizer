@@ -41,7 +41,7 @@ export function ChangePassword() {
 
   return (
     <form
-      className="flex w-full max-w-sm flex-col items-start gap-3"
+      className="flex w-full max-w-sm flex-col items-start gap-field"
       onSubmit={(e) => {
         e.preventDefault()
         if (current && next && !pending) submit()

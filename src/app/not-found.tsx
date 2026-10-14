@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { StatusPage } from '@/components/layout/StatusPage'
 import { Wordmark } from '@/components/layout/Wordmark'
 import { buttonClasses } from '@/components/ui/Button'
-import { pageWidth } from '@/components/ui/styles'
+import { pageFrame } from '@/components/ui/styles'
 import { cn } from '@/lib/cn'
 
 export const metadata: Metadata = { title: 'Page not found' }
@@ -15,7 +15,7 @@ export default function NotFound() {
   return (
     <>
       <header className="border-b-2 border-ink">
-        <div className={cn(pageWidth, 'flex h-16 items-center px-3 sm:px-4 md:px-8')}>
+        <div className={cn(pageFrame, 'flex h-16 items-center')}>
           <Wordmark />
         </div>
       </header>

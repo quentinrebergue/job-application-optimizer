@@ -40,6 +40,54 @@ recipe we adapt.
 Dense screens (the resume configuration panel) keep their content readable:
 thick strokes frame the blocks and the controls, not every row.
 
+## Spacing
+
+Spacing has **roles**, declared once in `globals.css` (`--spacing-*`), so that every gap of one role has one value
+(#285). A role may differ between a phone and a computer (the overrides from 768 px), never between two places of
+the same view. Use the role utilities (`gap-field`, `p-panel`, `mt-actions`...), not a number, wherever a role fits.
+
+| Role | Phone | Computer | Where |
+|---|---|---|---|
+| `label` | 4 px | 4 px | a label and its control, a control and its hint (`Field`) |
+| `field` | 16 px | 16 px | between the fields of a form |
+| `stack` | 16 px | 16 px | between the blocks inside one section, card or dialog; between the cards of a grid |
+| `actions` | 8 px | 8 px | extra room above the buttons that end a form or a card |
+| `inline` | 12 px | 12 px | between items side by side on one row: buttons, a title and its badge |
+| `heading` | 12 px | 16 px | a section title and what it introduces |
+| `section` | 24 px | 32 px | between the sections of a page, a panel or a dialog; under a page header |
+| `panel` | 16 px | 24 px | inside a large panel (a section of a page, a job's offer or resume) |
+| `card` | 16 px | 16 px | inside a card |
+| `row` | 12 px | 12 px | inside a dense row, between the rows of a list |
+| `dialog` | 16 px | 20 px | inside a dialog or a drawer |
+| `gutter` | 16 px | 32 px | the sides of every page, and of the header, the banner and the footer |
+| `control` | 12 px | 12 px | the sides inside a field, a menu, an alert or a tab |
+
+Raw values stay for what has no role: an icon beside its text, a row of chips, the size of a button.
+
+**A role name must not be the value of another utility.** `--spacing-block` once made Tailwind read `inline-block`
+as `inline-size: 1rem` and crushed the landing page: `src/lib/design-tokens.test.ts` fails on such a collision.
+
+## Text styles
+
+A text style is one class, `text-<role>`: size, line height, weight and tracking together; the colour stays apart
+(`text-ink`, `text-ink-muted`). Three weights only: 400 text, 600 labels, 800 titles.
+
+| Role | Size | Weight | Where |
+|---|---|---|---|
+| `title` | 24 px (30 px from 768 px) | 800 | the title of a page (`PageHeader`, a job) |
+| `heading` | 24 px | 800 | a title on a small card (sign in), a big figure |
+| `section` | 20 px | 800 | a section of a page (`SectionTitle level="page"`) |
+| `subsection` | 18 px | 800 | a part of a panel or a card, the title of a dialog (`SectionTitle`) |
+| `item` | 16 px | 800 | the title of a card or of a row of a list |
+| `small` | 14 px | 400 | secondary text, most of the interface |
+| `small-strong` | 14 px | 600 | the same, emphasised: a link, a message, a name |
+| `caption` | 12 px | 400 | a hint, a count, a date |
+| `label` | 12 px | 600 | the label of a field, a badge |
+| `eyebrow` (styles.ts) | 12 px | 600, capitals | the small label above a group |
+
+`small` and `caption` carry no weight, so an explicit `font-normal` or `font-semibold` next to them always wins. The
+landing page keeps its own large, fluid sizes.
+
 ## Color
 
 Each colour has a role. Colour never decorates.

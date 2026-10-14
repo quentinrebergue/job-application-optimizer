@@ -45,10 +45,10 @@ export function AuthForm({ mode, returnTo, query }: AuthFormProps) {
   const [state, action, pending] = useActionState(config.action, undefined)
 
   return (
-    <div className="flex flex-1 items-center justify-center px-4 py-12">
-      <Card className="w-full max-w-sm p-6">
-        <h1 className="mb-6 text-2xl font-extrabold tracking-tight">{config.title}</h1>
-        <form action={action} className="flex flex-col gap-4">
+    <div className="flex flex-1 items-center justify-center px-gutter py-centered">
+      <Card className="w-full max-w-sm p-panel">
+        <h1 className="text-heading mb-section">{config.title}</h1>
+        <form action={action} className="flex flex-col gap-field">
           <input type="hidden" name="returnTo" value={returnTo} />
           <Field label="Email" error={state?.errors?.email?.[0]}>
             {/* React 19 resets the form after the action: the email comes back in the state (#68). */}
@@ -65,18 +65,18 @@ export function AuthForm({ mode, returnTo, query }: AuthFormProps) {
             <Input name="password" type="password" autoComplete={config.passwordAutoComplete} required />
           </Field>
           {mode === 'login' && (
-            <Link href="/forgot-password" className="-mt-2 self-end text-sm font-semibold text-accent-strong underline underline-offset-4">
+            <Link href="/forgot-password" className="text-small-strong -mt-actions self-end text-accent-strong underline underline-offset-4">
               Forgot password?
             </Link>
           )}
           {state?.message && (
             <Alert>{state.message}</Alert>
           )}
-          <Button type="submit" disabled={pending} className="mt-2 w-full">
+          <Button type="submit" disabled={pending} className="mt-actions w-full">
             {pending ? config.pending : config.submit}
           </Button>
         </form>
-        <p className="mt-6 text-sm text-ink-muted">
+        <p className="mt-section text-small text-ink-muted">
           {config.switchText}{' '}
           <Link
             href={query ? `${config.switchPath}?${query}` : config.switchPath}

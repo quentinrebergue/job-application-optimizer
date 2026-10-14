@@ -34,12 +34,12 @@ export function EntityCard({ entity, href, onOpen }: Props) {
       }}
       className={cardClasses({ interactive: true, className: 'flex h-full flex-col gap-1' })}
     >
-      <span title={title} className="line-clamp-2 font-extrabold leading-tight">{title}</span>
-      {subtitle && <p className="truncate text-sm text-ink-muted">{subtitle}</p>}
+      <span title={title} className="text-item line-clamp-2">{title}</span>
+      {subtitle && <p className="truncate text-small text-ink-muted">{subtitle}</p>}
       {chips.length > 0 && (
         <div className="mt-auto flex flex-wrap items-center gap-1.5 pt-2">
           {chips.slice(0, MAX_TAGS).map((chip) => <Badge key={chip} label={chip} variant="muted" />)}
-          {extra > 0 && <span className="text-xs tabular-nums text-ink-muted">+{extra}</span>}
+          {extra > 0 && <span className="text-caption tabular-nums text-ink-muted">+{extra}</span>}
         </div>
       )}
     </a>

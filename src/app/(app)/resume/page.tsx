@@ -6,6 +6,7 @@ import { LibraryPanel } from '@/components/entities/LibraryPanel'
 import { ImportResume } from '@/components/entities/ImportResume'
 import { verifySession } from '@/lib/auth/dal'
 import { page } from '@/components/ui/styles'
+import { SectionTitle } from '@/components/ui/SectionTitle'
 
 export const dynamic = 'force-dynamic'
 
@@ -13,8 +14,8 @@ export const metadata = { title: 'Resume' }
 
 function Section({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
   return (
-    <section aria-labelledby={id} className="relative rounded-control border-2 border-ink bg-panel p-4 shadow-hard md:p-6">
-      <h2 id={id} className="mb-4 text-xl font-extrabold tracking-tight">{title}</h2>
+    <section aria-labelledby={id} className="relative rounded-control border-2 border-ink bg-panel p-panel shadow-hard">
+      <SectionTitle id={id} level="page" className="mb-heading">{title}</SectionTitle>
       {children}
     </section>
   )
@@ -31,7 +32,7 @@ export default async function ResumePage() {
         <ImportResume />
       </PageHeader>
 
-      <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-section">
         <Section id="profile" title="Profile">
           <ResumeDefaultsEditor />
         </Section>

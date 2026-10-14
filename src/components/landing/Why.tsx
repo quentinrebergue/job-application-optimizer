@@ -36,7 +36,7 @@ export function Why() {
     <section aria-labelledby="why-title" className="border-t-2 border-ink bg-panel">
       <div className={cn(page, 'py-12 md:py-16')}>
         <h2 id="why-title" className="text-4xl font-extrabold tracking-tight sm:text-5xl">Why FastResume?</h2>
-        <p className="mt-6 max-w-4xl text-xl font-normal leading-[1.9] tracking-tight sm:text-2xl sm:leading-[1.8] md:text-3xl md:leading-[1.7]">
+        <p className="mt-6 text-xl font-normal leading-[1.9] tracking-tight sm:text-2xl sm:leading-[1.8] md:text-3xl md:leading-[1.7]">
           A recruiter&apos;s first look at a resume lasts <Figure note={1} tilt="-rotate-2">7.4 s</Figure>. Tailored applications convert{' '}
           <Figure note={2} tilt="rotate-1">56% better</Figure>. FastResume makes a tailored resume for every offer in three clicks, and keeps track of your job offers.
         </p>
@@ -54,7 +54,7 @@ export function Sources() {
   return (
     <section aria-labelledby="sources-title" className="border-t-2 border-line pt-6">
       <h2 id="sources-title" className="text-sm font-extrabold uppercase tracking-wider text-ink-muted">Sources</h2>
-      <ol className="mt-3 flex max-w-4xl list-decimal flex-col gap-2 pl-5 text-sm text-ink-muted marker:font-extrabold">
+      <ol className="mt-3 flex list-decimal flex-col gap-2 pl-5 text-sm text-ink-muted marker:font-extrabold">
         <li id="why-source-1" className="scroll-mt-24 pl-1">
           Ladders eye-tracking study, 2018: recruiters&apos; first screening of a resume lasted 7.4 seconds on average.{' '}
           <a href={LADDERS_URL} className="font-semibold text-accent-strong underline underline-offset-4">Report by HR Dive</a>.

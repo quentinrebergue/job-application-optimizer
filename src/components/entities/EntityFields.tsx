@@ -17,7 +17,7 @@ interface Props {
 /** The fields of one kind of entry, from ENTITY_FIELDS, in a two-column grid (one column on a phone, except the short fields: a place and a period side by side). */
 export function EntityFields({ type, values, errors = {}, onChange }: Props) {
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-2 gap-field">
       {ENTITY_FIELDS[type].map((field) => {
         const value = values[field.key] ?? ''
         // A long text is never cut while typing or pasting: it counts, and says when it is too long.

@@ -7,8 +7,12 @@ const twMerge = extendTailwindMerge({
   extend: {
     theme: {
       radius: ['control'],
+      container: ['page', 'measure'],
+      // The text styles of globals.css: `text-small` replaces `text-caption`, and neither replaces a colour like `text-ink`.
+      text: ['body', 'title', 'heading', 'section', 'subsection', 'item', 'small', 'small-strong', 'caption', 'label'],
       shadow: ['hard'],
-      spacing: ['press'],
+      // The spacing roles of globals.css: `p-panel` replaces `p-card`, `gap-field` replaces `gap-4`.
+      spacing: ['press', 'label', 'field', 'stack', 'actions', 'inline', 'heading', 'section', 'panel', 'card', 'row', 'dialog', 'gutter', 'control', 'button', 'bar', 'footer', 'centered', 'nav', 'links', 'indent'],
     },
   },
 })

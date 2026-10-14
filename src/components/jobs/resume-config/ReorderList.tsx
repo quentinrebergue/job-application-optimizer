@@ -17,8 +17,8 @@ export function ReorderList({ items, onMove }: Props) {
       {items.map((entity, i) => {
         const name = entityLabel(entity)
         return (
-          <li key={entity.id} className="flex items-center gap-3 rounded-control border-2 border-ink bg-surface p-2 pl-3">
-            <span className="w-5 shrink-0 text-sm font-semibold tabular-nums text-ink-muted">{i + 1}</span>
+          <li key={entity.id} className="flex items-center gap-inline rounded-control border-2 border-ink bg-surface p-2 pl-row">
+            <span className="text-small-strong w-5 shrink-0 tabular-nums text-ink-muted">{i + 1}</span>
             <span className="min-w-0 flex-1 truncate font-semibold">{name}</span>
             <Button variant="secondary" size="sm" aria-label={`Move ${name} up`} onClick={() => onMove(entity.id, 'up')} disabled={i === 0}>
               ↑ Up

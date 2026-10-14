@@ -21,7 +21,7 @@ import { ResumeProfileSchema } from '@/schemas/resume-profile'
 //   the limit of imports -> the text of the PDF (pdf-text) -> the name, email, phone, links and date of birth taken
 //   out of it -> the limits of the AI -> the AI turns
 //   the text into entries -> every entry is checked against the text -> what is new is saved, and the profile is
-//   filled where it is empty.
+//   filled where it is empty. The answer holds the entries created, so the user can check and fix them (#281).
 // The file is never written to disk, and neither the file nor its text is kept or logged: they are
 // personal data. Only the entries the user can see and delete in the library are saved.
 
@@ -98,10 +98,10 @@ export async function POST(request: Request) {
       return reply('No experience, project, education or skill could be read in this resume.', 422, 'nothing_found')
     }
 
-    const summary = await saveImportedEntries(userId, entries)
+    const { summary, created, existing } = await saveImportedEntries(userId, entries)
     // The profile is filled only where it is empty: what the user typed stays.
-    const profileFilled = await saveImportedProfile(userId, profile)
-    return Response.json({ summary, profile: profileFilled, dropped, truncated: read.truncated })
+    const { filled: profileFilled, different: profileFound } = await saveImportedProfile(userId, profile)
+    return Response.json({ summary, entries: created, existing, profile: profileFilled, profileFound, dropped, truncated: read.truncated })
   } catch (error) {
     // Never the text, the file or an error message that could carry them: what happened, and nothing else.
     console.error('resume import failed', error instanceof Error ? error.name : 'unknown error')

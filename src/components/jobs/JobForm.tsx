@@ -67,10 +67,10 @@ export function JobForm({ initial, saving, onSave, onCancel }: Props) {
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
+    <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-field">
       {error && <Alert>{error}</Alert>}
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-field sm:grid-cols-2">
         <Field label="Job title" error={missing && !values.title.trim() ? 'Enter the job title.' : undefined}>
           <Input value={values.title} onChange={(e) => set('title', e.target.value)} maxLength={LIMITS.job.title} placeholder="Software Engineer" required />
         </Field>
@@ -79,7 +79,7 @@ export function JobForm({ initial, saving, onSave, onCancel }: Props) {
         </Field>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-field sm:grid-cols-2">
         <Field label="Location">
           <Input value={values.location} onChange={(e) => set('location', e.target.value)} maxLength={LIMITS.job.location} placeholder="Paris, France" />
         </Field>
@@ -105,7 +105,7 @@ export function JobForm({ initial, saving, onSave, onCancel }: Props) {
         <Textarea value={values.description} onChange={(e) => set('description', e.target.value)} rows={8} className="resize-y" />
       </Field>
 
-      <div className="flex items-center gap-3 pt-2">
+      <div className="flex items-center gap-inline pt-actions">
         <Button type="submit" disabled={saving}>{saving ? 'Saving…' : 'Save'}</Button>
         {onCancel && <Button variant="secondary" onClick={onCancel}>Cancel</Button>}
       </div>

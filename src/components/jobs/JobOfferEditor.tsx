@@ -25,11 +25,11 @@ export function JobOfferEditor({ job, onSaved, onDelete, deleting, onSaveStateCh
   useEffect(() => { onSaveStateChange?.(state) }, [state, onSaveStateChange])
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-field">
       {failure && <Alert>Offer not saved: {failure}</Alert>}
 
       {/* One field per row in the narrow desktop column, two side by side elsewhere. */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+      <div className="grid gap-field sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
         <Field label="Job title" error={errors.title}>
           <Input value={drafts.title} onChange={(e) => edit('title', e.target.value)} maxLength={LIMITS.job.title} required />
         </Field>
@@ -44,7 +44,7 @@ export function JobOfferEditor({ job, onSaved, onDelete, deleting, onSaveStateCh
         </Field>
       </div>
       {drafts.url && (
-        <a href={drafts.url} target="_blank" rel="noreferrer" className="self-start text-sm font-semibold text-accent-strong underline underline-offset-4">
+        <a href={drafts.url} target="_blank" rel="noreferrer" className="text-small-strong self-start text-accent-strong underline underline-offset-4">
           Open the offer
         </a>
       )}
@@ -58,7 +58,7 @@ export function JobOfferEditor({ job, onSaved, onDelete, deleting, onSaveStateCh
         <Textarea value={drafts.description} onChange={(e) => edit('description', e.target.value)} autoGrow />
       </Field>
 
-      <div className="mt-2 flex justify-end">
+      <div className="mt-actions flex justify-end">
         <Button variant="danger" size="sm" onClick={onDelete} disabled={deleting}>
           {deleting ? 'Deleting…' : 'Delete job'}
         </Button>

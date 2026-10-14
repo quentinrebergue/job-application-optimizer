@@ -36,13 +36,13 @@ export function Field({ label, hint, error, count, className, children }: FieldP
 
   return (
     <FieldContext.Provider value={{ id, describedBy: message ? messageId : undefined, invalid: Boolean(error) }}>
-      <div className={cn('flex flex-col gap-1', className)}>
-        <label htmlFor={id} className="text-xs font-semibold text-ink">
+      <div className={cn('flex flex-col gap-label', className)}>
+        <label htmlFor={id} className="text-label text-ink">
           {label}
         </label>
         {children}
         {(message || count) && (
-          <div className="flex items-start justify-between gap-3 text-xs">
+          <div className="flex items-start justify-between gap-inline text-caption">
             {message ? (
               <p id={messageId} role={error ? 'alert' : undefined} className={error ? 'text-danger' : 'text-ink-muted'}>
                 {message}

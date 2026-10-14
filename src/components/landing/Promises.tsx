@@ -6,7 +6,7 @@ export function Promises() {
   return (
     <section aria-labelledby="promises-title">
       <h2 id="promises-title" className="text-4xl font-extrabold tracking-tight sm:text-5xl">What we stand for</h2>
-      <p className="mt-3 max-w-2xl text-lg text-ink-muted">What we promise, and what we will never do.</p>
+      <p className="mt-3 max-w-measure text-lg text-ink-muted">What we promise, and what we will never do.</p>
       <ul className="mt-8 grid grid-cols-2 gap-4 md:mt-10 md:grid-cols-6 md:gap-6">
         {PROMISES.map((promise, index) => (
           <li
