@@ -10,12 +10,25 @@ interface EntityRow {
   data: Record<string, unknown>
 }
 
+/**
+ * What an entry reads as when its document lacks a field. The forms save every field (an empty string when there is
+ * nothing), and the whole app reads them that way (a description, a period, a list of technologies): an entry saved
+ * without one (an import made before it wrote them all) must not crash the page that shows it.
+ */
+const MISSING: Record<EntityType, Record<string, unknown>> = {
+  experiences: { location: '', period: '', description: '' },
+  projects: { tech: [], description: '' },
+  skills: { level: 'intermediate' },
+  education: { period: '' },
+}
+
 function rowToEntityMeta(row: EntityRow): EntityMeta {
   return {
     id: row.id,
     type: row.type,
     tags: row.tags,
     latex_snippet: row.latex_snippet,
+    ...MISSING[row.type],
     ...row.data,
   } as EntityMeta
 }
