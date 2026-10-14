@@ -10,7 +10,7 @@ interface Props<T extends string> {
   value: T
   onChange: (value: T) => void
   /**
-   * `tab-bar`: the top edge of a card (only a bottom stroke).
+   * `tab-bar`: the top edge of a card or of a full-width panel (only a bottom stroke).
    * `standalone`: a bordered bar with a hard shadow, on its own.
    */
   variant?: 'tab-bar' | 'standalone'
