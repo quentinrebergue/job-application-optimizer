@@ -6,7 +6,7 @@ interface PageHeaderProps {
 
 export function PageHeader({ title, subtitle, children }: PageHeaderProps) {
   return (
-    <div className="mb-8 flex flex-col gap-4 border-b-2 border-ink pb-6 sm:flex-row sm:items-start sm:justify-between">
+    <div className={`mb-6 flex flex-col gap-3 border-b-2 border-ink pb-4 sm:flex-row sm:justify-between ${subtitle ? 'sm:items-start' : 'sm:items-center'}`}>
       <div>
         <h1 className="text-3xl font-extrabold tracking-tight text-ink">{title}</h1>
         {subtitle && <p className="mt-1 text-sm text-ink-muted">{subtitle}</p>}

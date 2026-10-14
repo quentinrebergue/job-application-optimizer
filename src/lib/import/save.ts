@@ -1,6 +1,6 @@
-import { createEntity, listEntities } from '@/lib/data'
+import { createEntity, getResumeProfile, listEntities, saveResumeProfile } from '@/lib/data'
 import { MAX_ENTRIES } from '@/config/limits'
-import { IMPORT_TYPES, type ImportedEntries } from '@/lib/ai/import-prompt'
+import { IMPORT_TYPES, PROFILE_FIELDS, type ImportedEntries, type ImportedProfile } from '@/lib/ai/import-prompt'
 import type { EntityType } from '@/types'
 
 // Puts the entries of an imported resume in the library (#267). An import adds, it never replaces or
@@ -56,4 +56,16 @@ export async function saveImportedEntries(userId: string, imported: ImportedEntr
     summary[type] = kind
   }
   return summary
+}
+
+/**
+ * Fills the resume profile with what the resume says of the person, only where the profile is empty: what the user
+ * typed is never overwritten. Returns the fields filled.
+ */
+export async function saveImportedProfile(userId: string, imported: ImportedProfile): Promise<string[]> {
+  const current = await getResumeProfile(userId)
+  const filled = PROFILE_FIELDS.filter((field) => imported[field] && current[field].trim() === '')
+  if (filled.length === 0) return []
+  await saveResumeProfile(userId, { ...current, ...Object.fromEntries(filled.map((field) => [field, imported[field]])) })
+  return filled
 }

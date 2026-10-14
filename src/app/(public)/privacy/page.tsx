@@ -1,5 +1,5 @@
 import { LegalPage, LegalSection } from '@/components/legal/LegalPage'
-import { aiPrivacy } from '@/components/legal/ai-privacy'
+import { aiPrivacy, importPrivacy } from '@/components/legal/ai-privacy'
 import { ACCOUNT_TOOLS, AI_ON_MISTRAL, AI_PROVIDER, CONTACT_EMAIL, HOST, PUBLISHER_NAME } from '@/config/legal'
 
 export const metadata = {
@@ -52,6 +52,7 @@ export default function PrivacyPage() {
 
       <LegalSection title="The AI">
         <p>{aiPrivacy().join(' ')}</p>
+        {importPrivacy().length > 0 && <p id="import">{importPrivacy().join(' ')}</p>}
         {AI_ON_MISTRAL && (
           <p>
             Mistral’s infrastructure providers and their countries are listed on its{' '}
@@ -62,7 +63,7 @@ export default function PrivacyPage() {
 
       <LegalSection title="Where your data lives, who can see it">
         <p>
-          Everything is stored on {HOST.name} (OVHcloud) servers in France, under European law (GDPR). Only you see your content, and the AI provider named above when you use the AI ranking. The
+          Everything is stored on {HOST.name} (OVHcloud) servers in France, under European law (GDPR). Only you see your content, and the AI provider named above when you use the AI ranking or import a resume. The
           maintainer can technically reach the database to run the service and does not read your content. A database backup is made
           every day and kept for 7 days, on the same infrastructure.
         </p>

@@ -52,8 +52,8 @@ function ProfileForm({ initial }: { initial: ResumeProfile }) {
     },
   })
 
-  const text = (field: ProfileField, label: string, extra: { placeholder?: string; hint?: string; type?: string; wide?: boolean } = {}) => (
-    <Field label={label} hint={extra.hint} error={errors[field]} className={extra.wide ? 'sm:col-span-2' : undefined}>
+  const text = (field: ProfileField, label: string, extra: { placeholder?: string; hint?: string; type?: string; span?: string } = {}) => (
+    <Field label={label} hint={extra.hint} error={errors[field]} className={extra.span}>
       <Input type={extra.type ?? 'text'} value={values[field]} onChange={(e) => edit(field, e.target.value)} maxLength={LIMITS.profile[field]} placeholder={extra.placeholder} />
     </Field>
   )
@@ -64,21 +64,22 @@ function ProfileForm({ initial }: { initial: ResumeProfile }) {
       <p aria-live="polite" className="absolute right-4 top-5 text-sm text-ink-muted md:right-6 md:top-7">{state === 'saving' ? 'Saving…' : ''}</p>
       {failure && <Alert>Profile not saved: {failure}</Alert>}
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        {text('full_name', 'Full name', { placeholder: 'Ada Lovelace' })}
-        {text('email', 'Email', { type: 'email', placeholder: 'ada@example.com' })}
-        {text('linkedin', 'LinkedIn', { placeholder: 'linkedin.com/in/ada' })}
-        {text('phone', 'Phone', { placeholder: '+33 6 00 00 00 00' })}
-        {text('address', 'Address', { placeholder: 'Paris, France', wide: true })}
-        {text('resume_title', 'Resume title', { placeholder: 'Graduate Software Engineer — Systems', hint: 'Shown under your name; a job can use its own.', wide: true })}
+      {/* Short fields side by side: three in a row on a wide screen, two on a tablet, one on a phone. */}
+      <div className="grid gap-x-4 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
+        {text('full_name', 'Full name', { placeholder: 'Alex Morgan' })}
+        {text('email', 'Email', { type: 'email', placeholder: 'alex.morgan@example.com' })}
+        {text('phone', 'Phone', { placeholder: '+00 000 000 000' })}
+        {text('linkedin', 'LinkedIn', { placeholder: 'linkedin.com/in/alex-morgan' })}
+        {text('address', 'Address', { placeholder: 'City, Country' })}
+        {text('resume_title', 'Resume title', { placeholder: 'Project Coordinator', hint: 'Shown under your name; a job can use its own.', span: 'sm:col-span-2 lg:col-span-3' })}
         <Field
           label="Profile"
           hint="The short paragraph at the top of the resume; a job can use its own."
           error={errors.profile_text}
           count={counterFor(values.profile_text, LIMITS.profile.profile_text)}
-          className="sm:col-span-2"
+          className="sm:col-span-2 lg:col-span-3"
         >
-          <Textarea value={values.profile_text} onChange={(e) => edit('profile_text', e.target.value)} autoGrow placeholder="A few lines about you. Line breaks are kept." />
+          <Textarea value={values.profile_text} onChange={(e) => edit('profile_text', e.target.value)} autoGrow rows={2} className="min-h-16" placeholder="A few lines about you. Line breaks are kept." />
         </Field>
       </div>
     </div>

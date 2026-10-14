@@ -114,10 +114,17 @@ export function buildPayload(input: BuildPayloadInput): RenderPayload {
   const descriptionOverrides = config.entity_description_overrides ?? {}
   const tagOverrides = config.skill_tag_overrides ?? {}
 
-  const experiences = entities.filter((e): e is ExperienceMeta => e.type === 'experiences')
-  const projects = entities.filter((e): e is ProjectMeta => e.type === 'projects')
-  const skills = entities.filter((e): e is SkillMeta => e.type === 'skills')
-  const education = entities.filter((e): e is EducationMeta => e.type === 'education')
+  // An entry saved without every field (an import made before they were all written) reads as empty, not as a crash.
+  const experiences = entities
+    .filter((e): e is ExperienceMeta => e.type === 'experiences')
+    .map((e) => ({ ...e, location: e.location ?? '', period: e.period ?? '', description: e.description ?? '' }))
+  const projects = entities
+    .filter((e): e is ProjectMeta => e.type === 'projects')
+    .map((p) => ({ ...p, tech: p.tech ?? [], description: p.description ?? '' }))
+  const skills = entities.filter((e): e is SkillMeta => e.type === 'skills').map((s) => ({ ...s, tags: s.tags ?? [] }))
+  const education = entities
+    .filter((e): e is EducationMeta => e.type === 'education')
+    .map((e) => ({ ...e, period: e.period ?? '' }))
 
   return {
     schema_version: 1,

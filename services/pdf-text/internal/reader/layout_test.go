@@ -120,3 +120,39 @@ func TestNothingToReadIsAnEmptyText(t *testing.T) {
 		t.Errorf("got %q", got)
 	}
 }
+
+func TestLettersPlacedOneByOneStayOneWord(t *testing.T) {
+	// Some programs place every letter apart, a little spaced; pdfium puts the spaces of the text in the fragments.
+	var frags []fragment
+	x := 50.0
+	for _, letter := range []string{"G", "e", "r", "m", "a", "n ", "c", "o", "u", "r", "s", "e"} {
+		f := frag(letter, x, 700)
+		f.right = x + 5
+		frags = append(frags, f)
+		x += 7 // 2 points between letters: letter spacing, not a space
+	}
+	if got := layoutText(frags); got != "German course" {
+		t.Errorf("got %q", got)
+	}
+}
+
+func TestTextDrawnTwiceToLookBoldIsReadOnce(t *testing.T) {
+	got := layoutText([]fragment{frag("Seeking an internship", 50, 700), frag("Seeking an internship", 50.6, 700.3)})
+	if got != "Seeking an internship" {
+		t.Errorf("got %q", got)
+	}
+}
+
+func TestALineCutInPiecesAcrossTheGapDoesNotHideTheColumns(t *testing.T) {
+	// A headline across both columns, written as several short pieces: none is wide, together they cross the gap.
+	frags := []fragment{frag("Seeking an end", 30, 780), frag("of studies", 150, 780), frag("internship in", 260, 780)}
+	for i := 0; i < 5; i++ {
+		y := 700 - float64(i)*14
+		frags = append(frags, frag("side "+string(rune('a'+i)), 30, y), frag("a line of the main column "+string(rune('A'+i)), 220, y))
+	}
+	got := layoutText(frags)
+	// Each column is read whole: the side lines together, the main lines together.
+	if !strings.Contains(got, "side a\nside b\nside c\nside d\nside e") || !strings.Contains(got, "column A\na line of the main column B") {
+		t.Errorf("the columns were not found: %q", got)
+	}
+}

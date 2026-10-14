@@ -64,7 +64,7 @@ The code is in `scripts/eval-ranking/` (`metrics.ts` is tested without any AI ca
 A functional test of `api/import/resume`: real PDFs through the real chain (the pdf-text service, the AI gateway, the checks of the app), several times, with what each run gave against what is expected. Nothing is saved (the save is tested on Postgres in `src/lib/import/save.db.test.ts`): this answers "does it read my resumes right?", and "the same every time?".
 
 ```
-docker run --rm -p 8095:8080 pdf-text:dev            # or a port-forward of the service
+docker run --rm -p 8095:8080 -e MAX_PAGES=1 pdf-text:dev   # the first page only, as in production
 # .env.local: PDF_TEXT_URL=http://localhost:8095 and AI_GATEWAY_URL (a gateway with the "import" feature)
 npm run eval:import                                  # every case, 3 runs each
 npm run eval:import -- --case two-columns --runs 5 --show
@@ -78,3 +78,5 @@ A case is a file in `import/` (fictional resumes of the repository, versioned) o
 ```
 
 A number is an exact count, `{ "min", "max" }` a range; a kind left out is not checked. The exit code is 1 when a run did not give what was expected, or failed.
+
+A case can also give its `truth`: what a person would have typed (the profile, and each experience, project and degree with its fields). The import is then compared field by field (`scripts/eval-import/score.ts`): entries are paired with the expected ones by their words, and the run says what was found, missing or not expected, and which fields are wrong. The totals at the end (recall, precision, fields right, profile right) are the figures to compare two versions of the prompt with. The run also checks that the request to the AI holds none of the name, email or phone of the truth, and says `LEAK` if it does.

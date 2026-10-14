@@ -52,7 +52,8 @@ export function Modal({ open, onClose, title, children, className }: Props) {
           <X size={16} aria-hidden="true" />
         </button>
       </div>
-      <div className="flex-1 overflow-auto">{children}</div>
+      {/* flex-auto, not flex-1: a basis of 0 collapses the body to nothing in some browsers (Safari) when the dialog has no height of its own. */}
+      <div className="min-h-0 flex-auto overflow-auto">{children}</div>
     </dialog>
   )
 }

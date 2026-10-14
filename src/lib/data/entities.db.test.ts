@@ -29,6 +29,20 @@ dbDescribe('entities on Postgres', () => {
     expect(created).toMatchObject({ type: 'projects', title: 'Queue', tech: ['Go', 'Redis'], tags: ['Go', 'Redis'], description: 'A task queue.' })
   })
 
+  it('reads an entry saved without some fields as the forms save them: empty, never missing (an old import)', async () => {
+    const insert = (id: string, type: string, data: object) =>
+      pool.query("INSERT INTO entities (id, user_id, type, tags, latex_snippet, data) VALUES ($1, $2, $3, '{}', '', $4)", [id, alice, type, JSON.stringify(data)])
+    await insert('expe-bare', 'experiences', { title: 'Stage', company: 'Acme' })
+    await insert('proj-bare', 'projects', { title: 'A project' })
+    await insert('educ-bare', 'education', { degree: 'Diploma', institution: 'EPITA' })
+    expect(await getEntity(alice, 'experiences', 'expe-bare')).toMatchObject({ location: '', period: '', description: '' })
+    expect(await getEntity(alice, 'projects', 'proj-bare')).toMatchObject({ tech: [], description: '' })
+    expect((await listEntities(alice, 'education'))[0]).toMatchObject({ period: '' })
+    // What is saved is not overwritten by the defaults.
+    await insert('expe-full', 'experiences', { title: 'Job', company: 'Acme', period: '2020', description: 'Did things' })
+    expect(await getEntity(alice, 'experiences', 'expe-full')).toMatchObject({ period: '2020', description: 'Did things' })
+  })
+
   it('keeps the tags in their own column and the rest as one document, and rebuilds the same entry', async () => {
     const created = await createEntity(alice, 'projects', project as never)
     const { rows } = await pool.query('SELECT tags, data FROM entities WHERE id = $1', [created.id])

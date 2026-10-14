@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { AI_ON_MISTRAL, AI_TRAINING_OPTED_OUT } from '@/config/legal'
-import { aiPrivacy } from './ai-privacy'
+import { aiPrivacy, importNotice, importPrivacy } from './ai-privacy'
 
 const on = { onMistral: true, trainingOptedOut: true, zeroRetention: false }
 
@@ -48,5 +48,24 @@ describe('aiPrivacy', () => {
 describe('the real flags', () => {
   it('never put the AI on Mistral before the opt-out of training is confirmed', () => {
     expect(!AI_ON_MISTRAL || AI_TRAINING_OPTED_OUT).toBe(true)
+  })
+})
+
+describe('importPrivacy and importNotice (#110)', () => {
+  it('says what is taken out by code and what goes to Mistral, and that the file is not kept', () => {
+    const text = importPrivacy(on).join(' ')
+    expect(text).toMatch(/name, your email address, your phone number, the links to your profiles .* and your date of birth/)
+    expect(text).toMatch(/never sent to the AI/)
+    expect(text).toMatch(/may escape it/)
+    expect(text).toMatch(/sent to Mistral AI/)
+    expect(text).toMatch(/Neither the PDF nor its text is kept/)
+    expect(importPrivacy({ ...on, onMistral: false })).toEqual([])
+  })
+
+  it('does not claim more than the settings do', () => {
+    expect(importNotice({ ...on, zeroRetention: false })).toMatch(/keeps it for a limited time to watch for abuse/)
+    expect(importNotice({ ...on, zeroRetention: true })).toMatch(/does not keep it/)
+    expect(importNotice({ ...on, trainingOptedOut: false })).not.toMatch(/does not train/)
+    expect(importNotice(on)).toMatch(/does not train on it/)
   })
 })
