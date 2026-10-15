@@ -4,9 +4,11 @@ import { useLayoutEffect, useRef } from 'react'
 import { cn } from '@/lib/cn'
 import { useField } from './Field'
 
-// White controls with the ink stroke; the hard shadow appears while typing.
+// White controls with the ink stroke; the hard shadow appears while typing. 16 px on a phone: iOS zooms the page when
+// a field under 16 px takes the focus. Every field of the app takes these classes (Input, Textarea, Select, and the
+// native selects of the template picker), so this is the one place of the rule (checked by input-zoom.test.ts).
 export const controlClasses = cn(
-  'w-full rounded-control border-2 border-ink bg-surface px-control text-small text-ink placeholder:text-ink/40',
+  'w-full rounded-control border-2 border-ink bg-surface px-control text-body text-ink placeholder:text-ink/40 md:text-small',
   'transition-shadow focus-visible:shadow-hard focus-visible:outline-none',
   'aria-invalid:border-danger disabled:opacity-50',
 )
