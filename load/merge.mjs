@@ -17,6 +17,28 @@ if (samples.length === 0) {
   process.exit(0)
 }
 
+// ---- A scenario that is not a ramp (mixed, limits-probe...) has no steps: the highest value of each resource over the
+// whole run, and the hint on that.
+if (!result.ramp || !result.steps) {
+  const top = (key) => samples.reduce((m, x) => Math.max(m, x[key] ?? 0), 0)
+  const whole = { appCpu: top('appCpu'), appMem: top('appMem'), pgCpu: top('pgCpu'), hasherCpu: top('hasherCpu'), rendererCpu: top('rendererCpu'), nginxCpu: top('nginxCpu'), nodeCpuPercent: top('nodeCpuPercent'), nodeMem: top('nodeMem'), podsMem: top('podsMem') }
+  const stolen = samples.filter((x) => x.steal !== null && x.steal !== undefined)
+  const steal = stolen.length ? Math.max(...stolen.map((x) => x.steal)) : null
+  const f = (v) => String(Math.round(v))
+  console.log('')
+  console.log(`The cluster during the whole run (kubectl top and the counters of the cgroups; the highest value of each, ${samples.length} samples)`)
+  console.log('')
+  console.log(` app CPU ${f(whole.appCpu)} m | app ${f(whole.appMem)} Mi | hasher ${f(whole.hasherCpu)} m | Postgres ${f(whole.pgCpu)} m | nginx ${f(whole.nginxCpu)} m | node CPU ${f(whole.nodeCpuPercent)} % | steal ${steal === null ? '-' : steal.toFixed(1)} % | pods ${f(whole.podsMem)} Mi`)
+  const notes = []
+  if (whole.hasherCpu >= 800) notes.push(`the password-hasher reached ${f(whole.hasherCpu)} m: one hash at a time is one core, it was the limit of the logins`)
+  if (whole.appCpu >= 800) notes.push(`the app reached ${f(whole.appCpu)} m: one core is almost full`)
+  if (whole.nodeCpuPercent >= 85) notes.push(`the node reached ${f(whole.nodeCpuPercent)} % of CPU`)
+  if (steal !== null && steal >= 8) notes.push(`the hypervisor took up to ${steal.toFixed(1)} % of the node's CPU time (steal)`)
+  console.log(notes.length ? notes.map((n) => `  - ${n}`).join('\n') : '  - none of the resources measured here was full')
+  console.log('')
+  process.exit(0)
+}
+
 // ---- Each step gets the samples taken during it. metrics-server reports the last 15 seconds or so, so a sample is
 // attributed to the moment it started to describe.
 const stepMs = result.ramp.STEP_SECONDS * 1000
