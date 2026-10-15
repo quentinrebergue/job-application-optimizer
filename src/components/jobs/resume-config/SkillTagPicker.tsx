@@ -39,7 +39,7 @@ export function SkillTagPicker({ skill, selected, libraryTags, suggestions, busy
   }
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-row">
       <p className={eyebrow}>Tags printed in this resume</p>
       <div role="group" aria-label={`Tags of ${skill.name}`} className="flex flex-wrap items-center gap-2">
         {shown.map((tag) => {
@@ -51,7 +51,7 @@ export function SkillTagPicker({ skill, selected, libraryTags, suggestions, busy
               aria-pressed={on}
               onClick={() => onToggle(tag)}
               className={cn(
-                'rounded-control border-2 px-2 py-0.5 text-xs font-semibold transition-colors',
+                'text-label rounded-control border-2 px-2 py-0.5 transition-colors',
                 focusRing,
                 on ? 'border-ink bg-ink text-surface' : 'border-dashed border-ink bg-surface text-ink-muted hover:text-ink',
               )}
@@ -88,10 +88,10 @@ export function SkillTagPicker({ skill, selected, libraryTags, suggestions, busy
       </div>
 
       {suggestions.length > 0 && (
-        <div className="flex flex-col gap-2 border-t-2 border-dashed border-ink pt-3">
+        <div className="flex flex-col gap-2 border-t-2 border-dashed border-ink pt-row">
           <p className={eyebrow}>The AI suggests adding</p>
           {suggestions.map((s) => (
-            <div key={s.tag} className="flex flex-wrap items-center gap-2 text-sm">
+            <div key={s.tag} className="flex flex-wrap items-center gap-2 text-small">
               <Button
                 size="sm"
                 variant="secondary"

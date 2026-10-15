@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { SiteFooter } from '@/components/layout/SiteFooter'
 import { Wordmark } from '@/components/layout/Wordmark'
 import { buttonClasses } from '@/components/ui/Button'
-import { pageWidth } from '@/components/ui/styles'
+import { pageFrame } from '@/components/ui/styles'
 import { cn } from '@/lib/cn'
 
 // Shell of the pages a visitor sees before signing in: the same bar as the app
@@ -21,9 +21,9 @@ export default function PublicLayout({
         Skip to content
       </a>
       <header className="sticky top-0 z-40 border-b-2 border-ink bg-canvas">
-        <div className={cn(pageWidth, 'flex h-16 items-center justify-between gap-4 px-3 sm:px-4 md:px-8')}>
+        <div className={cn(pageFrame, 'flex h-16 items-center justify-between gap-nav')}>
           <Wordmark />
-          <nav aria-label="Account" className="flex items-center gap-3">
+          <nav aria-label="Account" className="flex items-center gap-inline">
             <Link href="/login" className={buttonClasses({ variant: 'secondary' })}>Log in</Link>
             <Link href="/signup" className={buttonClasses()}>Sign up</Link>
           </nav>

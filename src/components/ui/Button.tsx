@@ -18,8 +18,8 @@ const variants = {
 } as const
 
 const sizes = {
-  sm: 'h-8 px-3 text-xs',
-  md: 'h-10 px-4 text-sm',
+  sm: 'h-8 px-control text-caption',
+  md: 'h-10 px-button text-small',
 } as const
 
 export type ButtonVariant = keyof typeof variants

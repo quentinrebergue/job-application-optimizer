@@ -20,7 +20,7 @@ export function SelectMenuTrigger({ className, children, ...props }: React.Compo
   return (
     <SelectPrimitive.Trigger
       className={cn(
-        'flex h-10 items-center justify-between gap-2 rounded-control border-2 border-ink bg-surface px-3 text-sm font-semibold text-ink shadow-hard',
+        'text-small-strong flex h-10 items-center justify-between gap-2 rounded-control border-2 border-ink bg-surface px-control text-ink shadow-hard',
         'data-disabled:cursor-not-allowed data-disabled:opacity-50',
         focusRing,
         className,
@@ -55,7 +55,7 @@ export function SelectMenuItem({ className, children, ...props }: React.Componen
   return (
     <SelectPrimitive.Item
       className={cn(
-        'relative flex cursor-default select-none items-center rounded-control border-2 border-transparent py-1.5 pl-2 pr-8 text-sm outline-none',
+        'relative flex cursor-default select-none items-center rounded-control border-2 border-transparent py-1.5 pl-2 pr-8 text-small outline-none',
         'data-highlighted:border-ink data-highlighted:bg-accent data-disabled:pointer-events-none data-disabled:opacity-50',
         className,
       )}

@@ -50,7 +50,7 @@ export function JobsClient({ initialJobs, initialFilter }: Props) {
         </Link>
       </PageHeader>
 
-      <div className="mb-6">
+      <div className="mb-section">
         <FilterBar
           label="Filter by status"
           options={TABS.map((t) => ({
@@ -67,7 +67,7 @@ export function JobsClient({ initialJobs, initialFilter }: Props) {
         <div className="rounded-control border-2 border-dashed border-ink p-10 text-center">
           {tab === 'all' ? (
             <>
-              <p className="mb-4 text-ink-muted">No jobs yet.</p>
+              <p className="mb-stack text-ink-muted">No jobs yet.</p>
               <Link href="/jobs/new" className={buttonClasses()}>
                 <Plus size={15} aria-hidden="true" />
                 Add your first job
@@ -78,7 +78,7 @@ export function JobsClient({ initialJobs, initialFilter }: Props) {
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-stack sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filtered.map((j) => (
             <JobCard key={j.id} job={j} />
           ))}

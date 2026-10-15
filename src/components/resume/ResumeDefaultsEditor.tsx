@@ -15,7 +15,7 @@ type ProfileField = keyof ResumeProfile
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 /** The profile, loaded once, then edited in place. */
-export function ResumeDefaultsEditor() {
+export function ResumeDefaultsEditor({ inline = false }: { inline?: boolean }) {
   const [profile, setProfile] = useState<ResumeProfile | null>(null)
   const [error, setError] = useState<string | null>(null)
 
@@ -26,8 +26,8 @@ export function ResumeDefaultsEditor() {
   }, [])
 
   if (error) return <Alert>Profile not loaded: {error}</Alert>
-  if (!profile) return <p className="text-sm text-ink-muted">Loading your profile…</p>
-  return <ProfileForm initial={profile} />
+  if (!profile) return <p className="text-small text-ink-muted">Loading your profile…</p>
+  return <ProfileForm initial={profile} inline={inline} />
 }
 
 /**
@@ -35,7 +35,7 @@ export function ResumeDefaultsEditor() {
  * the API replaces the whole profile, so every save sends all the latest values
  * (the AI context, no longer edited here, is sent back unchanged).
  */
-function ProfileForm({ initial }: { initial: ResumeProfile }) {
+function ProfileForm({ initial, inline }: { initial: ResumeProfile; inline: boolean }) {
   const latest = useRef<ResumeProfile>(initial)
   const { values, errors, state, failure, edit } = useFieldAutosave<ResumeProfile>({
     initial,
@@ -59,13 +59,14 @@ function ProfileForm({ initial }: { initial: ResumeProfile }) {
   )
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-field">
       {/* On the section title's line (the section is `relative`): no space reserved for it. */}
-      <p aria-live="polite" className="absolute right-4 top-5 text-sm text-ink-muted md:right-6 md:top-7">{state === 'saving' ? 'Saving…' : ''}</p>
+      {/* `inline`: in a dialog, where there is no section title to sit on. */}
+      <p aria-live="polite" className={inline ? 'text-small text-ink-muted' : 'absolute right-4 top-5 text-small text-ink-muted md:right-6 md:top-7'}>{state === 'saving' ? 'Saving…' : ''}</p>
       {failure && <Alert>Profile not saved: {failure}</Alert>}
 
       {/* Short fields side by side: three in a row on a wide screen, two on a tablet, one on a phone. */}
-      <div className="grid gap-x-4 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-field sm:grid-cols-2 lg:grid-cols-3">
         {text('full_name', 'Full name', { placeholder: 'Alex Morgan' })}
         {text('email', 'Email', { type: 'email', placeholder: 'alex.morgan@example.com' })}
         {text('phone', 'Phone', { placeholder: '+00 000 000 000' })}

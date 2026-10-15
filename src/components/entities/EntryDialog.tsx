@@ -40,7 +40,7 @@ export function EntryDialog({ open, entity, onClose, onSaved, onDeleted }: Props
 
   return (
     <ResponsiveDialog open={open} onClose={onClose} title={`${TYPE_SINGULAR[type]}: ${entityTitle(entity) || 'Untitled'}`}>
-      <p aria-live="polite" className="-mt-2 text-xs text-ink-muted">{saveState === 'saving' ? 'Saving…' : saveState === 'saved' ? 'Saved' : ' '}</p>
+      <p aria-live="polite" className="-mt-2 text-caption text-ink-muted">{saveState === 'saving' ? 'Saving…' : saveState === 'saved' ? 'Saved' : ' '}</p>
       {error && <Alert>{error}</Alert>}
       <EntityEditor entity={entity} onSaved={onSaved} onDelete={handleDelete} deleting={deleting} onSaveStateChange={setSaveState} />
     </ResponsiveDialog>

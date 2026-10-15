@@ -4,9 +4,9 @@ import { Card } from '@/components/ui/Card'
 /** The honest answer to "what is the catch?", in the maintainer's own voice. Title on the left, the words in a card on the right. */
 export function Catch() {
   return (
-    <section aria-labelledby="catch-title" className="grid gap-6 md:grid-cols-[1fr_2fr] md:gap-12">
-      <h2 id="catch-title" className="text-4xl font-extrabold tracking-tight sm:text-5xl">What&apos;s the catch?</h2>
-      <Card className="flex max-w-3xl flex-col gap-4 p-6 text-lg md:p-8">
+    <section aria-labelledby="catch-title" className="grid gap-section md:grid-cols-[1fr_2fr]">
+      <h2 id="catch-title" className="text-statement">What&apos;s the catch?</h2>
+      <Card className="flex flex-col gap-stack p-panel text-lead">
         <p><span className="mr-1.5 inline-block -rotate-1 rounded-control border-2 border-ink bg-accent px-2 font-extrabold shadow-hard">There isn&apos;t one.</span> FastResume is a side project: I&apos;m Quentin, and I build it to grow my skills.</p>
         <p>What would make me happiest is <strong className="font-extrabold">traffic</strong>: real people using it, real bugs, real feedback. It is how I get experience, and above all, how I get to help people land an interview.</p>
         <p className="text-ink-muted">

@@ -36,12 +36,12 @@ export default async function HomePage() {
   return (
     <div className={page}>
       <PageHeader title="FastResume" subtitle="From a job offer to a tailored resume in a few clicks." />
-      <div className="grid gap-6 sm:grid-cols-2">
+      <div className="grid gap-stack sm:grid-cols-2">
         {cards.map((card) => (
-          <Link key={card.href} href={card.href} className={cardClasses({ interactive: true, className: 'flex flex-col gap-3 p-6' })}>
-            <span className="text-2xl font-extrabold tracking-tight">{card.title}</span>
+          <Link key={card.href} href={card.href} className={cardClasses({ interactive: true, className: 'flex flex-col gap-heading p-panel' })}>
+            <span className="text-heading">{card.title}</span>
             <span className="text-ink-muted">{card.text}</span>
-            <span className="mt-auto flex flex-wrap gap-x-4 gap-y-1 pt-2 text-sm font-semibold tabular-nums">
+            <span className="text-small-strong mt-auto flex flex-wrap gap-x-inline gap-y-1 pt-actions tabular-nums">
               {card.stats.map((s) => <span key={s}>{s}</span>)}
             </span>
           </Link>

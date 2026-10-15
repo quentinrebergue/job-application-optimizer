@@ -2,16 +2,19 @@
 
 import { useId, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { FileUp, LoaderCircle } from 'lucide-react'
+import { ChevronRight, FileUp, LoaderCircle } from 'lucide-react'
 import { Alert } from '@/components/ui/Alert'
 import { Button, type ButtonVariant } from '@/components/ui/Button'
-import { Modal } from '@/components/ui/Modal'
-import { focusRing } from '@/components/ui/styles'
+import { ResponsiveDialog } from '@/components/ui/ResponsiveDialog'
+import { eyebrow, focusRing } from '@/components/ui/styles'
 import { cn } from '@/lib/cn'
-import { IMPORT_MAX_MB, checkFile, report, sendResume, type Report } from '@/lib/import-resume'
+import type { EntityMeta } from '@/types'
+import { IMPORT_MAX_MB, checkFile, report, sendResume, withEntry, withoutEntry, type Report } from '@/lib/import-resume'
 import { importNotice } from '@/components/legal/ai-privacy'
+import { ImportedList } from './ImportedList'
+import { ImportedProfile } from './ImportedProfile'
 
-type Phase = { name: 'choose' } | { name: 'sending' } | { name: 'done'; report: Report } | { name: 'failed'; message: string }
+type Phase = { name: 'choose' } | { name: 'sending' } | { name: 'done'; report: Report; entries: EntityMeta[]; existing: EntityMeta[]; found: Record<string, string> } | { name: 'failed'; message: string }
 
 interface Props {
   /** The look of the button that opens the dialog. */
@@ -20,9 +23,9 @@ interface Props {
 }
 
 /**
- * Import a resume (#110): a button, and the dialog it opens. The user picks a PDF, it is read and its entries go
- * straight into the library (nothing to review: what is not wanted is deleted afterwards), and the dialog says what
- * was added and what was not, and why.
+ * Import a resume (#110): a button, and the dialog it opens (a drawer on a phone). The user picks a PDF, it is read
+ * and its entries go straight into the library; the dialog says what was added and what was not, and why, and lists
+ * what was added: each entry opens in place to be fixed, or deleted (#281).
  */
 export function ImportResume({ variant = 'primary', label = 'Import a resume' }: Props) {
   const router = useRouter()
@@ -62,7 +65,7 @@ export function ImportResume({ variant = 'primary', label = 'Import a resume' }:
     if (controller.signal.aborted) return
     abort.current = null
     if (out.ok) {
-      setPhase({ name: 'done', report: report(out.result) })
+      setPhase({ name: 'done', report: report(out.result), entries: out.result.entries ?? [], existing: out.result.existing ?? [], found: out.result.profileFound ?? {} })
     } else {
       setPhase({ name: 'failed', message: out.message })
     }
@@ -77,30 +80,52 @@ export function ImportResume({ variant = 'primary', label = 'Import a resume' }:
         {label}
       </Button>
 
-      <Modal open={open} onClose={close} title="Import a resume" className="max-w-lg">
-        <div className="flex flex-col gap-4 p-5">
+      <ResponsiveDialog open={open} onClose={close} title="Import a resume" size="wide">
+        <div className="flex flex-col gap-section">
           {phase.name === 'done' ? (
             <>
-              <Alert variant="success">{phase.report.headline}</Alert>
+              {/* Nothing is waiting to be confirmed: the import is in the library, and what is changed below saves itself. */}
+              {phase.report.total === 0 && <p className="text-small text-ink-muted">{phase.report.headline}</p>}
               {phase.report.notes.length > 0 && (
-                <ul className="list-disc space-y-1 pl-5 text-sm text-ink-muted">
+                <ul className="list-disc space-y-1 pl-indent text-small text-ink-muted">
                   {phase.report.notes.map((note) => <li key={note}>{note}</li>)}
                 </ul>
               )}
-              <div className="flex justify-end">
-                <Button variant="primary" onClick={close}>See my library</Button>
-              </div>
+              <ImportedProfile found={phase.found} />
+              {phase.entries.length > 0 && (
+                <ImportedList
+                  entries={phase.entries}
+                  onSaved={(saved) => setPhase((p) => (p.name === 'done' ? { ...p, entries: withEntry(p.entries, saved) } : p))}
+                  onDeleted={(gone) => setPhase((p) => (p.name === 'done' ? { ...p, entries: withoutEntry(p.entries, gone.id) } : p))}
+                />
+              )}
+              {phase.existing.length > 0 && (
+                <details className="group flex flex-col gap-heading">
+                  <summary className={cn(eyebrow, 'flex cursor-pointer list-none items-center gap-2 rounded-control', focusRing)}>
+                    <ChevronRight size={14} aria-hidden="true" className="transition-transform group-open:rotate-90" />
+                    Already in your library ({phase.existing.length})
+                  </summary>
+                  <div className="mt-heading flex flex-col gap-stack">
+                    <p className="text-small text-ink-muted">These were found in your resume but were already registered, so they were not added again.</p>
+                    <ImportedList
+                      entries={phase.existing}
+                      onSaved={(saved) => setPhase((p) => (p.name === 'done' ? { ...p, existing: withEntry(p.existing, saved) } : p))}
+                      onDeleted={(gone) => setPhase((p) => (p.name === 'done' ? { ...p, existing: withoutEntry(p.existing, gone.id) } : p))}
+                    />
+                  </div>
+                </details>
+              )}
             </>
           ) : (
             <form
-              className="flex flex-col gap-4"
+              className="flex flex-col gap-field"
               onSubmit={(e) => {
                 e.preventDefault()
                 send()
               }}
             >
               <div className="flex flex-col gap-1">
-                <label htmlFor={inputId} className="text-sm font-semibold">Your resume (PDF, {IMPORT_MAX_MB} MB at most)</label>
+                <label htmlFor={inputId} className="text-small-strong">Your resume (PDF, {IMPORT_MAX_MB} MB at most)</label>
                 <input
                   id={inputId}
                   type="file"
@@ -109,26 +134,26 @@ export function ImportResume({ variant = 'primary', label = 'Import a resume' }:
                   aria-invalid={problem ? true : undefined}
                   onChange={(e) => pick(e.target.files?.[0] ?? null)}
                   className={cn(
-                    'block w-full cursor-pointer rounded-control border-2 border-ink bg-surface p-2 text-sm',
-                    'file:mr-3 file:cursor-pointer file:rounded-control file:border-2 file:border-ink file:bg-accent file:px-3 file:py-1 file:font-semibold file:text-ink',
+                    'block w-full cursor-pointer rounded-control border-2 border-ink bg-surface p-2 text-small',
+                    'file:mr-inline file:cursor-pointer file:rounded-control file:border-2 file:border-ink file:bg-accent file:px-control file:py-1 file:font-semibold file:text-ink',
                     'disabled:cursor-not-allowed disabled:opacity-50',
                     focusRing,
                   )}
                 />
               </div>
-              <p className="text-xs text-ink-muted">
+              <p className="text-caption text-ink-muted">
                 {importNotice()}{' '}
                 <a href="/privacy#import" target="_blank" rel="noopener" className="underline underline-offset-2">Privacy policy</a>
               </p>
               {problem && <Alert>{problem}</Alert>}
               {phase.name === 'failed' && <Alert>{phase.message}</Alert>}
               {sending && (
-                <p role="status" className="flex items-center gap-2 text-sm font-semibold">
+                <p role="status" className="text-small-strong flex items-center gap-2">
                   <LoaderCircle size={16} className="animate-spin motion-reduce:animate-none" aria-hidden="true" />
                   Reading your resume… this takes about 10 seconds.
                 </p>
               )}
-              <div className="flex justify-end gap-3">
+              <div className="flex justify-end gap-inline">
                 <Button variant="secondary" onClick={close}>Cancel</Button>
                 <Button type="submit" variant="primary" disabled={!file || !!problem || sending}>
                   {phase.name === 'failed' ? 'Try again' : 'Import'}
@@ -137,7 +162,7 @@ export function ImportResume({ variant = 'primary', label = 'Import a resume' }:
             </form>
           )}
         </div>
-      </Modal>
+      </ResponsiveDialog>
     </>
   )
 }

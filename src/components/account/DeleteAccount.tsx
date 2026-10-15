@@ -61,7 +61,7 @@ export function DeleteAccount({ email }: { email: string }) {
             daily backups for up to 7 days, then disappears. To keep a copy of your data, download it first.
           </DrawerDescription>
           <form
-            className="flex flex-col gap-4"
+            className="flex flex-col gap-field"
             onSubmit={(e) => {
               e.preventDefault()
               if (matches && password && !pending) confirm()

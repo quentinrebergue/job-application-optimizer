@@ -22,18 +22,18 @@ export function Disclosure({ title, meta, defaultOpen = false, className, childr
   const panelId = useId()
 
   return (
-    <section className={cn('border-t-2 border-ink pt-4', className)}>
+    <section className={cn('border-t-2 border-ink pt-stack', className)}>
       <h2>
         <button
           type="button"
           aria-expanded={open}
           aria-controls={panelId}
           onClick={() => setOpen((v) => !v)}
-          className={cn('flex w-full items-center justify-between gap-4 rounded-control text-left', focusRing)}
+          className={cn('flex w-full items-center justify-between gap-inline rounded-control text-left', focusRing)}
         >
-          <span className="text-xl font-extrabold tracking-tight">
+          <span className="text-section">
             {title}
-            {meta && <span className="ml-2 text-sm font-normal tabular-nums text-ink-muted">{meta}</span>}
+            {meta && <span className="ml-2 text-small font-normal tabular-nums text-ink-muted">{meta}</span>}
           </span>
           <span
             aria-hidden="true"
@@ -44,7 +44,7 @@ export function Disclosure({ title, meta, defaultOpen = false, className, childr
         </button>
       </h2>
       {/* Children mount only when open: closed panels do not fetch or autosave. */}
-      <div id={panelId} hidden={!open} className="mt-4">
+      <div id={panelId} hidden={!open} className="mt-heading">
         {open && children}
       </div>
     </section>

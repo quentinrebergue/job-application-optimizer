@@ -64,7 +64,7 @@ export function LibraryPanel({ entities }: Props) {
   const close = () => (window.history.state?.dialog ? window.history.back() : go(libraryHref(tab), 'replace'))
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-stack">
       <FilterBar
         label="Kind of entry"
         options={LIBRARY_TABS.map((t) => ({ ...t, count: items.filter((e) => e.type === t.value).length }))}
@@ -73,9 +73,9 @@ export function LibraryPanel({ entities }: Props) {
       />
 
       {/* The first card adds an entry of the current kind; it also stands for an empty list. At the limit it says so. */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-stack sm:grid-cols-2 lg:grid-cols-3">
         {full ? (
-          <div className="flex min-h-28 flex-col items-center justify-center gap-1 rounded-control border-2 border-dashed border-ink p-4 text-center text-sm text-ink-muted">
+          <div className="flex min-h-28 flex-col items-center justify-center gap-1 rounded-control border-2 border-dashed border-ink p-card text-center text-small text-ink-muted">
             <span className="font-semibold text-ink">{shown.length} / {max}</span>
             <span>
               You have reached the limit of {max} {getEntityTypeConfig(tab).label.toLowerCase()}. Delete one to add another.
@@ -90,7 +90,7 @@ export function LibraryPanel({ entities }: Props) {
               openNew()
             }}
             className={cn(
-              'flex min-h-28 flex-col items-center justify-center gap-1 rounded-control border-2 border-dashed border-ink p-4 font-semibold text-ink-muted',
+              'flex min-h-28 flex-col items-center justify-center gap-1 rounded-control border-2 border-dashed border-ink p-card font-semibold text-ink-muted',
               'transition-colors hover:bg-surface hover:text-ink',
               focusRing,
             )}
@@ -99,7 +99,7 @@ export function LibraryPanel({ entities }: Props) {
               <Plus size={18} aria-hidden="true" />
               {ADD_LABEL[tab]}
             </span>
-            <span className="text-xs font-normal">{shown.length} / {max}</span>
+            <span className="text-caption font-normal">{shown.length} / {max}</span>
           </a>
         )}
         {shown.map((e) => <EntityCard key={e.id} entity={e} href={libraryHref(tab, { entry: e.id })} onOpen={openEntry} />)}

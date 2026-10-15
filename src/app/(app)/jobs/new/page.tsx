@@ -40,7 +40,7 @@ function NewJobForm() {
         subtitle={hasImport ? 'Imported from LinkedIn. Review and save.' : 'Paste the offer, save, then generate the resume.'}
       />
       {hasImport && (
-        <Alert variant="success" className="mb-6">Job details imported. Check the description, then save.</Alert>
+        <Alert variant="success" className="mb-section">Job details imported. Check the description, then save.</Alert>
       )}
       {/* Cancel goes to the list: opened in a new tab, there is no history to go back to. */}
       <JobForm initial={initial} saving={saving} onSave={handleSave} onCancel={() => router.push('/jobs')} />
@@ -50,7 +50,7 @@ function NewJobForm() {
 
 export default function NewJobPage() {
   return (
-    <Suspense fallback={<p className="p-4 text-sm text-ink-muted md:p-8">Loading…</p>}>
+    <Suspense fallback={<p className="p-gutter text-small text-ink-muted">Loading…</p>}>
       <NewJobForm />
     </Suspense>
   )

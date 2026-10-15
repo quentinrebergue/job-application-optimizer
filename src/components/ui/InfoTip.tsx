@@ -28,7 +28,7 @@ export function InfoTip({ label, children }: { label: string; children: React.Re
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Positioner side="top" sideOffset={8} collisionPadding={12} className="z-50">
-          <Popover.Popup className="max-w-[min(18rem,calc(100vw-2rem))] rounded-control border-2 border-ink bg-surface px-3 py-2 text-sm font-normal text-ink shadow-hard">
+          <Popover.Popup className="max-w-[min(18rem,calc(100vw-2rem))] rounded-control border-2 border-ink bg-surface px-control py-2 text-small font-normal text-ink shadow-hard">
             {children}
           </Popover.Popup>
         </Popover.Positioner>

@@ -6,7 +6,7 @@ import { useField } from './Field'
 
 // White controls with the ink stroke; the hard shadow appears while typing.
 export const controlClasses = cn(
-  'w-full rounded-control border-2 border-ink bg-surface px-3 text-sm text-ink placeholder:text-ink/40',
+  'w-full rounded-control border-2 border-ink bg-surface px-control text-small text-ink placeholder:text-ink/40',
   'transition-shadow focus-visible:shadow-hard focus-visible:outline-none',
   'aria-invalid:border-danger disabled:opacity-50',
 )

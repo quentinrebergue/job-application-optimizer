@@ -25,7 +25,7 @@ export function DemoStage({ stageRef, demo, label, caption, heightClass, widthCl
     <div className={cn('mx-auto w-full', widthClass)}>
       <div ref={stageRef} role="img" aria-label={label} className={cn(stroke, 'relative isolate overflow-hidden bg-panel shadow-hard', heightClass)}>
         {header}
-        <div className={cn('absolute inset-x-0 bottom-0 p-4', header ? 'top-10' : 'top-0')}>{children}</div>
+        <div className={cn('absolute inset-x-0 bottom-0 p-card', header ? 'top-10' : 'top-0')}>{children}</div>
         <svg
           aria-hidden="true"
           viewBox="0 0 22 22"
@@ -35,8 +35,8 @@ export function DemoStage({ stageRef, demo, label, caption, heightClass, widthCl
           <path d="M3 2l15 8-6.5 2L9 19z" className="fill-surface stroke-ink" strokeWidth="2" strokeLinejoin="round" />
         </svg>
       </div>
-      <div className="mt-3 flex items-start justify-between gap-4">
-        <p className="text-sm text-ink-muted">{caption}</p>
+      <div className="mt-heading flex items-start justify-between gap-stack">
+        <p className="text-small text-ink-muted">{caption}</p>
         {!demo.reduced && (
           <Button variant="secondary" aria-pressed={control.pressed} onClick={control.action}>{control.text}</Button>
         )}

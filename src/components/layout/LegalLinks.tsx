@@ -18,7 +18,7 @@ const linkClass = cn(
 export function LegalLinks({ className }: { className?: string }) {
   return (
     <nav aria-label="Legal" className={className}>
-      <ul className={cn('flex flex-wrap gap-x-5')}>
+      <ul className={cn('flex flex-wrap gap-x-links')}>
         {LINKS.map((link) => (
           <li key={link.href}><Link href={link.href} className={linkClass}>{link.label}</Link></li>
         ))}

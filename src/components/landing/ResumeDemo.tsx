@@ -59,7 +59,7 @@ export function ResumeDemo() {
       widthClass="max-w-sm"
     >
       {shown === 'rank' ? (
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-inline">
           <p className={eyebrow}>Resume for Backend engineer</p>
           <span data-target="rank" className={cn(drawnButton, 'self-start bg-ai', demo.lift('rank'))}>{ranking ? 'Ranking…' : 'Rank with AI'}</span>
           <div className="flex min-h-[13.5rem] flex-col gap-2">
@@ -68,7 +68,7 @@ export function ResumeDemo() {
           <span data-target="download" className={cn(drawnButton, 'self-start bg-accent', demo.lift('download'), rows < RESULTS.length && 'invisible')}>Download PDF</span>
         </div>
       ) : (
-        <ResumeExample showCaption={false} className="max-w-none" paperClassName="p-4 text-[10px] shadow-none sm:p-4 sm:text-[11px]" />
+        <ResumeExample showCaption={false} className="max-w-none" paperClassName="p-card text-[10px] shadow-none sm:text-[11px]" />
       )}
     </DemoStage>
   )

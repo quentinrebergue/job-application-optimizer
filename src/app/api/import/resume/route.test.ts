@@ -34,6 +34,7 @@ const asked = { title: 'Backend engineer', company: 'Logistix', location: 'Lyon'
 const experience = { title: 'Backend engineer', company: 'Logistix', location: 'Lyon', period: '2022 – Present', description: 'Built an API in Go', tags: ['Go'] }
 const answer = { content: { experiences: [asked], projects: [], education: [], skills: [] }, usage: { prompt_tokens: 900, completion_tokens: 300 }, model: 'mistral-small-2603' }
 const summary = { experiences: { added: 1, duplicates: 0, overCap: 0 } }
+const created = [{ id: 'expe-1', type: 'experiences', ...experience }]
 
 beforeEach(() => {
   getSessionUserId.mockReset().mockResolvedValue('u1')
@@ -43,8 +44,8 @@ beforeEach(() => {
   askGateway.mockReset().mockResolvedValue(answer)
   reserveAiCall.mockReset().mockResolvedValue({ id: 7 })
   settleAiCall.mockReset().mockResolvedValue(undefined)
-  saveImportedEntries.mockReset().mockResolvedValue(summary)
-  saveImportedProfile.mockReset().mockResolvedValue([])
+  saveImportedEntries.mockReset().mockResolvedValue({ summary, created, existing: [] })
+  saveImportedProfile.mockReset().mockResolvedValue({ filled: [], different: {} })
   vi.spyOn(console, 'error').mockImplementation(() => {})
   vi.spyOn(console, 'warn').mockImplementation(() => {})
 })
@@ -53,7 +54,7 @@ describe('POST /api/import/resume', () => {
   it('reads the PDF, asks the AI for the entries, saves them and says what was added', async () => {
     const res = await send()
     expect(res.status).toBe(200)
-    expect(await res.json()).toEqual({ summary, profile: [], dropped: 0, truncated: false })
+    expect(await res.json()).toEqual({ summary, entries: created, existing: [], profile: [], profileFound: {}, dropped: 0, truncated: false })
     expect(saveImportedEntries).toHaveBeenCalledWith('u1', expect.objectContaining({ experiences: [experience] }))
     expect(reserveAiCall).toHaveBeenCalledWith('u1', 'import')
     expect(settleAiCall).toHaveBeenCalledWith({ id: 7 }, { status: 'done', model: 'mistral-small-2603', promptTokens: 900, completionTokens: 300 })
@@ -147,12 +148,12 @@ describe('POST /api/import/resume', () => {
 
   it('never sends the name, email or phone to the AI: the code finds them and fills the profile with them', async () => {
     askGateway.mockResolvedValue({ ...answer, content: { ...answer.content, profile: { address: 'Lyon', resume_title: '', summary_from: 0, summary_to: 0 } } })
-    saveImportedProfile.mockResolvedValue(['full_name', 'email', 'phone', 'address'])
+    saveImportedProfile.mockResolvedValue({ filled: ['full_name', 'email', 'phone', 'address'], different: { phone: '+33 1 00 00 00 00' } })
     const res = await send()
     const sent = JSON.stringify(askGateway.mock.calls[0][0])
     for (const secret of ['Camille', 'Moreau', 'camille.moreau@example.com', '+33 6 12 34 56 78']) expect(sent).not.toContain(secret)
     expect(saveImportedProfile).toHaveBeenCalledWith('u1', { full_name: 'Camille Moreau', email: 'camille.moreau@example.com', phone: '+33 6 12 34 56 78', address: 'Lyon' })
-    expect(await res.json()).toMatchObject({ profile: ['full_name', 'email', 'phone', 'address'] })
+    expect(await res.json()).toMatchObject({ profile: ['full_name', 'email', 'phone', 'address'], profileFound: { phone: '+33 1 00 00 00 00' } })
   })
 
   it('says when the PDF was only read in part', async () => {

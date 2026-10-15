@@ -29,10 +29,10 @@ export default async function VerifyEmailPage({ searchParams }: PageProps<'/veri
   const canResend = user !== null && !user.emailVerified && status !== 'confirmed' && status !== 'email-changed'
 
   return (
-    <div className="flex flex-1 items-center justify-center px-4 py-12">
-      <Card className="flex w-full max-w-sm flex-col gap-4 p-6">
-        <h1 className="text-2xl font-extrabold tracking-tight">{title}</h1>
-        <p className="text-sm">{text}</p>
+    <div className="flex flex-1 items-center justify-center px-gutter py-centered">
+      <Card className="flex w-full max-w-sm flex-col gap-stack p-panel">
+        <h1 className="text-heading">{title}</h1>
+        <p className="text-small">{text}</p>
         {canResend && <ResendVerificationButton />}
         {user ? (
           <Link href="/jobs" className={buttonClasses({ className: 'self-start' })}>Go to my jobs</Link>

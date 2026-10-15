@@ -19,6 +19,8 @@ interface Props {
   open: boolean
   onClose: () => void
   title: string
+  /** `wide` for a dialog that lists things (from 768 px of width). */
+  size?: 'narrow' | 'wide'
   children: React.ReactNode
 }
 
@@ -26,7 +28,7 @@ interface Props {
  * A narrow dialog from 768 px of width, a drawer (the bottom sheet, which scrolls) below. Nothing is drawn before the
  * page is on the screen: which of the two it is depends on the width, which the server does not know.
  */
-export function ResponsiveDialog({ open, onClose, title, children }: Props) {
+export function ResponsiveDialog({ open, onClose, title, size = 'narrow', children }: Props) {
   const mounted = useSyncExternalStore(never, () => true, () => false)
   const wide = useSyncExternalStore(subscribe, isWide, () => true)
   // A drawer that is drawn already open does not slide in: it is drawn closed, then opened a moment later.
@@ -39,8 +41,8 @@ export function ResponsiveDialog({ open, onClose, title, children }: Props) {
 
   if (wide) {
     return (
-      <Modal open={open && entered} onClose={onClose} title={title} className="max-w-lg">
-        <div className="flex flex-col gap-4 p-5">{children}</div>
+      <Modal open={open && entered} onClose={onClose} title={title} className={size === 'wide' ? 'max-w-3xl' : 'max-w-lg'}>
+        <div className="flex flex-col gap-stack p-dialog">{children}</div>
       </Modal>
     )
   }

@@ -34,7 +34,7 @@ interface Props {
 }
 
 const CONTROL = cn(controlClasses, 'h-10')
-const LABEL = 'flex flex-col gap-1 text-xs font-semibold text-ink'
+const LABEL = 'text-label flex flex-col gap-1 text-ink'
 
 // "datePlacement" -> "Date placement"
 function labelFor(name: string): string {
@@ -75,7 +75,7 @@ export function TemplatePicker({ templates, value, onChange, disabled }: Props) 
 
   // A grid of equal fields: the template first, then its options.
   return (
-    <div className="grid gap-4 sm:grid-cols-2">
+    <div className="grid gap-field sm:grid-cols-2">
       <label className={LABEL}>
         Template
         <select
@@ -121,7 +121,7 @@ export function TemplatePicker({ templates, value, onChange, disabled }: Props) 
               />
             )}
             {spec.type === 'color' && (
-              <span className={cn(CONTROL, 'flex items-center gap-3')}>
+              <span className={cn(CONTROL, 'flex items-center gap-inline')}>
                 <input
                   type="color"
                   value={String(shown)}

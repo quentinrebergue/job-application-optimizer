@@ -25,8 +25,8 @@ export function DrawerContent({ className, children, ...props }: React.Component
       <DrawerPrimitive.Viewport className="pointer-events-none fixed inset-0 z-50 flex items-end justify-center">
         <DrawerPrimitive.Popup
           className={cn(
-            'pointer-events-auto w-full rounded-t-control border-2 border-b-0 border-ink bg-panel p-6 text-ink outline-none',
-            'pb-[max(1.5rem,env(safe-area-inset-bottom))]',
+            'pointer-events-auto w-full rounded-t-control border-2 border-b-0 border-ink bg-panel p-dialog text-ink outline-none',
+            'pb-[max(var(--spacing-dialog),env(safe-area-inset-bottom))]',
             // Follows the finger while swiping, slides in and out otherwise.
             'translate-y-(--drawer-swipe-movement-y,0px) transition-transform duration-300',
             'data-starting-style:translate-y-full data-ending-style:translate-y-full data-swiping:transition-none motion-reduce:transition-none',
@@ -35,7 +35,7 @@ export function DrawerContent({ className, children, ...props }: React.Component
           {...props}
         >
           {/* Full width; the content stays in a readable centred column. */}
-          <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
+          <div className="mx-auto flex w-full max-w-2xl flex-col gap-stack">
             <div aria-hidden="true" className="mx-auto h-1.5 w-16 shrink-0 rounded-full bg-ink" />
             {children}
           </div>
@@ -46,13 +46,13 @@ export function DrawerContent({ className, children, ...props }: React.Component
 }
 
 export function DrawerTitle({ className, ...props }: React.ComponentProps<typeof DrawerPrimitive.Title>) {
-  return <DrawerPrimitive.Title className={cn('text-xl font-extrabold tracking-tight', className)} {...props} />
+  return <DrawerPrimitive.Title className={cn('text-section', className)} {...props} />
 }
 
 export function DrawerDescription({ className, ...props }: React.ComponentProps<typeof DrawerPrimitive.Description>) {
-  return <DrawerPrimitive.Description className={cn('text-sm text-ink-muted', className)} {...props} />
+  return <DrawerPrimitive.Description className={cn('text-small text-ink-muted', className)} {...props} />
 }
 
 export function DrawerFooter({ className, ...props }: React.ComponentProps<'div'>) {
-  return <div className={cn('mt-2 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end', className)} {...props} />
+  return <div className={cn('mt-actions flex flex-col-reverse gap-inline sm:flex-row sm:justify-end', className)} {...props} />
 }

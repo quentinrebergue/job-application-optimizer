@@ -35,15 +35,138 @@
   --color-success: #05e17a;         /* done, positive */
   --color-danger: #b00020;          /* errors (text), destructive buttons (white text) */
 
+  /* The one width of the content of every page, of the header, the banner and the footer: padding (the gutter) sits
+     inside it, so their contents line up. */
+  --container-page: 80rem;
+  /* The longest line of a short text under a title (an introduction, a sentence next to a button). Sections and their
+     paragraphs take the whole page width instead. */
+  --container-measure: 40rem;
+
   --radius-control: 0.3125rem;      /* 5px: controls, cards, badges */
 
   /* Hard offset shadow and the distance an element moves onto it when pressed. */
   --shadow-hard: 4px 4px 0 0 var(--color-ink);
   --spacing-press: 4px;
+
+  /* The two scales every role takes its value from (checked by design-tokens.test.ts):
+       spacing 4 8 12 16 24 32 48 64 96 px, text sizes 12 14 16 18 20 24 32 36 48 72 px.
+     Spacing by role (#285): every gap of one role has one value, so changing it is one edit here. A value may differ
+     between a phone and a computer (the overrides below), never between two places of the same view. Raw gap-*, p-*
+     and m-* remain for what has no role: an icon beside its text, a chip row. */
+  --spacing-label: 0.25rem;         /* a label and its control, a control and its hint */
+  --spacing-field: 1rem;            /* between the fields of a form */
+  --spacing-stack: 1rem;            /* between the blocks inside one section, card or dialog */
+  --spacing-actions: 0.5rem;        /* extra room above the buttons that end a form or a card */
+  --spacing-inline: 0.75rem;        /* between items side by side on one row: buttons, a title and its badge */
+  --spacing-heading: 0.75rem;       /* a section title and what it introduces */
+  --spacing-section: 1.5rem;        /* between the sections of a page or of a dialog */
+  --spacing-panel: 1rem;            /* inside a large panel (a section of a page, a job's offer or resume) */
+  --spacing-card: 1rem;             /* inside a card */
+  --spacing-row: 0.75rem;           /* inside a dense row of a list */
+  --spacing-dialog: 1rem;           /* inside a dialog or a drawer */
+  --spacing-gutter: 1rem;           /* the edge of every page: its sides, and those of the header, banner and footer */
+  --spacing-control: 0.75rem;       /* the sides inside a field, a menu, an alert or a tab */
+  --spacing-button: 1rem;           /* the sides inside a button */
+  --spacing-bar: 0.75rem;           /* the top and bottom of a strip: the header of a dialog, a panel title, the banner */
+  --spacing-footer: 1.5rem;         /* the top and bottom of the footer */
+  --spacing-centered: 3rem;         /* above and below a card or a message centred on its own page */
+  --spacing-nav: 1rem;              /* between the parts of the top bar */
+  --spacing-links: 1rem;            /* between the links of a footer */
+  --spacing-indent: 1.5rem;         /* the indent of a list */
+
+  /* The landing and legal pages: bigger rooms, same scale. */
+  --spacing-band: 3rem;             /* the top and bottom of a band of a landing or legal page */
+  --spacing-hero: 3rem;             /* above and below the first screen of the landing page */
+  --spacing-chapter: 4rem;          /* between the big blocks of a landing page */
+  --spacing-columns: 2rem;          /* between the columns (or the rows, once stacked) of a landing block */
+  --spacing-showcase: 2rem;         /* inside the big call-to-action card */
+
+  /* Text styles by role (#285): size, line height, weight and tracking together, as `text-<role>`. Colour stays
+     apart (text-ink, text-ink-muted). Three weights only: 400 text, 600 labels, 800 titles. */
+  --text-body: 1rem;                          /* the links of the top bar */
+  --text-body--line-height: 1.5rem;
+  --text-display: 3rem;                       /* the first line of the landing page */
+  --text-display--line-height: 0.95;
+  --text-display--font-weight: 800;
+  --text-display--letter-spacing: -0.025em;
+  --text-statement: 2.25rem;                  /* the title of a block of a landing or legal page */
+  --text-statement--line-height: 1.1;
+  --text-statement--font-weight: 800;
+  --text-statement--letter-spacing: -0.025em;
+  --text-pitch: 1.25rem;                      /* the sentence the landing page is about */
+  --text-pitch--line-height: 1.8;
+  --text-pitch--letter-spacing: -0.025em;
+  --text-lead: 1.125rem;                      /* the paragraph that introduces a block */
+  --text-lead--line-height: 1.75rem;
+  --text-title: 1.5rem;                       /* the title of a page */
+  --text-title--line-height: 1.2;
+  --text-title--font-weight: 800;
+  --text-title--letter-spacing: -0.025em;
+  --text-heading: 1.5rem;                     /* a title on a small card (sign in), a big figure */
+  --text-heading--line-height: 1.25;
+  --text-heading--font-weight: 800;
+  --text-heading--letter-spacing: -0.025em;
+  --text-section: 1.25rem;                    /* a section of a page */
+  --text-section--line-height: 1.75rem;
+  --text-section--font-weight: 800;
+  --text-section--letter-spacing: -0.025em;
+  --text-subsection: 1.125rem;                /* a part of a panel or card, the title of a dialog */
+  --text-subsection--line-height: 1.75rem;
+  --text-subsection--font-weight: 800;
+  --text-subsection--letter-spacing: -0.025em;
+  --text-item: 1rem;                          /* the title of a card or of a row of a list */
+  --text-item--line-height: 1.25;
+  --text-item--font-weight: 800;
+  --text-small: 0.875rem;                     /* secondary text and most of the interface */
+  --text-small--line-height: 1.25rem;
+  --text-small-strong: 0.875rem;              /* the same, emphasised: a link, a message, a name */
+  --text-small-strong--line-height: 1.25rem;
+  --text-small-strong--font-weight: 600;
+  --text-caption: 0.75rem;                    /* a hint, a count, a date */
+  --text-caption--line-height: 1rem;
+  --text-label: 0.75rem;                      /* the label of a field, a badge */
+  --text-label--line-height: 1rem;
+  --text-label--font-weight: 600;
+}
+
+/* From a computer's width (768 px) the roles with more room take it. */
+@media (min-width: 768px) {
+  :root {
+    --spacing-heading: 1rem;
+    --spacing-section: 2rem;
+    --spacing-panel: 1.5rem;
+    --spacing-dialog: 1.5rem;
+    --spacing-gutter: 2rem;
+    --spacing-centered: 4rem;
+    --spacing-band: 4rem;
+    --spacing-hero: 4rem;
+    --spacing-chapter: 6rem;
+    --spacing-columns: 3rem;
+    --spacing-showcase: 4rem;
+    --text-statement: 3rem;
+    --text-pitch: 2rem;
+    --text-lead: 1.25rem;
+    --spacing-nav: 1.5rem;
+    --text-title: 2rem;
+  }
+}
+
+/* The first screen of the landing page has room for more from 1024 px. */
+@media (min-width: 1024px) {
+  :root {
+    --spacing-hero: 6rem;
+    --text-display: 4.5rem;
+  }
 }
 
 :root {
   color-scheme: light;
+}
+
+/* The scrollbar is always there: without it a short page is wider than a long one, and the header and the content
+   shift by half a scrollbar when you go from one to the other (scrollbar-gutter does the same, but not everywhere). */
+html {
+  overflow-y: scroll;
 }
 
 body {

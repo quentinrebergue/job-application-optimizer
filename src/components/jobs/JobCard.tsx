@@ -27,14 +27,14 @@ export function StatusBadge({ status, className }: { status: string; className?:
 export function JobCard({ job }: { job: JobOffer }) {
   return (
     <Link href={`/jobs/${job.id}`} className={cardClasses({ interactive: true, className: 'flex h-full flex-col gap-1' })}>
-      <div className="flex items-start justify-between gap-3">
-        <span title={job.title} className="line-clamp-2 font-extrabold leading-tight text-ink">
+      <div className="flex items-start justify-between gap-inline">
+        <span title={job.title} className="text-item line-clamp-2 text-ink">
           {job.title}
         </span>
         <StatusBadge status={job.status} />
       </div>
-      <p className="truncate text-sm text-ink-muted">{job.company}</p>
-      <p className="mt-auto pt-2 text-xs tabular-nums text-ink-muted">{formatDate(job.date_added)}</p>
+      <p className="truncate text-small text-ink-muted">{job.company}</p>
+      <p className="mt-auto pt-2 text-caption tabular-nums text-ink-muted">{formatDate(job.date_added)}</p>
     </Link>
   )
 }

@@ -18,12 +18,12 @@ export function ResendVerificationButton({ className }: { className?: string }) 
   }
 
   return (
-    <div className={cn('flex flex-wrap items-center gap-x-3 gap-y-1', className)}>
+    <div className={cn('flex flex-wrap items-center gap-x-inline gap-y-1', className)}>
       <Button size="sm" variant="secondary" onClick={resend} disabled={pending}>
         {pending ? 'Sending…' : 'Resend the email'}
       </Button>
       {result && (
-        <span role="status" className={cn('text-sm', result.ok ? 'font-semibold' : 'text-danger')}>
+        <span role="status" className={cn('text-small', result.ok ? 'font-semibold' : 'text-danger')}>
           {result.message}
         </span>
       )}

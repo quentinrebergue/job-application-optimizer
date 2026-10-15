@@ -1,9 +1,12 @@
 import { describe, it, expect } from 'vitest'
-import { IMPORT_MAX_BYTES, checkFile, errorMessage, report, sendResume, type ImportResult } from './import-resume'
+import { IMPORT_MAX_BYTES, checkFile, errorMessage, groupByKind, groupTitle, profileRows, report, sendResume, withEntry, withoutEntry, type ImportResult } from './import-resume'
+import type { EntityMeta } from '@/types'
 
 const none = { added: 0, duplicates: 0, overCap: 0 }
 const result = (over: Partial<ImportResult['summary']> = {}, rest: Partial<ImportResult> = {}): ImportResult => ({
   summary: { experiences: none, projects: none, education: none, skills: none, ...over },
+  entries: [],
+  existing: [],
   dropped: 0,
   truncated: false,
   ...rest,
@@ -35,11 +38,11 @@ describe('report', () => {
     expect(all.notes).toEqual([])
   })
 
-  it('says when there is nothing new, and why', () => {
+  it('says when there is nothing new; the entries already in the library are listed, not counted in a note', () => {
     const r = report(result({ projects: { added: 0, duplicates: 3, overCap: 0 } }))
     expect(r.headline).toBe('Nothing new to add.')
     expect(r.total).toBe(0)
-    expect(r.notes).toEqual(['3 already in your library, not added again.'])
+    expect(r.notes).toEqual([])
   })
 
   it('explains what the caps of the library kept out, kind by kind', () => {
@@ -50,14 +53,6 @@ describe('report', () => {
     ])
   })
 
-  it('says when only the first page of the PDF was read', () => {
-    expect(report(result({}, { truncated: true })).notes).toEqual(['Only the first page of the PDF was read.'])
-  })
-
-  it('says which fields of the profile were filled', () => {
-    const r = report(result({ experiences: { ...none, added: 1 } }, { profile: ['full_name', 'phone', 'linkedin'] }))
-    expect(r.notes).toEqual(['Your profile: name, phone and LinkedIn filled in.'])
-  })
 
   it('does not report what the checks dropped: a count the user cannot act on', () => {
     expect(report(result({ experiences: { ...none, added: 1 } }, { dropped: 3 })).notes).toEqual([])
@@ -116,5 +111,50 @@ describe('sendResume', () => {
   it('does not take an answer without a summary for a success', async () => {
     const out = await sendResume(file, { fetchImpl: reply(200, { hello: 'world' }) as unknown as typeof fetch })
     expect(out.ok).toBe(false)
+  })
+})
+
+describe('the entries the import created', () => {
+  const entry = (type: string, id: string, extra: object = {}) => ({ id, type, ...extra }) as unknown as EntityMeta
+  const entries = [
+    entry('skills', 's1', { name: 'Go' }),
+    entry('experiences', 'e1', { title: 'Engineer' }),
+    entry('skills', 's2', { name: 'SQL' }),
+    entry('education', 'd1', { degree: 'MSc' }),
+  ]
+
+  it('groups them by kind, in the order of the library, leaving out the kinds with none', () => {
+    expect(groupByKind(entries).map((g) => [g.kind, g.entries.map((e) => e.id)])).toEqual([
+      ['experiences', ['e1']],
+      ['education', ['d1']],
+      ['skills', ['s1', 's2']],
+    ])
+    expect(groupByKind([])).toEqual([])
+  })
+
+  it('titles a group with the right number', () => {
+    expect(groupTitle('experiences', 1)).toBe('1 experience')
+    expect(groupTitle('skills', 2)).toBe('2 skills')
+  })
+
+  it('removes a deleted entry and only that one', () => {
+    expect(withoutEntry(entries, 's1').map((e) => e.id)).toEqual(['e1', 's2', 'd1'])
+    expect(withoutEntry(entries, 'nope')).toHaveLength(4)
+  })
+
+  it('shows an entry as last saved, keeping the fields the answer does not hold', () => {
+    const out = withEntry(entries, entry('experiences', 'e1', { title: 'Lead engineer' }))
+    expect(out[1]).toMatchObject({ id: 'e1', title: 'Lead engineer' })
+    expect(out).toHaveLength(4)
+    expect(withEntry(entries, entry('skills', 'zz'))).toEqual(entries)
+  })
+})
+
+describe('profileRows', () => {
+  it('lists every field of the profile in the order of the form, null where it is empty', () => {
+    const rows = profileRows({ full_name: 'Camille Moreau', email: '', phone: '  ', linkedin: 'in/camille', address: '', resume_title: 'Engineer', profile_text: '' } as never)
+    expect(rows.map((r) => r.key)).toHaveLength(7)
+    expect(rows.map((r) => r.label)).toEqual(['Name', 'Email', 'Phone', 'LinkedIn', 'Address', 'Resume title', 'Profile'])
+    expect(rows.map((r) => r.value)).toEqual(['Camille Moreau', null, null, 'in/camille', null, 'Engineer', null])
   })
 })

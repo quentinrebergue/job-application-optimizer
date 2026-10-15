@@ -40,7 +40,7 @@ export function Tabs<T extends string>({ label, items, value, onChange, classNam
             disabled={item.disabled}
             onClick={() => onChange(item.value)}
             className={cn(
-              'rounded-control border-2 px-3 py-1.5 text-sm transition-colors disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:border-transparent',
+              'rounded-control border-2 px-control py-1.5 text-small transition-colors disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:border-transparent',
               focusRing,
               selected
                 ? 'border-ink bg-surface font-semibold text-ink shadow-hard'
@@ -49,9 +49,9 @@ export function Tabs<T extends string>({ label, items, value, onChange, classNam
           >
             {item.label}
             {item.count !== undefined && (
-              <span className="ml-1.5 text-xs font-normal tabular-nums">{item.count}</span>
+              <span className="ml-1.5 text-caption font-normal tabular-nums">{item.count}</span>
             )}
-            {item.note && <span className="ml-1.5 text-xs font-normal">· {item.note}</span>}
+            {item.note && <span className="ml-1.5 text-caption font-normal">· {item.note}</span>}
           </button>
         )
       })}

@@ -48,7 +48,7 @@ export function EntityRow({ entity, state, onToggle, onExpand, children }: Props
         state.selected ? 'bg-surface shadow-hard' : 'bg-canvas',
       )}
     >
-      <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-x-3 p-3">
+      <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-x-row p-row">
         <input
           id={checkboxId}
           type="checkbox"
@@ -57,19 +57,19 @@ export function EntityRow({ entity, state, onToggle, onExpand, children }: Props
           className="mt-0.5 size-5 cursor-pointer accent-ink"
         />
         <div className="flex min-w-0 flex-col gap-1">
-          <label htmlFor={checkboxId} title={name} className="cursor-pointer truncate font-extrabold leading-tight">{name}</label>
-          {sub && <p className="truncate text-xs text-ink-muted">{sub}</p>}
+          <label htmlFor={checkboxId} title={name} className="text-item cursor-pointer truncate">{name}</label>
+          {sub && <p className="truncate text-caption text-ink-muted">{sub}</p>}
           {(state.recommended || state.level !== null || state.score !== null || state.tagCount) && (
             <div className="flex flex-wrap items-center gap-2">
               {/* A recommended entry says how well it matches in the tag itself; the others say it in plain text. */}
               {state.level !== null
                 ? state.recommended
                   ? <Badge label={MATCH_LABELS[state.level]} variant="accent" />
-                  : <span className="text-xs font-semibold">{MATCH_LABELS[state.level]}</span>
+                  : <span className="text-label">{MATCH_LABELS[state.level]}</span>
                 : (
                   <>
                     {state.recommended && <Badge label="Recommended" variant="accent" />}
-                    {state.score !== null && <span className="text-xs font-semibold tabular-nums">{state.score}% match</span>}
+                    {state.score !== null && <span className="text-label tabular-nums">{state.score}% match</span>}
                   </>
                 )}
               {state.tagCount && <Badge label={state.tagCount} variant="muted" />}
@@ -88,9 +88,9 @@ export function EntityRow({ entity, state, onToggle, onExpand, children }: Props
         )}
       </div>
       {state.expanded && (
-        <div className="flex flex-col gap-3 border-t-2 border-ink p-3">
+        <div className="flex flex-col gap-row border-t-2 border-ink p-row">
           {state.reason && (
-            <p className="text-sm">
+            <p className="text-small">
               <span className="font-semibold">Why it matches: </span>
               <span className="text-ink-muted">{state.reason}</span>
             </p>

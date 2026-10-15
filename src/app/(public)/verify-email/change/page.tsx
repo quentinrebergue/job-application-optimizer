@@ -19,10 +19,10 @@ export default async function ChangeEmailPage({ searchParams }: PageProps<'/veri
   if ('failure' in result || !token) redirect(`/verify-email?status=${'failure' in result ? result.failure : 'invalid'}`)
 
   return (
-    <div className="flex flex-1 items-center justify-center px-4 py-12">
-      <Card className="flex w-full max-w-sm flex-col gap-4 p-6">
-        <h1 className="text-2xl font-extrabold tracking-tight">Confirm your new email</h1>
-        <p className="text-sm">
+    <div className="flex flex-1 items-center justify-center px-gutter py-centered">
+      <Card className="flex w-full max-w-sm flex-col gap-stack p-panel">
+        <h1 className="text-heading">Confirm your new email</h1>
+        <p className="text-small">
           Make <strong className="break-all">{result.newEmail}</strong> the address of your FastResume account? You will log in with it.
         </p>
         <form action={confirmEmailChangeAction}>

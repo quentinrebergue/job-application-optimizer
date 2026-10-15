@@ -102,24 +102,24 @@ export function JobDetailClient({ initialJob, initialTab }: Props) {
     cn(tab === panel ? 'block' : 'hidden', desktop)
 
   return (
-    <div className={cn(page, 'flex flex-col gap-6')}>
+    <div className={cn(page, 'flex flex-col gap-section')}>
       {/* Back link and status on one row, then the title and its details. */}
-      <header className="flex flex-col gap-3 lg:border-b-2 lg:border-ink lg:pb-6">
-        <div className="flex items-center justify-between gap-3">
-          <Link href="/jobs" className="text-sm font-semibold text-ink-muted underline-offset-4 hover:text-ink hover:underline">
+      <header className="flex flex-col gap-heading lg:border-b-2 lg:border-ink lg:pb-section">
+        <div className="flex items-center justify-between gap-inline">
+          <Link href="/jobs" className="text-small-strong text-ink-muted underline-offset-4 hover:text-ink hover:underline">
             ← All jobs
           </Link>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-inline">
             {/* Only while saving: a permanent "saved" message is noise. Failures show an alert. */}
-            <p aria-live="polite" className="text-sm text-ink-muted">{saving ? 'Saving…' : ''}</p>
+            <p aria-live="polite" className="text-small text-ink-muted">{saving ? 'Saving…' : ''}</p>
             <StatusSelect value={job.status} onChange={handleStatusChange} disabled={busy} />
           </div>
         </div>
         <div className="min-w-0">
           {/* On a phone: the title on one line and the date; the company and the place are in the Offer tab. */}
-          <h1 className="truncate text-2xl font-extrabold leading-tight tracking-tight sm:overflow-visible sm:whitespace-normal sm:text-3xl">{job.title}</h1>
+          <h1 className="text-title truncate sm:overflow-visible sm:whitespace-normal">{job.title}</h1>
           <p className="mt-1 hidden font-semibold sm:block">{job.company}</p>
-          <p className="text-sm text-ink-muted">
+          <p className="text-small text-ink-muted">
             Added <span className="tabular-nums">{formatDate(job.date_added)}</span>
             {job.location && <span className="hidden sm:inline"> · {job.location}</span>}
           </p>
@@ -127,7 +127,7 @@ export function JobDetailClient({ initialJob, initialTab }: Props) {
         {error && <Alert>{error}</Alert>}
       </header>
 
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:items-start">
+      <div className="grid grid-cols-1 gap-section lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:items-start">
         {/* On desktop the offer follows the scroll, at most one screen high: the resume is usually much longer. */}
         <PanelCard
           title="Offer"
@@ -194,7 +194,7 @@ function PanelCard({ title, tabs, desktopHeader, scrollBody, className, children
   return (
     <section aria-label={title} className={cn(
         // Below desktop the card gives way to the page: edge to edge, tabs on top, the tint directly on the page (a phone is narrow), down to the footer, whose own stroke closes it.
-        'border-ink bg-panel max-lg:-mx-4 max-lg:-mb-4 max-lg:border-t-2 md:max-lg:-mx-8 md:max-lg:-mb-8 lg:rounded-control lg:border-2 lg:shadow-hard',
+        'border-ink bg-panel max-lg:-mx-gutter max-lg:-mb-gutter max-lg:border-t-2 lg:rounded-control lg:border-2 lg:shadow-hard',
         scrollBody && 'lg:flex-col',
         className,
       )}>
@@ -202,10 +202,10 @@ function PanelCard({ title, tabs, desktopHeader, scrollBody, className, children
       {desktopHeader ? (
         <div className="hidden shrink-0 lg:block">{desktopHeader}</div>
       ) : (
-        <h2 className="hidden shrink-0 border-b-2 border-ink px-5 py-3 text-xl font-extrabold tracking-tight lg:block">{title}</h2>
+        <h2 className="text-section hidden shrink-0 border-b-2 border-ink px-panel py-bar lg:block">{title}</h2>
       )}
       {/* The gutter is reserved so the width (and the auto-grown text) does not jump when a scrollbar appears. */}
-      <div className={cn('p-4 md:p-6', scrollBody && 'lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:[scrollbar-gutter:stable]')}>{children}</div>
+      <div className={cn('p-panel', scrollBody && 'lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:[scrollbar-gutter:stable]')}>{children}</div>
     </section>
   )
 }

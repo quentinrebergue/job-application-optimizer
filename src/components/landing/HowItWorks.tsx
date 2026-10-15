@@ -21,11 +21,11 @@ interface StepProps {
 
 function Step({ number, title, children, visual, flip, divider }: StepProps) {
   return (
-    <div className={cn('grid items-start gap-8 md:grid-cols-2 md:gap-14', divider && 'border-t-2 border-ink/15 pt-16')}>
-      <div className={cn('flex flex-col gap-4', flip && 'md:order-2')}>
-        <div className="flex items-center gap-3">
-          <span className="flex size-10 shrink-0 items-center justify-center rounded-control border-2 border-ink bg-accent text-xl font-extrabold tabular-nums shadow-hard">{number}</span>
-          <h3 className="text-2xl font-extrabold tracking-tight sm:text-3xl">{title}</h3>
+    <div className={cn('grid items-start gap-columns md:grid-cols-2', divider && 'border-t-2 border-ink/15 pt-chapter')}>
+      <div className={cn('flex flex-col gap-stack', flip && 'md:order-2')}>
+        <div className="flex items-center gap-inline">
+          <span className="flex size-10 shrink-0 items-center justify-center rounded-control border-2 border-ink bg-accent text-section tabular-nums shadow-hard">{number}</span>
+          <h3 className="text-title">{title}</h3>
         </div>
         {children}
       </div>
@@ -39,7 +39,7 @@ function Facts({ items, className }: { items: { name: string; text: React.ReactN
   return (
     <dl className={cn('mt-2 flex flex-col border-t-2 border-ink/15', className)}>
       {items.map((item) => (
-        <div key={item.name} className="grid grid-cols-[7.5rem_1fr] items-baseline gap-3 border-b-2 border-ink/15 py-3">
+        <div key={item.name} className="grid grid-cols-[7.5rem_1fr] items-baseline gap-inline border-b-2 border-ink/15 py-bar">
           <dt className="font-extrabold">{item.name}</dt>
           <dd className="text-ink-muted">{item.text}</dd>
         </div>
@@ -56,13 +56,13 @@ const LIBRARY_PARTS = [
   { name: 'Education', text: 'Your degrees and schools.' },
 ]
 
-const bullet = 'flex flex-col gap-3 text-ink-muted [&_strong]:font-extrabold [&_strong]:text-ink'
+const bullet = 'flex flex-col gap-inline text-ink-muted [&_strong]:font-extrabold [&_strong]:text-ink'
 
 export function HowItWorks() {
   return (
     <section aria-labelledby="how-title" className="border-y-2 border-ink">
-      <div className={cn(page, 'flex flex-col gap-16 py-12 md:py-16')}>
-        <h2 id="how-title" className="text-4xl font-extrabold tracking-tight sm:text-5xl">How it works</h2>
+      <div className={cn(page, 'flex flex-col gap-chapter py-band')}>
+        <h2 id="how-title" className="text-statement">How it works</h2>
 
         <Step number={1} title="Your library" visual={<LibraryDemo />}>
           <div className={bullet}>
@@ -76,7 +76,7 @@ export function HowItWorks() {
           <div className={bullet}>
             <p>Paste the <strong>title, company and description</strong> of each offer. All of them live in one list, and the description is what the AI reads to rank your library.</p>
           </div>
-          <div className="mt-2 hidden flex-col gap-3 border-t-2 border-ink/15 pt-4 md:flex">
+          <div className="mt-2 hidden flex-col gap-inline border-t-2 border-ink/15 pt-stack md:flex">
             <p className="font-extrabold">Follow each application</p>
             <ul className="flex flex-wrap gap-2">
               {APPLICATION_STATUSES.map((status) => (
