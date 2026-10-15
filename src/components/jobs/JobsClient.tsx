@@ -1,17 +1,20 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
+import { flushSync } from 'react-dom'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import type { StatusFilter } from '@/lib/job-filter'
+import { jobsHref, matchesQuery, type StatusFilter } from '@/lib/job-filter'
 import { Plus } from 'lucide-react'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { JobCard } from '@/components/jobs/JobCard'
+import { SearchField, SearchToggle } from '@/components/jobs/JobSearch'
 import { FilterBar } from '@/components/ui/FilterBar'
-import { buttonClasses } from '@/components/ui/Button'
+import { Button, buttonClasses } from '@/components/ui/Button'
 import type { JobOffer } from '@/types'
 import { APPLICATION_STATUSES, APPLICATION_STATUS_LABELS } from '@/config'
 import { page } from '@/components/ui/styles'
+import { cn } from '@/lib/cn'
 
 const TABS: { label: string; value: StatusFilter }[] = [
   { label: 'All', value: 'all' },
@@ -21,20 +24,49 @@ const TABS: { label: string; value: StatusFilter }[] = [
 interface Props {
   initialJobs: JobOffer[]
   initialFilter: StatusFilter
+  /** The search of the address (?q=), if any. */
+  initialQuery: string
 }
 
-export function JobsClient({ initialJobs, initialFilter }: Props) {
+export function JobsClient({ initialJobs, initialFilter, initialQuery }: Props) {
   const router = useRouter()
   const [tab, setTab] = useState<StatusFilter>(initialFilter)
+  // The search is local state: the list follows every key typed, no request. The address keeps it (?q=) so that it
+  // survives a visit to a job, without asking the server for the page again.
+  const [query, setQuery] = useState(initialQuery)
+  // On a phone the field is opened by the magnifier; a search already in the address opens it.
+  const [searchOpen, setSearchOpen] = useState(initialQuery !== '')
+  const searchRef = useRef<HTMLInputElement>(null)
 
   function changeFilter(value: StatusFilter) {
     setTab(value)
-    router.replace(value === 'all' ? '/jobs' : `/jobs?status=${value}`, { scroll: false })
+    router.replace(jobsHref(value, query), { scroll: false })
   }
 
-  const filtered = tab === 'all'
-    ? initialJobs
-    : initialJobs.filter((j) => j.status === tab)
+  function changeQuery(value: string) {
+    setQuery(value)
+    window.history.replaceState(null, '', jobsHref(tab, value))
+  }
+
+  function toggleSearch() {
+    if (searchOpen) {
+      changeQuery('')
+      setSearchOpen(false)
+      return
+    }
+    // The field is drawn and focused inside the tap itself: a phone only opens its keyboard for a focus taken there.
+    flushSync(() => setSearchOpen(true))
+    searchRef.current?.focus()
+  }
+
+  function escapeSearch() {
+    changeQuery('')
+    setSearchOpen(false)
+  }
+
+  // The counts of the filter are those of the search: what each status would show.
+  const searched = initialJobs.filter((j) => matchesQuery(j, query))
+  const filtered = tab === 'all' ? searched : searched.filter((j) => j.status === tab)
 
   return (
     <div className={page}>
@@ -48,29 +80,43 @@ export function JobsClient({ initialJobs, initialFilter }: Props) {
         </Link>
       </PageHeader>
 
-      {/* On a phone the page has no title bar: the Add Job button sits beside the filter, as tall as it. */}
-      <div className="mb-section flex items-stretch gap-inline">
-        <div className="min-w-0 flex-1">
+      {/* On a phone the page has no title bar: beside the filter, the magnifier that opens the search under it and Add job,
+          as tall as the filter. From 768 px the search is a field beside the bar. */}
+      <div className="mb-section grid grid-cols-[minmax(0,1fr)_auto_auto] items-stretch gap-inline md:grid-cols-[minmax(0,1fr)_16rem]">
+        <div className="min-w-0">
           <FilterBar
             label="Filter by status"
             options={TABS.map((t) => ({
               ...t,
-              count: t.value === 'all' ? initialJobs.length : initialJobs.filter((j) => j.status === t.value).length,
+              count: t.value === 'all' ? searched.length : searched.filter((j) => j.status === t.value).length,
             }))}
             value={tab}
             onChange={changeFilter}
           />
         </div>
+        <SearchToggle open={searchOpen} onToggle={toggleSearch} />
         <Link href="/jobs/new" className={buttonClasses({ className: 'h-auto shrink-0 md:hidden' })}>
           <Plus size={16} aria-hidden="true" />
           Add job
         </Link>
+        <div className={cn('col-span-3 md:col-span-1 md:flex', !searchOpen && 'max-md:hidden')}>
+          <SearchField value={query} onChange={changeQuery} onEscape={escapeSearch} inputRef={searchRef} />
+        </div>
       </div>
+
+      <p role="status" className="sr-only">{query.trim() ? `${filtered.length} ${filtered.length === 1 ? 'job matches' : 'jobs match'} your search.` : ''}</p>
 
       {/* Content */}
       {filtered.length === 0 ? (
         <div className="rounded-control border-2 border-dashed border-ink p-10 text-center">
-          {tab === 'all' ? (
+          {query.trim() ? (
+            <>
+              <p className="mb-stack text-ink-muted">
+                No {tab === 'all' ? '' : `${APPLICATION_STATUS_LABELS[tab].toLowerCase()} `}job matches &ldquo;{query.trim()}&rdquo;.
+              </p>
+              <Button variant="secondary" onClick={escapeSearch}>Clear the search</Button>
+            </>
+          ) : tab === 'all' ? (
             <>
               <p className="mb-stack text-ink-muted">No jobs yet.</p>
               <Link href="/jobs/new" className={buttonClasses()}>
