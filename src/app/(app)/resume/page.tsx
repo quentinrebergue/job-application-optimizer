@@ -1,4 +1,3 @@
-import { PageHeader } from '@/components/ui/PageHeader'
 import { listEntities } from '@/lib/data'
 import { ENTITY_TYPE_IDS } from '@/config'
 import { ProfileSection } from '@/components/resume/ProfileSection'
@@ -17,7 +16,7 @@ export default async function ResumePage() {
 
   return (
     <div className={page}>
-      <PageHeader title="Resume" hideOnPhone />
+      <h1 className="sr-only">Resume</h1>
 
       <div className="flex flex-col gap-section">
         <ProfileSection />

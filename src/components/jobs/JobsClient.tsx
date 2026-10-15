@@ -5,16 +5,14 @@ import { flushSync } from 'react-dom'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { jobsHref, matchesQuery, type StatusFilter } from '@/lib/job-filter'
-import { Plus } from 'lucide-react'
-import { PageHeader } from '@/components/ui/PageHeader'
+import { Plus, Search } from 'lucide-react'
 import { JobCard } from '@/components/jobs/JobCard'
-import { SearchField, SearchToggle } from '@/components/jobs/JobSearch'
+import { SEARCH_FIELD_ID, SearchField, SearchToggle } from '@/components/jobs/JobSearch'
 import { FilterBar } from '@/components/ui/FilterBar'
 import { Button, buttonClasses } from '@/components/ui/Button'
 import type { JobOffer } from '@/types'
 import { APPLICATION_STATUSES, APPLICATION_STATUS_LABELS } from '@/config'
 import { page } from '@/components/ui/styles'
-import { cn } from '@/lib/cn'
 
 const TABS: { label: string; value: StatusFilter }[] = [
   { label: 'All', value: 'all' },
@@ -70,19 +68,11 @@ export function JobsClient({ initialJobs, initialFilter, initialQuery }: Props) 
 
   return (
     <div className={page}>
-      <PageHeader title="Job Tracker" hideOnPhone>
-        <Link
-          href="/jobs/new"
-          className={buttonClasses()}
-        >
-          <Plus size={16} aria-hidden="true" />
-          Add Job
-        </Link>
-      </PageHeader>
-
-      {/* On a phone the page has no title bar: beside the filter, the magnifier that opens the search under it and Add job,
-          as tall as the filter. From 768 px the search is a field beside the bar. */}
-      <div className="mb-section grid grid-cols-[minmax(0,1fr)_auto_auto] items-stretch gap-inline md:grid-cols-[minmax(0,1fr)_16rem]">
+      {/* The page starts with its controls; the title is for screen readers. From 825 px the search and Add job are
+          segments at the end of the bar of statuses, in its own look; below 825 px, the menu of statuses, the magnifier and
+          Add job, as tall as the menu. The search field opens under all of them. */}
+      <h1 className="sr-only">Job Tracker</h1>
+      <div className="mb-section grid grid-cols-[minmax(0,1fr)_auto_auto] items-stretch gap-inline min-[825px]:grid-cols-1">
         <div className="min-w-0">
           <FilterBar
             label="Filter by status"
@@ -92,14 +82,21 @@ export function JobsClient({ initialJobs, initialFilter, initialQuery }: Props) 
             }))}
             value={tab}
             onChange={changeFilter}
+            // Eight segments need 825 px: below, the menu of statuses with the magnifier and Add job beside it.
+            segmentsClassName="hidden min-[825px]:flex"
+            selectClassName="min-[825px]:hidden"
+            actions={[
+              { key: 'search', icon: <Search size={16} aria-hidden="true" />, ariaLabel: searchOpen ? 'Close the search' : 'Search jobs', expanded: searchOpen, controls: SEARCH_FIELD_ID, onClick: toggleSearch },
+              { key: 'add', icon: <Plus size={16} aria-hidden="true" />, label: 'Add job', href: '/jobs/new', accent: true },
+            ]}
           />
         </div>
         <SearchToggle open={searchOpen} onToggle={toggleSearch} />
-        <Link href="/jobs/new" className={buttonClasses({ className: 'h-auto shrink-0 md:hidden' })}>
+        <Link href="/jobs/new" className={buttonClasses({ className: 'h-auto shrink-0 min-[825px]:hidden' })}>
           <Plus size={16} aria-hidden="true" />
           Add job
         </Link>
-        <div className={cn('col-span-3 md:col-span-1 md:flex', !searchOpen && 'max-md:hidden')}>
+        <div className={searchOpen ? 'col-span-3 min-[825px]:col-span-1 min-[825px]:flex' : 'hidden'}>
           <SearchField value={query} onChange={changeQuery} onEscape={escapeSearch} inputRef={searchRef} />
         </div>
       </div>

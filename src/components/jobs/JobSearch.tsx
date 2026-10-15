@@ -9,7 +9,7 @@ import { MAX_QUERY_LENGTH } from '@/lib/job-filter'
 /** The id of the search field, for the button that opens it. */
 export const SEARCH_FIELD_ID = 'job-search'
 
-/** On a phone: the magnifier that opens the search field under the filter (and closes it, clearing the search). */
+/** Below 825 px: the magnifier that opens the search field under the filter (and closes it, clearing the search). */
 export function SearchToggle({ open, onToggle }: { open: boolean; onToggle: () => void }) {
   return (
     <Button
@@ -18,7 +18,7 @@ export function SearchToggle({ open, onToggle }: { open: boolean; onToggle: () =
       aria-expanded={open}
       aria-controls={SEARCH_FIELD_ID}
       onClick={onToggle}
-      className="h-auto shrink-0 md:hidden"
+      className={cn('h-auto shrink-0 min-[825px]:hidden', !open && 'bg-panel')}
     >
       <Search size={16} aria-hidden="true" />
     </Button>
@@ -54,7 +54,7 @@ export function SearchField({ value, onChange, onEscape, inputRef, className }: 
       ref={inputRef}
       onChange={(e) => onChange(e.target.value)}
       onKeyDown={(e) => { if (e.key === 'Escape') onEscape() }}
-      className={cn('md:h-full', className)}
+      className={cn('min-[825px]:h-full', className)}
     />
   )
 }
