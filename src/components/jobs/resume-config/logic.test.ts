@@ -3,7 +3,7 @@ import type { EntityMeta, ResumeConfig } from '@/types'
 import type { AIAnalysisResult } from '@/types/job'
 import {
   EMPTY_CONFIG, applyAiOrder, entitySubLabel, groupEntities, initialConfig, moveEntity, parseEndDate,
-  resetConfig, setDescription, toggleEntity, toggleSkillTag,
+  resetConfig, setDescription, toggleEntity, toggleProjectTech, toggleSkillTag,
 } from './logic'
 
 const exp = (id: string, period: string): EntityMeta =>
@@ -196,3 +196,18 @@ describe('initialConfig', () => {
     expect(initialConfig(saved, [skill('s', ['Go', 'Rust', 'C'])], ai).skill_tag_overrides).toEqual({ s: ['Rust'] })
   })
 })
+
+describe('toggleProjectTech', () => {
+  it('hides the technologies, and showing them again keeps no key (shown is the default)', () => {
+    const hidden = toggleProjectTech(cfg())
+    expect(hidden.show_project_tech).toBe(false)
+    const shown = toggleProjectTech(hidden)
+    expect('show_project_tech' in shown).toBe(false)
+  })
+
+  it('changes nothing else in the configuration', () => {
+    const base = cfg({ selected_entity_ids: ['a'], project_order: ['a'] })
+    expect(toggleProjectTech(base)).toEqual({ ...base, show_project_tech: false })
+  })
+})
+

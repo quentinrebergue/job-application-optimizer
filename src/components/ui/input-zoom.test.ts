@@ -29,6 +29,7 @@ describe('the text size of the fields', () => {
       'src/components/resume/TemplatePicker.tsx', // selects with CONTROL = controlClasses + h-10; a colour input
       'src/components/entities/ImportResume.tsx', // a file input
       'src/components/jobs/resume-config/EntityRow.tsx', // a checkbox
+      'src/components/jobs/resume-config/EntitySection.tsx', // a checkbox (show the technologies)
       'src/components/auth/AuthForm.tsx', // hidden
       'src/components/auth/ResetPasswordForm.tsx', // hidden
       'src/app/(public)/verify-email/change/page.tsx', // hidden

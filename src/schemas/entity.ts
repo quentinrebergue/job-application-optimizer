@@ -26,7 +26,7 @@ export const SkillMetaSchema = z.object({
   id: z.string(),
   type: z.literal('skills'),
   name: z.string(),
-  category: z.string(),
+  category: z.string().default(''),
   level: z.enum(['beginner', 'intermediate', 'advanced', 'expert']),
   tags: z.array(z.string()),
   latex_snippet: z.string().optional().default(''),

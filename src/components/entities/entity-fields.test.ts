@@ -12,9 +12,9 @@ describe('entity fields', () => {
   })
 
   it('does not ask for a skill level, and sends the neutral one on creation', () => {
-    expect(toValues('skills')).toEqual({ name: '', category: '', tags: '' })
-    expect(toPayload('skills', { name: 'Languages', category: 'Programming', tags: 'C, Go' })).toEqual({
-      level: 'intermediate', name: 'Languages', category: 'Programming', tags: ['C', 'Go'],
+    expect(toValues('skills')).toEqual({ name: '', tags: '' })
+    expect(toPayload('skills', { name: 'Languages', tags: 'C, Go' })).toEqual({
+      level: 'intermediate', name: 'Languages', tags: ['C', 'Go'],
     })
   })
 
@@ -35,7 +35,8 @@ describe('entity fields', () => {
 
   it('shows where and when on the second line', () => {
     expect(entitySubtitle({ type: 'experiences', company: 'Acme', period: '2024' } as EntityMeta)).toBe('Acme · 2024')
-    expect(entitySubtitle({ type: 'skills', category: 'Languages' } as EntityMeta)).toBe('Languages')
+    // A skill has no second line any more: its category (kept on older entries) is not shown.
+    expect(entitySubtitle({ type: 'skills', category: 'Languages' } as EntityMeta)).toBe('')
   })
 })
 
@@ -68,7 +69,7 @@ describe('size limits (#201)', () => {
   it('names what the second line of a card holds, so an empty one says what is missing', () => {
     expect(missingDetails('experiences')).toBe('company, location or period')
     expect(missingDetails('education')).toBe('institution or period')
-    expect(missingDetails('skills')).toBe('category')
+    expect(missingDetails('skills')).toBeNull()
     // A project has no second line: there is nothing to say is missing.
     expect(missingDetails('projects')).toBeNull()
     expect(detailFields('projects')).toEqual([])

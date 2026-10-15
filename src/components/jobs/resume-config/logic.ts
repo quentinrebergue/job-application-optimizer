@@ -182,6 +182,16 @@ export function toggleSkillTag(config: ResumeConfig, skillId: string, tag: strin
   return { ...config, skill_tag_overrides: overrides }
 }
 
+/** Shows or hides the technologies printed under the projects of this resume; showing is the default, so no key is kept for it. */
+export function toggleProjectTech(config: ResumeConfig): ResumeConfig {
+  if (config.show_project_tech === false) {
+    const shown = { ...config }
+    delete shown.show_project_tech
+    return shown
+  }
+  return { ...config, show_project_tech: false }
+}
+
 /** Sets a custom description; an empty or unchanged one removes the override. */
 export function setDescription(config: ResumeConfig, entityId: string, value: string, original: string): ResumeConfig {
   const overrides = { ...(config.entity_description_overrides ?? {}) }

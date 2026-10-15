@@ -50,8 +50,9 @@ export const ENTITY_FIELDS: Record<EntityType, FieldDef[]> = {
     { key: 'description', label: 'Description', kind: 'textarea', wide: true, placeholder: 'What the project was and your part in it.', maxLength: LIMITS.projects.description },
   ],
   skills: [
-    { key: 'name', label: 'Name', kind: 'text', short: true, required: true, placeholder: 'Office tools', maxLength: LIMITS.skills.name },
-    { key: 'category', label: 'Category', kind: 'text', short: true, required: true, placeholder: 'Tools', maxLength: LIMITS.skills.category },
+    // The name is the title of the group on the resume. There is no category to fill: nothing read it (the resume, the AI)
+    // and it said again what the name says; entries made before keep theirs, unseen.
+    { key: 'name', label: 'Name', kind: 'text', required: true, placeholder: 'Office tools', maxLength: LIMITS.skills.name },
     {
       key: 'tags', label: 'Skills', kind: 'list', wide: true,
       placeholder: 'Spreadsheets, presentations, scheduling', hint: 'Printed after the name of the group.',
@@ -155,12 +156,12 @@ export function entityTitle(e: EntityMeta): string {
   return e.title
 }
 
-/** Second line of an entry card: where and when, or the group of a skill (a project has none). */
+/** Second line of an entry card: where and when (a project and a skill have none). */
 export function entitySubtitle(e: EntityMeta): string {
   if (e.type === 'experiences') return [e.company, e.period].filter(Boolean).join(' · ')
   if (e.type === 'projects') return ''
   if (e.type === 'education') return [e.institution, e.period].filter(Boolean).join(' · ')
-  return e.category
+  return ''
 }
 
 /** The chips of an entry card: a project's technologies, the others' tags. */
