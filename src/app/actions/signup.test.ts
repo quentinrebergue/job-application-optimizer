@@ -4,6 +4,7 @@ const createUser = vi.fn()
 const createSession = vi.fn()
 const sendVerificationEmail = vi.fn()
 const checkSignup = vi.fn()
+const giveBack = vi.fn()
 const redirect = vi.fn((path: string) => { throw new Error(`REDIRECT ${path}`) })
 
 vi.mock('@/lib/db', () => ({ pool: { query: vi.fn() } }))
@@ -32,7 +33,8 @@ beforeEach(() => {
   createUser.mockReset().mockResolvedValue({ id: 'u1', email: 'a@example.com' })
   createSession.mockReset().mockResolvedValue(undefined)
   sendVerificationEmail.mockReset().mockResolvedValue(undefined)
-  checkSignup.mockReset().mockResolvedValue({ ok: true })
+  giveBack.mockReset().mockResolvedValue(undefined)
+  checkSignup.mockReset().mockResolvedValue({ ok: true, giveBack })
   redirect.mockClear()
 })
 
@@ -51,6 +53,21 @@ describe('signup and its limit (#210)', () => {
     expect(createUser).not.toHaveBeenCalled()
     expect(createSession).not.toHaveBeenCalled()
     expect(sendVerificationEmail).not.toHaveBeenCalled()
+  })
+
+  it('gives the points back when the sign-up is refused for lack of room, and makes no account', async () => {
+    const { BusyError } = await import('@/lib/concurrency')
+    createUser.mockRejectedValue(new BusyError())
+    const state = await signup(undefined, form('a@example.com', 'abcd1234'))
+    expect(state?.message).toMatch(/very busy/)
+    expect(giveBack).toHaveBeenCalledTimes(1)
+    expect(createSession).not.toHaveBeenCalled()
+  })
+
+  it('keeps the points of a sign-up that failed for another reason (a duplicate address)', async () => {
+    createUser.mockRejectedValue(Object.assign(new Error('duplicate'), { code: '23505' }))
+    await signup(undefined, form('a@example.com', 'abcd1234'))
+    expect(giveBack).not.toHaveBeenCalled()
   })
 
   it('does not count a form that is not valid', async () => {

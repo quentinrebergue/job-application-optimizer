@@ -1,6 +1,6 @@
 import { envNumber } from '@/lib/env'
 import { waitFor } from '@/lib/quotas'
-import { consumeRateLimit, ipRateKey, isPublicIp } from '@/lib/rate-limit'
+import { consumeRateLimit, ipRateKey, isPublicIp, refundRateLimit } from '@/lib/rate-limit'
 
 // How many accounts can be created, and how fast (#210). Each account gets its own AI quotas, so
 // without a limit on sign-ups the per-user limits are only a fraction of the real limit; and each
@@ -28,7 +28,10 @@ export function signupLimits() {
   }
 }
 
-export type SignupCheck = { ok: true } | { ok: false; message: string }
+export type SignupCheck =
+  /** `giveBack` returns the points of this sign-up: for one that was refused for lack of room before an account was made (#258). */
+  | { ok: true; giveBack: () => Promise<void> }
+  | { ok: false; message: string }
 
 let warned = false
 /** Said once per process: without the visitor's real address the per-address limit does nothing. */
@@ -50,10 +53,13 @@ export function resetSignupWarning() {
  */
 export async function checkSignup(ip: string | null, now = new Date()): Promise<SignupCheck> {
   const limits = signupLimits()
+  const taken: string[] = []
 
   if (ip && isPublicIp(ip)) {
     for (const [window, limit, ms] of [['hour', limits.perIpHour, HOUR_MS], ['day', limits.perIpDay, DAY_MS]] as const) {
-      const { allowed, retryAfterMs } = await consumeRateLimit(`signup-ip:${ipRateKey(ip)}:${window}`, limit, ms, now)
+      const key = `signup-ip:${ipRateKey(ip)}:${window}`
+      const { allowed, retryAfterMs } = await consumeRateLimit(key, limit, ms, now)
+      taken.push(key)
       if (!allowed) {
         console.warn('sign-up limit reached for an address', { ip, window, limit })
         return { ok: false, message: `Too many sign-ups from your network. Try again in ${waitFor(retryAfterMs)}.` }
@@ -64,6 +70,7 @@ export async function checkSignup(ip: string | null, now = new Date()): Promise<
   }
 
   const site = await consumeRateLimit('signup-all:day', limits.maxPerDay, DAY_MS, now)
+  taken.push('signup-all:day')
   // Said once, on the sign-up that crosses the line: a surge is something to look at, not to block.
   if (site.count === limits.alertPerDay + 1) {
     console.warn('sign-up surge: more sign-ups today than usual', { signups: site.count, alert: limits.alertPerDay, max: limits.maxPerDay })
@@ -72,5 +79,5 @@ export async function checkSignup(ip: string | null, now = new Date()): Promise<
     if (site.count === limits.maxPerDay + 1) console.warn('sign-up limit reached for the whole site', { limit: limits.maxPerDay })
     return { ok: false, message: `Sign-ups are very busy right now. Try again in ${waitFor(site.retryAfterMs)}.` }
   }
-  return { ok: true }
+  return { ok: true, giveBack: async () => { for (const key of taken) await refundRateLimit(key, now) } }
 }

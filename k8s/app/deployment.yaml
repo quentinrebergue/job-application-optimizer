@@ -38,6 +38,13 @@ spec:
             # to hash in the app again: it also does so by itself when the service does not answer.
             - name: PASSWORD_HASHER_URL
               value: "http://password-hasher"
+            # How many logins and sign-ups may wait for the service (#258). It does about 3.2 hashes a second, so a
+            # queue of 30 is about 10 seconds at the longest: past it a visitor is told "very busy, try again" at once
+            # instead of waiting for a page that fails at 60 s (the default, 150, was 47 s). Queue = the longest wait
+            # accepted x the rate of the service; with N replicas of the app, divide by N (each has its own queue).
+            # The service's own queue (8) never fills before it: the app sends it two at a time.
+            - name: BCRYPT_QUEUE
+              value: "30"
             # The service that reads the text of a PDF, for the import of a resume (#267).
             - name: PDF_TEXT_URL
               value: "http://pdf-text"

@@ -23,7 +23,7 @@ vi.mock('@/lib/auth/login-limit', () => ({
 vi.mock('next/navigation', () => ({ redirect: vi.fn() }))
 vi.mock('next/headers', () => ({ headers: async () => new Headers() }))
 vi.mock('next/server', () => ({ after: vi.fn() }))
-vi.mock('@/lib/auth/signup-limit', () => ({ checkSignup: vi.fn(async () => ({ ok: true })) }))
+vi.mock('@/lib/auth/signup-limit', () => ({ checkSignup: vi.fn(async () => ({ ok: true, giveBack: async () => {} })) }))
 
 const { BusyError } = await import('@/lib/concurrency')
 const { login, signup } = await import('./auth')

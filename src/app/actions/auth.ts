@@ -48,7 +48,12 @@ export async function signup(_prevState: AuthFormState, formData: FormData): Pro
     user = await createUser(email, password)
     await createSession(user.id)
   } catch (err) {
-    if (err instanceof BusyError) return { message: 'Sign-up is very busy right now. Try again in a moment.', email }
+    if (err instanceof BusyError) {
+      // Refused for lack of room, no account made: it does not count against the address (a visitor told to try again
+      // would otherwise use up the sign-ups of their hour on refusals).
+      await allowed.giveBack()
+      return { message: 'Sign-up is very busy right now. Try again in a moment.', email }
+    }
     const isDuplicate = err instanceof Error && 'code' in err && err.code === '23505'
     return { message: isDuplicate ? 'This email is already registered.' : 'Something went wrong. Try again.', email }
   }
