@@ -182,6 +182,16 @@ export function toggleSkillTag(config: ResumeConfig, skillId: string, tag: strin
   return { ...config, skill_tag_overrides: overrides }
 }
 
+/** Shows or hides the technologies printed under the projects of this resume; showing is the default, so no key is kept for it. */
+export function toggleProjectTech(config: ResumeConfig): ResumeConfig {
+  if (config.show_project_tech === false) {
+    const shown = { ...config }
+    delete shown.show_project_tech
+    return shown
+  }
+  return { ...config, show_project_tech: false }
+}
+
 /** Sets a custom description; an empty or unchanged one removes the override. */
 export function setDescription(config: ResumeConfig, entityId: string, value: string, original: string): ResumeConfig {
   const overrides = { ...(config.entity_description_overrides ?? {}) }
@@ -203,6 +213,10 @@ export function resetConfig(entities: EntityMeta[]): ResumeConfig {
  * The config to show when the panel opens: the saved one, plus education when
  * nothing is selected yet, plus what the AI recommends, plus orders initialised
  * from the selection. Shown only; saved on the user's next change.
+ *
+ * The recommendations of an analysis are applied **once**: `ai_applied_at` names the analysis whose
+ * recommendations the selection already holds, so entries the user unticked after the ranking are not ticked again
+ * on the next visit. A new analysis ("Rank again") has another date and is applied.
  */
 export function initialConfig(saved: ResumeConfig | null, entities: EntityMeta[], ai?: AIAnalysisResult | null): ResumeConfig {
   let cfg: ResumeConfig = saved?.selected_entity_ids ? saved : EMPTY_CONFIG
@@ -211,11 +225,15 @@ export function initialConfig(saved: ResumeConfig | null, entities: EntityMeta[]
   }
 
   if (cfg.selected_entity_ids.length === 0) add(entities.filter((e) => e.type === 'education').map((e) => e.id))
-  add(ai?.recommended_experience_ids)
-  add(ai?.recommended_project_ids)
-  add(ai?.recommended_skill_ids)
+  const applyAi = !!ai && cfg.ai_applied_at !== ai.analyzed_at
+  if (applyAi) {
+    add(ai.recommended_experience_ids)
+    add(ai.recommended_project_ids)
+    add(ai.recommended_skill_ids)
+    cfg = { ...cfg, ai_applied_at: ai.analyzed_at }
+  }
 
-  if (ai?.recommended_skill_tags && Object.keys(ai.recommended_skill_tags).length > 0) {
+  if (applyAi && ai.recommended_skill_tags && Object.keys(ai.recommended_skill_tags).length > 0) {
     const overrides = { ...(cfg.skill_tag_overrides ?? {}) }
     for (const [skillId, tags] of Object.entries(ai.recommended_skill_tags)) {
       const skill = entities.find((e) => e.id === skillId) as SkillMeta | undefined

@@ -2,14 +2,15 @@
 
 import { SectionTitle } from '@/components/ui/SectionTitle'
 import { useState } from 'react'
-import type { EntityMeta, ResumeConfig, SkillMeta } from '@/types'
+import type { EntityMeta, ProjectMeta, ResumeConfig, SkillMeta } from '@/types'
+import { MAX_PROJECT_TECH } from '@/lib/resume/build-payload'
 import type { AIAnalysisResult } from '@/types/job'
 import { Button } from '@/components/ui/Button'
 import { DescriptionEditor } from './DescriptionEditor'
 import { EntityRow, type RowState } from './EntityRow'
 import { ReorderList } from './ReorderList'
 import { SkillTagPicker } from './SkillTagPicker'
-import { TYPE_LABELS, applyAiOrder, moveEntity, setDescription, toggleEntity, toggleSkillTag, type EntityType } from './logic'
+import { TYPE_LABELS, applyAiOrder, moveEntity, setDescription, toggleEntity, toggleProjectTech, toggleSkillTag, type EntityType } from './logic'
 import type { useResumeConfig } from './useResumeConfig'
 
 type Panel = ReturnType<typeof useResumeConfig>
@@ -59,7 +60,18 @@ export function EntitySection({ type, group, panel, ai, libraryTags }: Props) {
     <section aria-labelledby={`section-${type}`} className="flex flex-col gap-heading">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <SectionTitle as="h4" id={`section-${type}`}>{TYPE_LABELS[type]}</SectionTitle>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          {type === 'projects' && (
+            <label className="text-small flex cursor-pointer items-center gap-2">
+              <input
+                type="checkbox"
+                checked={config.show_project_tech !== false}
+                onChange={() => update(toggleProjectTech)}
+                className="size-5 cursor-pointer accent-ink"
+              />
+              Show technologies
+            </label>
+          )}
           {reordering && hasScores && (
             <Button variant="secondary" size="sm" onClick={() => update((c) => applyAiOrder(c, entities, type))}>
               Order by AI score
@@ -72,6 +84,10 @@ export function EntitySection({ type, group, panel, ai, libraryTags }: Props) {
           )}
         </div>
       </div>
+      {/* A long list is cut on the resume, not in the library: say so where the user can see it is happening. */}
+      {type === 'projects' && config.show_project_tech !== false && included.some((p) => (p as ProjectMeta).tech.length > MAX_PROJECT_TECH) && (
+        <p className="text-caption text-ink-muted">The first {MAX_PROJECT_TECH} technologies of each project are printed.</p>
+      )}
       {reordering && canReorder ? (
         <ReorderList
           items={included}

@@ -57,6 +57,12 @@ dbDescribe('importing a resume on Postgres', () => {
     expect(again.existing.map((e) => e.id)).toEqual([first.created[0].id])
   })
 
+  it('takes a skill typed by hand (no category) and an imported one of the same name for the same skill', async () => {
+    await createEntity(alice, 'skills', { name: 'Go', level: 'intermediate', tags: [] } as never)
+    const { summary } = await saveImportedEntries(alice, { ...none, skills: [{ name: ' go ', category: 'Go', level: 'intermediate', tags: [] }] })
+    expect(summary.skills).toEqual({ added: 0, duplicates: 1, overCap: 0 })
+  })
+
   it('does not add the same entry twice within one resume', async () => {
     const { summary } = await saveImportedEntries(alice, { ...none, experiences: [experience, experience] })
     expect(summary.experiences).toEqual({ added: 1, duplicates: 1, overCap: 0 })

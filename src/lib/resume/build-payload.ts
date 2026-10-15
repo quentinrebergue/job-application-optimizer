@@ -33,8 +33,11 @@ export interface RenderPayload {
 
 export type PayloadConfig = Pick<
   ResumeConfig,
-  'profile_text' | 'resume_title' | 'skill_tag_overrides' | 'entity_description_overrides' | 'project_order' | 'experience_order'
+  'profile_text' | 'resume_title' | 'skill_tag_overrides' | 'entity_description_overrides' | 'project_order' | 'experience_order' | 'show_project_tech'
 >
+
+/** The technologies printed under a project: a list of thirty would fill the one page. The library keeps them all (the AI reads them all). */
+export const MAX_PROJECT_TECH = 8
 
 export interface BuildPayloadInput {
   templateId: string
@@ -149,7 +152,7 @@ export function buildPayload(input: BuildPayloadInput): RenderPayload {
       })),
       projects: applyOrder(projects, config.project_order).map((p) => ({
         title: softBreaks(p.title),
-        tech: p.tech.map(softBreaks),
+        tech: config.show_project_tech === false ? [] : p.tech.slice(0, MAX_PROJECT_TECH).map(softBreaks),
         description: softBreaks(descriptionOverrides[p.id] ?? p.description),
       })),
       skills: skills

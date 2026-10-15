@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import type { EducationMeta, EntityMeta, ExperienceMeta, ProjectMeta, SkillMeta } from '@/types'
 import type { ResumeProfile } from '@/schemas/resume-profile'
-import { applyOrder, buildPayload, endDateKey, sortByEndDate } from './build-payload'
+import { MAX_PROJECT_TECH, applyOrder, buildPayload, endDateKey, sortByEndDate } from './build-payload'
 
 const ZWSP = '\u200B'
 
@@ -91,6 +91,26 @@ describe('applyOrder', () => {
 
   it('ignores unknown and repeated ids', () => {
     expect(applyOrder(items, ['zzz', 'b', 'b', 'c']).map((i) => i.id)).toEqual(['b', 'c', 'a', 'd'])
+  })
+})
+
+describe('the technologies of a project on the resume', () => {
+  const many = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L']
+  const withMany = [project('p1', { tech: many })]
+
+  it('prints the first MAX_PROJECT_TECH, the library keeps them all', () => {
+    const payload = buildPayload({ templateId: 'classic', profile, entities: withMany })
+    expect(payload.sections.projects[0].tech).toEqual(many.slice(0, MAX_PROJECT_TECH))
+    expect(MAX_PROJECT_TECH).toBe(8)
+  })
+
+  it('prints none when the user hid them for this job', () => {
+    const payload = buildPayload({ templateId: 'classic', profile, entities: withMany, config: { show_project_tech: false } })
+    expect(payload.sections.projects[0].tech).toEqual([])
+  })
+
+  it('prints them when the setting is true or absent', () => {
+    expect(buildPayload({ templateId: 'classic', profile, entities: withMany, config: { show_project_tech: true } }).sections.projects[0].tech).toHaveLength(8)
   })
 })
 

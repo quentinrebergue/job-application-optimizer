@@ -3,7 +3,7 @@ import type { EntityMeta, ResumeConfig } from '@/types'
 import type { AIAnalysisResult } from '@/types/job'
 import {
   EMPTY_CONFIG, applyAiOrder, entitySubLabel, groupEntities, initialConfig, moveEntity, parseEndDate,
-  resetConfig, setDescription, toggleEntity, toggleSkillTag,
+  resetConfig, setDescription, toggleEntity, toggleProjectTech, toggleSkillTag,
 } from './logic'
 
 const exp = (id: string, period: string): EntityMeta =>
@@ -143,6 +143,7 @@ describe('resetConfig', () => {
 
 describe('initialConfig', () => {
   const ai = {
+    analyzed_at: '2026-10-01T00:00:00Z',
     recommended_experience_ids: ['x'],
     recommended_project_ids: ['p'],
     recommended_skill_ids: ['s'],
@@ -158,8 +159,55 @@ describe('initialConfig', () => {
     expect(result.project_order).toEqual(['p'])
   })
 
+  it('applies the recommendations of an analysis once: what the user unticked stays unticked', () => {
+    const entities = [edu('e', '2020'), exp('x', '2024'), proj('p'), skill('s', ['Go', 'Rust'])]
+    const analysis = { ...ai, analyzed_at: '2026-10-15T10:00:00Z' } as AIAnalysisResult
+    const first = initialConfig(null, entities, analysis)
+    expect(first.ai_applied_at).toBe('2026-10-15T10:00:00Z')
+    // The user unticks the project; that is saved with the marker. The next visit must not tick it again.
+    const saved = { ...first, selected_entity_ids: first.selected_entity_ids.filter((id) => id !== 'p') }
+    const again = initialConfig(saved, entities, analysis)
+    expect(again.selected_entity_ids).toEqual(['e', 'x', 's'])
+  })
+
+  it('applies the recommendations again for a new analysis (Rank again)', () => {
+    const entities = [edu('e', '2020'), exp('x', '2024'), proj('p'), skill('s', ['Go', 'Rust'])]
+    const saved = cfg({ selected_entity_ids: ['e', 'x', 's'], ai_applied_at: '2026-10-15T10:00:00Z', project_order: [], experience_order: ['x'] })
+    const newer = { ...ai, analyzed_at: '2026-10-16T08:00:00Z' } as AIAnalysisResult
+    const result = initialConfig(saved, entities, newer)
+    expect(result.selected_entity_ids).toContain('p')
+    expect(result.ai_applied_at).toBe('2026-10-16T08:00:00Z')
+  })
+
+  it('applies them to a configuration saved before the marker existed (once, then the marker is saved with the next change)', () => {
+    const entities = [exp('x', '2024'), proj('p')]
+    const legacy = cfg({ selected_entity_ids: ['x'] })
+    const analysis = { ...ai, analyzed_at: '2026-10-15T10:00:00Z' } as AIAnalysisResult
+    expect(initialConfig(legacy, entities, analysis).selected_entity_ids).toEqual(['x', 'p', 's'])
+  })
+
+  it('does not touch the selection when there is no analysis', () => {
+    const saved = cfg({ selected_entity_ids: ['x'] })
+    expect(initialConfig(saved, [exp('x', '2024')], null).ai_applied_at).toBeUndefined()
+  })
+
   it('never replaces a tag choice the user already made', () => {
     const saved = cfg({ selected_entity_ids: ['s'], skill_tag_overrides: { s: ['Rust'] } })
     expect(initialConfig(saved, [skill('s', ['Go', 'Rust', 'C'])], ai).skill_tag_overrides).toEqual({ s: ['Rust'] })
   })
 })
+
+describe('toggleProjectTech', () => {
+  it('hides the technologies, and showing them again keeps no key (shown is the default)', () => {
+    const hidden = toggleProjectTech(cfg())
+    expect(hidden.show_project_tech).toBe(false)
+    const shown = toggleProjectTech(hidden)
+    expect('show_project_tech' in shown).toBe(false)
+  })
+
+  it('changes nothing else in the configuration', () => {
+    const base = cfg({ selected_entity_ids: ['a'], project_order: ['a'] })
+    expect(toggleProjectTech(base)).toEqual({ ...base, show_project_tech: false })
+  })
+})
+

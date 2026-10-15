@@ -20,6 +20,10 @@ export interface ResumeConfig {
   resume_title?: string
   /** Free-text context sent to the AI only — never rendered in the PDF */
   ai_context?: string
+  /** The analysis (its `analyzed_at`) whose recommendations were applied to this selection: they are applied once, so what the user unticks stays unticked. */
+  ai_applied_at?: string
+  /** Whether the resume prints the technologies under each project. Absent = it does (the first MAX_PROJECT_TECH of each). */
+  show_project_tech?: boolean
   /** Per-skill tag overrides: skillId → selected tags. Absent = use all tags. */
   skill_tag_overrides?: Record<string, string[]>
   /** Per-entity description overrides: entityId → custom description. Absent = use original. */

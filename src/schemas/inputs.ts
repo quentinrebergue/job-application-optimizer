@@ -35,7 +35,8 @@ const entityShapes = {
   },
   skills: {
     name: required(LIMITS.skills.name),
-    category: required(LIMITS.skills.category),
+    // No longer asked (the name says it); an older client or entry may still send it.
+    category: text(LIMITS.skills.category).optional(),
     level: z.enum(['beginner', 'intermediate', 'advanced', 'expert']).optional(),
     tags: tagList.optional(),
     latex_snippet: latex.optional(),
@@ -98,6 +99,8 @@ export const ResumeConfigInputSchema = z.object({
   profile_text: text(LIMITS.profile.profile_text).default(''),
   resume_title: text(LIMITS.profile.resume_title).optional(),
   ai_context: text(LIMITS.profile.ai_context).optional(),
+  ai_applied_at: z.string().max(LIMITS.resume.id).optional(),
+  show_project_tech: z.boolean().optional(),
   skill_tag_overrides: z.record(id, tagList).optional(),
   entity_description_overrides: z.record(id, text(LIMITS.resume.entityDescription)).optional(),
   project_order: ids.optional(),

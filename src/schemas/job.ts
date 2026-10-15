@@ -62,6 +62,8 @@ export const ResumeConfigSchema = z.object({
   profile_text: z.string().default(''),
   resume_title: z.string().default(''),
   ai_context: z.string().default(''),
+  ai_applied_at: z.string().optional(),
+  show_project_tech: z.boolean().optional(),
   skill_tag_overrides: z.record(z.string(), z.array(z.string())).optional(),
   entity_description_overrides: z.record(z.string(), z.string()).optional(),
   project_order: z.array(z.string()).optional(),

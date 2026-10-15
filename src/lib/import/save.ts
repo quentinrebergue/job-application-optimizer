@@ -26,7 +26,8 @@ const IDENTITY: Record<EntityType, string[]> = {
   experiences: ['title', 'company', 'period'],
   projects: ['title'],
   education: ['degree', 'institution', 'period'],
-  skills: ['name', 'category'],
+  // Only the name: a skill typed by hand has no category, and the same name is the same skill.
+  skills: ['name'],
 }
 
 const keyOf = (type: EntityType, entry: Fields): string =>
