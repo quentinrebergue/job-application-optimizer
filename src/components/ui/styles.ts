@@ -22,6 +22,9 @@ export const focusRing = [
 /** The same for a link in running text or a footer: a yellow background, nothing moves. */
 export const focusLink = 'focus-visible:bg-warning focus-visible:text-ink focus-visible:outline-2 focus-visible:outline-transparent'
 
+/** A large panel of a page (a section of the Resume page): the light tint, the stroke and the hard shadow. */
+export const panelSection = 'relative rounded-control border-2 border-ink bg-panel p-panel shadow-hard'
+
 /** Small capital label above a group ("STATUS", "DESCRIPTION"). */
 export const eyebrow = 'text-label uppercase tracking-wider text-ink-muted'
 

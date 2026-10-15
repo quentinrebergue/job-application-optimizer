@@ -76,7 +76,6 @@ describe('the design roles', () => {
     // (font-extrabold on a name or a sticker) is emphasis, and the size of a title is caught by the roles above.
     const ALLOWED_HEAVY = new Set([
       'src/components/layout/Wordmark.tsx',
-      'src/components/layout/SiteFooter.tsx',
       'src/components/layout/AppHeader.tsx',
       'src/components/layout/StatusPage.tsx',
       'src/components/layout/AccountMenu.tsx',

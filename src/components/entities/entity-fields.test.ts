@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import type { EntityMeta } from '@/types'
-import { ENTITY_FIELDS, entityChips, entitySubtitle, fieldUpdate, fieldError, fieldErrors, toPayload, toValues } from './entity-fields'
+import { ENTITY_FIELDS, detailFields, missingDetails, entityChips, entitySubtitle, fieldUpdate, fieldError, fieldErrors, toPayload, toValues } from './entity-fields'
 
 describe('entity fields', () => {
   it('turns an entry into form values and back, lists included', () => {
@@ -63,5 +63,14 @@ describe('size limits (#201)', () => {
   it('reports the too long fields of a whole form', () => {
     const title = 'a'.repeat(151)
     expect(fieldErrors('experiences', { title, company: 'Acme' })).toEqual({ title: 'Too long: 150 characters at most.' })
+  })
+
+  it('names what the second line of a card holds, so an empty one says what is missing', () => {
+    expect(missingDetails('experiences')).toBe('company, location or period')
+    expect(missingDetails('education')).toBe('institution or period')
+    expect(missingDetails('skills')).toBe('category')
+    // A project has no second line: there is nothing to say is missing.
+    expect(missingDetails('projects')).toBeNull()
+    expect(detailFields('projects')).toEqual([])
   })
 })

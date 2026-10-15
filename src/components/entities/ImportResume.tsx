@@ -4,7 +4,7 @@ import { useId, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { ChevronRight, FileUp, LoaderCircle } from 'lucide-react'
 import { Alert } from '@/components/ui/Alert'
-import { Button, type ButtonVariant } from '@/components/ui/Button'
+import { Button, type ButtonSize, type ButtonVariant } from '@/components/ui/Button'
 import { ResponsiveDialog } from '@/components/ui/ResponsiveDialog'
 import { eyebrow, focusRing } from '@/components/ui/styles'
 import { cn } from '@/lib/cn'
@@ -19,7 +19,7 @@ type Phase = { name: 'choose' } | { name: 'sending' } | { name: 'done'; report: 
 interface Props {
   /** The look of the button that opens the dialog. */
   variant?: ButtonVariant
-  label?: string
+  size?: ButtonSize
 }
 
 /**
@@ -27,7 +27,7 @@ interface Props {
  * and its entries go straight into the library; the dialog says what was added and what was not, and why, and lists
  * what was added: each entry opens in place to be fixed, or deleted (#281).
  */
-export function ImportResume({ variant = 'primary', label = 'Import a resume' }: Props) {
+export function ImportResume({ variant = 'primary', size = 'md' }: Props) {
   const router = useRouter()
   const inputId = useId()
   const [open, setOpen] = useState(false)
@@ -75,9 +75,11 @@ export function ImportResume({ variant = 'primary', label = 'Import a resume' }:
 
   return (
     <>
-      <Button variant={variant} onClick={() => setOpen(true)}>
+      <Button variant={variant} size={size} onClick={() => setOpen(true)} aria-label="Import a resume">
         <FileUp size={16} aria-hidden="true" />
-        {label}
+        {/* Short on a phone, where it shares a line with other buttons. */}
+        <span className="md:hidden">Import</span>
+        <span className="max-md:hidden">Import a resume</span>
       </Button>
 
       <ResponsiveDialog open={open} onClose={close} title="Import a resume" size="wide">

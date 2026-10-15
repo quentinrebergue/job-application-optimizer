@@ -24,7 +24,7 @@ export function AppHeader({ userEmail }: { userEmail: string | null }) {
       <div className={cn(pageFrame, 'flex h-16 items-center gap-nav')}>
         {/* The name sits in its own cell, closed by a full-height stroke: it is not a section. */}
         <div className="flex self-stretch items-center border-r-2 border-ink pr-nav">
-          <Wordmark />
+          <Wordmark markOnPhone />
         </div>
 
         <nav aria-label="Main" className="flex items-center gap-1 sm:gap-2">

@@ -16,7 +16,7 @@ export default function NotFound() {
     <>
       <header className="border-b-2 border-ink">
         <div className={cn(pageFrame, 'flex h-16 items-center')}>
-          <Wordmark />
+          <Wordmark markOnPhone />
         </div>
       </header>
       <main>

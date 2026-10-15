@@ -7,7 +7,8 @@ Feature components for the Job Tracker module.
 | File | Description |
 |------|-------------|
 | `JobCard.tsx` | Clickable job card: title (two lines at most, full title on hover), company, date; same height for every card in a row. Also exports `StatusBadge` (fixed width, status → `Badge` variant from `APPLICATION_STATUS_BADGES`). |
-| `JobsClient.tsx` | Jobs list: status filter (`FilterBar`, kept in the URL as `?status=`), empty state per filter, grid of `JobCard`. |
+| `JobsClient.tsx` | Jobs list: status filter (`FilterBar`, kept in the URL as `?status=`), search by title and company (kept as `?q=`, the list follows each key typed, the counts of the filter follow the search), empty states, grid of `JobCard`. |
+| `JobSearch.tsx` | The search field (it opens under the filter) and, below 825 px, the magnifier that opens it; from 825 px the magnifier and Add job are segments of the status bar (focus taken in the tap, 16 px so the page does not zoom). |
 | `JobForm.tsx` | Form for creating a job (`/jobs/new`), built from `Field`/`Input`/`Select`/`Textarea`; `onSave` throws to report a failure, shown in an `Alert`. |
 | `JobDetailClient.tsx` | Job page: header (title, company, date, location, `StatusSelect`), then the offer and the resume as two white cards: side by side on desktop with a title strip, one at a time below desktop with `SegmentedTabs` (Offer / Resume / Cover letter, greyed out "Soon") as the top of the card, kept in `?tab=`. |
 | `JobOfferEditor.tsx` | The offer, always editable (title, company, location, link, description), each field saved 0.8 s after typing via `useJobAutosave`; delete zone at the bottom. |

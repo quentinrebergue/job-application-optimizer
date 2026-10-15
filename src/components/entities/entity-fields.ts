@@ -28,7 +28,7 @@ export interface FieldDef {
 /** Keywords of an experience or a degree (tag taxonomy); not printed, not sent to the AI ranking. */
 const KEYWORDS: FieldDef = {
   key: 'tags', label: 'Skills & technologies', kind: 'list', wide: true,
-  placeholder: 'Teamwork, scheduling, customer service', hint: 'Comma-separated keywords for this entry; they are not printed.',
+  placeholder: 'Teamwork, scheduling, customer service',
 }
 
 export const ENTITY_FIELDS: Record<EntityType, FieldDef[]> = {
@@ -45,7 +45,7 @@ export const ENTITY_FIELDS: Record<EntityType, FieldDef[]> = {
     // One list for a project: printed in the resume and matched by the AI (saved as its tags too).
     {
       key: 'tech', label: 'Technologies', kind: 'list', mirrors: ['tags'],
-      placeholder: 'Spreadsheets, budgeting, teamwork', hint: 'Comma-separated. Printed in the resume and used by the AI to match a job.',
+      placeholder: 'Spreadsheets, budgeting, teamwork', hint: 'Printed on the resume and used by the AI to match a job.',
     },
     { key: 'description', label: 'Description', kind: 'textarea', wide: true, placeholder: 'What the project was and your part in it.', maxLength: LIMITS.projects.description },
   ],
@@ -54,7 +54,7 @@ export const ENTITY_FIELDS: Record<EntityType, FieldDef[]> = {
     { key: 'category', label: 'Category', kind: 'text', short: true, required: true, placeholder: 'Tools', maxLength: LIMITS.skills.category },
     {
       key: 'tags', label: 'Skills', kind: 'list', wide: true,
-      placeholder: 'Spreadsheets, presentations, scheduling', hint: 'Comma-separated. Printed after the name of the group.',
+      placeholder: 'Spreadsheets, presentations, scheduling', hint: 'Printed after the name of the group.',
     },
   ],
   education: [
@@ -131,6 +131,21 @@ export function fieldErrors(type: EntityType, values: FieldValues): Record<strin
     if (message) errors[field.key] = message
   }
   return errors
+}
+
+/**
+ * The text fields that follow the title of an entry other than a long text: what its card shows on its second line
+ * (company, location, period; a degree's institution and period; a skill's group). A project has none.
+ */
+export function detailFields(type: EntityType): FieldDef[] {
+  return ENTITY_FIELDS[type].slice(1).filter((f) => f.kind === 'text')
+}
+
+/** "company, location or period": what a card names when its second line is empty; null for a kind with no such line. */
+export function missingDetails(type: EntityType): string | null {
+  const names = detailFields(type).map((f) => f.label.toLowerCase())
+  if (names.length === 0) return null
+  return names.length === 1 ? names[0] : `${names.slice(0, -1).join(', ')} or ${names.at(-1)}`
 }
 
 /** Title shown for an entry. */

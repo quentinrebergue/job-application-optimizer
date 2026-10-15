@@ -8,8 +8,9 @@ import { fetchJson } from '@/lib/http'
 import { groupByKind, groupTitle } from '@/lib/import-resume'
 import { DeleteButton } from './DeleteButton'
 import { EntityEditor } from './EntityEditor'
-import { ENTITY_FIELDS, entityChips, entityTitle, toValues } from './entity-fields'
-import { EditToggle, Empty, SectionTitle } from './ImportedParts'
+import { detailFields, entityChips, entityTitle, missingDetails, toValues } from './entity-fields'
+import { EditToggle } from '@/components/ui/EditToggle'
+import { Empty, SectionTitle } from './ImportedParts'
 
 interface Props {
   entries: EntityMeta[]
@@ -22,7 +23,7 @@ interface Props {
 function detailsOf(entity: EntityMeta): string {
   const type = entity.type as EntityType
   const values = toValues(type, entity)
-  return ENTITY_FIELDS[type].slice(1).filter((f) => f.kind === 'text').map((f) => values[f.key]).filter(Boolean).join(' · ')
+  return detailFields(type).map((f) => values[f.key]).filter(Boolean).join(' · ')
 }
 
 /**
@@ -66,6 +67,7 @@ export function ImportedList({ entries, onSaved, onDeleted }: Props) {
               const editing = editingId === entity.id
               const description = 'description' in entity ? entity.description : ''
               const details = detailsOf(entity)
+              const missing = missingDetails(entity.type as EntityType)
               const chips = entityChips(entity)
               return (
                 <li key={entity.id} className="flex flex-col gap-stack rounded-control border-2 border-ink bg-surface p-card">
@@ -73,8 +75,8 @@ export function ImportedList({ entries, onSaved, onDeleted }: Props) {
                     <div className="min-w-0">
                       {!editing && (
                         <>
-                          <p className="text-item">{title}</p>
-                          {details ? <p className="mt-1 text-small text-ink-muted">{details}</p> : <Empty>No data found</Empty>}
+                          {entityTitle(entity) ? <p className="text-item">{title}</p> : <p className="text-small text-ink-muted">No title found</p>}
+                          {details ? <p className="mt-1 text-small text-ink-muted">{details}</p> : missing && <Empty>No {missing} found</Empty>}
                         </>
                       )}
                     </div>

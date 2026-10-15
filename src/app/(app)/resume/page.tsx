@@ -1,25 +1,13 @@
-import { PageHeader } from '@/components/ui/PageHeader'
 import { listEntities } from '@/lib/data'
 import { ENTITY_TYPE_IDS } from '@/config'
-import { ResumeDefaultsEditor } from '@/components/resume/ResumeDefaultsEditor'
+import { ProfileSection } from '@/components/resume/ProfileSection'
 import { LibraryPanel } from '@/components/entities/LibraryPanel'
-import { ImportResume } from '@/components/entities/ImportResume'
 import { verifySession } from '@/lib/auth/dal'
 import { page } from '@/components/ui/styles'
-import { SectionTitle } from '@/components/ui/SectionTitle'
 
 export const dynamic = 'force-dynamic'
 
 export const metadata = { title: 'Resume' }
-
-function Section({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
-  return (
-    <section aria-labelledby={id} className="relative rounded-control border-2 border-ink bg-panel p-panel shadow-hard">
-      <SectionTitle id={id} level="page" className="mb-heading">{title}</SectionTitle>
-      {children}
-    </section>
-  )
-}
 
 /** Your profile and your library: what every tailored resume is made of. */
 export default async function ResumePage() {
@@ -28,18 +16,12 @@ export default async function ResumePage() {
 
   return (
     <div className={page}>
-      <PageHeader title="Resume">
-        <ImportResume />
-      </PageHeader>
+      <h1 className="sr-only">Resume</h1>
 
       <div className="flex flex-col gap-section">
-        <Section id="profile" title="Profile">
-          <ResumeDefaultsEditor />
-        </Section>
+        <ProfileSection />
 
-        <Section id="library" title="Library">
-          <LibraryPanel entities={lists.flat()} />
-        </Section>
+        <LibraryPanel entities={lists.flat()} />
       </div>
     </div>
   )
