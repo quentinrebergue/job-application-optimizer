@@ -155,6 +155,8 @@ describe('profileRows', () => {
     const rows = profileRows({ full_name: 'Camille Moreau', email: '', phone: '  ', linkedin: 'in/camille', address: '', resume_title: 'Engineer', profile_text: '' } as never)
     expect(rows.map((r) => r.key)).toHaveLength(7)
     expect(rows.map((r) => r.label)).toEqual(['Name', 'Email', 'Phone', 'LinkedIn', 'Address', 'Resume title', 'Profile'])
+    // A missing field says which one it is.
+    expect(rows.filter((r) => r.value === null).map((r) => r.missing)).toEqual(['No email found', 'No phone found', 'No address found', 'No profile text found'])
     expect(rows.map((r) => r.value)).toEqual(['Camille Moreau', null, null, 'in/camille', null, 'Engineer', null])
   })
 })

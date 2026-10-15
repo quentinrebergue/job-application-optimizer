@@ -68,7 +68,7 @@
   --spacing-control: 0.75rem;       /* the sides inside a field, a menu, an alert or a tab */
   --spacing-button: 1rem;           /* the sides inside a button */
   --spacing-bar: 0.75rem;           /* the top and bottom of a strip: the header of a dialog, a panel title, the banner */
-  --spacing-footer: 1.5rem;         /* the top and bottom of the footer */
+  --spacing-footer: 1rem;           /* the top and bottom of the footer */
   --spacing-centered: 3rem;         /* above and below a card or a message centred on its own page */
   --spacing-nav: 1rem;              /* between the parts of the top bar */
   --spacing-links: 1rem;            /* between the links of a footer */
@@ -139,6 +139,7 @@
     --spacing-gutter: 2rem;
     --spacing-centered: 4rem;
     --spacing-band: 4rem;
+    --spacing-footer: 1.5rem;
     --spacing-hero: 4rem;
     --spacing-chapter: 6rem;
     --spacing-columns: 3rem;

@@ -88,7 +88,7 @@ Spacing has **roles**, declared once in `globals.css` (`--spacing-*`) (#285).
 | `dialog` | 16 | 24 | inside a dialog or a drawer |
 | `section` | 24 | 32 | between the sections of a page, a panel or a dialog; under a page header |
 | `indent` | 24 | 24 | the indent of a list |
-| `footer` | 24 | 24 | the top and bottom of the footer |
+| `footer` | 16 | 24 | the top and bottom of the footer |
 | `gutter` | 16 | 32 | the sides of every page, and of the header, the banner and the footer |
 | `centered` | 48 | 64 | above and below a card or a message centred on its own page |
 | `band` | 48 | 64 | the top and bottom of a band of the landing or of a legal page |

@@ -4,8 +4,9 @@ import { useMemo, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Plus } from 'lucide-react'
 import type { EntityMeta, EntityType } from '@/types'
-import { FilterBar } from '@/components/ui/FilterBar'
-import { focusRing } from '@/components/ui/styles'
+import { FilterSegments, FilterSelect } from '@/components/ui/FilterBar'
+import { SectionTitle } from '@/components/ui/SectionTitle'
+import { focusRing, panelSection } from '@/components/ui/styles'
 import { MAX_ENTRIES } from '@/config/limits'
 import { getEntityTypeConfig } from '@/config'
 import { cn } from '@/lib/cn'
@@ -63,14 +64,21 @@ export function LibraryPanel({ entities }: Props) {
   // Closing goes back when the dialog was opened from this page (the history keeps one entry), else replaces the address.
   const close = () => (window.history.state?.dialog ? window.history.back() : go(libraryHref(tab), 'replace'))
 
+  const filter = {
+    label: 'Kind of entry',
+    options: LIBRARY_TABS.map((t) => ({ ...t, count: items.filter((e) => e.type === t.value).length })),
+    value: tab,
+    onChange: (value: EntityType) => go(libraryHref(value), 'replace'),
+  }
+
   return (
-    <div className="flex flex-col gap-stack">
-      <FilterBar
-        label="Kind of entry"
-        options={LIBRARY_TABS.map((t) => ({ ...t, count: items.filter((e) => e.type === t.value).length }))}
-        value={tab}
-        onChange={(value) => go(libraryHref(value), 'replace')}
-      />
+    <section aria-labelledby="library" className={cn(panelSection, 'flex flex-col gap-stack')}>
+      {/* On a phone the menu of kinds sits beside the title; from 640 px the bar of segments is under it. */}
+      <div className="flex items-center justify-between gap-inline">
+        <SectionTitle id="library" level="page">Library</SectionTitle>
+        <FilterSelect {...filter} className="w-48 max-w-[60%]" />
+      </div>
+      <FilterSegments {...filter} />
 
       {/* The first card adds an entry of the current kind; it also stands for an empty list. At the limit it says so. */}
       <div className="grid grid-cols-1 gap-stack sm:grid-cols-2 lg:grid-cols-3">
@@ -132,6 +140,6 @@ export function LibraryPanel({ entities }: Props) {
           }}
         />
       )}
-    </div>
+    </section>
   )
 }

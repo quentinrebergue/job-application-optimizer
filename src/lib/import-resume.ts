@@ -41,12 +41,16 @@ const NOUN: Record<Kind, [one: string, many: string]> = {
 }
 const PROFILE_ORDER = ['full_name', 'email', 'phone', 'linkedin', 'address', 'resume_title', 'profile_text'] as const
 type ProfileKey = (typeof PROFILE_ORDER)[number]
+/** What a missing field is called in "No <noun> found" (the label with its capital, except for a name like LinkedIn). */
+const PROFILE_NOUN: Record<ProfileKey, string> = {
+  full_name: 'name', email: 'email', phone: 'phone', linkedin: 'LinkedIn', address: 'address', resume_title: 'resume title', profile_text: 'profile text',
+}
 const PROFILE_LABEL: Record<ProfileKey, string> = {
   full_name: 'Name', email: 'Email', phone: 'Phone', linkedin: 'LinkedIn', address: 'Address', resume_title: 'Resume title', profile_text: 'Profile',
 }
 /** The profile as lines to read, in the order of the form; a field left empty is null. */
-export function profileRows(profile: ResumeProfile): { key: ProfileKey; label: string; value: string | null }[] {
-  return PROFILE_ORDER.map((field) => ({ key: field, label: PROFILE_LABEL[field], value: profile[field]?.trim() ? profile[field] : null }))
+export function profileRows(profile: ResumeProfile): { key: ProfileKey; label: string; missing: string; value: string | null }[] {
+  return PROFILE_ORDER.map((field) => ({ key: field, label: PROFILE_LABEL[field], missing: `No ${PROFILE_NOUN[field]} found`, value: profile[field]?.trim() ? profile[field] : null }))
 }
 const count = (n: number, kind: Kind) => `${n} ${NOUN[kind][n === 1 ? 0 : 1]}`
 

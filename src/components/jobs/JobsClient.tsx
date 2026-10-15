@@ -38,9 +38,7 @@ export function JobsClient({ initialJobs, initialFilter }: Props) {
 
   return (
     <div className={page}>
-      <PageHeader
-        title="Job Tracker"
-      >
+      <PageHeader title="Job Tracker" hideOnPhone>
         <Link
           href="/jobs/new"
           className={buttonClasses()}
@@ -50,16 +48,23 @@ export function JobsClient({ initialJobs, initialFilter }: Props) {
         </Link>
       </PageHeader>
 
-      <div className="mb-section">
-        <FilterBar
-          label="Filter by status"
-          options={TABS.map((t) => ({
-            ...t,
-            count: t.value === 'all' ? initialJobs.length : initialJobs.filter((j) => j.status === t.value).length,
-          }))}
-          value={tab}
-          onChange={changeFilter}
-        />
+      {/* On a phone the page has no title bar: the Add Job button sits beside the filter, as tall as it. */}
+      <div className="mb-section flex items-stretch gap-inline">
+        <div className="min-w-0 flex-1">
+          <FilterBar
+            label="Filter by status"
+            options={TABS.map((t) => ({
+              ...t,
+              count: t.value === 'all' ? initialJobs.length : initialJobs.filter((j) => j.status === t.value).length,
+            }))}
+            value={tab}
+            onChange={changeFilter}
+          />
+        </div>
+        <Link href="/jobs/new" className={buttonClasses({ className: 'h-auto shrink-0 md:hidden' })}>
+          <Plus size={16} aria-hidden="true" />
+          Add job
+        </Link>
       </div>
 
       {/* Content */}

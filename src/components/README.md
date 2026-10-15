@@ -7,7 +7,7 @@ Reusable React components. Organised by feature area and a shared `ui/` primitiv
 | Directory | Description |
 |-----------|-------------|
 | `account/` | The account page: ExportButton, DeleteAccount (#104) |
-| `layout/` | App-shell components (Sidebar), the footer of every page (SiteFooter: the way in for a visitor, the pages of the app when signed in, always at the bottom of the window) and the legal links in it (LegalLinks) |
+| `layout/` | App-shell components (Sidebar), the footer of every page (SiteFooter: who it is from and the legal links, no navigation: the top bar has it; always at the bottom of the window) and the legal links in it (LegalLinks) |
 | `legal/` | The frame of the text pages: LegalPage, LegalSection |
 | `ui/` | Generic UI primitives — Badge, PageHeader |
 | `entities/` | The library: LibraryPanel, EntityCard, EntityForm, EntityEditor, entry fields |

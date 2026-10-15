@@ -7,6 +7,13 @@ import { cn } from '@/lib/cn'
 import { counterFor, isLongText, tooLong } from '@/lib/text-limit'
 import { ENTITY_FIELDS, type FieldValues } from './entity-fields'
 
+/**
+ * The least height of a description. On a computer 13 rem. In the drawer of a phone, as much as fits without the drawer
+ * scrolling: the drawer is at most 90dvh high and the rest of the tallest form takes about 34 rem (measured at 375 px
+ * wide: 538 px with the handle and the padding), so the description gets what is left, between 4 and 13 rem (it still grows as you type).
+ */
+const DESCRIPTION_HEIGHT = 'min-h-[clamp(4rem,calc(90dvh_-_34rem),13rem)] md:min-h-52'
+
 interface Props {
   type: EntityType
   values: FieldValues
@@ -32,7 +39,7 @@ export function EntityFields({ type, values, errors = {}, onChange }: Props) {
           className={cn(field.wide ? 'col-span-2' : field.short ? 'col-span-1' : 'col-span-2 sm:col-span-1')}
         >
           {field.kind === 'textarea' ? (
-            <Textarea value={values[field.key] ?? ''} onChange={(e) => onChange(field.key, e.target.value)} placeholder={field.placeholder} autoGrow className="min-h-52" />
+            <Textarea value={values[field.key] ?? ''} onChange={(e) => onChange(field.key, e.target.value)} placeholder={field.placeholder} autoGrow className={DESCRIPTION_HEIGHT} />
           ) : field.kind === 'select' ? (
             <Select value={values[field.key] ?? ''} onChange={(e) => onChange(field.key, e.target.value)}>
               {field.options?.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}

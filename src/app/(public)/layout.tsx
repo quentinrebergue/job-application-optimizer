@@ -22,7 +22,7 @@ export default function PublicLayout({
       </a>
       <header className="sticky top-0 z-40 border-b-2 border-ink bg-canvas">
         <div className={cn(pageFrame, 'flex h-16 items-center justify-between gap-nav')}>
-          <Wordmark />
+          <Wordmark markOnPhone />
           <nav aria-label="Account" className="flex items-center gap-inline">
             <Link href="/login" className={buttonClasses({ variant: 'secondary' })}>Log in</Link>
             <Link href="/signup" className={buttonClasses()}>Sign up</Link>
