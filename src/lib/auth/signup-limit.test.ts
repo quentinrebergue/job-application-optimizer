@@ -8,6 +8,7 @@ vi.mock('@/lib/rate-limit', async (importOriginal) => ({
 }))
 
 const { checkSignup, signupLimits, resetSignupWarning } = await import('./signup-limit')
+const { pool } = await import('@/lib/db')
 
 const NOW = new Date('2026-10-12T10:00:00Z')
 const allow = { allowed: true, retryAfterMs: 0, count: 1 }
@@ -34,11 +35,23 @@ describe('signupLimits', () => {
 
 describe('checkSignup', () => {
   it('counts the address per hour and per day, and the whole site per day at its high limit', async () => {
-    expect(await checkSignup('203.0.113.7', NOW)).toEqual({ ok: true })
+    expect(await checkSignup('203.0.113.7', NOW)).toMatchObject({ ok: true })
     expect(consumeRateLimit.mock.calls.map((c) => c.slice(0, 3))).toEqual([
       ['signup-ip:203.0.113.7:hour', 30, 3_600_000],
       ['signup-ip:203.0.113.7:day', 60, 86_400_000],
       ['signup-all:day', 1000, 86_400_000],
+    ])
+  })
+
+  it('gives back what it counted (the address by hour and day, and the site) for a sign-up refused for lack of room', async () => {
+    const check = await checkSignup('203.0.113.7', NOW)
+    if (!check.ok) throw new Error('expected the sign-up to be allowed')
+    vi.mocked(pool.query).mockClear()
+    await check.giveBack()
+    expect(vi.mocked(pool.query).mock.calls.map((c) => (c[1] as unknown[])[0])).toEqual([
+      'signup-ip:203.0.113.7:hour',
+      'signup-ip:203.0.113.7:day',
+      'signup-all:day',
     ])
   })
 
@@ -73,7 +86,7 @@ describe('checkSignup', () => {
 
     it('is reported once, on the sign-up that crosses the alert line, and nobody is refused', async () => {
       consumeRateLimit.mockResolvedValueOnce(ok(1)).mockResolvedValueOnce(ok(1)).mockResolvedValueOnce(ok(151))
-      expect(await checkSignup('203.0.113.7', NOW)).toEqual({ ok: true })
+      expect(await checkSignup('203.0.113.7', NOW)).toMatchObject({ ok: true })
       expect(console.warn).toHaveBeenCalledTimes(1)
       expect(vi.mocked(console.warn).mock.calls[0][0]).toContain('sign-up surge')
     })
@@ -81,7 +94,7 @@ describe('checkSignup', () => {
     it('says nothing before the line and nothing again after it', async () => {
       for (const count of [150, 152, 400]) {
         consumeRateLimit.mockResolvedValueOnce(ok(1)).mockResolvedValueOnce(ok(1)).mockResolvedValueOnce(ok(count))
-        expect(await checkSignup('203.0.113.7', NOW)).toEqual({ ok: true })
+        expect(await checkSignup('203.0.113.7', NOW)).toMatchObject({ ok: true })
       }
       expect(console.warn).not.toHaveBeenCalled()
     })
@@ -105,7 +118,7 @@ describe('checkSignup', () => {
   it.each([['a private address (the load balancer)', '10.0.3.4'], ['no address at all', null], ['a loopback address', '127.0.0.1']])(
     'does not limit per address for %s, only for the site, and says so once',
     async (_name, ip) => {
-      expect(await checkSignup(ip, NOW)).toEqual({ ok: true })
+      expect(await checkSignup(ip, NOW)).toMatchObject({ ok: true })
       expect(consumeRateLimit.mock.calls.map((c) => c[0])).toEqual(['signup-all:day'])
       await checkSignup(ip, NOW)
       expect(console.warn).toHaveBeenCalledTimes(1)
