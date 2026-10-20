@@ -20,11 +20,12 @@ const richBody = `{
   },
   "sections": {
     "experiences": [
-      {"title": "SRE", "company": "Acme", "location": "Paris", "period": "2024 - Now", "description": "a\nb"},
+      {"title": "SRE", "company": "Acme", "location": "Paris", "period": "2024 - Now", "description": "a\n- b with a very long line that goes on and on so that it wraps onto a second line\n- c\n-5% stays text"},
       {"title": "Intern", "company": "", "location": "", "period": "", "description": ""}
     ],
     "projects": [
-      {"title": "App", "tech": ["Go", "K8s"], "description": "d"},
+      {"title": "App", "tech": ["Go", "K8s"], "description": "- d\n- e"},
+      {"title": "Mixed", "tech": [], "description": "intro\n- point"},
       {"title": "Bare", "tech": [], "description": ""}
     ],
     "skills": [{"name": "Languages", "tags": ["Go", "TS"]}],

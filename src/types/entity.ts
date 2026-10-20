@@ -2,6 +2,12 @@
 
 export type EntityType = 'experiences' | 'projects' | 'skills' | 'education'
 
+/** Another version of a description (#297): a name the user chose ("Short", "Technical") and its text. The main description stays in `description`. */
+export interface DescriptionVariant {
+  name: string
+  text: string
+}
+
 export interface ExperienceMeta {
   id: string
   type: 'experiences'
@@ -10,6 +16,8 @@ export interface ExperienceMeta {
   location?: string
   period: string
   description: string
+  /** Other versions of the description, picked per job. Absent = none. */
+  descriptions?: DescriptionVariant[]
   tags: string[]
   latex_snippet?: string
 }
@@ -20,6 +28,7 @@ export interface ProjectMeta {
   title: string
   tech: string[]
   description: string
+  descriptions?: DescriptionVariant[]
   tags: string[]
   latex_snippet?: string
 }

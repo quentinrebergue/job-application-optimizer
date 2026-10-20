@@ -3,7 +3,7 @@ import type { EntityMeta, ResumeConfig } from '@/types'
 import type { AIAnalysisResult } from '@/types/job'
 import {
   EMPTY_CONFIG, applyAiOrder, entitySubLabel, groupEntities, initialConfig, moveEntity, parseEndDate,
-  resetConfig, setDescription, toggleEntity, toggleProjectTech, toggleSkillTag,
+  resetConfig, setDescription, setDescriptionVariant, toggleEntity, toggleProjectTech, toggleSkillTag,
 } from './logic'
 
 const exp = (id: string, period: string): EntityMeta =>
@@ -132,6 +132,20 @@ describe('setDescription', () => {
     expect(custom.entity_description_overrides).toEqual({ a: 'new text' })
     expect(setDescription(custom, 'a', 'original', 'original').entity_description_overrides).toEqual({})
     expect(setDescription(custom, 'a', '  ', 'original').entity_description_overrides).toEqual({})
+  })
+})
+
+describe('setDescriptionVariant', () => {
+  it('records the version chosen for an entry and removes the choice for the main description', () => {
+    const chosen = setDescriptionVariant(cfg(), 'a', 'Short')
+    expect(chosen.description_variant).toEqual({ a: 'Short' })
+    expect(setDescriptionVariant(chosen, 'b', 'Long').description_variant).toEqual({ a: 'Short', b: 'Long' })
+    expect(setDescriptionVariant(chosen, 'a', null).description_variant).toEqual({})
+  })
+
+  it('drops the text written for the job on that entry only, since it would hide the version just chosen', () => {
+    const written = setDescription(setDescription(cfg(), 'a', 'mine', 'original'), 'b', 'other', 'original')
+    expect(setDescriptionVariant(written, 'a', 'Short').entity_description_overrides).toEqual({ b: 'other' })
   })
 })
 

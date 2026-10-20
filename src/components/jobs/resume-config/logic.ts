@@ -200,6 +200,19 @@ export function setDescription(config: ResumeConfig, entityId: string, value: st
   return { ...config, entity_description_overrides: overrides }
 }
 
+/**
+ * Chooses which version of the description a job prints for an entry; the main description (null) removes the choice.
+ * The text written for this job is dropped too: it would hide the version just chosen, and the text now starts from it.
+ */
+export function setDescriptionVariant(config: ResumeConfig, entityId: string, name: string | null): ResumeConfig {
+  const chosen = { ...(config.description_variant ?? {}) }
+  if (name === null) delete chosen[entityId]
+  else chosen[entityId] = name
+  const overrides = { ...(config.entity_description_overrides ?? {}) }
+  delete overrides[entityId]
+  return { ...config, description_variant: chosen, entity_description_overrides: overrides }
+}
+
 /** Default selection: every education entry. */
 export function resetConfig(entities: EntityMeta[]): ResumeConfig {
   return {

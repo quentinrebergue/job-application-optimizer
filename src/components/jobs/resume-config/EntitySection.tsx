@@ -3,6 +3,7 @@
 import { SectionTitle } from '@/components/ui/SectionTitle'
 import { useState } from 'react'
 import type { EntityMeta, ProjectMeta, ResumeConfig, SkillMeta } from '@/types'
+import { variantsOf, versionText } from '@/lib/description-variants'
 import { MAX_PROJECT_TECH } from '@/lib/resume/build-payload'
 import type { AIAnalysisResult } from '@/types/job'
 import { Button } from '@/components/ui/Button'
@@ -10,7 +11,7 @@ import { DescriptionEditor } from './DescriptionEditor'
 import { EntityRow, type RowState } from './EntityRow'
 import { ReorderList } from './ReorderList'
 import { SkillTagPicker } from './SkillTagPicker'
-import { TYPE_LABELS, applyAiOrder, moveEntity, setDescription, toggleEntity, toggleProjectTech, toggleSkillTag, type EntityType } from './logic'
+import { TYPE_LABELS, applyAiOrder, moveEntity, setDescription, setDescriptionVariant, toggleEntity, toggleProjectTech, toggleSkillTag, type EntityType } from './logic'
 import type { useResumeConfig } from './useResumeConfig'
 
 type Panel = ReturnType<typeof useResumeConfig>
@@ -120,13 +121,17 @@ function editorFor(entity: EntityMeta, panel: Panel, ai: AIAnalysisResult | null
   const { config, update } = panel
 
   if (entity.type === 'experiences' || entity.type === 'projects') {
-    const original = entity.description
+    const chosen = config.description_variant?.[entity.id]
+    const original = versionText(entity, chosen)
     const custom = config.entity_description_overrides?.[entity.id]
     const value = custom ?? original
     return (
       <DescriptionEditor
-        key={value}
+        key={`${chosen ?? ''}:${value}`}
         value={value}
+        versions={variantsOf(entity).map((v) => v.name)}
+        version={variantsOf(entity).some((v) => v.name === chosen) ? chosen : undefined}
+        onVersion={(name) => update((c) => setDescriptionVariant(c, entity.id, name))}
         original={original}
         isCustom={!!custom}
         onCommit={(text) => update((c) => setDescription(c, entity.id, text, original))}

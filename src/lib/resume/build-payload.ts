@@ -1,6 +1,7 @@
 import type { EducationMeta, EntityMeta, ExperienceMeta, ProjectMeta, ResumeConfig, SkillMeta } from '@/types'
 import type { ResumeProfile } from '@/schemas/resume-profile'
 import { softBreaks } from './soft-breaks'
+import { printedDescription } from '@/lib/description-variants'
 
 /**
  * The JSON sent to the resume-renderer service (POST /render). It mirrors the
@@ -33,7 +34,7 @@ export interface RenderPayload {
 
 export type PayloadConfig = Pick<
   ResumeConfig,
-  'profile_text' | 'resume_title' | 'skill_tag_overrides' | 'entity_description_overrides' | 'project_order' | 'experience_order' | 'show_project_tech'
+  'profile_text' | 'resume_title' | 'skill_tag_overrides' | 'entity_description_overrides' | 'description_variant' | 'project_order' | 'experience_order' | 'show_project_tech'
 >
 
 /** The technologies printed under a project: a list of thirty would fill the one page. The library keeps them all (the AI reads them all). */
@@ -114,7 +115,6 @@ export function applyOrder<T extends { id: string }>(items: readonly T[], order?
 
 export function buildPayload(input: BuildPayloadInput): RenderPayload {
   const { profile, config = {}, entities } = input
-  const descriptionOverrides = config.entity_description_overrides ?? {}
   const tagOverrides = config.skill_tag_overrides ?? {}
 
   // An entry saved without every field (an import made before they were all written) reads as empty, not as a crash.
@@ -148,12 +148,12 @@ export function buildPayload(input: BuildPayloadInput): RenderPayload {
         company: softBreaks(e.company),
         location: softBreaks(e.location ?? ''),
         period: e.period,
-        description: softBreaks(descriptionOverrides[e.id] ?? e.description),
+        description: softBreaks(printedDescription(e, config)),
       })),
       projects: applyOrder(projects, config.project_order).map((p) => ({
         title: softBreaks(p.title),
         tech: config.show_project_tech === false ? [] : p.tech.slice(0, MAX_PROJECT_TECH).map(softBreaks),
-        description: softBreaks(descriptionOverrides[p.id] ?? p.description),
+        description: softBreaks(printedDescription(p, config)),
       })),
       skills: skills
         .map((s) => ({ name: softBreaks(s.name), tags: (tagOverrides[s.id] ?? s.tags).map(softBreaks) }))

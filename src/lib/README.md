@@ -12,6 +12,7 @@ Server-side business logic. All functions are barrel-exported from `index.ts`. T
 | `concurrency.ts` | `limitConcurrency(maxActive, maxQueued)`: at most N jobs at once, the others wait in order, a `BusyError` past the queue. Around the hashing of passwords (`BCRYPT_CONCURRENCY` 2, `BCRYPT_QUEUE` 150): bcryptjs runs on the main thread, 40 checks at once froze the application for 4 s, two at a time for 0.4 s (#225). |
 | `account-notice.ts` | The mails that tell an owner their data was downloaded (at most one an hour), their account deleted, their password changed, their address asked or changed, or someone tried to use it for another account, sent after the response (#104, #236) |
 | `email/` | `sendEmail()` over SMTP through an ordered list of providers (primary, optional fallback); mails printed in the console in development |
+| `description-variants.ts` | The other versions of a description (#297): which text a job prints (written for the job, else the version chosen, else the main one), and the checks and swaps of the library form. |
 | `resume/` | Builds the render payload from entities and the user profile, and calls the resume-renderer service (Go + Typst). `soft-breaks.ts` adds zero-width spaces inside the words of 61 characters or more with nothing to break at (a run of letters, an identifier), so a long word wraps instead of running off the page; ordinary text and the contact details are never touched. |
 | `ai/` | AI ranking of the library against a job offer |
 

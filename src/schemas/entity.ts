@@ -1,5 +1,7 @@
 import { z } from 'zod'
 
+const DescriptionVariantSchema = z.object({ name: z.string(), text: z.string() })
+
 export const ExperienceMetaSchema = z.object({
   id: z.string(),
   type: z.literal('experiences'),
@@ -8,6 +10,7 @@ export const ExperienceMetaSchema = z.object({
   location: z.string().optional().default(''),
   period: z.string(),
   description: z.string(),
+  descriptions: z.array(DescriptionVariantSchema).optional(),
   tags: z.array(z.string()),
   latex_snippet: z.string().optional().default(''),
 })
@@ -18,6 +21,7 @@ export const ProjectMetaSchema = z.object({
   title: z.string(),
   tech: z.array(z.string()),
   description: z.string(),
+  descriptions: z.array(DescriptionVariantSchema).optional(),
   tags: z.array(z.string()),
   latex_snippet: z.string().optional().default(''),
 })
