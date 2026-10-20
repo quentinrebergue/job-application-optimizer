@@ -16,8 +16,42 @@
 #set text(font: ("Liberation Sans", "Helvetica", "Arial"), size: opts.fontSize * 1pt, lang: "en")
 #set par(leading: 0.6em, spacing: 0.7em)
 
-// Plain text with line breaks preserved (a bare "\n" would collapse to a space).
-#let lines(s) = s.split("\n").join(linebreak())
+// BEGIN lines
+// A description is plain text. A line that starts with a dash or a bullet followed by a space is a point: a run of
+// such lines is printed as a list (a bullet, a hanging indent). Other lines keep their breaks. A dash inside a
+// sentence, a negative number ("-5 %": no space after the dash) and a line of dashes only are not points.
+#let point-marker = regex("^\\s*[-–—•*]\\s+")
+#let is-point(l) = l.match(regex("^\\s*[-–—•*]\\s+\\S")) != none
+// The lines of a description in runs: ("list", points) for consecutive points, ("text", lines) for the others.
+#let groups(s) = {
+  let out = ()
+  for l in s.replace("\r", "").split("\n") {
+    let kind = if is-point(l) { "list" } else { "text" }
+    let item = if kind == "list" { l.replace(point-marker, "") } else { l }
+    let n = out.len()
+    if n > 0 and out.at(n - 1).at(0) == kind {
+      out.at(n - 1).at(1).push(item)
+    } else {
+      out.push((kind, (item,)))
+    }
+  }
+  out
+}
+#let lines(s) = {
+  for (kind, items) in groups(s) {
+    if kind == "list" {
+      block(above: 0.9em, below: 0.9em, list(marker: [•], body-indent: 0.5em, spacing: 0.85em, ..items))
+    } else {
+      items.join(linebreak())
+    }
+  }
+}
+// After a project's title: its text follows on the same line, after a dash; a list starts under the title instead.
+#let after-title(s) = if groups(s).first().at(0) == "list" {
+  linebreak()
+  lines(s)
+} else [ — #lines(s)]
+// END lines
 
 #let href(url) = if url.starts-with("http") { url } else { "https://" + url }
 
@@ -86,7 +120,7 @@
 
 #section("Projects", sections.projects, p => [
   *#p.title*#if p.tech.len() > 0 [ #text(fill: muted)[(#p.tech.join(", "))]]
-  #if p.description != "" [ — #lines(p.description)]
+  #if p.description != "" [#text(fill: muted)[#after-title(p.description)]]
 ])
 
 #section("Education", sections.education, e => [
