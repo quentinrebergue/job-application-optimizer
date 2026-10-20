@@ -46,7 +46,7 @@ describe('the form of the versions', () => {
     expect(variantsError([...ok, { name: 'short', text: 'y' }], 1000)).toMatch(/Two versions are named/)
     expect(variantsError([{ name: 'x'.repeat(31), text: '' }], 1000)).toMatch(/at most 30/)
     expect(variantsError([{ name: 'Long', text: 'x'.repeat(1001) }], 1000)).toMatch(/over 1,000 characters/)
-    expect(variantsError(Array.from({ length: 5 }, (_, i) => ({ name: `V${i}`, text: '' })), 1000)).toMatch(/At most 4/)
+    expect(variantsError(Array.from({ length: 4 }, (_, i) => ({ name: `V${i}`, text: '' })), 1000)).toMatch(/At most 3/)
   })
 
   it('name a new version so that it never takes a name already used', () => {

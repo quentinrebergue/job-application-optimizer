@@ -19,14 +19,17 @@ interface Props {
   values: FieldValues
   errors?: Partial<Record<string, string>>
   onChange: (key: string, value: string) => void
+  /** The description is one of several versions (#297): the bar above its text, and the text and the way to change it that are on show. */
+  description?: { header: React.ReactNode; value: string; onChange: (value: string) => void }
 }
 
 /** The fields of one kind of entry, from ENTITY_FIELDS, in a two-column grid (one column on a phone, except the short fields: a place and a period side by side). */
-export function EntityFields({ type, values, errors = {}, onChange }: Props) {
+export function EntityFields({ type, values, errors = {}, onChange, description }: Props) {
   return (
     <div className="grid grid-cols-2 gap-field">
       {ENTITY_FIELDS[type].map((field) => {
-        const value = values[field.key] ?? ''
+        const versions = field.key === 'description' ? description : undefined
+        const value = versions ? versions.value : values[field.key] ?? ''
         // A long text is never cut while typing or pasting: it counts, and says when it is too long.
         const long = isLongText(field.maxLength)
         return (
@@ -39,7 +42,14 @@ export function EntityFields({ type, values, errors = {}, onChange }: Props) {
           className={cn(field.wide ? 'col-span-2' : field.short ? 'col-span-1' : 'col-span-2 sm:col-span-1')}
         >
           {field.kind === 'textarea' ? (
-            <Textarea value={values[field.key] ?? ''} onChange={(e) => onChange(field.key, e.target.value)} placeholder={field.placeholder} autoGrow className={DESCRIPTION_HEIGHT} />
+            versions ? (
+              <div className="flex flex-col gap-field">
+                {versions.header}
+                <Textarea value={value} onChange={(e) => versions.onChange(e.target.value)} placeholder={field.placeholder} autoGrow className={DESCRIPTION_HEIGHT} />
+              </div>
+            ) : (
+              <Textarea value={values[field.key] ?? ''} onChange={(e) => onChange(field.key, e.target.value)} placeholder={field.placeholder} autoGrow className={DESCRIPTION_HEIGHT} />
+            )
           ) : field.kind === 'select' ? (
             <Select value={values[field.key] ?? ''} onChange={(e) => onChange(field.key, e.target.value)}>
               {field.options?.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
