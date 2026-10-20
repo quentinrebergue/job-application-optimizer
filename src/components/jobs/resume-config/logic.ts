@@ -2,6 +2,7 @@
 // they can be tested on their own. Each update returns a new ResumeConfig.
 
 import type { EntityMeta, ResumeConfig, SkillMeta } from '@/types'
+import { compareChronologically } from '@/lib/resume/build-payload'
 import type { AIAnalysisResult, EntityRankingResult } from '@/types/job'
 
 export const TYPE_ORDER = ['experiences', 'projects', 'skills', 'education'] as const
@@ -40,33 +41,9 @@ export function entitySubLabel(e: EntityMeta): string {
 
 // ─── Dates ───────────────────────────────────────────────────────────────────
 
-const MONTHS = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']
-
-/**
- * End date of a period such as "02/2026 – 08/2026", "June 2024 – August 2024",
- * "2020 – 2026" or "2024 – Present". "Present" sorts after everything.
- */
-export function parseEndDate(period: string): Date {
-  const parts = period.split(/–|—/).map((p) => p.trim())
-  const end = parts[parts.length - 1] ?? ''
-  if (end.toLowerCase().includes('present')) return new Date(9999, 11, 31)
-
-  const mmyyyy = end.match(/(\d{1,2})\/(\d{4})/)
-  if (mmyyyy) return new Date(parseInt(mmyyyy[2]), parseInt(mmyyyy[1]) - 1, 1)
-
-  let year = 2000
-  let month = 0
-  for (const word of end.split(/\s+/)) {
-    const y = word.match(/\d{4}/)
-    if (y) year = parseInt(y[0])
-    const m = MONTHS.findIndex((name) => name === word.toLowerCase() || name.slice(0, 3) === word.toLowerCase())
-    if (m !== -1) month = m
-  }
-  return new Date(year, month, 1)
-}
-
 const period = (e: EntityMeta) => (e as { period?: string }).period ?? ''
-const mostRecentFirst = (a: EntityMeta, b: EntityMeta) => parseEndDate(period(b)).getTime() - parseEndDate(period(a)).getTime()
+/** The same order as the PDF (#295): what is going on, then the later start, then the later end. */
+const mostRecentFirst = (a: EntityMeta, b: EntityMeta) => compareChronologically(period(a), period(b))
 
 // ─── Scores and grouping ─────────────────────────────────────────────────────
 
@@ -123,9 +100,9 @@ export function groupEntities(entities: EntityMeta[], config: ResumeConfig, ai?:
 const ORDER_KEY = { experiences: 'experience_order', projects: 'project_order' } as const
 
 /**
- * Selects or unselects an entity. An unselected experience or project keeps its
- * place in the order, so it does not jump in the list (the PDF only prints the
- * selected ones); a newly selected one not yet in the order goes last.
+ * Selects or unselects an entity. An unselected project keeps its place in the order, so it does not jump in the
+ * list (the PDF only prints the selected ones); a newly selected one not yet in the order goes last. The experiences
+ * have no order of their own until the user reorders them: they follow the dates (#295).
  */
 export function toggleEntity(config: ResumeConfig, entity: EntityMeta): ResumeConfig {
   const selected = config.selected_entity_ids.includes(entity.id)
@@ -135,7 +112,7 @@ export function toggleEntity(config: ResumeConfig, entity: EntityMeta): ResumeCo
       ? config.selected_entity_ids.filter((id) => id !== entity.id)
       : [...config.selected_entity_ids, entity.id],
   }
-  if (!selected && (entity.type === 'experiences' || entity.type === 'projects')) {
+  if (!selected && entity.type === 'projects') {
     const key = ORDER_KEY[entity.type]
     const order = config[key] ?? []
     if (!order.includes(entity.id)) next[key] = [...order, entity.id]
@@ -146,10 +123,12 @@ export function toggleEntity(config: ResumeConfig, entity: EntityMeta): ResumeCo
 /**
  * Moves a selected experience or project one step up or down among the selected
  * ones: it swaps places with the previous or next selected entry of the order.
+ * `shown` is the order on screen (the selected ones): it becomes the order when none is saved yet, as for the
+ * experiences, which follow the dates until the first move.
  */
-export function moveEntity(config: ResumeConfig, type: 'experiences' | 'projects', id: string, direction: 'up' | 'down'): ResumeConfig {
+export function moveEntity(config: ResumeConfig, type: 'experiences' | 'projects', id: string, direction: 'up' | 'down', shown: string[] = []): ResumeConfig {
   const key = ORDER_KEY[type]
-  const order = config[key] ?? []
+  const order = config[key]?.length ? config[key] : shown
   const index = order.indexOf(id)
   if (index === -1) return config
   const isSelected = (other: string) => config.selected_entity_ids.includes(other)
@@ -160,6 +139,25 @@ export function moveEntity(config: ResumeConfig, type: 'experiences' | 'projects
   const next = [...order]
   ;[next[index], next[target]] = [next[target], next[index]]
   return { ...config, [key]: next }
+}
+
+/**
+ * Whether the selected experiences are printed in an order other than the dates, because a saved order says so
+ * (chosen by hand, or written by the AI's ranking before #295: the two cannot be told apart).
+ */
+export function hasCustomExperienceOrder(config: ResumeConfig, entities: EntityMeta[]): boolean {
+  if (!config.experience_order?.length) return false
+  const selected = entities.filter((e) => e.type === 'experiences' && config.selected_entity_ids.includes(e.id))
+  const shown = [...selected].sort(byCustomOrder(config.experience_order, mostRecentFirst)).map((e) => e.id)
+  const dates = [...selected].sort(mostRecentFirst).map((e) => e.id)
+  return shown.some((id, i) => id !== dates[i])
+}
+
+/** Back to the dates: the saved order of the experiences is removed. */
+export function backToChronologicalOrder(config: ResumeConfig): ResumeConfig {
+  const next = { ...config }
+  delete next.experience_order
+  return next
 }
 
 /** Orders the selected experiences or projects by AI score, highest first. */
@@ -224,8 +222,8 @@ export function resetConfig(entities: EntityMeta[]): ResumeConfig {
 
 /**
  * The config to show when the panel opens: the saved one, plus education when
- * nothing is selected yet, plus what the AI recommends, plus orders initialised
- * from the selection. Shown only; saved on the user's next change.
+ * nothing is selected yet, plus what the AI recommends, plus the order of the projects
+ * initialised from the selection. Shown only; saved on the user's next change.
  *
  * The recommendations of an analysis are applied **once**: `ai_applied_at` names the analysis whose
  * recommendations the selection already holds, so entries the user unticked after the ranking are not ticked again
@@ -256,11 +254,11 @@ export function initialConfig(saved: ResumeConfig | null, entities: EntityMeta[]
     cfg = { ...cfg, skill_tag_overrides: overrides }
   }
 
-  for (const type of ['experiences', 'projects'] as const) {
-    const key = ORDER_KEY[type]
-    if (cfg[key]?.length) continue
-    const selected = cfg.selected_entity_ids.filter((id) => entities.some((e) => e.id === id && e.type === type))
-    if (selected.length > 0) cfg = { ...cfg, [key]: selected }
+  // The projects start in the order of the selection, which is the AI's: the best match first. The experiences do not
+  // (#295): they follow the dates, and only a reorder by hand gives them an order of their own.
+  if (!cfg.project_order?.length) {
+    const selected = cfg.selected_entity_ids.filter((id) => entities.some((e) => e.id === id && e.type === 'projects'))
+    if (selected.length > 0) cfg = { ...cfg, project_order: selected }
   }
   return cfg
 }

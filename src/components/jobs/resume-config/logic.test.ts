@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import type { EntityMeta, ResumeConfig } from '@/types'
 import type { AIAnalysisResult } from '@/types/job'
 import {
-  EMPTY_CONFIG, applyAiOrder, entitySubLabel, groupEntities, initialConfig, moveEntity, parseEndDate,
+  EMPTY_CONFIG, applyAiOrder, backToChronologicalOrder, hasCustomExperienceOrder, entitySubLabel, groupEntities, initialConfig, moveEntity,
   resetConfig, setDescription, setDescriptionVariant, toggleEntity, toggleProjectTech, toggleSkillTag,
 } from './logic'
 
@@ -21,19 +21,6 @@ describe('entitySubLabel', () => {
   it('shows where and when', () => {
     expect(entitySubLabel(exp('a', '2024 – Present'))).toBe('Co · 2024 – Present')
     expect(entitySubLabel(skill('s', []))).toBe('')
-  })
-})
-
-describe('parseEndDate', () => {
-  it('reads the end of the usual period formats', () => {
-    expect(parseEndDate('02/2026 – 08/2026')).toEqual(new Date(2026, 7, 1))
-    expect(parseEndDate('June 2024 – August 2024')).toEqual(new Date(2024, 7, 1))
-    expect(parseEndDate('Jan 2023 — Mar 2023')).toEqual(new Date(2023, 2, 1))
-    expect(parseEndDate('2020 – 2026')).toEqual(new Date(2026, 0, 1))
-  })
-
-  it('puts "Present" after every date', () => {
-    expect(parseEndDate('2024 – Present').getTime()).toBeGreaterThan(parseEndDate('2030').getTime())
   })
 })
 
@@ -71,15 +58,23 @@ describe('groupEntities', () => {
 })
 
 describe('toggleEntity', () => {
-  it('adds an experience to the selection and the order, and keeps its place when it is unselected', () => {
+  it('adds a project to the selection and the order, and keeps its place when it is unselected', () => {
+    const p = proj('a')
+    const on = toggleEntity(cfg(), p)
+    expect(on.selected_entity_ids).toEqual(['a'])
+    expect(on.project_order).toEqual(['a'])
+    const off = toggleEntity(on, p)
+    expect(off.selected_entity_ids).toEqual([])
+    expect(off.project_order).toEqual(['a'])
+    expect(toggleEntity(off, p).project_order).toEqual(['a'])
+  })
+
+  it('gives an experience no order of its own: it keeps following the dates (#295)', () => {
     const e = exp('a', '2024')
     const on = toggleEntity(cfg(), e)
     expect(on.selected_entity_ids).toEqual(['a'])
-    expect(on.experience_order).toEqual(['a'])
-    const off = toggleEntity(on, e)
-    expect(off.selected_entity_ids).toEqual([])
-    expect(off.experience_order).toEqual(['a'])
-    expect(toggleEntity(off, e).experience_order).toEqual(['a'])
+    expect(on.experience_order).toBeUndefined()
+    expect(toggleEntity(on, e).experience_order).toBeUndefined()
   })
 
   it('does not move an entry in the list when it is unselected', () => {
@@ -108,6 +103,44 @@ describe('moveEntity', () => {
   it('skips unselected entries, so one click always moves among the printed ones', () => {
     const config = cfg({ selected_entity_ids: ['a', 'c'], project_order: ['a', 'b', 'c'] })
     expect(moveEntity(config, 'projects', 'c', 'up').project_order).toEqual(['c', 'b', 'a'])
+  })
+})
+
+describe('moveEntity on experiences that follow the dates (#295)', () => {
+  it('starts from the order on screen when no order is saved yet', () => {
+    const config = cfg({ selected_entity_ids: ['a', 'b', 'c'] })
+    expect(moveEntity(config, 'experiences', 'b', 'up').experience_order).toBeUndefined()
+    expect(moveEntity(config, 'experiences', 'b', 'up', ['a', 'b', 'c']).experience_order).toEqual(['b', 'a', 'c'])
+  })
+})
+
+describe('the order of the experiences of a job (#295)', () => {
+  const entities = [exp('teach', '09/2024 – 02/2026'), exp('now', '02/2026 – Now'), exp('old', '2019 – 2020')]
+
+  it('says nothing while the experiences follow the dates, with or without a saved order that agrees', () => {
+    const selected = ['teach', 'now', 'old']
+    expect(hasCustomExperienceOrder(cfg({ selected_entity_ids: selected }), entities)).toBe(false)
+    expect(hasCustomExperienceOrder(cfg({ selected_entity_ids: selected, experience_order: ['now', 'teach', 'old'] }), entities)).toBe(false)
+  })
+
+  it('says so when a saved order puts them out of time, as the AI did before', () => {
+    const config = cfg({ selected_entity_ids: ['teach', 'now', 'old'], experience_order: ['teach', 'now', 'old'] })
+    expect(hasCustomExperienceOrder(config, entities)).toBe(true)
+    // An experience that is not selected does not count.
+    expect(hasCustomExperienceOrder({ ...config, selected_entity_ids: ['now'] }, entities)).toBe(false)
+  })
+
+  it('goes back to the dates by removing the saved order only', () => {
+    const config = cfg({ selected_entity_ids: ['teach', 'now'], experience_order: ['teach', 'now'], project_order: ['p'] })
+    const back = backToChronologicalOrder(config)
+    expect(back.experience_order).toBeUndefined()
+    expect(back.project_order).toEqual(['p'])
+    expect(groupEntities(entities, back).experiences.map((e) => e.id)).toEqual(['now', 'teach', 'old'])
+  })
+
+  it('shows the panel in the order of the PDF: ongoing first, then the later start', () => {
+    const groups = groupEntities([exp('teach', '09/2024 – 02/2026'), exp('now', '02/2026 – Now')], cfg())
+    expect(groups.experiences.map((e) => e.id)).toEqual(['now', 'teach'])
   })
 })
 
@@ -169,7 +202,8 @@ describe('initialConfig', () => {
     const result = initialConfig(null, entities, ai)
     expect(result.selected_entity_ids).toEqual(['e', 'x', 'p', 's'])
     expect(result.skill_tag_overrides).toEqual({ s: ['Go'] })
-    expect(result.experience_order).toEqual(['x'])
+    // The experiences stay in the order of the dates, whatever the AI's order (#295); the projects follow the AI.
+    expect(result.experience_order).toBeUndefined()
     expect(result.project_order).toEqual(['p'])
   })
 

@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import type { EducationMeta, EntityMeta, ExperienceMeta, ProjectMeta, SkillMeta } from '@/types'
 import type { ResumeProfile } from '@/schemas/resume-profile'
-import { MAX_PROJECT_TECH, applyOrder, buildPayload, endDateKey, sortByEndDate } from './build-payload'
+import { MAX_PROJECT_TECH, applyOrder, buildPayload, endDateKey, sortChronologically, startDateKey } from './build-payload'
 
 const ZWSP = '\u200B'
 
@@ -55,9 +55,9 @@ describe('endDateKey', () => {
   })
 })
 
-describe('sortByEndDate', () => {
+describe('sortChronologically', () => {
   it('puts the current job first, then newest to oldest', () => {
-    const sorted = sortByEndDate([
+    const sorted = sortChronologically([
       experience('old', '2019 - 2020'),
       experience('now', '01/2024 - Now'),
       experience('mid', '2021 - 2022'),
@@ -66,14 +66,57 @@ describe('sortByEndDate', () => {
   })
 
   it('keeps input order for equal dates and unreadable ones', () => {
-    const sorted = sortByEndDate([experience('a', '2022'), experience('b', '2022'), experience('c', '???'), experience('d', 'n/a')])
+    const sorted = sortChronologically([experience('a', '2022'), experience('b', '2022'), experience('c', '???'), experience('d', 'n/a')])
     expect(sorted.map((e) => e.id)).toEqual(['a', 'b', 'c', 'd'])
   })
 
   it('does not mutate its input', () => {
     const input = [experience('old', '2019'), experience('new', '2024')]
-    sortByEndDate(input)
+    sortChronologically(input)
     expect(input.map((e) => e.id)).toEqual(['old', 'new'])
+  })
+})
+
+describe('startDateKey', () => {
+  it('reads the start of a range and a single date', () => {
+    expect(startDateKey('03/2022 - 09/2023')).toBe(2022 * 12 + 2)
+    expect(startDateKey('2021 – 2026')).toBe(2021 * 12)
+    expect(startDateKey('02/2026')).toBe(2026 * 12 + 1)
+  })
+
+  it('reads month names, in English and French', () => {
+    expect(startDateKey('Jun 2022 – Sep 2023')).toBe(2022 * 12 + 5)
+    expect(startDateKey('June 2024 – August 2024')).toBe(2024 * 12 + 5)
+    expect(endDateKey('June 2024 – August 2024')).toBe(2024 * 12 + 7)
+    expect(startDateKey('Janv. 2023 – Août 2023')).toBe(2023 * 12)
+    expect(endDateKey('Janv. 2023 – Août 2023')).toBe(2023 * 12 + 7)
+    expect(endDateKey('juil 2023')).toBe(2023 * 12 + 6)
+  })
+
+  it('sends anything unreadable to the end', () => {
+    for (const period of ['', 'summer', '13/2024', 'Foo 2024']) expect(startDateKey(period), period).toBe(-Infinity)
+  })
+})
+
+describe('sortChronologically: the start date decides (#295)', () => {
+  const ids = (periods: Record<string, string>) =>
+    sortChronologically(Object.entries(periods).map(([id, period]) => experience(id, period))).map((e) => e.id)
+
+  it('puts the current role first even when an older one ended later than it started', () => {
+    expect(ids({ teach: '09/2024 – 02/2026', now: '02/2026 – Now' })).toEqual(['now', 'teach'])
+  })
+
+  it('puts the later start first when two roles overlap', () => {
+    expect(ids({ degree: '2021 – 2025', freelance: '03/2023 – 2024' })).toEqual(['freelance', 'degree'])
+  })
+
+  it('breaks a tie on the start by the later end, and keeps input order for equal periods', () => {
+    expect(ids({ short: '2022 – 2023', long: '2022 – 2025' })).toEqual(['long', 'short'])
+    expect(ids({ a: '2022 – 2023', b: '2022 – 2023' })).toEqual(['a', 'b'])
+  })
+
+  it('puts several ongoing periods by their start, and an unreadable one last', () => {
+    expect(ids({ bad: '???', recent: '2025 – Now', older: '2020 – Now', mid: '2023 – 2024' })).toEqual(['recent', 'older', 'mid', 'bad'])
   })
 })
 
@@ -170,6 +213,20 @@ describe('buildPayload', () => {
     })
     expect(payload.sections.experiences.map((e) => e.title)).toEqual(['Role e-old', 'Role e-now'])
     expect(payload.sections.projects.map((p) => p.title)).toEqual(['Project p2', 'Project p1'])
+  })
+
+  it('prints the experiences and the education by date whatever the order of the selection, and lets a custom order win', () => {
+    const list: EntityMeta[] = [
+      experience('teach', '09/2024 – 02/2026'),
+      experience('now', '02/2026 – Now'),
+      experience('old', '2019 - 2020'),
+      education('msc', '2021 - 2023'),
+      education('bsc', '2018 - 2021'),
+    ]
+    const printed = (config: object) => buildPayload({ templateId: 'classic', profile, entities: [...list].reverse(), config }).sections
+    expect(printed({}).experiences.map((e) => e.title)).toEqual(['Role now', 'Role teach', 'Role old'])
+    expect(printed({}).education.map((e) => e.degree)).toEqual(['Degree msc', 'Degree bsc'])
+    expect(printed({ experience_order: ['teach', 'now'] }).experiences.map((e) => e.title)).toEqual(['Role teach', 'Role now', 'Role old'])
   })
 
   it('applies description overrides, including to a blank override', () => {
