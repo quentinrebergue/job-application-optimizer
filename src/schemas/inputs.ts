@@ -12,6 +12,12 @@ const text = (max: number) => z.string().trim().max(max)
 /** Text that must not be empty (a title, a company...). */
 const required = (max: number) => text(max).min(1)
 
+/** The other versions of a description (#297): a name and a text, at most a few. */
+const descriptionVariants = (descriptionMax: number) =>
+  z
+    .array(z.object({ name: required(LIMITS.descriptionVariants.name), text: text(descriptionMax) }))
+    .max(LIMITS.descriptionVariants.perEntry)
+
 const tagList = z.array(z.string().trim().min(1).max(LIMITS.tag)).max(LIMITS.tagsPerEntry)
 const latex = text(LIMITS.latexSnippet)
 
@@ -23,6 +29,7 @@ const entityShapes = {
     location: text(LIMITS.experiences.location).optional(),
     period: text(LIMITS.experiences.period).optional(),
     description: text(LIMITS.experiences.description).optional(),
+    descriptions: descriptionVariants(LIMITS.experiences.description).optional(),
     tags: tagList.optional(),
     latex_snippet: latex.optional(),
   },
@@ -30,6 +37,7 @@ const entityShapes = {
     title: required(LIMITS.projects.title),
     tech: tagList.optional(),
     description: text(LIMITS.projects.description).optional(),
+    descriptions: descriptionVariants(LIMITS.projects.description).optional(),
     tags: tagList.optional(),
     latex_snippet: latex.optional(),
   },
@@ -101,6 +109,7 @@ export const ResumeConfigInputSchema = z.object({
   ai_context: text(LIMITS.profile.ai_context).optional(),
   ai_applied_at: z.string().max(LIMITS.resume.id).optional(),
   show_project_tech: z.boolean().optional(),
+  description_variant: z.record(id, text(LIMITS.descriptionVariants.name)).optional(),
   skill_tag_overrides: z.record(id, tagList).optional(),
   entity_description_overrides: z.record(id, text(LIMITS.resume.entityDescription)).optional(),
   project_order: ids.optional(),

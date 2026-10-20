@@ -184,6 +184,19 @@ describe('buildPayload', () => {
     expect(payload.sections.projects.find((p) => p.title === 'Project p1')?.description).toBe('')
   })
 
+  it('prints the version of a description a job chose, under the text written for the job, over the main one (#297)', () => {
+    const versions = [
+      project('pv', { descriptions: [{ name: 'Short', text: 'Short text' }, { name: 'Technical', text: 'Tech text' }] }),
+    ]
+    const text = (config: object) =>
+      buildPayload({ templateId: 'classic', profile, entities: versions, config }).sections.projects[0].description
+    expect(text({})).toBe('About pv')
+    expect(text({ description_variant: { pv: 'Short' } })).toBe('Short text')
+    expect(text({ description_variant: { pv: 'Short' }, entity_description_overrides: { pv: 'Mine' } })).toBe('Mine')
+    // A version deleted or renamed since: the main description, not an empty line.
+    expect(text({ description_variant: { pv: 'Gone' } })).toBe('About pv')
+  })
+
   it('applies skill tag overrides and drops skills left without tags', () => {
     const twoSkills = [...entities, skill('s2', ['Rust']), skill('s3', [])]
     const payload = buildPayload({
