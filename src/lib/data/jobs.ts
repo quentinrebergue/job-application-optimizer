@@ -53,6 +53,15 @@ export async function listJobs(userId: string): Promise<JobOffer[]> {
   return rows.map(rowToJobOffer)
 }
 
+/** Whether the user has another job at the same company (read without case or surrounding spaces): the name of a PDF then needs the title. */
+export async function hasOtherJobAtCompany(userId: string, jobId: string, company: string): Promise<boolean> {
+  const { rows } = await pool.query(
+    'SELECT 1 FROM jobs WHERE user_id = $1 AND id <> $2 AND lower(trim(company)) = lower(trim($3)) LIMIT 1',
+    [userId, jobId, company]
+  )
+  return rows.length > 0
+}
+
 export async function getJob(userId: string, id: string): Promise<JobWithConfig | null> {
   const { rows } = await pool.query(
     'SELECT * FROM jobs WHERE user_id = $1 AND id = $2',

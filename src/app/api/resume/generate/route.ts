@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server'
-import { getJob, getResumeProfile, listEntities } from '@/lib/data'
+import { getJob, getResumeProfile, hasOtherJobAtCompany, listEntities } from '@/lib/data'
 import { ENTITY_TYPE_IDS } from '@/config'
 import { getSessionUserId } from '@/lib/auth/session'
 import { buildPayload, type PayloadConfig } from '@/lib/resume/build-payload'
+import { resumeFileName } from '@/lib/resume/file-name'
 import { RenderError, renderPdf } from '@/lib/resume/renderer-client'
 import { GenerateResumeSchema } from '@/schemas/resume-generate'
 import { readJson } from '@/lib/validation/read-json'
@@ -54,12 +55,20 @@ export async function POST(request: Request) {
     entities,
   })
 
+  // Named after the person and the company, not after the job's id (#293); the browser saves under this very name.
+  const fileName = resumeFileName({
+    fullName: profile.full_name,
+    company: job?.company ?? '',
+    title: job?.title ?? '',
+    sharesCompany: job ? await hasOtherJobAtCompany(userId, job.id, job.company) : false,
+  })
+
   try {
     const pdf = await renderPdf(payload)
     return new Response(pdf, {
       headers: {
         'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename="${jobId ? `resume-${jobId}` : 'resume'}.pdf"`,
+        'Content-Disposition': `attachment; filename="${fileName}"`,
         'Content-Length': String(pdf.byteLength),
       },
     })
