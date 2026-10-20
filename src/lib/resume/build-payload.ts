@@ -58,37 +58,64 @@ const ONGOING = new Set(['now', 'present', 'current', 'ongoing', 'today', 'prés
 // En dash, em dash or hyphen, with or without spaces around it.
 const RANGE_SEPARATOR = /\s*[–—-]\s*/
 
+// Month names, English and French, by their first letters ("jun", "juin", "févr." all read).
+const MONTHS: [RegExp, number][] = [
+  [/^jan/, 0], [/^f[eé]v?/, 1], [/^mar/, 2], [/^a?pr|^avr/, 3], [/^ma[iy]/, 4], [/^jun|^juin/, 5],
+  [/^jul|^juil/, 6], [/^aug|^ao/, 7], [/^sep/, 8], [/^oct/, 9], [/^nov/, 10], [/^d[eé]c/, 11],
+]
+
 /**
- * Turns the end of a period ("01/2024 - Now", "2021 – 2026", "03/2022") into a
- * number that sorts chronologically. Still-ongoing periods are Infinity (most
- * recent) and anything unreadable is -Infinity (oldest), so a typo never
+ * Turns one date of a period ("01/2024", "2021", "Jun 2022", "Now") into a number that sorts chronologically: months
+ * since year 0. Still-ongoing is Infinity (most recent) and anything unreadable is -Infinity (oldest), so a typo never
  * produces NaN and scrambles the order.
  */
-export function endDateKey(period: string): number {
-  const parts = period.split(RANGE_SEPARATOR)
-  const end = parts[parts.length - 1].trim().toLowerCase()
+function dateKey(raw: string): number {
+  const date = raw.trim().toLowerCase()
+  if (ONGOING.has(date)) return Infinity
 
-  if (ONGOING.has(end)) return Infinity
-
-  const monthYear = /^(\d{1,2})\/(\d{4})$/.exec(end)
+  const monthYear = /^(\d{1,2})\/(\d{4})$/.exec(date)
   if (monthYear) {
     const month = Number(monthYear[1])
     return month >= 1 && month <= 12 ? Number(monthYear[2]) * 12 + month - 1 : -Infinity
   }
 
-  const yearOnly = /^(\d{4})$/.exec(end)
+  const yearOnly = /^(\d{4})$/.exec(date)
   if (yearOnly) return Number(yearOnly[1]) * 12 // a bare year counts as January
+
+  const named = /^([a-zéû]+)\.?\s+(\d{4})$/.exec(date)
+  const month = named ? MONTHS.find(([name]) => name.test(named[1])) : undefined
+  if (named && month) return Number(named[2]) * 12 + month[1]
 
   return -Infinity
 }
 
-/** Most recent first. Returns a new array; equal dates keep their input order. */
-export function sortByEndDate<T extends { period: string }>(items: readonly T[]): T[] {
-  return [...items].sort((a, b) => {
-    const ka = endDateKey(a.period)
-    const kb = endDateKey(b.period)
-    return ka === kb ? 0 : kb > ka ? 1 : -1
-  })
+/** The end of a period ("01/2024 - Now", "2021 – 2026", "03/2022"); a single date is its own end. */
+export function endDateKey(period: string): number {
+  const parts = period.split(RANGE_SEPARATOR)
+  return dateKey(parts[parts.length - 1])
+}
+
+/** The start of a period; a single date is its own start. */
+export function startDateKey(period: string): number {
+  return dateKey(period.split(RANGE_SEPARATOR)[0])
+}
+
+/**
+ * Orders two periods, most recent first: what is still going on, then the later start, then the later end (#295).
+ * The start decides because two roles that overlap (a freelance work during a degree) read best by when each began.
+ * A period that cannot be read goes last; equal periods compare as equal.
+ */
+export function compareChronologically(a: string, b: string): number {
+  const keys = (period: string) => [endDateKey(period) === Infinity ? 1 : 0, startDateKey(period), endDateKey(period)]
+  const ka = keys(a)
+  const kb = keys(b)
+  for (let i = 0; i < ka.length; i++) if (ka[i] !== kb[i]) return kb[i] > ka[i] ? 1 : -1
+  return 0
+}
+
+/** Most recent first (see compareChronologically). Returns a new array; equal periods keep their input order. */
+export function sortChronologically<T extends { period: string }>(items: readonly T[]): T[] {
+  return [...items].sort((a, b) => compareChronologically(a.period, b.period))
 }
 
 /**
@@ -143,7 +170,7 @@ export function buildPayload(input: BuildPayloadInput): RenderPayload {
       summary: softBreaks(config.profile_text?.trim() || profile.profile_text),
     },
     sections: {
-      experiences: applyOrder(sortByEndDate(experiences), config.experience_order).map((e) => ({
+      experiences: applyOrder(sortChronologically(experiences), config.experience_order).map((e) => ({
         title: softBreaks(e.title),
         company: softBreaks(e.company),
         location: softBreaks(e.location ?? ''),
@@ -158,7 +185,7 @@ export function buildPayload(input: BuildPayloadInput): RenderPayload {
       skills: skills
         .map((s) => ({ name: softBreaks(s.name), tags: (tagOverrides[s.id] ?? s.tags).map(softBreaks) }))
         .filter((s) => s.tags.length > 0),
-      education: sortByEndDate(education).map((e) => ({
+      education: sortChronologically(education).map((e) => ({
         degree: softBreaks(e.degree),
         institution: softBreaks(e.institution),
         period: e.period,

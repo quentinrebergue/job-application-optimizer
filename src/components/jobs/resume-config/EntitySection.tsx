@@ -11,7 +11,7 @@ import { DescriptionEditor } from './DescriptionEditor'
 import { EntityRow, type RowState } from './EntityRow'
 import { ReorderList } from './ReorderList'
 import { SkillTagPicker } from './SkillTagPicker'
-import { TYPE_LABELS, applyAiOrder, moveEntity, setDescription, setDescriptionVariant, toggleEntity, toggleProjectTech, toggleSkillTag, type EntityType } from './logic'
+import { TYPE_LABELS, applyAiOrder, backToChronologicalOrder, hasCustomExperienceOrder, moveEntity, setDescription, setDescriptionVariant, toggleEntity, toggleProjectTech, toggleSkillTag, type EntityType } from './logic'
 import type { useResumeConfig } from './useResumeConfig'
 
 type Panel = ReturnType<typeof useResumeConfig>
@@ -89,10 +89,19 @@ export function EntitySection({ type, group, panel, ai, libraryTags }: Props) {
       {type === 'projects' && config.show_project_tech !== false && included.some((p) => (p as ProjectMeta).tech.length > MAX_PROJECT_TECH) && (
         <p className="text-caption text-ink-muted">The first {MAX_PROJECT_TECH} technologies of each project are printed.</p>
       )}
+      {/* A saved order can put the experiences out of time (the AI's, before #295, or the user's own): say so, and offer the way back. */}
+      {type === 'experiences' && hasCustomExperienceOrder(config, entities) && (
+        <p className="text-caption text-ink-muted flex flex-wrap items-center gap-2">
+          The experiences follow a custom order, not the dates.
+          <Button variant="ghost" size="sm" className="h-auto px-0" onClick={() => update(backToChronologicalOrder)}>
+            Back to chronological order
+          </Button>
+        </p>
+      )}
       {reordering && canReorder ? (
         <ReorderList
           items={included}
-          onMove={(id, direction) => update((c) => (orderable ? moveEntity(c, type, id, direction) : c))}
+          onMove={(id, direction) => update((c) => (orderable ? moveEntity(c, type, id, direction, included.map((e) => e.id)) : c))}
         />
       ) : (
       <ul className="flex flex-col gap-row">
