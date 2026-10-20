@@ -28,7 +28,7 @@ export const LIMITS = {
   skills: { name: 150, category: 50 },
   education: { degree: 150, institution: 150, period: 50 },
   /** The other versions of a description (#297): how many an experience or a project keeps besides the main one, and the length of a version's name. Each version is held to the limit of a description. */
-  descriptionVariants: { perEntry: 4, name: 30 },
+  descriptionVariants: { perEntry: 3, name: 30 },
   /** One keyword, and how many an entry or a job may have. */
   tag: 50,
   tagsPerEntry: 30,

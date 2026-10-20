@@ -1,14 +1,14 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import type { EntityMeta, EntityType } from '@/types'
 import { Alert } from '@/components/ui/Alert'
 import { useFieldAutosave, type SaveState } from '@/hooks/useFieldAutosave'
 import { fetchJson } from '@/lib/http'
 import { LIMITS } from '@/config/limits'
-import { parseVariants, serializeVariants, variantsError, variantsOf } from '@/lib/description-variants'
+import { makeMain, nextVersionName, parseVariants, serializeVariants, variantsError, variantsOf } from '@/lib/description-variants'
 import { DeleteButton } from './DeleteButton'
-import { VariantsEditor } from './VariantsEditor'
+import { DescriptionVersions, MAIN_VERSION, versionIndex, versionKey } from './DescriptionVersions'
 import { EntityFields } from './EntityFields'
 import { ENTITY_FIELDS, entityTitle, fieldError, fieldUpdate, toValues } from './entity-fields'
 
@@ -48,22 +48,51 @@ export function EntityEditor({ entity, onSaved, onDelete, deleting, onSaveStateC
     },
   })
 
+  // The version of the description on show (#297): the default one, or one of the others.
+  const [active, setActive] = useState(MAIN_VERSION)
+  const variants = parseVariants(values[VERSIONS] ?? '[]')
+  const index = versionIndex(active, variants.length)
+  const saveVariants = (list: typeof variants) => edit(VERSIONS, serializeVariants(list))
+
   useEffect(() => { onSaveStateChange?.(state) }, [state, onSaveStateChange])
 
   return (
     <div className="flex flex-col gap-field">
       {failure && <Alert>Not saved: {failure}</Alert>}
-      <EntityFields type={type} values={values} errors={errors} onChange={edit} />
-      {hasVersions && (
-        <VariantsEditor
-          description={values.description ?? ''}
-          value={values[VERSIONS] ?? '[]'}
-          limit={limit}
-          error={errors[VERSIONS]}
-          onChange={(v) => edit(VERSIONS, v)}
-          onMakeMain={(description, v) => { edit('description', description); edit(VERSIONS, v) }}
-        />
-      )}
+      <EntityFields
+        type={type}
+        values={values}
+        errors={errors}
+        onChange={edit}
+        description={hasVersions ? {
+          value: index === -1 ? values.description ?? '' : variants[index].text,
+          onChange: (text) => (index === -1 ? edit('description', text) : saveVariants(variants.map((v, i) => (i === index ? { ...v, text } : v)))),
+          header: (
+            <DescriptionVersions
+              variants={variants}
+              active={active}
+              error={errors[VERSIONS]}
+              onSelect={setActive}
+              // A new version starts as a copy of the default text: rewritten from there, not from nothing.
+              onAdd={() => {
+                saveVariants([...variants, { name: nextVersionName(variants), text: values.description ?? '' }])
+                setActive(versionKey(variants.length))
+              }}
+              onRename={(name) => saveVariants(variants.map((v, i) => (i === index ? { ...v, name } : v)))}
+              onMakeMain={() => {
+                const next = makeMain(values.description ?? '', variants, index)
+                edit('description', next.description)
+                saveVariants(next.variants)
+                setActive(MAIN_VERSION)
+              }}
+              onDelete={() => {
+                saveVariants(variants.filter((_, i) => i !== index))
+                setActive(MAIN_VERSION)
+              }}
+            />
+          ),
+        } : undefined}
+      />
       {onDelete && (
         <div className="mt-actions flex justify-end">
           <DeleteButton name={entityTitle(entity) || 'this entry'} onConfirm={onDelete} busy={deleting} />
