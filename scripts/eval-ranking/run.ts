@@ -2,6 +2,7 @@
  * Runs every evaluation case through the real ranking (gateway included), measures it
  * and compares it with the saved reference. Options: npm run eval:ranking -- --help
  */
+import { mismatchWarning, modelMismatch } from './model-check'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { rankWithUsage } from '@/lib/ai'
@@ -20,7 +21,7 @@ function describe(error: unknown): string {
   return parts.filter((m, i) => m && parts.indexOf(m) === i).join(' <- ')
 }
 
-async function runCase(c: EvalCase, runs: number, options: PromptOptions): Promise<RunRecord[]> {
+async function runCase(c: EvalCase, runs: number, options: PromptOptions, answered: Set<string>): Promise<RunRecord[]> {
   const records: RunRecord[] = []
   // The client logs every failure with its stack: the summary at the end says it once.
   const logError = console.error
@@ -29,10 +30,12 @@ async function runCase(c: EvalCase, runs: number, options: PromptOptions): Promi
     for (let i = 1; i <= runs; i++) {
       const start = Date.now()
       try {
-        const { analysis, usage, diagnostics, raw, promptParts } = await rankWithUsage('eval', c.job.title, c.job.company, c.job.description, c.entities, options)
+        const { analysis, usage, model, diagnostics, raw, promptParts } = await rankWithUsage('eval', c.job.title, c.job.company, c.job.description, c.entities, options)
         // The code drops what the AI invented before the answer is returned: count it from the diagnostics.
         const metrics = scoreRun(c.expected, c.entities, analysis)
         metrics.invalidIds += diagnostics.invalidIds
+        metrics.emptyTypes = diagnostics.emptyTypes.length
+        if (model) answered.add(model)
         records.push({ ok: true, metrics, ms: Date.now() - start, promptTokens: usage.prompt_tokens, completionTokens: usage.completion_tokens, raw, analysis, promptParts })
       } catch (error) {
         records.push({ ok: false, error: describe(error) })
@@ -93,8 +96,9 @@ async function main(args: Args) {
   const summaries: Record<string, Summary> = {}
   const records: Record<string, RunRecord[]> = {}
   const errors = new Set<string>()
+  const answered = new Set<string>()
   for (const c of cases) {
-    records[c.name] = await runCase(c, args.runs, options)
+    records[c.name] = await runCase(c, args.runs, options, answered)
     for (const r of records[c.name]) if (!r.ok) errors.add(r.error)
     summaries[c.name] = summarize(records[c.name])
     if (Object.values(c.expected).every((ids) => ids.length === 0)) {
@@ -103,6 +107,10 @@ async function main(args: Args) {
   }
   const total = overall(Object.values(summaries))
 
+  // `--model` only sets the prices: say loudly when another model answered, at the top and at the end.
+  const wrongModels = modelMismatch(args.model, answered)
+  const warning = wrongModels.length > 0 ? mismatchWarning(args.model!, wrongModels) : ''
+  if (warning) console.log(`\n${warning}`)
   printHeader(label, args.model, cases.length, args.runs, variant)
   printTable(summaries, total, args.model)
   const perRanking = printCost(args.model, total)
@@ -125,8 +133,11 @@ async function main(args: Args) {
   const saved: Saved = { label, model: args.model, costPerRanking: perRanking, raw, date: new Date().toISOString(), runsPerCase: args.runs, cases: summaries, overall: total }
   await fs.mkdir(RESULTS_DIR, { recursive: true })
   await fs.writeFile(path.join(RESULTS_DIR, `${saved.date.replace(/[:.]/g, '-')}-${label}.json`), JSON.stringify(saved, null, 2))
+  if (warning) console.log(`\n${warning}`)
   if (args.saveBaseline) {
-    if (total.failures > 0) {
+    if (warning) {
+      console.log('Reference NOT saved: another model answered than the one named in --model.')
+    } else if (total.failures > 0) {
       console.log('Reference NOT saved: some runs failed, a reference must be a clean run.')
     } else {
       await fs.writeFile(baselinePath, JSON.stringify(saved, null, 2))

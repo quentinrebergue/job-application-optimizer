@@ -62,10 +62,19 @@ describe('POST /api/jobs/[id]/rank', () => {
       analysis: { job_id: '', ats_tags: ['go'], summary: 'ok' },
       usage: { prompt_tokens: 2690, completion_tokens: 450 },
       model: 'mistral-small-2603',
+      emptyTypes: [],
     })
     reserveAiCall.mockReset().mockResolvedValue({ id: 7 })
     settleAiCall.mockReset().mockResolvedValue(undefined)
     getJob.mockResolvedValue({ id: 'job-1', title: 'Dev', company: 'Acme', description: 'd', resume_config: {} })
+  })
+
+  it('logs a ranking the code had to complete, with ids and no content (#218)', async () => {
+    rankJobWithAI.mockResolvedValue({ analysis: { job_id: '', ats_tags: [] }, usage: { prompt_tokens: 1, completion_tokens: 1 }, model: 'm', emptyTypes: ['projects'] })
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    expect((await post()).status).toBe(200)
+    expect(warn).toHaveBeenCalledWith('AI ranking: nothing recommended, completed', { userId: 'u1', jobId: 'job-1', types: ['projects'] })
+    warn.mockRestore()
   })
 
   it('ranks through the gateway for this user and saves the result', async () => {

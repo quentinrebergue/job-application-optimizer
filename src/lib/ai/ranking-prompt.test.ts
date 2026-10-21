@@ -86,7 +86,7 @@ describe('normalizeRanking', () => {
     expect(analysis.recommended_project_ids.slice(0, 3)).toEqual(['proj-00000001', 'proj-00000002', 'proj-00000003'])
     expect(analysis.recommended_skill_ids).toEqual(['skil-1', 'skil-2'])
     expect(analysis.ats_tags).toEqual(['C', 'RTOS'])
-    expect(diagnostics).toEqual({ invalidIds: 0, unrated: 0 })
+    expect(diagnostics).toEqual({ invalidIds: 0, unrated: 0, emptyTypes: [] })
   })
 
   it('orders by level, then by the AI order among its best, then by the library', () => {
@@ -162,6 +162,46 @@ describe('normalizeRanking', () => {
     })
     expect(analysis.suggested_new_skill_tags).toEqual([{ skill_id: 'skil-1', tag: 'Rust', reason: '' }])
     expect(analysis.suggested_new_skills).toEqual([])
+  })
+
+  describe('a type is never left empty when the library has entries of it (#218)', () => {
+    it('completes a type the model rated 0 everywhere, in the order of its best list, then of the library', () => {
+      const { analysis, diagnostics } = normalize({
+        levels: levelsOf([3, 3, 3], [0, 0, 0, 0, 0, 0], [3, 2, 0]),
+        best: { experiences: [], projects: [{ id: 'P4', why: 'closest' }, { id: 'P2', why: '' }], skills: [] },
+      })
+      // The minimum of projects is 3: the two the model named, then the first of the library.
+      expect(analysis.recommended_project_ids).toEqual(['proj-00000004', 'proj-00000002', 'proj-00000001'])
+      expect(diagnostics.emptyTypes).toEqual(['projects'])
+    })
+
+    it('completes every type when all are rated 0, and says which', () => {
+      const { analysis, diagnostics } = normalize({ levels: levelsOf([0, 0, 0], [0, 0, 0, 0, 0, 0], [0, 0, 0]), best: {} })
+      expect(analysis.recommended_experience_ids).toEqual(['exp-aaaa0001', 'exp-aaaa0002'])
+      expect(analysis.recommended_project_ids).toHaveLength(3)
+      expect(analysis.recommended_skill_ids).toEqual(['skil-1', 'skil-2'])
+      expect(diagnostics.emptyTypes).toEqual(['experiences', 'projects', 'skills'])
+    })
+
+    it('completes a type the model did not rate at all, from the library', () => {
+      const { analysis, diagnostics } = normalize({ levels: levelsOf([3, 2, 2], [], [3, 2, 2]), best: best(['E1', 'E2'], [], ['S1', 'S2']) })
+      expect(analysis.recommended_project_ids).toEqual(['proj-00000001', 'proj-00000002', 'proj-00000003'])
+      expect(diagnostics.emptyTypes).toEqual(['projects'])
+    })
+
+    it('does not touch a type that already has recommendations, weak ones included', () => {
+      const weak = normalize({ levels: levelsOf([3, 1, 0], [1, 1, 0, 0, 0, 0], [3, 2, 0]), best: {} })
+      expect(weak.analysis.recommended_project_ids).toEqual(['proj-00000001', 'proj-00000002'])
+      expect(weak.diagnostics.emptyTypes).toEqual([])
+      expect(normalize({ levels: FULL, best: best(['E1', 'E3'], ['P1', 'P2', 'P3'], ['S1', 'S2']) }).diagnostics.emptyTypes).toEqual([])
+    })
+
+    it('leaves a type empty when the library has no entry of it', () => {
+      const none = buildRankingPrompt('T', 'C', 'D', { experiences: [], projects: [], skills: [] }).labels
+      const { analysis, diagnostics } = normalizeRanking({ levels: {}, best: {} }, none)
+      expect(analysis.recommended_experience_ids).toEqual([])
+      expect(diagnostics.emptyTypes).toEqual([])
+    })
   })
 
   it('answers with empty lists when the library is empty', () => {

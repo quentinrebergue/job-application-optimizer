@@ -185,6 +185,8 @@ export interface RankingDiagnostics {
   invalidIds: number
   /** Entries the AI did not rate at all. */
   unrated: number
+  /** The types the AI left with nothing recommended although the library has entries of them: the code completed them (#218). */
+  emptyTypes: RankedType[]
 }
 
 type Analysis = Omit<AIAnalysisResult, 'job_id' | 'analyzed_at'>
@@ -271,10 +273,19 @@ function rate(type: RankedType, root: Record<string, unknown>, levels: Map<strin
   return rated.sort((a, b) => b.level - a.level || a.position - b.position)
 }
 
-/** What is recommended: the good ones up to the maximum, topped up with weak ones to reach the minimum. */
-function choose(rated: Rated[], { min, max }: { min: number; max: number }): Rated[] {
+/**
+ * What is recommended: the good ones up to the maximum, topped up with weak ones to reach the minimum. A type is never
+ * left empty when the library has entries of it (#218): the model sometimes rates a whole type 0, and a resume with no
+ * experience or no project selected would come out without any message. The entries then come in the order the model
+ * gave (its "best" list, then the library's), and `filled` says the type had to be completed.
+ */
+function choose(rated: Rated[], all: Rated[], { min, max }: { min: number; max: number }): { chosen: Rated[]; filled: boolean } {
   const good = rated.filter((r) => r.level >= RECOMMEND_FROM_LEVEL).slice(0, max)
-  return good.length >= min ? good : rated.filter((r) => r.level >= 1).slice(0, min)
+  if (good.length >= min) return { chosen: good, filled: false }
+  const weak = rated.filter((r) => r.level >= 1).slice(0, min)
+  if (weak.length > 0) return { chosen: weak, filled: false }
+  const chosen = (rated.length > 0 ? rated : all).slice(0, min)
+  return { chosen, filled: chosen.length > 0 }
 }
 
 /**
@@ -284,7 +295,7 @@ function choose(rated: Rated[], { min, max }: { min: number; max: number }): Rat
  */
 export function normalizeRanking(data: unknown, labels: RankingLabels): { analysis: Analysis; diagnostics: RankingDiagnostics } {
   if (!isRecord(data)) throw new Error('The AI answer is not a JSON object.')
-  const diagnostics: RankingDiagnostics = { invalidIds: 0, unrated: 0 }
+  const diagnostics: RankingDiagnostics = { invalidIds: 0, unrated: 0, emptyTypes: [] }
 
   const levels = readLevels(data.levels, labels, diagnostics)
   const rated = {
@@ -292,10 +303,14 @@ export function normalizeRanking(data: unknown, labels: RankingLabels): { analys
     projects: rate('projects', data, levels, labels, diagnostics),
     skills: rate('skills', data, levels, labels, diagnostics),
   }
-  const chosen = {
-    experiences: choose(rated.experiences, RANKING_LIMITS.experiences),
-    projects: choose(rated.projects, RANKING_LIMITS.projects),
-    skills: choose(rated.skills, RANKING_LIMITS.skills),
+  // The entries of a type the model did not rate at all, in the order of the library (the last resort of `choose`).
+  const unrated = (type: RankedType): Rated[] =>
+    [...labels.values()].filter((l) => l.type === type).map((l) => ({ entity: l.entity, level: 0 as const, why: '', tags: [] }))
+  const chosen = {} as Record<RankedType, Rated[]>
+  for (const type of ['experiences', 'projects', 'skills'] as const) {
+    const { chosen: picked, filled } = choose(rated[type], unrated(type), RANKING_LIMITS[type])
+    chosen[type] = picked
+    if (filled) diagnostics.emptyTypes.push(type)
   }
 
   const entry = (type: RankedType, r: Rated, i: number): EntityRankingResult => ({
