@@ -21,23 +21,63 @@ spec:
               resources:
                 requests:
                   cpu: 10m
-                  memory: 32Mi
+                  memory: 64Mi
                 limits:
-                  memory: 128Mi
+                  memory: 256Mi
               env:
                 - name: PGPASSWORD
                   valueFrom:
                     secretKeyRef:
                       name: app-secrets
                       key: POSTGRES_PASSWORD
+                # The copy off the cluster (#105): an OVH Object Storage bucket at Roubaix, on another site than the
+                # cluster (Strasbourg). The keys and the public key of `age` are in a Secret made by hand
+                # (docs/runbooks/restore-postgres.md): without it the pod does not start and no backup is made,
+                # so make it BEFORE Argo CD syncs this file.
+                - name: S3_BUCKET
+                  value: fastresume-db-backups
+                - name: RCLONE_S3_PROVIDER
+                  value: Other
+                - name: RCLONE_S3_ENDPOINT
+                  value: https://s3.rbx.io.cloud.ovh.net
+                - name: RCLONE_S3_REGION
+                  value: rbx
+                - name: RCLONE_S3_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: backup-offsite
+                      key: S3_ACCESS_KEY_ID
+                - name: RCLONE_S3_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: backup-offsite
+                      key: S3_SECRET_ACCESS_KEY
+                - name: AGE_PUBLIC_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: backup-offsite
+                      key: AGE_PUBLIC_KEY
               command:
                 - /bin/sh
                 - -c
                 - |
                   set -euo pipefail
                   TIMESTAMP=$(date +%Y%m%d-%H%M%S)
-                  pg_dump -h postgres -U app -d job_optimizer | gzip > /backup/job_optimizer-$TIMESTAMP.sql.gz
-                  ls -1t /backup/job_optimizer-*.sql.gz | tail -n +8 | xargs -r rm --
+                  FILE=/backup/job_optimizer-$TIMESTAMP.sql.gz
+                  pg_dump -h postgres -U app -d job_optimizer | gzip > "$FILE"
+                  # Kept 7 days, by age and not by count: the privacy page says deleted data leaves the backups within a
+                  # week, which a count of files cannot promise when some nights fail. The file just written stays.
+                  find /backup -name 'job_optimizer-*.sql.gz' -mtime +6 -delete
+
+                  # Off the cluster, encrypted with the public key of `age`: only the private key, kept elsewhere, reads it.
+                  # The unencrypted file never leaves this pod.
+                  apk add --no-cache age rclone > /dev/null
+                  age -r "$AGE_PUBLIC_KEY" -o "$FILE.age" "$FILE"
+                  rclone copyto "$FILE.age" ":s3:$S3_BUCKET/$(basename "$FILE").age" --s3-no-check-bucket
+                  rm -f "$FILE.age"
+                  # The same 7 days in the bucket. Reached only once the new copy is in: the newest is never deleted.
+                  rclone delete ":s3:$S3_BUCKET" --min-age 7d --include 'job_optimizer-*.sql.gz.age' --s3-no-check-bucket
+                  echo "off-site copy done: $(basename "$FILE").age"
               volumeMounts:
                 - name: pgbackup
                   mountPath: /backup

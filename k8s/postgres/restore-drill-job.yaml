@@ -1,0 +1,76 @@
+# The restore drill (#105): restore the latest backup into a scratch database, count the rows against production, time it.
+# Not part of kustomization.yaml on purpose: it is run by hand (docs/runbooks/restore-postgres.md), never by Argo CD.
+# It only reads the backup volume and only creates, then drops, the database `restore_drill`: the production database
+# `job_optimizer` is only read (row counts).
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: restore-drill
+  namespace: job-optimizer
+spec:
+  backoffLimit: 0
+  ttlSecondsAfterFinished: 3600
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: restore
+          image: postgres:17-alpine
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64Mi
+            limits:
+              memory: 256Mi
+          env:
+            - name: PGHOST
+              value: postgres
+            - name: PGUSER
+              value: app
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: POSTGRES_PASSWORD
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -euo pipefail
+              LATEST=$(ls -1t /backup/job_optimizer-*.sql.gz | head -n 1)
+              echo "backup: $LATEST"
+              echo "size:   $(du -h "$LATEST" | cut -f1) (compressed)"
+              echo "taken:  $(stat -c %y "$LATEST")"
+              echo "files kept: $(ls -1 /backup/job_optimizer-*.sql.gz | wc -l)"
+
+              psql -d postgres -q -c "DROP DATABASE IF EXISTS restore_drill" -c "CREATE DATABASE restore_drill"
+              START=$(date +%s)
+              gunzip -c "$LATEST" | psql -d restore_drill -v ON_ERROR_STOP=1 -q -o /dev/null
+              END=$(date +%s)
+              echo "restored in $((END - START)) s"
+
+              counts() {
+                for t in $(psql -d "$1" -Atc "select tablename from pg_tables where schemaname = 'public' order by 1"); do
+                  echo "$t $(psql -d "$1" -Atc "select count(*) from \"$t\"")"
+                done
+              }
+              counts job_optimizer > /tmp/production.txt
+              counts restore_drill > /tmp/restored.txt
+              echo "--- rows per table: production now / restored from the backup"
+              awk 'NR == FNR { now[$1] = $2; next } { printf "%-30s %10s %10s\n", $1, now[$1], $2 }' /tmp/production.txt /tmp/restored.txt
+              echo "--- tables of production missing from the restore:"
+              cut -d' ' -f1 /tmp/production.txt | sort > /tmp/a.txt
+              cut -d' ' -f1 /tmp/restored.txt | sort > /tmp/b.txt
+              comm -23 /tmp/a.txt /tmp/b.txt
+
+              psql -d postgres -q -c "DROP DATABASE restore_drill"
+              echo "scratch database dropped"
+          volumeMounts:
+            - name: pgbackup
+              mountPath: /backup
+              readOnly: true
+      volumes:
+        - name: pgbackup
+          persistentVolumeClaim:
+            claimName: pgbackup
+            readOnly: true
