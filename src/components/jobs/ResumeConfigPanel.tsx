@@ -1,5 +1,6 @@
 'use client'
 
+import { fileNameFromDisposition } from '@/lib/resume/file-name'
 import { SectionTitle } from '@/components/ui/SectionTitle'
 import { useEffect, useState } from 'react'
 import { formatDate } from '@/lib/format'
@@ -50,7 +51,7 @@ function usePdf(jobId: string) {
       const url = URL.createObjectURL(await res.blob())
       const a = document.createElement('a')
       a.href = url
-      a.download = `resume-${jobId}.pdf`
+      a.download = fileNameFromDisposition(res.headers.get('Content-Disposition'))
       a.click()
       URL.revokeObjectURL(url)
     } catch (err) {

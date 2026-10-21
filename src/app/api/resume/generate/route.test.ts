@@ -3,10 +3,12 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 const getJob = vi.fn()
 const getResumeProfile = vi.fn()
 const listEntities = vi.fn()
+const hasOtherJobAtCompany = vi.fn()
 vi.mock('@/lib/data', () => ({
   getJob: (...a: unknown[]) => getJob(...a),
   getResumeProfile: (...a: unknown[]) => getResumeProfile(...a),
   listEntities: (...a: unknown[]) => listEntities(...a),
+  hasOtherJobAtCompany: (...a: unknown[]) => hasOtherJobAtCompany(...a),
 }))
 vi.mock('@/lib/auth/session', () => ({ getSessionUserId: vi.fn().mockResolvedValue('u1') }))
 vi.mock('@/lib/db', () => ({ pool: { query: vi.fn() } }))
@@ -32,7 +34,8 @@ const post = (body: unknown, headers: Record<string, string> = { 'content-type':
 const entity = (id: string, type: string) => ({ id, type, title: id })
 
 beforeEach(() => {
-  getJob.mockReset().mockResolvedValue({ id: 'job-1', resume_config: { selected_entity_ids: ['exp-1'] } })
+  hasOtherJobAtCompany.mockReset().mockResolvedValue(false)
+  getJob.mockReset().mockResolvedValue({ id: 'job-1', company: 'Acme Corp', title: 'Backend Engineer', resume_config: { selected_entity_ids: ['exp-1'] } })
   getResumeProfile.mockReset().mockResolvedValue({ full_name: 'Ada Lovelace' })
   listEntities.mockReset().mockImplementation(async (_user: string, type: string) =>
     type === 'experiences' ? [entity('exp-1', 'experiences'), entity('exp-2', 'experiences')] : type === 'projects' ? [entity('proj-1', 'projects')] : [])
@@ -91,10 +94,23 @@ describe('POST /api/resume/generate (#201, #202, #220)', () => {
     const res = await post({ jobId: 'job-1' })
     expect(res.status).toBe(200)
     expect(res.headers.get('Content-Type')).toBe('application/pdf')
-    expect(res.headers.get('Content-Disposition')).toBe('attachment; filename="resume-job-1.pdf"')
+    expect(res.headers.get('Content-Disposition')).toBe('attachment; filename="resume_ada.lovelace_acme-corp.pdf"')
+    expect(hasOtherJobAtCompany).toHaveBeenCalledWith('u1', 'job-1', 'Acme Corp')
     expect(listEntities).toHaveBeenCalledWith('u1', 'experiences')
     const entities = buildPayload.mock.calls[0][0].entities.map((e: { id: string }) => e.id)
     expect(entities).toEqual(['exp-1'])
+  })
+
+  it('adds the first words of the title to the name when another job of the user is at the same company', async () => {
+    hasOtherJobAtCompany.mockResolvedValue(true)
+    const res = await post({ jobId: 'job-1' })
+    expect(res.headers.get('Content-Disposition')).toBe('attachment; filename="resume_ada.lovelace_acme-corp_backend-engineer.pdf"')
+  })
+
+  it('names a PDF made without a job after the person only', async () => {
+    const res = await post({ entityIds: ['exp-1'] })
+    expect(res.headers.get('Content-Disposition')).toBe('attachment; filename="resume_ada.lovelace.pdf"')
+    expect(hasOtherJobAtCompany).not.toHaveBeenCalled()
   })
 
   it('lets explicit entry ids win over the saved selection of the job', async () => {

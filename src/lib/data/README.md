@@ -8,7 +8,7 @@ Data access layer on Postgres (`@/lib/db`). Every query is scoped to the signed-
 |------|-------------|
 | `index.ts` | Barrel export |
 | `entities.ts` | `listEntities`, `getEntity`, `createEntity`, `updateEntity`, `deleteEntity` |
-| `jobs.ts` | `listJobs`, `getJob`, `createJob`, `updateJob`, `deleteJob`, `getResumeConfig`, `saveResumeConfig` |
+| `jobs.ts` | `listJobs`, `getJob`, `hasOtherJobAtCompany`, `createJob`, `updateJob`, `deleteJob`, `getResumeConfig`, `saveResumeConfig` |
 | `resume-profile.ts` | `getResumeProfile`, `saveResumeProfile` |
 | `users.ts` | `createUser`, `findUserByEmail`, `findUserById`, `markEmailVerified`, `updatePassword`, `findPasswordHash`, `updateEmail` (false when the address is taken), `emailTaken`, `replacePassword` (new password, sessions closed and reset / change-of-address links cancelled, in one transaction) |
 | `email-tokens.ts` | Single-use tokens sent by mail (only their SHA-256 is stored): `createEmailToken`, `consumeEmailToken`, `peekEmailToken` (check without using), `consumeEmailChangeToken` and `peekEmailChangeToken` (the link of a change of address, which carries the new address, #236; the page reads it, the button uses it), `deleteExpiredEmailTokens` (a day after their expiry, run next to the rate-limit cleanup), `invalidateEmailTokens`, `countRecentTokens` |
