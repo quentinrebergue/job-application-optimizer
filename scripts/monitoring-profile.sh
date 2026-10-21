@@ -7,6 +7,8 @@
 #
 # The profiles are files in k8s/monitoring/, so what runs is what Git says.
 # DRY_RUN=1 shows the Helm command without running it.
+# FORCE=1 applies the profile even when it is the one running: needed after a change to the values (a rule, Alertmanager),
+# since the profile is read from Grafana alone and the script would say "nothing to do".
 set -euo pipefail
 
 RELEASE=monitoring
@@ -17,7 +19,7 @@ CHART_VERSION=91.8.2
 dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/../k8s/monitoring" && pwd)"
 
 usage() {
-  sed -n '2,9p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
+  sed -n '2,11p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
 }
 
 current_profile() {
@@ -56,8 +58,8 @@ case "${1:-}" in
     ;;
   normal | minimal)
     profile="$1"
-    if [ "$(current_profile)" = "$profile" ] && [ "${DRY_RUN:-0}" != 1 ]; then
-      echo "already in the $profile profile, nothing to do"
+    if [ "$(current_profile)" = "$profile" ] && [ "${DRY_RUN:-0}" != 1 ] && [ "${FORCE:-0}" != 1 ]; then
+      echo "already in the $profile profile, nothing to do (FORCE=1 applies it anyway, to roll out changed values)"
       exit 0
     fi
     echo "switching to the $profile profile..."
