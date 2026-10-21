@@ -1,5 +1,19 @@
+# Alertmanager sends the alerts by email (#29). Its configuration is NOT in this repository: it holds the SMTP password and
+# the address of the person to wake, so it lives in a Secret made by hand (see k8s/monitoring/alertmanager.example.yaml
+# and docs/monitoring.md). Without that Secret Alertmanager does not start.
 alertmanager:
-  enabled: false
+  enabled: true
+  alertmanagerSpec:
+    configSecret: alertmanager-config
+    # A few dozen MiB: the node has about 1.1 GiB of margin (docs/reports/2026-10-13-node-memory.md).
+    resources:
+      requests:
+        cpu: 10m
+        memory: 24Mi
+      limits:
+        memory: 64Mi
+    # Silences and the state of notifications live in memory: a restart forgets them, which costs at most one repeated email.
+    retention: 24h
 
 # OVH runs the control plane: etcd, the scheduler, the controller manager and
 # kube-proxy have no scrape target here (checked in Prometheus /targets), so
@@ -26,6 +40,24 @@ kubeApiServer:
         sourceLabels: [__name__]
 
 defaultRules:
+  # Alerts of the chart that cannot hold on one node of a small cluster, or that nobody can act on: left on, they would
+  # fire all the time and teach us to ignore the emails (#29).
+  disabled:
+    # "The cluster could not lose a node": always true with one node.
+    KubeCPUOvercommit: true
+    KubeMemoryOvercommit: true
+    # Namespace quotas: there are none.
+    KubeCPUQuotaOvercommit: true
+    KubeMemoryQuotaOvercommit: true
+    KubeQuotaAlmostFull: true
+    KubeQuotaFullyUsed: true
+    KubeQuotaExceeded: true
+    # A job that failed once (the migrator) is read in its own logs, not in an email a day later.
+    KubeJobFailed: true
+    # The node is meant to run at about three quarters of its memory: NodeMemoryLow (below) alerts on what matters, the
+    # memory left before the kubelet evicts. Major page faults only follow the same pressure.
+    NodeMemoryHighUtilization: true
+    NodeMemoryMajorPagesFaults: true
   rules:
     etcd: false
     kubeSchedulerAlerting: false
@@ -78,3 +110,49 @@ kube-state-metrics:
     requests:
       cpu: 50m
       memory: 64Mi
+
+# Our own rules, next to the chart's: what the incident of 2026-10-02 would have shown, and the site itself.
+# The chart already alerts on KubePodNotReady and KubePodCrashLooping (15 minutes each, so a normal rollout is silent).
+additionalPrometheusRulesMap:
+  fastresume:
+    groups:
+      - name: fastresume.node
+        rules:
+          # The kubelet says the node is short of memory: it starts evicting pods next.
+          - alert: NodeMemoryPressure
+            expr: kube_node_status_condition{condition="MemoryPressure",status="true"} == 1
+            for: 2m
+            labels:
+              severity: critical
+            annotations:
+              summary: "Node {{ $labels.node }} is under memory pressure"
+              description: "The kubelet reports MemoryPressure: it will evict pods. See docs/reports/2026-10-13-node-memory.md and scripts/node-memory.sh."
+          # Before the kubelet evicts (it does under 250 MiB available): 400 MiB for five minutes is a reason to look.
+          - alert: NodeMemoryLow
+            expr: node_memory_MemAvailable_bytes < 400 * 1024 * 1024
+            for: 5m
+            labels:
+              severity: warning
+            annotations:
+              summary: "Node {{ $labels.instance }} has under 400 MiB of memory available"
+              description: "{{ $value | humanize1024 }}B available for five minutes. The kubelet evicts pods under 250 MiB."
+          # An evicted pod stays listed (as Failed) until it is deleted: kubectl delete pod --field-selector=status.phase=Failed -A
+          - alert: PodEvicted
+            expr: sum by (namespace, pod) (kube_pod_status_reason{reason="Evicted"}) > 0
+            for: 1m
+            labels:
+              severity: warning
+            annotations:
+              summary: "Pod {{ $labels.namespace }}/{{ $labels.pod }} was evicted"
+              description: "Evicted pods stay listed until deleted: kubectl delete pod --field-selector=status.phase=Failed -n {{ $labels.namespace }}"
+      - name: fastresume.app
+        rules:
+          # The app has no replica able to answer: the site is down (the external probe says the same, from outside).
+          - alert: AppNoReplicaAvailable
+            expr: kube_deployment_status_replicas_available{namespace="job-optimizer",deployment="app"} == 0
+            for: 2m
+            labels:
+              severity: critical
+            annotations:
+              summary: "No replica of the app is available"
+              description: "kubectl get pods -n job-optimizer; kubectl describe deployment app -n job-optimizer"

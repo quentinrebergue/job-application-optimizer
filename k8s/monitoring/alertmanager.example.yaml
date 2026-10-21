@@ -1,0 +1,37 @@
+# The configuration of Alertmanager (#29), as a template. The real file holds a password and an address: it is kept
+# OUT of Git, in a file of your own (for instance ~/alertmanager.yaml, chmod 600), and put in the cluster as a Secret:
+#
+#   kubectl create secret generic alertmanager-config -n monitoring \
+#     --from-file=alertmanager.yaml=$HOME/alertmanager.yaml
+#
+# Replace what is between <>. The SMTP account is the one the app uses to send mail (Brevo): the same login and key, a
+# sender address that the provider accepts. To change it later, delete the Secret and create it again; Alertmanager
+# reloads the file by itself in about a minute.
+global:
+  # Port 2525, the one the app uses: from the cluster the usual 587 times out (checked from two namespaces, 2026-10-21).
+  smtp_smarthost: "<smtp host>:2525"
+  smtp_from: "<sender address>"
+  smtp_auth_username: "<smtp login>"
+  smtp_auth_password: "<smtp key>"
+  smtp_require_tls: true
+
+route:
+  # What does not match below goes nowhere: Watchdog (always firing, it proves the chain works) and the alerts of
+  # severity "info".
+  receiver: nobody
+  group_by: [alertname, namespace]
+  group_wait: 30s
+  group_interval: 5m
+  # Still firing after twelve hours: one more email, not one every five minutes.
+  repeat_interval: 12h
+  routes:
+    - receiver: email
+      matchers:
+        - severity=~"warning|critical"
+
+receivers:
+  - name: nobody
+  - name: email
+    email_configs:
+      - to: "<your address>"
+        send_resolved: true
