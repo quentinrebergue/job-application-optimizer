@@ -222,7 +222,7 @@ export function resetConfig(entities: EntityMeta[]): ResumeConfig {
 
 /**
  * The config to show when the panel opens: the saved one, plus education when
- * nothing is selected yet, plus what the AI recommends, plus the order of the projects
+ * nothing is selected yet, plus the experiences and projects the AI recommends (no skill: they start unticked), plus the order of the projects
  * initialised from the selection. Shown only; saved on the user's next change.
  *
  * The recommendations of an analysis are applied **once**: `ai_applied_at` names the analysis whose
@@ -240,7 +240,8 @@ export function initialConfig(saved: ResumeConfig | null, entities: EntityMeta[]
   if (applyAi) {
     add(ai.recommended_experience_ids)
     add(ai.recommended_project_ids)
-    add(ai.recommended_skill_ids)
+    // The skills are not ticked for the user (#302): the AI's recommendation stays a badge on the row, and the tags it
+    // narrowed (below) apply once the skill is ticked.
     cfg = { ...cfg, ai_applied_at: ai.analyzed_at }
   }
 
