@@ -15,7 +15,9 @@ const GROUPS = ['Run', 'Compare', 'Print', 'Try a variant'] as const
 
 export const FLAGS: Flag[] = [
   { name: 'model', type: 'string', value: 'name', group: 'Run', description: 'The model the gateway runs (e.g. mistral-medium-2604). It sets the prices; without it there is no cost. See prices.ts.' },
-  { name: 'runs', type: 'string', value: 'n', group: 'Run', description: 'Runs per case (default 3). The answers are nearly the same from one run to the next, so more runs add little: more cases do.' },
+  { name: 'start-gateway', type: 'boolean', group: 'Run', description: 'Build and start the AI gateway for this run and stop it after, on a free port, answering with --model. Needs AI_TOKEN (and AI_BASE_URL unless you use the default provider) in .env.local, and Go.' },
+  { name: 'runs', type: 'string', value: 'n', group: 'Run', description: 'Runs per case (default 1). The answers are nearly the same from one run to the next, so more runs add little: more cases do. The stability column needs 2 or more.' },
+  { name: 'parallel', type: 'string', value: 'n', group: 'Run', description: 'Calls at once (default 1, one after the other; at most 8). Faster, but the provider may limit the rate: if most calls fail the evaluation stops. The time is then measured under load.' },
   { name: 'case', type: 'string', value: 'text', group: 'Run', description: 'Only the cases whose name contains this text. Also picks which case --dry-run, --show-prompt, --raw and --show-answer print.' },
   { name: 'with-examples', type: 'boolean', group: 'Run', description: 'Also run the fictional cases of eval/cases (skipped when eval/private has cases).' },
   { name: 'label', type: 'string', value: 'name', group: 'Compare', description: 'A name for this run, written in its results file (default: the model).' },
@@ -41,8 +43,10 @@ export interface Args {
   help: boolean
   model?: string
   runs: number
+  parallel: number
   case?: string
   withExamples: boolean
+  startGateway: boolean
   label?: string
   baseline?: string
   saveBaseline: boolean
@@ -85,15 +89,19 @@ export function parseArguments(argv: string[]): Args {
   const padLength = values['pad-length'] === undefined ? undefined : Number(values['pad-length'])
   if (padLength !== undefined && (!Number.isInteger(padLength) || padLength < 1)) throw new Error('--pad-length is a whole number of at least 1.')
   if (padLength !== undefined && pad === undefined) throw new Error('--pad-length goes with --pad: it lengthens the entries that --pad adds.')
-  const runs = Number(values.runs ?? 3)
+  const runs = Number(values.runs ?? 1)
   if (!Number.isInteger(runs) || runs < 1) throw new Error('--runs is a whole number of at least 1.')
+  const parallel = Number(values.parallel ?? 1)
+  if (!Number.isInteger(parallel) || parallel < 1 || parallel > 8) throw new Error('--parallel is a whole number from 1 to 8.')
 
   return {
     help: Boolean(values.help),
     model: values.model as string | undefined,
     runs,
+    parallel,
     case: values.case as string | undefined,
     withExamples: Boolean(values['with-examples']),
+    startGateway: Boolean(values['start-gateway']),
     label: values.label as string | undefined,
     baseline: values.baseline as string | undefined,
     saveBaseline: Boolean(values['save-baseline']),
@@ -137,6 +145,7 @@ export function helpText(): string {
     '  npm run eval:ranking -- --model mistral-medium-2604 --baseline medium',
     '  npm run eval:ranking -- --model mistral-medium-2604 --baseline medium --save-baseline',
     '  npm run eval:ranking -- --dry-run --case helsing --clean-offer code',
+    '  npm run eval:ranking -- --model mistral-small-2603 --start-gateway --parallel 4   (no gateway to start by hand, four calls at once)',
     '  npm run eval:ranking -- --sizes',
     '  npm run eval:ranking -- --sizes --pad 10          (how big a library of about 60 entries is)',
     '  npm run eval:ranking -- --sizes --pad 7 --pad-length 800   (a library at the caps with long descriptions)',

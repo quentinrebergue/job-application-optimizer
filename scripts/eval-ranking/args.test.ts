@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest'
 import { FLAGS, helpText, parseArguments } from './args'
 
 describe('parseArguments', () => {
-  it('has defaults: JSON, text library, schema, three runs', () => {
-    expect(parseArguments([])).toMatchObject({ runs: 3, answerFormat: 'json', libraryFormat: 'text', schema: true, help: false, details: false })
+  it('has defaults: JSON, text library, schema, one run', () => {
+    expect(parseArguments([])).toMatchObject({ runs: 1, parallel: 1, answerFormat: 'json', libraryFormat: 'text', schema: true, help: false, details: false })
   })
 
   it('reads values and switches', () => {
@@ -48,5 +48,10 @@ describe('helpText', () => {
     const help = helpText()
     expect(help).toMatch(/unless you pass --sizes or --dry-run/)
     expect(help).toContain('--sizes')
+  })
+
+  it('reads --parallel, one to eight, and refuses the rest', () => {
+    expect(parseArguments(['--parallel', '4']).parallel).toBe(4)
+    for (const bad of ['0', '9', '2.5', 'x']) expect(() => parseArguments(['--parallel', bad]), bad).toThrow('--parallel')
   })
 })
