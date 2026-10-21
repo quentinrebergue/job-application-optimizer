@@ -2,6 +2,7 @@ import type { EntityMeta } from '@/types'
 import type { AIAnalysisResult } from '@/types/job'
 import { askGateway, type GatewayAnswer } from './gateway'
 import { ANSWER_LAYOUT, parseYamlAnswer, type PromptOptions } from './formats'
+import { headerForPrompt } from './header'
 import { buildRankingPrompt, buildRankingSchema, normalizeRanking, type RankingDiagnostics } from './ranking-prompt'
 
 type Library = {
@@ -11,6 +12,13 @@ type Library = {
   education?: EntityMeta[]
 }
 
+/** What the user wrote as title and profile for this offer, and the name of the profile (taken out of the text before the AI reads it). */
+export interface CandidateHeader {
+  title: string
+  profile: string
+  fullName?: string
+}
+
 /** Rates the user's library against a job offer, through the AI gateway; the tokens and the model are returned to be counted (#203). */
 export async function rankJobWithAI(
   userId: string,
@@ -18,9 +26,10 @@ export async function rankJobWithAI(
   jobCompany: string,
   jobDescription: string,
   entities: Library,
-): Promise<{ analysis: AIAnalysisResult; usage: GatewayAnswer['usage']; model?: string; emptyTypes: RankingDiagnostics['emptyTypes'] }> {
-  const { analysis, usage, model, diagnostics } = await rankWithUsage(userId, jobTitle, jobCompany, jobDescription, entities)
-  return { analysis, usage, model, emptyTypes: diagnostics.emptyTypes }
+  header?: CandidateHeader,
+): Promise<{ analysis: AIAnalysisResult; usage: GatewayAnswer['usage']; model?: string; emptyTypes: RankingDiagnostics['emptyTypes']; droppedProposals: RankingDiagnostics['droppedProposals'] }> {
+  const { analysis, usage, model, diagnostics } = await rankWithUsage(userId, jobTitle, jobCompany, jobDescription, entities, {}, header)
+  return { analysis, usage, model, emptyTypes: diagnostics.emptyTypes, droppedProposals: diagnostics.droppedProposals }
 }
 
 /** Same, with the tokens the call used, what the AI got wrong, its answer as it came and the size of each part of the prompt (the evaluation script measures all of them). */
@@ -31,17 +40,22 @@ export async function rankWithUsage(
   jobDescription: string,
   entities: Library,
   options: PromptOptions = {},
+  header?: CandidateHeader,
 ): Promise<{ analysis: AIAnalysisResult; usage: GatewayAnswer['usage']; model?: string; diagnostics: RankingDiagnostics; raw: unknown; promptParts: Record<string, number> }> {
-  const { prompt, labels, parts } = buildRankingPrompt(jobTitle, jobCompany, jobDescription, entities, options)
+  // The title and the profile are asked too when the candidate has some (#294), made safe first: the AI never reads the name, the email, the phone or the links.
+  const asked = header && (header.title.trim() !== '' || header.profile.trim() !== '') ? header : undefined
+  const { prompt, labels, parts } = buildRankingPrompt(jobTitle, jobCompany, jobDescription, entities, options, asked && headerForPrompt(asked, asked.fullName))
   const answerFormat = options.answerFormat ?? 'json'
   const system = ANSWER_LAYOUT[answerFormat].system
   // JSON: the schema holds the model to the labels and levels of this library. YAML (an experiment, picked by
   // the evaluation only) cannot be held to a schema: the gateway returns the text and the code validates it.
   const { content, usage, model } = answerFormat === 'json'
-    ? await askGateway({ feature: 'rank', userId, system, prompt, ...(options.schema === false ? {} : { schema: buildRankingSchema(labels) }) })
+    ? await askGateway({ feature: 'rank', userId, system, prompt, ...(options.schema === false ? {} : { schema: buildRankingSchema(labels, !!asked) }) })
     : await askGateway({ feature: 'rank', userId, system, prompt, format: 'text' })
   const data = answerFormat === 'json' ? content : parseYamlAnswer(String(content))
-  const { analysis, diagnostics } = normalizeRanking(data, labels)
+  // What the proposal is checked against: what the user wrote, and everything the AI was given to write from.
+  const known = [parts.experiences, parts.projects, parts.skills, parts.offer].join('\n')
+  const { analysis, diagnostics } = normalizeRanking(data, labels, asked && { original: { title: asked.title, profile: asked.profile }, known })
   if (diagnostics.invalidIds > 0 || diagnostics.unrated > 0) {
     console.warn(`AI ranking: ${diagnostics.invalidIds} invalid label(s) dropped, ${diagnostics.unrated} entry(ies) not rated`)
   }

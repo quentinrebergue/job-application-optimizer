@@ -5,6 +5,7 @@ Evaluation of the AI ranking (#44 follow-up): did a change to the prompt, the mo
 ## Use
 
 1. Start the gateway (`services/ai-gateway`, see its README) and put `AI_GATEWAY_URL` in `.env.local`.
+   (A case may also carry a `header`: a title and a profile with the details of a person, to check what is sent of them: `LEAK` in the table means a detail reached the request, and the proposals refused by the code are counted.)
 2. Turn a real job of the local database into a case, then fill `expected` with the ids you would pick:
    ```
    npm run eval:export -- <job id>

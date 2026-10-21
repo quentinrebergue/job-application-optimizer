@@ -1,6 +1,7 @@
 import type { EntityMeta } from '@/types'
 import { ANSWER_LAYOUT } from './formats'
 import { aiLimits } from './limits'
+import type { Header } from './header'
 import { buildRankingPrompt } from './ranking-prompt'
 
 // Is the ranking prompt small enough for the gateway? (#185) The gateway refuses a prompt over its
@@ -27,8 +28,10 @@ export function checkPromptSize(
   jobDescription: string,
   entities: Library,
   max: number = aiLimits().maxPromptChars,
+  /** The header asked with the ranking (#294), as it will be sent. */
+  header?: Header,
 ): SizeCheck {
-  const { prompt, labels, parts, sizes } = buildRankingPrompt(jobTitle, jobCompany, jobDescription, entities)
+  const { prompt, labels, parts, sizes } = buildRankingPrompt(jobTitle, jobCompany, jobDescription, entities, {}, header)
   const total = chars(ANSWER_LAYOUT.json.system) + chars(prompt)
   if (total <= max) return { ok: true, chars: total }
 

@@ -58,6 +58,71 @@ describe('buildRankingPrompt', () => {
   })
 })
 
+describe('the header of the candidate in the ranking (#294)', () => {
+  const header = { title: 'Software Engineer', profile: 'Backend developer. Go and Python.' }
+
+  it('asks for a title and a profile, and gives the AI what the candidate wrote', () => {
+    const { prompt, parts } = buildRankingPrompt('Platform Engineer', 'Dust', 'Kubernetes', LIBRARY, {}, header)
+    expect(parts.header).toContain('Title: Software Engineer')
+    expect(parts.header).toContain('Backend developer. Go and Python.')
+    expect(parts.answer).toContain('"title":"one line","profile":"the paragraph"')
+    expect(parts.answer).toContain('Change ONLY what is tied to the offer')
+    expect(parts.answer).toContain('never change, repeat or invent one')
+    // The library comes first and the offer last, for a provider that caches the start of a prompt.
+    expect(prompt.indexOf('CANDIDATE HEADER')).toBeGreaterThan(prompt.indexOf('SKILLS'))
+    expect(prompt.indexOf('CANDIDATE HEADER')).toBeLessThan(prompt.indexOf('JOB OFFER'))
+  })
+
+  it('changes nothing for a candidate who wrote neither', () => {
+    const plain = buildRankingPrompt('Dev', 'Acme', 'x', LIBRARY)
+    expect(buildRankingPrompt('Dev', 'Acme', 'x', LIBRARY, {}, { title: '', profile: '' }).prompt).toBe(plain.prompt)
+    expect(plain.parts.header).toBeUndefined()
+    expect(plain.parts.answer).not.toContain('"title"')
+  })
+
+  it('holds the schema to a title and a profile only when they are asked', () => {
+    const labels = buildRankingPrompt('Dev', 'Acme', 'x', LIBRARY).labels
+    const withHeader = buildRankingSchema(labels, true) as any // eslint-disable-line @typescript-eslint/no-explicit-any
+    expect(withHeader.required).toEqual(['ats_tags', 'levels', 'best', 'new_skill_tags', 'title', 'profile'])
+    expect(withHeader.properties.title).toEqual({ type: 'string' })
+    expect((buildRankingSchema(labels) as any).properties.title).toBeUndefined() // eslint-disable-line @typescript-eslint/no-explicit-any
+  })
+
+  describe('the answer', () => {
+    const original = { title: 'Software Engineer', profile: 'Backend developer. Go and Python.' }
+    const known = 'Platform Engineer Kubernetes'
+    const answer = (extra: object) => ({ levels: levelsOf([3, 2, 0], [3, 3, 3, 0, 0, 0], [3, 2, 0]), best: {}, ...extra })
+    const normalize = (extra: object) => normalizeRanking(answer(extra), buildRankingPrompt('Dev', 'Acme', 'x', LIBRARY).labels, { original, known })
+    const levelsOf = (e: number[], p: number[], s: number[]) =>
+      Object.fromEntries([...e.map((l, i) => [`E${i + 1}`, l]), ...p.map((l, i) => [`P${i + 1}`, l]), ...s.map((l, i) => [`S${i + 1}`, l])])
+
+    it('keeps a proposal, with the words it brings that nothing the AI read holds', () => {
+      const { analysis, diagnostics } = normalize({ title: 'Platform Engineer', profile: 'Platform developer. Go, Python and Rust.' })
+      expect(analysis.recommended_title).toBe('Platform Engineer')
+      expect(analysis.title_new_terms).toEqual([])
+      expect(analysis.recommended_profile).toContain('Platform developer')
+      expect(analysis.profile_new_terms).toEqual(['Rust'])
+      expect(diagnostics.droppedProposals).toEqual([])
+    })
+
+    it('drops a text that holds a detail of the person, and counts it', () => {
+      const { analysis, diagnostics } = normalize({ title: 'Platform Engineer', profile: 'Backend developer, write to me@example.com' })
+      expect(analysis.recommended_title).toBe('Platform Engineer')
+      expect(analysis.recommended_profile).toBeUndefined()
+      expect(diagnostics.droppedProposals).toEqual(['profile'])
+    })
+
+    it('has no proposal when the header was not asked, or when the AI changes nothing', () => {
+      const labels = buildRankingPrompt('Dev', 'Acme', 'x', LIBRARY).labels
+      const asked = normalizeRanking(answer({ title: 'Platform Engineer' }), labels)
+      expect(asked.analysis.recommended_title).toBeUndefined()
+      const same = normalize({ title: original.title, profile: original.profile })
+      expect(same.analysis.recommended_title).toBeUndefined()
+      expect(same.analysis.recommended_profile).toBeUndefined()
+    })
+  })
+})
+
 describe('normalizeRanking', () => {
   const labels: RankingLabels = buildRankingPrompt('Dev', 'Acme', 'x', LIBRARY).labels
   const normalize = (data: unknown) => normalizeRanking(data, labels)
@@ -86,7 +151,7 @@ describe('normalizeRanking', () => {
     expect(analysis.recommended_project_ids.slice(0, 3)).toEqual(['proj-00000001', 'proj-00000002', 'proj-00000003'])
     expect(analysis.recommended_skill_ids).toEqual(['skil-1', 'skil-2'])
     expect(analysis.ats_tags).toEqual(['C', 'RTOS'])
-    expect(diagnostics).toEqual({ invalidIds: 0, unrated: 0, emptyTypes: [] })
+    expect(diagnostics).toEqual({ invalidIds: 0, unrated: 0, emptyTypes: [], droppedProposals: [] })
   })
 
   it('orders by level, then by the AI order among its best, then by the library', () => {

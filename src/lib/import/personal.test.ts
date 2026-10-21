@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { findName, redactPersonal } from './personal'
+import { findName, redactPersonal, containsPersonal } from './personal'
 
 const RESUME = [
   'Camille Moreau',
@@ -69,5 +69,19 @@ describe('findName', () => {
 
   it('does not take a heading or a sentence for a name', () => {
     expect(findName(['Work experience at a large company', 'and the inner workings'], 'someone@example.com')).toBeUndefined()
+  })
+})
+
+describe('containsPersonal', () => {
+  it('finds an email, a link, a phone number, a date of birth and the placeholders', () => {
+    for (const text of ['write to a@b.co', 'see linkedin.com/in/someone', 'github.com/x/y', 'call +33 6 12 34 56 78', 'Born on 05/12/2003', 'I am [name]', 'at [email]', 'https://example.com', 'www.example.com', 'LinkedIn: JeremyGomes']) {
+      expect(containsPersonal(text), text).toBe(true)
+    }
+  })
+
+  it('leaves an ordinary profile alone: names of roles, technologies, years and figures', () => {
+    for (const text of ['Platform Engineer', 'Engineering student with experience in Go, Kubernetes and CI/CD. GitHub Actions, 3 years, 99.9% uptime, since 2023.', 'Cut build time by 40% for 1200 users', 'Software Engineer — Systems & Networking']) {
+      expect(containsPersonal(text), text).toBe(false)
+    }
   })
 })

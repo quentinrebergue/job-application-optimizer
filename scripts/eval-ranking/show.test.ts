@@ -37,3 +37,14 @@ describe('formatAnswer', () => {
     expect(text).toContain('Rust (Languages): asked')
   })
 })
+
+describe('formatAnswer: the header proposed for the offer (#294)', () => {
+  it('shows the proposed title and profile with the words to check, and nothing without them', () => {
+    const base = { ats_tags: [], entities_by_type: { experiences: [], projects: [], skills: [], education: [] }, recommended_experience_ids: [], recommended_project_ids: [], recommended_skill_ids: [], suggested_new_skills: [], suggested_new_skill_tags: [] } as unknown as AIAnalysisResult
+    expect(formatAnswer(base, { experiences: [], projects: [], skills: [] })).not.toContain('HEADER FOR THIS OFFER')
+    const text = formatAnswer({ ...base, recommended_title: 'Platform Engineer', recommended_profile: 'Platform developer.', profile_new_terms: ['Rust'] }, { experiences: [], projects: [], skills: [] })
+    expect(text).toContain('HEADER FOR THIS OFFER')
+    expect(text).toContain('title: Platform Engineer')
+    expect(text).toContain('profile: Platform developer.   (new: Rust)')
+  })
+})

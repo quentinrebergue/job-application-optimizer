@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import type { EntityMeta } from '@/types'
+import { headerForPrompt, type Header } from '@/lib/ai/header'
 import type { Expected } from './metrics'
 
 export interface EvalCase {
@@ -9,8 +10,18 @@ export interface EvalCase {
   source: 'example' | 'private'
   job: { title: string; company: string; description: string }
   entities: { experiences: EntityMeta[]; projects: EntityMeta[]; skills: EntityMeta[]; education: EntityMeta[] }
+  /**
+   * The title and the profile of the candidate, asked to be adapted to the offer (#294), and the details of the person
+   * the request must not hold (`fullName`, `email`, `phone`). Absent: the case does not ask for a header.
+   */
+  header?: { title: string; profile: string; fullName?: string; email?: string; phone?: string }
   /** The ids I would pick for this offer: what the evaluation compares the AI with. */
   expected: Expected
+}
+
+/** The header of a case as the app sends it: made safe, as `headerForPrompt` does; undefined for a case without one. */
+export function safeHeader(c: EvalCase): Header | undefined {
+  return c.header && headerForPrompt(c.header, c.header.fullName)
 }
 
 const ROOT = path.resolve(process.cwd(), 'eval')

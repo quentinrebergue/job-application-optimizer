@@ -70,7 +70,7 @@ describe('stability', () => {
 describe('summarize and compare', () => {
   const run = (recall: number, ms: number): RunRecord => ({
     ok: true,
-    metrics: { hits: 0, expected: 0, recommended: 0, recall, precision: recall, invalidIds: 0, emptyTypes: 0, expectedNotScored: 0, selection: ['a'], missed: [], extra: [], invalid: [] },
+    metrics: { hits: 0, expected: 0, recommended: 0, recall, precision: recall, invalidIds: 0, emptyTypes: 0, leaks: 0, droppedProposals: 0, expectedNotScored: 0, selection: ['a'], missed: [], extra: [], invalid: [] },
     ms, promptTokens: 1000, completionTokens: 500,
   })
 

@@ -3,7 +3,7 @@ import type { EntityMeta, ResumeConfig } from '@/types'
 import type { AIAnalysisResult } from '@/types/job'
 import {
   EMPTY_CONFIG, applyAiOrder, backToChronologicalOrder, hasCustomExperienceOrder, entitySubLabel, groupEntities, initialConfig, moveEntity,
-  resetConfig, setDescription, setDescriptionVariant, toggleEntity, toggleProjectTech, toggleSkillTag,
+  resetConfig, setDescription, headerSuggestions, dismissHeaderSuggestion, setDescriptionVariant, toggleEntity, toggleProjectTech, toggleSkillTag,
 } from './logic'
 
 const exp = (id: string, period: string): EntityMeta =>
@@ -270,3 +270,34 @@ describe('toggleProjectTech', () => {
   })
 })
 
+describe('the title and the profile the AI suggests (#294)', () => {
+  const ai = {
+    analyzed_at: '2026-10-20T10:00:00Z',
+    recommended_title: 'Platform Engineer',
+    title_new_terms: [],
+    recommended_profile: 'Platform developer. Go and Rust.',
+    profile_new_terms: ['Rust'],
+  } as unknown as AIAnalysisResult
+  const current = { resume_title: 'Software Engineer', profile_text: 'Backend developer. Go.' }
+
+  it('offers what differs from the resume, with its new words', () => {
+    expect(headerSuggestions(ai, current, cfg())).toEqual([
+      { field: 'resume_title', text: 'Platform Engineer', newTerms: [] },
+      { field: 'profile_text', text: 'Platform developer. Go and Rust.', newTerms: ['Rust'] },
+    ])
+  })
+
+  it('offers nothing without an analysis or without a proposal, and not what the resume already says', () => {
+    expect(headerSuggestions(null, current, cfg())).toEqual([])
+    expect(headerSuggestions({ analyzed_at: 'x' } as AIAnalysisResult, current, cfg())).toEqual([])
+    expect(headerSuggestions(ai, { ...current, resume_title: ' Platform Engineer ' }, cfg()).map((s) => s.field)).toEqual(['profile_text'])
+  })
+
+  it('does not offer again what the user turned down, until a new analysis', () => {
+    const kept = dismissHeaderSuggestion(cfg(), 'resume_title', ai.analyzed_at)
+    expect(kept.ai_header_dismissed).toEqual({ resume_title: '2026-10-20T10:00:00Z' })
+    expect(headerSuggestions(ai, current, kept).map((s) => s.field)).toEqual(['profile_text'])
+    expect(headerSuggestions({ ...ai, analyzed_at: '2026-10-21T10:00:00Z' }, current, kept).map((s) => s.field)).toEqual(['resume_title', 'profile_text'])
+    expect(dismissHeaderSuggestion(kept, 'profile_text', ai.analyzed_at).ai_header_dismissed).toEqual({ resume_title: ai.analyzed_at, profile_text: ai.analyzed_at })
+  })
+})

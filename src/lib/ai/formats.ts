@@ -64,6 +64,17 @@ new_skill_tags: [{skill: S1, tag: "Go"}]`,
   },
 }
 
+/**
+ * The example of the answer with the two keys of the header (#294), before "new_skill_tags": a title on one line and
+ * the paragraph of the profile. Asked only when the candidate has a title or a profile.
+ */
+export function exampleWithHeader(format: AnswerFormat): string {
+  const { example } = ANSWER_LAYOUT[format]
+  if (format === 'json') return example.replace('"new_skill_tags"', '"title":"one line","profile":"the paragraph","new_skill_tags"')
+  if (format === 'yaml') return example.replace('new_skill_tags:', 'title: one line\nprofile: the paragraph\nnew_skill_tags:')
+  return example.replace('new_skill_tags:', 'title: "one line"\nprofile: "the paragraph"\nnew_skill_tags:')
+}
+
 /** The YAML the AI wrote, as a value; a code fence around it is tolerated. */
 export function parseYamlAnswer(text: string): unknown {
   const body = text.trim().replace(/^```(?:ya?ml)?[ \t]*\n/i, '').replace(/\n```[ \t]*$/, '')

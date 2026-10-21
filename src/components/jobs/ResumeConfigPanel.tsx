@@ -17,7 +17,7 @@ import { useAiRanking } from './useAiRanking'
 import { ContentFields } from './resume-config/ContentFields'
 import { EntitySection } from './resume-config/EntitySection'
 import { SuggestedSkills } from './resume-config/SuggestedSkills'
-import { TYPE_ORDER, groupEntities } from './resume-config/logic'
+import { TYPE_ORDER, dismissHeaderSuggestion, groupEntities, headerSuggestions } from './resume-config/logic'
 import { useResumeConfig } from './resume-config/useResumeConfig'
 
 interface Props {
@@ -113,6 +113,8 @@ export function ResumeConfigPanel({ jobId, aiAnalysis, onRankingComplete, onClea
         defaults={{ resume_title: defaults.resume_title, profile_text: defaults.profile_text }}
         saved={{ resume_title: config.resume_title, profile_text: config.profile_text }}
         onChange={panel.editText}
+        suggestions={headerSuggestions(aiAnalysis, { resume_title: drafts.resume_title, profile_text: drafts.profile_text }, config)}
+        onKeep={(field) => aiAnalysis && panel.update((c) => dismissHeaderSuggestion(c, field, aiAnalysis.analyzed_at))}
       />
 
       {TYPE_ORDER.map((type) => (

@@ -1,4 +1,4 @@
-import { getJob, updateJob } from '@/lib/data'
+import { getJob, getResumeProfile, updateJob } from '@/lib/data'
 import { listEntities } from '@/lib/data'
 import { rankJobWithAI } from '@/lib/ai'
 import { AiGatewayError } from '@/lib/ai/gateway'
@@ -7,6 +7,7 @@ import { findUserById } from '@/lib/data/users'
 import { reserveAiCall, settleAiCall } from '@/lib/ai/usage'
 import { outcomeOfFailure } from '@/lib/ai/failure'
 import { checkPromptSize } from '@/lib/ai/prompt-size'
+import { headerForPrompt } from '@/lib/ai/header'
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const userId = await getSessionUserId()
@@ -35,8 +36,16 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     const projects = await listEntities(userId, 'projects')
     const skills = await listEntities(userId, 'skills')
 
+    // The title and the profile of this resume, adapted to the offer by the AI too (#294): the ones of this job, else the user's defaults.
+    const profile = await getResumeProfile(userId)
+    const header = {
+      title: job.resume_config.resume_title?.trim() || profile.resume_title || '',
+      profile: job.resume_config.profile_text?.trim() || profile.profile_text || '',
+      fullName: profile.full_name || undefined,
+    }
+
     // A prompt over the gateway's limit is refused here, with what to cut, before anything is reserved (#185).
-    const size = checkPromptSize(job.title, job.company, job.description, { experiences, projects, skills })
+    const size = checkPromptSize(job.title, job.company, job.description, { experiences, projects, skills }, undefined, headerForPrompt(header, header.fullName))
     if (!size.ok) return Response.json({ error: size.message, code: 'prompt_too_large' }, { status: 413 })
 
     // The limits (per user, and the site's monthly cap) are checked and the call is written down
@@ -51,7 +60,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
 
     let result
     try {
-      result = await rankJobWithAI(userId, job.title, job.company, job.description, { experiences, projects, skills })
+      result = await rankJobWithAI(userId, job.title, job.company, job.description, { experiences, projects, skills }, header)
     } catch (error) {
       await settleAiCall(reservation, outcomeOfFailure(error))
       throw error
@@ -59,6 +68,9 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     // The model left a type with nothing recommended and the code completed it: counted here, with ids only (#218).
     if (result.emptyTypes.length > 0) {
       console.warn('AI ranking: nothing recommended, completed', { userId, jobId: id, types: result.emptyTypes })
+    }
+    if (result.droppedProposals.length > 0) {
+      console.warn('AI ranking: proposal refused', { userId, jobId: id, texts: result.droppedProposals })
     }
     await settleAiCall(reservation, {
       status: 'done',

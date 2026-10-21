@@ -26,6 +26,10 @@ export interface RunMetrics {
   invalidIds: number
   /** Types the AI left with nothing recommended and the code completed (#218): the answer was empty for them. */
   emptyTypes: number
+  /** Details of the person the request to the AI still held (#294): none is allowed. */
+  leaks: number
+  /** Texts of the header the AI proposed and the code refused (#294). */
+  droppedProposals: number
   /** Expected ids the AI did not even mention in its scores (forgotten, not judged low). */
   expectedNotScored: number
   /** Everything it recommended, as "type:id", for the stability measure. */
@@ -68,6 +72,8 @@ export function scoreRun(expected: Expected, library: Library, analysis: AIAnaly
     invalidIds: invalid.length,
     // Set by the caller, which holds the diagnostics of the ranking.
     emptyTypes: 0,
+    leaks: 0,
+    droppedProposals: 0,
     expectedNotScored,
     selection: selection.sort(),
     missed,
@@ -103,6 +109,8 @@ export interface Summary {
   precision: number | null
   invalidIds: number
   emptyTypes: number
+  leaks: number
+  droppedProposals: number
   expectedNotScored: number
   stability: number | null
   msMedian: number
@@ -132,6 +140,8 @@ export function summarize(records: RunRecord[]): Summary {
     precision: meanOrNull(ok.map((r) => r.metrics.precision)),
     invalidIds: mean(ok.map((r) => r.metrics.invalidIds)),
     emptyTypes: mean(ok.map((r) => r.metrics.emptyTypes)),
+    leaks: mean(ok.map((r) => r.metrics.leaks)),
+    droppedProposals: mean(ok.map((r) => r.metrics.droppedProposals)),
     expectedNotScored: mean(ok.map((r) => r.metrics.expectedNotScored)),
     stability: stability(ok.map((r) => r.metrics.selection)),
     msMedian: median(ok.map((r) => r.ms)),
@@ -150,6 +160,8 @@ export function overall(summaries: Summary[]): Summary {
     precision: meanOrNull(summaries.map((s) => s.precision)),
     invalidIds: mean(summaries.map((s) => s.invalidIds)),
     emptyTypes: mean(summaries.map((s) => s.emptyTypes ?? 0)),
+    leaks: mean(summaries.map((s) => s.leaks ?? 0)),
+    droppedProposals: mean(summaries.map((s) => s.droppedProposals ?? 0)),
     expectedNotScored: mean(summaries.map((s) => s.expectedNotScored)),
     stability: meanOrNull(summaries.map((s) => s.stability)),
     msMedian: median(summaries.map((s) => s.msMedian)),
@@ -168,6 +180,8 @@ const RULES: Record<Metric, { better: 'higher' | 'lower'; tolerance: number; rel
   failures: { better: 'lower', tolerance: 0, relative: false },
   invalidIds: { better: 'lower', tolerance: 0, relative: false },
   emptyTypes: { better: 'lower', tolerance: 0, relative: false },
+  leaks: { better: 'lower', tolerance: 0, relative: false },
+  droppedProposals: { better: 'lower', tolerance: 0, relative: false },
   expectedNotScored: { better: 'lower', tolerance: 0, relative: false },
   msMedian: { better: 'lower', tolerance: 0.1, relative: true },
   msMax: { better: 'lower', tolerance: 0.1, relative: true },
