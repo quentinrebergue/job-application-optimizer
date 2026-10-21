@@ -33,6 +33,16 @@ interface Props {
   disabled?: boolean
 }
 
+/**
+ * Whether an option is offered. With "fit to page" on, the renderer picks the text size that fills the page, so the
+ * font size would do nothing the user could see: it is offered again when fitting is turned off.
+ */
+export function isOptionOffered(name: string, template: TemplateInfo, options: TemplateChoice['options']): boolean {
+  if (FIXED_TEMPLATE_OPTIONS[name] !== undefined) return false
+  const fit = template.options.fitToPage
+  return !(name === 'fontSize' && fit && String(options.fitToPage ?? fit.default) === 'yes')
+}
+
 const CONTROL = cn(controlClasses, 'h-10')
 const LABEL = 'text-label flex flex-col gap-1 text-ink'
 
@@ -92,8 +102,8 @@ export function TemplatePicker({ templates, value, onChange, disabled }: Props) 
         </select>
       </label>
 
-      {/* Options the app fixes (FIXED_TEMPLATE_OPTIONS) are not offered. */}
-      {Object.entries(current.options).filter(([name]) => FIXED_TEMPLATE_OPTIONS[name] === undefined).map(([name, spec]) => {
+      {/* Options the app fixes (FIXED_TEMPLATE_OPTIONS) are not offered, nor the font size while the page is fitted. */}
+      {Object.entries(current.options).filter(([name]) => isOptionOffered(name, current, value.options)).map(([name, spec]) => {
         const shown = value.options[name] ?? spec.default
         // A label around a group of buttons would click the first one; the steps name themselves.
         const Wrapper = spec.type === 'number' ? 'div' : 'label'
