@@ -197,10 +197,11 @@ describe('initialConfig', () => {
     recommended_skill_tags: { s: ['Go'] },
   } as unknown as AIAnalysisResult
 
-  it('selects education when nothing is saved, then adds the AI recommendations and orders', () => {
+  it('selects education when nothing is saved, then adds the AI recommendations (no skill) and the order of the projects', () => {
     const entities = [edu('e', '2020'), exp('x', '2024'), proj('p'), skill('s', ['Go', 'Rust'])]
     const result = initialConfig(null, entities, ai)
-    expect(result.selected_entity_ids).toEqual(['e', 'x', 'p', 's'])
+    // No skill is ticked, although the AI recommends one (#302); the tags it narrowed wait for the user to tick it.
+    expect(result.selected_entity_ids).toEqual(['e', 'x', 'p'])
     expect(result.skill_tag_overrides).toEqual({ s: ['Go'] })
     // The experiences stay in the order of the dates, whatever the AI's order (#295); the projects follow the AI.
     expect(result.experience_order).toBeUndefined()
@@ -215,12 +216,12 @@ describe('initialConfig', () => {
     // The user unticks the project; that is saved with the marker. The next visit must not tick it again.
     const saved = { ...first, selected_entity_ids: first.selected_entity_ids.filter((id) => id !== 'p') }
     const again = initialConfig(saved, entities, analysis)
-    expect(again.selected_entity_ids).toEqual(['e', 'x', 's'])
+    expect(again.selected_entity_ids).toEqual(['e', 'x'])
   })
 
   it('applies the recommendations again for a new analysis (Rank again)', () => {
     const entities = [edu('e', '2020'), exp('x', '2024'), proj('p'), skill('s', ['Go', 'Rust'])]
-    const saved = cfg({ selected_entity_ids: ['e', 'x', 's'], ai_applied_at: '2026-10-15T10:00:00Z', project_order: [], experience_order: ['x'] })
+    const saved = cfg({ selected_entity_ids: ['e', 'x'], ai_applied_at: '2026-10-15T10:00:00Z', project_order: [], experience_order: ['x'] })
     const newer = { ...ai, analyzed_at: '2026-10-16T08:00:00Z' } as AIAnalysisResult
     const result = initialConfig(saved, entities, newer)
     expect(result.selected_entity_ids).toContain('p')
@@ -231,12 +232,22 @@ describe('initialConfig', () => {
     const entities = [exp('x', '2024'), proj('p')]
     const legacy = cfg({ selected_entity_ids: ['x'] })
     const analysis = { ...ai, analyzed_at: '2026-10-15T10:00:00Z' } as AIAnalysisResult
-    expect(initialConfig(legacy, entities, analysis).selected_entity_ids).toEqual(['x', 'p', 's'])
+    expect(initialConfig(legacy, entities, analysis).selected_entity_ids).toEqual(['x', 'p'])
   })
 
   it('does not touch the selection when there is no analysis', () => {
     const saved = cfg({ selected_entity_ids: ['x'] })
     expect(initialConfig(saved, [exp('x', '2024')], null).ai_applied_at).toBeUndefined()
+  })
+
+  it('keeps the skills a saved selection holds, and ticking a skill afterwards prints the tags the AI narrowed', () => {
+    const entities = [skill('s', ['Go', 'Rust']), skill('t', ['C'])]
+    const saved = cfg({ selected_entity_ids: ['t'], ai_applied_at: '2026-10-01T00:00:00Z' })
+    expect(initialConfig(saved, entities, ai).selected_entity_ids).toContain('t')
+    expect(initialConfig(saved, entities, ai).selected_entity_ids).not.toContain('s')
+    const fresh = initialConfig(null, entities, ai)
+    expect(fresh.selected_entity_ids).not.toContain('s')
+    expect(toggleEntity(fresh, entities[0]).skill_tag_overrides).toEqual({ s: ['Go'] })
   })
 
   it('never replaces a tag choice the user already made', () => {
