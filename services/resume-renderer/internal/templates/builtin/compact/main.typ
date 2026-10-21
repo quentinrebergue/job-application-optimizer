@@ -12,8 +12,7 @@
 
 #set document(title: profile.name + " - Resume", author: profile.name)
 #set page(paper: "a4", margin: (x: 1.3cm, y: 1.1cm))
-#set text(font: ("Liberation Sans", "Helvetica", "Arial"), size: opts.fontSize * 1pt, lang: "en")
-#set par(leading: 0.55em, spacing: 0.6em)
+#set text(font: ("Liberation Sans", "Helvetica", "Arial"), lang: "en")
 
 // BEGIN lines
 // A description is plain text. A line that starts with a dash or a bullet followed by a space is a point: a run of
@@ -39,7 +38,7 @@
 #let lines(s) = {
   for (kind, items) in groups(s) {
     if kind == "list" {
-      block(above: 0.8em, below: 0.8em, list(marker: [•], body-indent: 0.5em, spacing: 0.75em, ..items))
+      list(marker: [•], body-indent: 0.5em, tight: false, ..items)
     } else {
       items.join(linebreak())
     }
@@ -69,17 +68,22 @@
   [#left #text(fill: muted)[| #right]]
 }
 
-#let section(title, items, render) = {
+#let section(title, items, render, sp) = {
   if items.len() > 0 [
-    #block(above: 1em, below: 0.6em, width: 100%, stroke: (bottom: 0.6pt + accent), inset: (bottom: 3pt))[
+    #block(above: 1em * sp, below: 0.6em * sp, width: 100%, stroke: (bottom: 0.6pt + accent), inset: (bottom: 3pt))[
       #text(weight: "bold", fill: accent, tracking: 0.06em)[#upper(title)]
     ]
     #for item in items [
-      #block(breakable: false, below: 0.7em)[#render(item)]
+      #block(breakable: false, below: 0.7em * sp)[#render(item)]
     ]
   ]
 }
 
+// The whole page at a text scale `k` (1 = the size of the options) and a gap scale `sp`.
+#let page-body(k, sp) = {
+  set text(size: opts.fontSize * k * 1pt)
+  set par(leading: (0.4 + 0.15 * calc.min(sp, 2)) * 1em, spacing: 0.75em * sp)
+  [
 // Header
 #text(size: 2em, weight: "bold")[#profile.name]
 #if profile.title != "" [
@@ -98,7 +102,7 @@
 }
 
 #if profile.summary != "" [
-  #v(0.3em)
+  #v(0.3em * sp)
   #lines(profile.summary)
 ]
 
@@ -111,17 +115,51 @@
     #v(0.15em)
     #text(fill: muted)[#lines(e.description)]
   ]
-])
+], sp)
 
 #section("Projects", sections.projects, p => [
   *#p.title*#if p.tech.len() > 0 [ #text(fill: muted)[(#p.tech.join(", "))]]
   #if p.description != "" [#after-title(p.description)]
-])
+], sp)
 
 #section("Education", sections.education, e => [
   #heading-line([*#e.degree*#if e.institution != "" [, #e.institution]], e.period)
-])
+], sp)
 
 #section("Technical Expertise", sections.skills, s => [
   *#s.name:* #s.tags.join(", ")
-])
+], sp)
+  ]
+}
+
+// Fit to the page (#306): with "fitToPage" on, the content is laid out at several sizes and the largest that fits one
+// page is kept, so a short resume does not leave a gap at the bottom and a long one is not cut onto a second page.
+// `t` runs along one path from the tightest to the loosest look: first the text and the gaps shrink together down to
+// 75 % and 60 %, then (t = 1, the look set by the options) the text grows to 115 %, then only the gaps grow.
+#let look(t) = if t <= 1 {
+  (0.75 + 0.25 * t, 0.6 + 0.4 * t)
+} else if t <= 2 {
+  (1 + 0.15 * (t - 1), 1.0)
+} else {
+  (1.15, 1 + 1.2 * (t - 2))
+}
+
+#layout(size => {
+  let fits(t) = {
+    let (k, sp) = look(t)
+    measure(page-body(k, sp), width: size.width).height <= size.height
+  }
+  let t = if opts.fitToPage != "yes" { 1.0 } else if fits(3.0) { 3.0 } else if not fits(0.0) {
+    // Even the tightest look needs more than a page: keep the normal look and let it run onto the next one.
+    1.0
+  } else {
+    let (lo, hi) = (0.0, 3.0)
+    for _ in range(12) {
+      let mid = (lo + hi) / 2
+      if fits(mid) { lo = mid } else { hi = mid }
+    }
+    lo
+  }
+  let (k, sp) = look(t)
+  page-body(k, sp)
+})

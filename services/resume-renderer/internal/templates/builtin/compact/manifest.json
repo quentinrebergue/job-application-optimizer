@@ -6,6 +6,7 @@
   "options": {
     "fontSize": { "type": "number", "min": 8, "max": 11, "default": 9.5 },
     "accentColor": { "type": "color", "default": "#2b2b2b" },
+    "fitToPage": { "type": "enum", "values": ["yes", "no"], "default": "yes" },
     "datePlacement": { "type": "enum", "values": ["inline", "right"], "default": "inline" }
   }
 }
