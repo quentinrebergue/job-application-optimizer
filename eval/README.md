@@ -4,7 +4,7 @@ Evaluation of the AI ranking (#44 follow-up): did a change to the prompt, the mo
 
 ## Use
 
-1. Start the gateway (`services/ai-gateway`, see its README) and put `AI_GATEWAY_URL` in `.env.local`.
+1. Start the gateway (`services/ai-gateway`, see its README) and put `AI_GATEWAY_URL` in `.env.local`. Or let the evaluation do it: `--start-gateway` builds the gateway, starts it on a free port with the model of `--model`, and stops it after the run (it needs `AI_TOKEN`, and `AI_BASE_URL` for a provider other than the default one, in `.env.local`, and Go). `--parallel 4` sends four calls at once (default 1; the time column is then measured under load, and the run stops if most calls fail).
    (A case may also carry a `header`: a title and a profile with the details of a person, to check what is sent of them: `LEAK` in the table means a detail reached the request, and the proposals refused by the code are counted.)
 2. Turn a real job of the local database into a case, then fill `expected` with the ids you would pick:
    ```
@@ -25,7 +25,7 @@ law, trades, writing, some tech): `--pad n` buries each case's library in `n` of
 entries in the middle, to see whether a long prompt makes the model miss what it finds in a short one (#185).
 
 The fictional cases of `cases/` are skipped when `private/` has cases of its own.
-A full evaluation (15 offers x 3 runs) costs a few cents.
+A full evaluation (15 offers x 1 run, the default; `--runs 3` to measure stability) costs a few cents.
 
 ## Is a difference real?
 

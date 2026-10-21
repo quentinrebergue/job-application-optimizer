@@ -3,7 +3,9 @@
  * and compares it with the saved reference. Options: npm run eval:ranking -- --help
  */
 import { buildRankingPrompt } from '@/lib/ai/ranking-prompt'
+import { startGateway } from './gateway'
 import { findLeaks } from './leaks'
+import { runPool } from './parallel'
 import { mismatchWarning, modelMismatch } from './model-check'
 import fs from 'node:fs/promises'
 import path from 'node:path'
@@ -30,33 +32,43 @@ function leaksIn(c: EvalCase): number {
   return findLeaks(c.header, prompt).length
 }
 
-async function runCase(c: EvalCase, runs: number, options: PromptOptions, answered: Set<string>): Promise<RunRecord[]> {
-  const records: RunRecord[] = []
+/** One ranking of one case: its record, a failure included (the error is kept, nothing is thrown). */
+async function runOnce(c: EvalCase, options: PromptOptions, answered: Set<string>): Promise<RunRecord> {
+  const start = Date.now()
+  try {
+    const { analysis, usage, model, diagnostics, raw, promptParts } = await rankWithUsage('eval', c.job.title, c.job.company, c.job.description, c.entities, options, c.header && { title: c.header.title, profile: c.header.profile, fullName: c.header.fullName })
+    // The code drops what the AI invented before the answer is returned: count it from the diagnostics.
+    const metrics = scoreRun(c.expected, c.entities, analysis)
+    metrics.invalidIds += diagnostics.invalidIds
+    metrics.emptyTypes = diagnostics.emptyTypes.length
+    metrics.droppedProposals = diagnostics.droppedProposals.length
+    metrics.leaks = leaksIn(c)
+    if (model) answered.add(model)
+    return { ok: true, metrics, ms: Date.now() - start, promptTokens: usage.prompt_tokens, completionTokens: usage.completion_tokens, raw, analysis, promptParts }
+  } catch (error) {
+    return { ok: false, error: describe(error) }
+  }
+}
+
+/**
+ * Every ranking of every case, `parallel` at a time (1: one after the other, as before). The records come back by case,
+ * in the order of the runs. When the pool stops because most calls failed, the calls not sent are failures with a reason.
+ */
+async function runAll(cases: EvalCase[], runs: number, parallel: number, options: PromptOptions, answered: Set<string>): Promise<{ records: Record<string, RunRecord[]>; stopped: boolean }> {
+  const jobs = cases.flatMap((c) => Array.from({ length: runs }, () => () => runOnce(c, options, answered)))
   // The client logs every failure with its stack: the summary at the end says it once.
   const logError = console.error
   console.error = () => {}
   try {
-    for (let i = 1; i <= runs; i++) {
-      const start = Date.now()
-      try {
-        const { analysis, usage, model, diagnostics, raw, promptParts } = await rankWithUsage('eval', c.job.title, c.job.company, c.job.description, c.entities, options, c.header && { title: c.header.title, profile: c.header.profile, fullName: c.header.fullName })
-        // The code drops what the AI invented before the answer is returned: count it from the diagnostics.
-        const metrics = scoreRun(c.expected, c.entities, analysis)
-        metrics.invalidIds += diagnostics.invalidIds
-        metrics.emptyTypes = diagnostics.emptyTypes.length
-        metrics.droppedProposals = diagnostics.droppedProposals.length
-        metrics.leaks = leaksIn(c)
-        if (model) answered.add(model)
-        records.push({ ok: true, metrics, ms: Date.now() - start, promptTokens: usage.prompt_tokens, completionTokens: usage.completion_tokens, raw, analysis, promptParts })
-      } catch (error) {
-        records.push({ ok: false, error: describe(error) })
-      }
-      process.stdout.write(`  ${c.name} ${i}/${runs}\r`)
-    }
+    const { results, stopped } = await runPool(jobs, parallel, (r) => !r.ok, (done, total) => process.stdout.write(`  ${done}/${total}\r`))
+    const records: Record<string, RunRecord[]> = {}
+    cases.forEach((c, i) => {
+      records[c.name] = results.slice(i * runs, (i + 1) * runs).map((r) => r ?? { ok: false as const, error: 'not sent: most calls failed, the evaluation was stopped' })
+    })
+    return { records, stopped }
   } finally {
     console.error = logError
   }
-  return records
 }
 
 /** The reference file: `baseline.json` by default, `baseline-<name>.json` for a named one. */
@@ -105,11 +117,10 @@ async function main(args: Args) {
   if (args.dryRun) return
 
   const summaries: Record<string, Summary> = {}
-  const records: Record<string, RunRecord[]> = {}
   const errors = new Set<string>()
   const answered = new Set<string>()
+  const { records, stopped } = await runAll(cases, args.runs, args.parallel, options, answered)
   for (const c of cases) {
-    records[c.name] = await runCase(c, args.runs, options, answered)
     for (const r of records[c.name]) if (!r.ok) errors.add(r.error)
     summaries[c.name] = summarize(records[c.name])
     if (Object.values(c.expected).every((ids) => ids.length === 0)) {
@@ -123,6 +134,8 @@ async function main(args: Args) {
   const warning = wrongModels.length > 0 ? mismatchWarning(args.model!, wrongModels) : ''
   if (warning) console.log(`\n${warning}`)
   printHeader(label, args.model, cases.length, args.runs, variant)
+  if (args.parallel > 1) console.log(`${args.parallel} calls at once: the time is measured under load, not comparable with a run one call at a time.\n`)
+  if (stopped) console.log('STOPPED: most calls failed (the provider may be limiting the rate): try a lower --parallel. The calls not sent count as failed.\n')
   printTable(summaries, total, args.model)
   const perRanking = printCost(args.model, total)
   printFailures(errors)
@@ -158,11 +171,26 @@ async function main(args: Args) {
   if (total.failures > 0) process.exitCode = 1
 }
 
+/** Runs the evaluation, with a gateway started for it when `--start-gateway` is given (and stopped whatever happens). */
+async function withGateway(args: Args) {
+  if (!args.startGateway || args.dryRun || args.sizes) return main(args)
+  const gateway = await startGateway(args.model)
+  const before = process.env.AI_GATEWAY_URL
+  process.env.AI_GATEWAY_URL = gateway.url
+  try {
+    await main(args)
+  } finally {
+    if (before === undefined) delete process.env.AI_GATEWAY_URL
+    else process.env.AI_GATEWAY_URL = before
+    await gateway.stop()
+  }
+}
+
 async function start() {
   try {
     const args = parseArguments(process.argv.slice(2))
     if (args.help) console.log(helpText())
-    else await main(args)
+    else await withGateway(args)
   } catch (error) {
     console.error(error instanceof Error ? error.message : error)
     process.exit(1)
