@@ -2,7 +2,7 @@
 import type { PromptOptions } from '@/lib/ai/formats'
 import { ANSWER_LAYOUT } from '@/lib/ai/formats'
 import { buildRankingPrompt, buildRankingSchema } from '@/lib/ai/ranking-prompt'
-import type { EvalCase } from './cases'
+import { safeHeader, type EvalCase } from './cases'
 
 export interface SizeRow {
   name: string
@@ -23,7 +23,7 @@ const chars = (text: string) => [...text].length
 export function measureSizes(cases: EvalCase[], options: PromptOptions = {}): SizeRow[] {
   const format = options.answerFormat ?? 'json'
   return cases.map((c) => {
-    const { prompt, labels, parts } = buildRankingPrompt(c.job.title, c.job.company, c.job.description, c.entities, options)
+    const { prompt, labels, parts } = buildRankingPrompt(c.job.title, c.job.company, c.job.description, c.entities, options, safeHeader(c))
     const system = chars(ANSWER_LAYOUT[format].system)
     const held = format === 'json' && options.schema !== false
     return {
@@ -32,7 +32,7 @@ export function measureSizes(cases: EvalCase[], options: PromptOptions = {}): Si
       instructions: system + chars(parts.intro) + chars(parts.answer),
       library: chars(parts.experiences) + chars(parts.projects) + chars(parts.skills),
       offer: chars(parts.offer),
-      schema: held ? chars(JSON.stringify(buildRankingSchema(labels))) : 0,
+      schema: held ? chars(JSON.stringify(buildRankingSchema(labels, !!safeHeader(c)))) : 0,
     }
   })
 }

@@ -85,6 +85,15 @@ export function redactPersonal(text: string): Redacted {
   const name = findName(lines, email)
   if (name) personal.full_name = name.replace(/\s+/g, ' ')
 
+  return { personal, text: redactDetails(text, name) }
+}
+
+/**
+ * The text with its details replaced by placeholders: what has a shape (email, links, phone, date of birth) wherever
+ * it is, and `name` (given, never guessed) in every form. `redactPersonal` guesses the name; a text that is not a
+ * whole resume (a title, a profile) is given the name of the profile instead, since "Platform Engineer" looks like a name.
+ */
+export function redactDetails(text: string, name?: string): string {
   let out = text
     .replace(EMAIL, PLACEHOLDER.email)
     .replace(PROFILE_LINK, PLACEHOLDER.link)
@@ -103,5 +112,17 @@ export function redactPersonal(text: string): Redacted {
       }
     }
   }
-  return { personal, text: out }
+  return out
+}
+
+/**
+ * Whether a text holds a detail of a person, or a placeholder this file leaves in its place: an email address, a link to a
+ * profile, a phone number, a date of birth, `[name]` and the others. Used on what the AI writes (#294), which must hold
+ * none. The name is not looked for: a name has no shape, and a title such as "Platform Engineer" looks like one.
+ */
+export function containsPersonal(text: string): boolean {
+  if (Object.values(PLACEHOLDER).some((placeholder) => text.includes(placeholder))) return true
+  if (text.match(EMAIL) || text.match(PROFILE_LINK) || text.match(/\bhttps?:\/\/|\bwww\./i)) return true
+  if ([...text.matchAll(HANDLE)].length > 0 || text.match(BIRTH)) return true
+  return (text.match(PHONE) ?? []).some((p) => digitsOf(p) >= 9 && digitsOf(p) <= 15)
 }

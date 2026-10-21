@@ -15,6 +15,9 @@ describe('aiPrivacy', () => {
     const text = aiPrivacy(on).join(' ')
     expect(text).toMatch(/sent to Mistral AI, a French company based in Paris/)
     expect(text).toMatch(/not your name, your email address or your phone number/)
+    // The title and the profile are sent, made safe first (#294).
+    expect(text).toMatch(/title and the profile paragraph of your resume are sent too/)
+    expect(text).toMatch(/Before they leave, our code takes out your name/)
     expect(text).toMatch(/never its US one/)
   })
 

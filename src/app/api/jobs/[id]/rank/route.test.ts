@@ -2,10 +2,11 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 const getJob = vi.fn()
 const updateJob = vi.fn()
+const getResumeProfile = vi.fn()
 vi.mock('@/lib/data', () => ({
   getJob: (...a: unknown[]) => getJob(...a),
   updateJob: (...a: unknown[]) => updateJob(...a),
-  getResumeProfile: vi.fn().mockResolvedValue({ ai_context: '' }),
+  getResumeProfile: (...a: unknown[]) => getResumeProfile(...a),
   listEntities: vi.fn().mockResolvedValue([]),
 }))
 const rankJobWithAI = vi.fn()
@@ -30,6 +31,7 @@ const ctx = { params: Promise.resolve({ id: 'job-1' }) }
 beforeEach(() => {
   getJob.mockReset().mockResolvedValue({ id: 'job-1', ats_tags: ['go'], ai_analysis: { job_id: 'job-1' } })
   updateJob.mockReset().mockResolvedValue({})
+  getResumeProfile.mockReset().mockResolvedValue({ ai_context: '', full_name: 'Ada Lovelace', resume_title: 'Software Engineer', profile_text: 'Backend developer.' })
   getSessionUserId.mockReset().mockResolvedValue('u1')
 })
 
@@ -63,14 +65,31 @@ describe('POST /api/jobs/[id]/rank', () => {
       usage: { prompt_tokens: 2690, completion_tokens: 450 },
       model: 'mistral-small-2603',
       emptyTypes: [],
+      droppedProposals: [],
     })
     reserveAiCall.mockReset().mockResolvedValue({ id: 7 })
     settleAiCall.mockReset().mockResolvedValue(undefined)
     getJob.mockResolvedValue({ id: 'job-1', title: 'Dev', company: 'Acme', description: 'd', resume_config: {} })
   })
 
+  it('asks for the title and the profile of this job, else the defaults of the user, with the name to take out (#294)', async () => {
+    expect((await post()).status).toBe(200)
+    expect(rankJobWithAI.mock.calls[0][5]).toEqual({ title: 'Software Engineer', profile: 'Backend developer.', fullName: 'Ada Lovelace' })
+    getJob.mockResolvedValue({ id: 'job-1', title: 'Dev', company: 'Acme', description: 'd', resume_config: { resume_title: ' Platform Engineer ', profile_text: 'Mine.' } })
+    await post()
+    expect(rankJobWithAI.mock.calls[1][5]).toMatchObject({ title: 'Platform Engineer', profile: 'Mine.' })
+  })
+
+  it('logs a proposal the code refused, with ids and no content (#294)', async () => {
+    rankJobWithAI.mockResolvedValue({ analysis: { job_id: '', ats_tags: [] }, usage: { prompt_tokens: 1, completion_tokens: 1 }, model: 'm', emptyTypes: [], droppedProposals: ['profile'] })
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    expect((await post()).status).toBe(200)
+    expect(warn).toHaveBeenCalledWith('AI ranking: proposal refused', { userId: 'u1', jobId: 'job-1', texts: ['profile'] })
+    warn.mockRestore()
+  })
+
   it('logs a ranking the code had to complete, with ids and no content (#218)', async () => {
-    rankJobWithAI.mockResolvedValue({ analysis: { job_id: '', ats_tags: [] }, usage: { prompt_tokens: 1, completion_tokens: 1 }, model: 'm', emptyTypes: ['projects'] })
+    rankJobWithAI.mockResolvedValue({ analysis: { job_id: '', ats_tags: [] }, usage: { prompt_tokens: 1, completion_tokens: 1 }, model: 'm', emptyTypes: ['projects'], droppedProposals: [] })
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
     expect((await post()).status).toBe(200)
     expect(warn).toHaveBeenCalledWith('AI ranking: nothing recommended, completed', { userId: 'u1', jobId: 'job-1', types: ['projects'] })
@@ -126,7 +145,7 @@ describe('POST /api/jobs/[id]/rank', () => {
     })
 
     it('refuses a prompt that is too long with what to cut, before reserving anything (#185)', async () => {
-      getJob.mockResolvedValue({ id: 'job-1', title: 'Dev', company: 'Acme', description: 'x'.repeat(70_000) })
+      getJob.mockResolvedValue({ id: 'job-1', title: 'Dev', company: 'Acme', description: 'x'.repeat(70_000), resume_config: {} })
       const res = await post()
       expect(res.status).toBe(413)
       const body = await res.json()

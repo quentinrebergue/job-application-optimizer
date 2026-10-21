@@ -23,6 +23,8 @@ export interface ResumeConfig {
   /** The analysis (its `analyzed_at`) whose recommendations were applied to this selection: they are applied once, so what the user unticks stays unticked. */
   ai_applied_at?: string
   /** Which version of the description each entry prints for this job: entry id -> the name of one of its versions. Absent = the main description. */
+  /** The analysis (its `analyzed_at`) whose suggested title / profile the user kept his own against: not shown again (#294). */
+  ai_header_dismissed?: { resume_title?: string; profile_text?: string }
   description_variant?: Record<string, string>
   /** Whether the resume prints the technologies under each project. Absent = it does (the first MAX_PROJECT_TECH of each). */
   show_project_tech?: boolean
@@ -84,6 +86,9 @@ export interface AIAnalysisResult {
   resume_tips?: string[] // Actionable tips to improve the resume for this job
   recommended_title?: string // AI-suggested resume headline for this job
   recommended_profile?: string // AI-suggested profile/summary paragraph for this job
+  /** Capitalised words and numbers of the suggested title / profile found nowhere in what the AI was given (#294): to be checked. */
+  title_new_terms?: string[]
+  profile_new_terms?: string[]
   recommended_experience_ids: string[]
   recommended_project_ids: string[]
   recommended_skill_ids: string[] // Top skill sections to include

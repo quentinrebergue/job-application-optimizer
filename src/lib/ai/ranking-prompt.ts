@@ -1,8 +1,10 @@
 import type { EntityMeta, ExperienceMeta, ProjectMeta, SkillMeta } from '@/types'
 import type { AIAnalysisResult, EntityRankingResult } from '@/types/job'
+import { LIMITS } from '@/config/limits'
 import { RANKING_LIMITS, RECOMMEND_FROM_LEVEL } from '@/config/ranking'
 import { stringify } from 'yaml'
-import { ANSWER_LAYOUT, type PromptOptions } from './formats'
+import { ANSWER_LAYOUT, exampleWithHeader, type PromptOptions } from './formats'
+import { checkProposal, type Header } from './header'
 import { cleanOffer } from './offer'
 
 /**
@@ -37,6 +39,8 @@ export function buildRankingPrompt(
   jobDescription: string,
   entities: { experiences: EntityMeta[]; projects: EntityMeta[]; skills: EntityMeta[] },
   options: PromptOptions = {},
+  /** The title and the profile of the candidate, already made safe (`headerForPrompt`); asked to be adapted to the offer (#294). */
+  header?: Header,
 ): PromptMeasure {
   const labels: RankingLabels = new Map()
   const sizes: Record<string, number> = {}
@@ -80,18 +84,21 @@ export function buildRankingPrompt(
   // stay the same come first (the instructions, then the user's library) and the offer last: a model
   // provider that caches the start of a prompt can then reuse it from one offer to the next.
   const layout = ANSWER_LAYOUT[options.answerFormat ?? 'json']
-  const parts = {
+  const withHeader = !!header && (header.title !== '' || header.profile !== '')
+  const parts: Record<string, string> = {
     intro: `You are a strict technical recruiter. Rate how well each entry of a candidate's library fits a job offer. Below: how to answer, then the library, then the job offer.`,
     answer: `ANSWER
 ${layout.instruction}
-${layout.example}
+${withHeader ? exampleWithHeader(options.answerFormat ?? 'json') : layout.example}
 
 RULES
 - "levels" has EVERY label of the library, each with a level, using the label exactly as given. Never skip one, never invent one.
 - Level: 3 = the offer asks for it (same technology or same kind of work); 2 = related and transferable; 1 = weak link; 0 = unrelated. Be strict: level 3 needs the offer's technology or domain to appear in the entry itself.
 - "best": for each type, the entries of level 2 or 3, best first: at most ${RANKING_LIMITS.experiences.max} experiences, ${RANKING_LIMITS.projects.max} projects, ${RANKING_LIMITS.skills.max} skills. For experiences and projects, "why" names the evidence in the entry. For skills, "tags" are the numbers of the tags of that skill that matter for this offer.
 - "ats_tags": 5 to 10 keywords an applicant tracking system would search in this offer (tools, languages, domain, level, work mode).
-- "new_skill_tags": 0 to 5 technologies or skills the offer asks for that no skill of the library has; each one is a tag to add to the skill it fits best ("skill" is its label).`,
+- "new_skill_tags": 0 to 5 technologies or skills the offer asks for that no skill of the library has; each one is a tag to add to the skill it fits best ("skill" is its label).${withHeader ? `
+- "title": the candidate's resume title for this offer, one line of at most ${LIMITS.profile.resume_title} characters. Keep the candidate's own title unless the offer's role or field calls for another; only reword it, never promote it.
+- "profile": the candidate's profile paragraph for this offer. Change ONLY what is tied to the offer (the target role, the field, the technologies the offer names) and keep the rest word for word: a sentence about languages, studies or interests is not touched. Never add a skill, a degree, a company or a number that is not in the paragraph or in the library. Placeholders such as [name] or [email] stand for details taken out: never change, repeat or invent one. If nothing needs changing, return the paragraph as it is.` : ''}`,
     experiences: `CANDIDATE LIBRARY (every entry has a label)
 EXPERIENCES
 ${experiences}`,
@@ -99,6 +106,10 @@ ${experiences}`,
 ${projects}`,
     skills: `SKILLS${yamlLibrary ? ' (the tags of a skill are numbered from 1 in the order listed)' : ''}
 ${skills}`,
+    ...(withHeader ? { header: `CANDIDATE HEADER (what the resume says first)
+Title: ${header.title || '(none)'}
+Profile:
+${header.profile || '(none)'}` } : {}),
     offer: `JOB OFFER
 Title: ${jobTitle}
 Company: ${jobCompany}
@@ -124,7 +135,7 @@ const string: Schema = { type: 'string' }
  * entries and the length of every text, and the model server then took minutes
  * to build its grammar (8 of 15 evaluation calls failed).
  */
-export function buildRankingSchema(labels: RankingLabels): Schema {
+export function buildRankingSchema(labels: RankingLabels, withHeader = false): Schema {
   const labelsOf = (type: RankedType) => [...labels].filter(([, l]) => l.type === type).map(([label]) => label)
 
   const best = (type: RankedType, properties: Schema): Schema => {
@@ -163,6 +174,7 @@ export function buildRankingSchema(labels: RankingLabels): Schema {
         required: ['experiences', 'projects', 'skills'],
         additionalProperties: false,
       },
+      ...(withHeader ? { title: string, profile: string } : {}),
       new_skill_tags: skillLabels.length === 0
         ? { type: 'array', maxItems: 0 }
         : {
@@ -175,7 +187,7 @@ export function buildRankingSchema(labels: RankingLabels): Schema {
             },
           },
     },
-    required: ['ats_tags', 'levels', 'best', 'new_skill_tags'],
+    required: ['ats_tags', 'levels', 'best', 'new_skill_tags', ...(withHeader ? ['title', 'profile'] : [])],
     additionalProperties: false,
   }
 }
@@ -187,6 +199,8 @@ export interface RankingDiagnostics {
   unrated: number
   /** The types the AI left with nothing recommended although the library has entries of them: the code completed them (#218). */
   emptyTypes: RankedType[]
+  /** The texts of the header the AI proposed and the code refused: a detail of the person, a text too long (#294). */
+  droppedProposals: ('title' | 'profile')[]
 }
 
 type Analysis = Omit<AIAnalysisResult, 'job_id' | 'analyzed_at'>
@@ -293,9 +307,14 @@ function choose(rated: Rated[], all: Rated[], { min, max }: { min: number; max: 
  * job_id/analyzed_at, set by the caller). The answer is untrusted input: every
  * label is checked against the library.
  */
-export function normalizeRanking(data: unknown, labels: RankingLabels): { analysis: Analysis; diagnostics: RankingDiagnostics } {
+export function normalizeRanking(
+  data: unknown,
+  labels: RankingLabels,
+  /** What the user wrote as title and profile, and the text the AI wrote from (the proposal is checked against both). */
+  header?: { original: Header; known: string },
+): { analysis: Analysis; diagnostics: RankingDiagnostics } {
   if (!isRecord(data)) throw new Error('The AI answer is not a JSON object.')
-  const diagnostics: RankingDiagnostics = { invalidIds: 0, unrated: 0, emptyTypes: [] }
+  const diagnostics: RankingDiagnostics = { invalidIds: 0, unrated: 0, emptyTypes: [], droppedProposals: [] }
 
   const levels = readLevels(data.levels, labels, diagnostics)
   const rated = {
@@ -340,8 +359,14 @@ export function normalizeRanking(data: unknown, labels: RankingLabels): { analys
     })
     .slice(0, 5)
 
+  // The title and the profile proposed for this offer, checked in code (#294): nothing of the person, nothing too long.
+  const proposal = header ? checkProposal(data, header.original, header.known) : undefined
+  if (proposal) diagnostics.droppedProposals = proposal.dropped
+
   return {
     analysis: {
+      ...(proposal?.title !== undefined ? { recommended_title: proposal.title, title_new_terms: proposal.titleNewTerms } : {}),
+      ...(proposal?.profile !== undefined ? { recommended_profile: proposal.profile, profile_new_terms: proposal.profileNewTerms } : {}),
       ats_tags: textList(data.ats_tags, 10),
       entities_by_type: {
         experiences: rated.experiences.map((r, i) => entry('experiences', r, i)),

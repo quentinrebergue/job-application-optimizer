@@ -2,13 +2,15 @@
  * Runs every evaluation case through the real ranking (gateway included), measures it
  * and compares it with the saved reference. Options: npm run eval:ranking -- --help
  */
+import { buildRankingPrompt } from '@/lib/ai/ranking-prompt'
+import { findLeaks } from './leaks'
 import { mismatchWarning, modelMismatch } from './model-check'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { rankWithUsage } from '@/lib/ai'
 import type { PromptOptions } from '@/lib/ai/formats'
 import { helpText, parseArguments, type Args } from './args'
-import { loadCases, RESULTS_DIR, type EvalCase } from './cases'
+import { loadCases, RESULTS_DIR, safeHeader, type EvalCase } from './cases'
 import { loadDistractors, padEntities } from './pad'
 import { formatSizes, measureSizes } from './sizes'
 import { overall, scoreRun, summarize, type RunRecord, type Summary } from './metrics'
@@ -21,6 +23,13 @@ function describe(error: unknown): string {
   return parts.filter((m, i) => m && parts.indexOf(m) === i).join(' <- ')
 }
 
+/** The details of the person in the request of a case, as the app would send it (#294); the header is made safe first. */
+function leaksIn(c: EvalCase): number {
+  if (!c.header) return 0
+  const { prompt } = buildRankingPrompt(c.job.title, c.job.company, c.job.description, c.entities, {}, safeHeader(c))
+  return findLeaks(c.header, prompt).length
+}
+
 async function runCase(c: EvalCase, runs: number, options: PromptOptions, answered: Set<string>): Promise<RunRecord[]> {
   const records: RunRecord[] = []
   // The client logs every failure with its stack: the summary at the end says it once.
@@ -30,11 +39,13 @@ async function runCase(c: EvalCase, runs: number, options: PromptOptions, answer
     for (let i = 1; i <= runs; i++) {
       const start = Date.now()
       try {
-        const { analysis, usage, model, diagnostics, raw, promptParts } = await rankWithUsage('eval', c.job.title, c.job.company, c.job.description, c.entities, options)
+        const { analysis, usage, model, diagnostics, raw, promptParts } = await rankWithUsage('eval', c.job.title, c.job.company, c.job.description, c.entities, options, c.header && { title: c.header.title, profile: c.header.profile, fullName: c.header.fullName })
         // The code drops what the AI invented before the answer is returned: count it from the diagnostics.
         const metrics = scoreRun(c.expected, c.entities, analysis)
         metrics.invalidIds += diagnostics.invalidIds
         metrics.emptyTypes = diagnostics.emptyTypes.length
+        metrics.droppedProposals = diagnostics.droppedProposals.length
+        metrics.leaks = leaksIn(c)
         if (model) answered.add(model)
         records.push({ ok: true, metrics, ms: Date.now() - start, promptTokens: usage.prompt_tokens, completionTokens: usage.completion_tokens, raw, analysis, promptParts })
       } catch (error) {

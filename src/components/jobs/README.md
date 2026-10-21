@@ -23,7 +23,7 @@ Feature components for the Job Tracker module.
 |------|-------------|
 | `logic.ts` | Pure functions: grouping and sorting (experiences and education by date as the PDF does: ongoing first, then the later start; a saved order wins, and a note offers "Back to chronological order" when it puts them out of time; projects by custom order or AI score), toggling (an unselected project keeps its place), moving among the selected entries, AI order, tag and description overrides, reset, and the config shown on opening (`initialConfig`). Tested in `logic.test.ts`. |
 | `useResumeConfig.ts` | Loads library, config and defaults; every change is applied to the latest config and saved; text fields save 0.8 s after typing. Opening the panel never writes. The AI context is no longer edited here; its saved value is kept and still used by the ranking. |
-| `ContentFields.tsx` | "Header" section: resume title and profile, with "Use my default". |
+| `ContentFields.tsx` | "Header" section: resume title and profile, with "Use my default"; under a field, the AI's suggestion for this offer (#294) with the words that differ marked, the new words to check, "Use this" (saved as the text of this job) and "Keep mine" (not shown again for this analysis). |
 | `EntitySection.tsx` | One type of entries with its rows and editors; for experiences and projects a "Reorder" mode (with "Order by AI score") instead of arrows on every row. |
 | `ReorderList.tsx` | Numbered list of the included entries with labelled Up / Down buttons. |
 | `EntityRow.tsx` | Include checkbox, title, where and when, "Recommended" and match; a bordered arrow button (named "Edit the description of …" / "Choose the tags of …") opens the editor and the AI's reason. |

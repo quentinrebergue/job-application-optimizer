@@ -1,7 +1,8 @@
 import { buildRankingPrompt, buildRankingSchema } from '@/lib/ai/ranking-prompt'
 import { ANSWER_LAYOUT, type PromptOptions } from '@/lib/ai/formats'
 import type { Args } from './args'
-import type { EvalCase } from './cases'
+import { safeHeader, type EvalCase } from './cases'
+import { findLeaks } from './leaks'
 import { compare, type RunRecord, type Summary } from './metrics'
 import { averageShares, formatMoney } from './money'
 import { costOf, priceOf } from './prices'
@@ -36,6 +37,8 @@ function problems(s: Summary): string {
     s.expectedNotScored > 0.05 ? `${s.expectedNotScored.toFixed(1)} not rated` : '',
     s.invalidIds > 0.05 ? `${s.invalidIds.toFixed(1)} invented` : '',
     s.emptyTypes > 0.05 ? `${s.emptyTypes.toFixed(1)} empty` : '',
+    s.leaks > 0 ? `LEAK ${s.leaks.toFixed(1)}` : '',
+    s.droppedProposals > 0.05 ? `${s.droppedProposals.toFixed(1)} proposal(s) refused` : '',
   ].filter(Boolean)
   return found.length ? found.join(', ') : '-'
 }
@@ -177,10 +180,13 @@ export function printAnswers(cases: EvalCase[], records: Record<string, RunRecor
 
 /** The request the app sends for this case: the system prompt, the prompt and the JSON schema of the answer. */
 export function printRequest(c: EvalCase, options: PromptOptions) {
-  const { prompt, labels } = buildRankingPrompt(c.job.title, c.job.company, c.job.description, c.entities, options)
+  const header = safeHeader(c)
+  const { prompt, labels } = buildRankingPrompt(c.job.title, c.job.company, c.job.description, c.entities, options, header)
+  const leaks = findLeaks(c.header, prompt)
   const json = (options.answerFormat ?? 'json') === 'json' && options.schema !== false
-  const schema = json ? JSON.stringify(buildRankingSchema(labels), null, 2) : '(none: the answer is not held to a schema, the code validates it)'
+  const schema = json ? JSON.stringify(buildRankingSchema(labels, !!header), null, 2) : '(none: the answer is not held to a schema, the code validates it)'
   console.log(`\n${line}\nREQUEST for "${c.name}"\n${line}`)
+  if (leaks.length > 0) console.log(`\nLEAK: the request holds ${leaks.join(', ')} of the person`)
   if (options.cleanOffer) {
     const cleaned = buildRankingPrompt(c.job.title, c.job.company, c.job.description, c.entities, options).parts.offer.length
     const original = buildRankingPrompt(c.job.title, c.job.company, c.job.description, c.entities, { ...options, cleanOffer: undefined }).parts.offer.length

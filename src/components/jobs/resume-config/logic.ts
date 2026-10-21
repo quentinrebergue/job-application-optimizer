@@ -211,6 +211,38 @@ export function setDescriptionVariant(config: ResumeConfig, entityId: string, na
   return { ...config, description_variant: chosen, entity_description_overrides: overrides }
 }
 
+export type HeaderField = 'resume_title' | 'profile_text'
+
+/** A title or a profile the AI proposes for this offer (#294), with the words in it that nothing it read holds. */
+export interface HeaderSuggestion {
+  field: HeaderField
+  text: string
+  newTerms: string[]
+}
+
+/**
+ * The suggestions still to show: those of the analysis on screen that differ from what the resume says now (a
+ * suggestion already used, or written by hand, is not offered again) and that the user did not turn down. A new
+ * analysis has another date, so what was turned down comes back with it.
+ */
+export function headerSuggestions(ai: AIAnalysisResult | null | undefined, current: Record<HeaderField, string>, config: ResumeConfig): HeaderSuggestion[] {
+  if (!ai) return []
+  const proposed: { field: HeaderField; text?: string; newTerms?: string[] }[] = [
+    { field: 'resume_title', text: ai.recommended_title, newTerms: ai.title_new_terms },
+    { field: 'profile_text', text: ai.recommended_profile, newTerms: ai.profile_new_terms },
+  ]
+  return proposed.flatMap(({ field, text, newTerms }) =>
+    text && text.trim() !== current[field].trim() && config.ai_header_dismissed?.[field] !== ai.analyzed_at
+      ? [{ field, text, newTerms: newTerms ?? [] }]
+      : [],
+  )
+}
+
+/** "Keep mine": the suggestion of this analysis is not shown again for this field. */
+export function dismissHeaderSuggestion(config: ResumeConfig, field: HeaderField, analyzedAt: string): ResumeConfig {
+  return { ...config, ai_header_dismissed: { ...(config.ai_header_dismissed ?? {}), [field]: analyzedAt } }
+}
+
 /** Default selection: every education entry. */
 export function resetConfig(entities: EntityMeta[]): ResumeConfig {
   return {

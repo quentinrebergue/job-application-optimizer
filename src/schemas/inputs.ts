@@ -109,6 +109,7 @@ export const ResumeConfigInputSchema = z.object({
   ai_context: text(LIMITS.profile.ai_context).optional(),
   ai_applied_at: z.string().max(LIMITS.resume.id).optional(),
   show_project_tech: z.boolean().optional(),
+  ai_header_dismissed: z.object({ resume_title: id.optional(), profile_text: id.optional() }).optional(),
   description_variant: z.record(id, text(LIMITS.descriptionVariants.name)).optional(),
   skill_tag_overrides: z.record(id, tagList).optional(),
   entity_description_overrides: z.record(id, text(LIMITS.resume.entityDescription)).optional(),

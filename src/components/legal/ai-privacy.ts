@@ -20,7 +20,7 @@ export function aiPrivacy(
   }
   return [
     `When you rank your library against a job offer, the text of the offer and the content of your library entries (titles, companies, descriptions, tags) are sent to ${AI_PROVIDER.name}, a French company based in ${AI_PROVIDER.seat.split(',')[0]}, which processes them for us under a data processing agreement.`,
-    'We add nothing else: not your name, your email address or your phone number.',
+    'The title and the profile paragraph of your resume are sent too, so that the AI can suggest a version for the offer. Before they leave, our code takes out your name, your email address, your phone number, the links to your profiles and your date of birth. We add nothing else: not your name, your email address or your phone number.',
     'The model is open-weight (Mistral Small, Apache 2.0 licence). It is hosted by Mistral and its cloud providers in the European Economic Area, through Mistral’s European endpoint, never its US one.',
     flags.zeroRetention
       ? 'Mistral does not store or log these requests.'
@@ -29,7 +29,7 @@ export function aiPrivacy(
       ? 'We opted out of training: Mistral does not use these requests to train its models.'
       : 'Mistral’s terms let it use these requests to train its models unless the customer opts out.',
     'For each ranking or import we also record, on our side, the date, the model, the number of tokens and the cost, never the content. They serve the limits per person and the monthly budget of the site. We keep them for the current and the previous month; after that each month is replaced by a total (calls, tokens, cost) with no identity in it. If you delete your account, your records stay until then without your identity.',
-    'The AI chooses and orders what you wrote; it never adds an experience, a skill or a number you did not write.',
+    'The AI chooses and orders what you wrote; it never adds an experience, a skill or a number you did not write. Its suggestions for your title and profile are only proposals: nothing changes in your resume until you press “Use this”, and the words they hold that are in neither your library nor the offer are listed for you to check.',
   ]
 }
 

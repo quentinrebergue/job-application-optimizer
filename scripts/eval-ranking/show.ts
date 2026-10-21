@@ -25,6 +25,11 @@ export function formatAnswer(analysis: AIAnalysisResult, expected: Expected): st
       lines.push(`  ${String(e.rank ?? '').padStart(2)}. [${e.level ?? '?'}] ${mark}${check} ${e.name}${why}`)
     }
   }
+  if (analysis.recommended_title || analysis.recommended_profile) {
+    lines.push('', 'HEADER FOR THIS OFFER')
+    if (analysis.recommended_title) lines.push(`  title: ${analysis.recommended_title}${analysis.title_new_terms?.length ? `   (new: ${analysis.title_new_terms.join(', ')})` : ''}`)
+    if (analysis.recommended_profile) lines.push(`  profile: ${analysis.recommended_profile}${analysis.profile_new_terms?.length ? `   (new: ${analysis.profile_new_terms.join(', ')})` : ''}`)
+  }
   lines.push('', '  * recommended by the app    + expected and recommended    - expected but not recommended')
   if (analysis.suggested_new_skills.length) {
     lines.push('', 'NEW SKILLS', ...analysis.suggested_new_skills.map((s) => `  ${s.name} (${s.category}): ${s.reason}`))
