@@ -18,9 +18,9 @@ export async function rankJobWithAI(
   jobCompany: string,
   jobDescription: string,
   entities: Library,
-): Promise<{ analysis: AIAnalysisResult; usage: GatewayAnswer['usage']; model?: string }> {
-  const { analysis, usage, model } = await rankWithUsage(userId, jobTitle, jobCompany, jobDescription, entities)
-  return { analysis, usage, model }
+): Promise<{ analysis: AIAnalysisResult; usage: GatewayAnswer['usage']; model?: string; emptyTypes: RankingDiagnostics['emptyTypes'] }> {
+  const { analysis, usage, model, diagnostics } = await rankWithUsage(userId, jobTitle, jobCompany, jobDescription, entities)
+  return { analysis, usage, model, emptyTypes: diagnostics.emptyTypes }
 }
 
 /** Same, with the tokens the call used, what the AI got wrong, its answer as it came and the size of each part of the prompt (the evaluation script measures all of them). */

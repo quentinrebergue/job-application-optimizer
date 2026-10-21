@@ -35,6 +35,7 @@ function problems(s: Summary): string {
     s.failures > 0 ? `${s.failures} failed` : '',
     s.expectedNotScored > 0.05 ? `${s.expectedNotScored.toFixed(1)} not rated` : '',
     s.invalidIds > 0.05 ? `${s.invalidIds.toFixed(1)} invented` : '',
+    s.emptyTypes > 0.05 ? `${s.emptyTypes.toFixed(1)} empty` : '',
   ].filter(Boolean)
   return found.length ? found.join(', ') : '-'
 }

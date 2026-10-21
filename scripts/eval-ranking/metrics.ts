@@ -24,6 +24,8 @@ export interface RunMetrics {
   precision: number | null
   /** Recommended ids that are not in the library (invented). */
   invalidIds: number
+  /** Types the AI left with nothing recommended and the code completed (#218): the answer was empty for them. */
+  emptyTypes: number
   /** Expected ids the AI did not even mention in its scores (forgotten, not judged low). */
   expectedNotScored: number
   /** Everything it recommended, as "type:id", for the stability measure. */
@@ -64,6 +66,8 @@ export function scoreRun(expected: Expected, library: Library, analysis: AIAnaly
     recall: expectedTotal ? hits / expectedTotal : null,
     precision: recommendedTotal ? hits / recommendedTotal : null,
     invalidIds: invalid.length,
+    // Set by the caller, which holds the diagnostics of the ranking.
+    emptyTypes: 0,
     expectedNotScored,
     selection: selection.sort(),
     missed,
@@ -98,6 +102,7 @@ export interface Summary {
   recall: number | null
   precision: number | null
   invalidIds: number
+  emptyTypes: number
   expectedNotScored: number
   stability: number | null
   msMedian: number
@@ -126,6 +131,7 @@ export function summarize(records: RunRecord[]): Summary {
     recall: meanOrNull(ok.map((r) => r.metrics.recall)),
     precision: meanOrNull(ok.map((r) => r.metrics.precision)),
     invalidIds: mean(ok.map((r) => r.metrics.invalidIds)),
+    emptyTypes: mean(ok.map((r) => r.metrics.emptyTypes)),
     expectedNotScored: mean(ok.map((r) => r.metrics.expectedNotScored)),
     stability: stability(ok.map((r) => r.metrics.selection)),
     msMedian: median(ok.map((r) => r.ms)),
@@ -143,6 +149,7 @@ export function overall(summaries: Summary[]): Summary {
     recall: meanOrNull(summaries.map((s) => s.recall)),
     precision: meanOrNull(summaries.map((s) => s.precision)),
     invalidIds: mean(summaries.map((s) => s.invalidIds)),
+    emptyTypes: mean(summaries.map((s) => s.emptyTypes ?? 0)),
     expectedNotScored: mean(summaries.map((s) => s.expectedNotScored)),
     stability: meanOrNull(summaries.map((s) => s.stability)),
     msMedian: median(summaries.map((s) => s.msMedian)),
@@ -160,6 +167,7 @@ const RULES: Record<Metric, { better: 'higher' | 'lower'; tolerance: number; rel
   stability: { better: 'higher', tolerance: 0.01, relative: false },
   failures: { better: 'lower', tolerance: 0, relative: false },
   invalidIds: { better: 'lower', tolerance: 0, relative: false },
+  emptyTypes: { better: 'lower', tolerance: 0, relative: false },
   expectedNotScored: { better: 'lower', tolerance: 0, relative: false },
   msMedian: { better: 'lower', tolerance: 0.1, relative: true },
   msMax: { better: 'lower', tolerance: 0.1, relative: true },
@@ -178,7 +186,8 @@ export function compare(before: Summary, after: Summary): Change[] {
   return (Object.keys(RULES) as Metric[]).map((metric) => {
     const a = before[metric], b = after[metric]
     const rule = RULES[metric]
-    if (a === null || b === null) return { metric, before: a, after: b, verdict: 'same' as const }
+    // A reference saved before a figure existed has none (undefined): nothing to compare.
+    if (a == null || b == null) return { metric, before: a, after: b, verdict: 'same' as const }
     const delta = b - a
     const threshold = rule.relative ? Math.abs(a) * rule.tolerance : rule.tolerance
     if (Math.abs(delta) <= threshold) return { metric, before: a, after: b, verdict: 'same' as const }

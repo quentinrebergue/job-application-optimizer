@@ -56,6 +56,10 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       await settleAiCall(reservation, outcomeOfFailure(error))
       throw error
     }
+    // The model left a type with nothing recommended and the code completed it: counted here, with ids only (#218).
+    if (result.emptyTypes.length > 0) {
+      console.warn('AI ranking: nothing recommended, completed', { userId, jobId: id, types: result.emptyTypes })
+    }
     await settleAiCall(reservation, {
       status: 'done',
       model: result.model,

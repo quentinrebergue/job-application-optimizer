@@ -70,7 +70,7 @@ describe('stability', () => {
 describe('summarize and compare', () => {
   const run = (recall: number, ms: number): RunRecord => ({
     ok: true,
-    metrics: { hits: 0, expected: 0, recommended: 0, recall, precision: recall, invalidIds: 0, expectedNotScored: 0, selection: ['a'], missed: [], extra: [], invalid: [] },
+    metrics: { hits: 0, expected: 0, recommended: 0, recall, precision: recall, invalidIds: 0, emptyTypes: 0, expectedNotScored: 0, selection: ['a'], missed: [], extra: [], invalid: [] },
     ms, promptTokens: 1000, completionTokens: 500,
   })
 
@@ -90,5 +90,15 @@ describe('summarize and compare', () => {
     const v2 = Object.fromEntries(compare(before, worse).map((c) => [c.metric, c.verdict]))
     expect(v2.recall).toBe('worse')
     expect(v2.msMedian).toBe('worse')
+  })
+
+  it('counts the types the code had to complete (#218), and compares with a reference saved before the figure existed', () => {
+    const base = run(1, 1000) as Extract<RunRecord, { ok: true }>
+    const empty: RunRecord = { ...base, metrics: { ...base.metrics, emptyTypes: 2 } }
+    expect(summarize([empty, run(1, 1000)]).emptyTypes).toBe(1)
+    const after = overall([summarize([empty])])
+    const old = { ...overall([summarize([run(1, 1000)])]), emptyTypes: undefined as unknown as number }
+    expect(compare(old, after).find((c) => c.metric === 'emptyTypes')?.verdict).toBe('same')
+    expect(compare(overall([summarize([run(1, 1000)])]), after).find((c) => c.metric === 'emptyTypes')?.verdict).toBe('worse')
   })
 })
