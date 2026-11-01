@@ -45,7 +45,7 @@ If the drill fails, the logs say where: `ON_ERROR_STOP` stops at the first SQL e
 
 | Date | Backup | Size | Restore | Rows | By |
 |---|---|---|---|---|---|
-| | | | | | |
+| 2026-11-01 | `job_optimizer-20261101-181243.sql.gz`, taken 4 minutes before | 176 KB compressed | 1 s | 11 tables, every count identical to production (users 5, jobs 61, entities 41, sessions 4, ai_usage 72); no table missing | owner |
 
 ## If the database is lost: restoring for real
 
