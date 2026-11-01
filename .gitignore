@@ -53,9 +53,6 @@ terraform/kubeconfig.yaml
 # ansible
 ansible/inventory.ini
 
-# Local preview config of Claude Code
-.claude/launch.json
-
 # AI ranking evaluation: real offers and library (personal data) and the results
 /eval/private/
 /eval/results/

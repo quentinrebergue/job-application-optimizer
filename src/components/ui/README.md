@@ -28,6 +28,7 @@ is shown with its variants on `/ui` (development only).
 | `ResponsiveDialog.tsx` | `<ResponsiveDialog open onClose title size?>` — a narrow (or `wide`, for lists) `Modal` from 768 px of width, a `Drawer` (the bottom sheet, which scrolls) below; nothing is drawn before the page is on the screen (the width is not known to the server), and it is drawn closed then opened a moment later so that the drawer slides in. |
 | `PageHeader.tsx` | `<PageHeader title subtitle? children?>` — page heading with an action slot (the Jobs and Resume pages have none: their controls come first, and the title is an invisible `h1` for screen readers); actions wrap under the title on phones. |
 | `styles.ts` | Shared class strings: `page` and `pageWidth` (the one page width, 1280px, also the top bar's), `focusRing` and `focusLink` (keyboard focus: yellow, and pressed for a control), `eyebrow` (small capital label), `stroke` (2px ink, 5px radius), `pressable` (hard shadow, moves onto it on hover, or on tap on phones; off with reduced motion). |
+| `EditToggle.tsx` | Edit, which becomes Done in the same place while what it edits is open. |
 
 Class names are joined with `cn()` from `src/lib/cn.ts` (clsx + tailwind-merge), so a
 caller's `className` overrides the defaults.

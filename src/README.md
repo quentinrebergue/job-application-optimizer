@@ -10,6 +10,8 @@ Root source directory for the Next.js application.
 | `components/` | Reusable React components (UI primitives, feature components) |
 | `config/` | Application-wide constants, entity type registry, sections of the top bar |
 | `emails/` | Mails as React Email components (`EmailLayout`, `VerifyEmail`), their brand values (`theme.ts`, checked against `globals.css`) and `messages.tsx`, which renders them to HTML and plain text for `lib/email` |
+| `hooks/` | Client hooks shared by several features |
+| `tests/` | Tests of the repository itself (the rules of the code, the manifests, the READMEs) and the database test setup |
 | `lib/` | Server-side business logic — data access, resume rendering, AI ranking |
 | `schemas/` | Zod validation schemas mirroring each TypeScript type |
 | `types/` | TypeScript type definitions for the entire application |
