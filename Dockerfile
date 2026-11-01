@@ -2,7 +2,7 @@
 
 # Base images pinned to an exact version and digest (#143): every build uses the
 # same bytes. Dependabot opens a PR when a new version is out.
-FROM node:22.23.3-slim@sha256:c3de60bf2f9dd0ac6370e6117950ff62d6e339527e7472301c9c78a017978392 AS base
+FROM node:22.23.3-slim@sha256:3ed98443660ff48413b5af19ecefce3b9d50845a901a43420d47cc63a9fddbe9 AS base
 
 # ---- deps: install node_modules with full devDependencies for the build ----
 FROM base AS deps
