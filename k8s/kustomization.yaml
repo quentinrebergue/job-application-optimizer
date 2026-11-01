@@ -39,7 +39,7 @@ images:
   newTag: cf5ea18
 - name: ghcr.io/quentinrebergue/job-application-optimizer
   newName: ghcr.io/quentinrebergue/job-application-optimizer
-  newTag: cf5ea18
+  newTag: 1bc75ec
 - name: ghcr.io/quentinrebergue/password-hasher
   newName: ghcr.io/quentinrebergue/password-hasher
   newTag: cf5ea18
