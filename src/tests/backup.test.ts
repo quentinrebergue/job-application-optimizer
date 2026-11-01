@@ -40,6 +40,13 @@ describe('the copy off the cluster', () => {
     expect(script).toMatch(/rm -f "\$FILE\.age"/)
   })
 
+  it('clears the encrypted copies a failed run left on the volume, before it dumps again', () => {
+    expect(script).toContain('rm -f /backup/*.sql.gz.age')
+    expect(script.indexOf('rm -f /backup/*.sql.gz.age')).toBeLessThan(script.indexOf('pg_dump'))
+    // Only the temporary .age files: never the dumps, which are the first copy.
+    expect(script).not.toMatch(/rm -f \/backup\/\*(?!\.sql\.gz\.age)/)
+  })
+
   it('stops at the first failure, so a copy that did not leave makes the job fail', () => {
     expect(script).toMatch(/set -euo pipefail/)
   })
