@@ -39,7 +39,7 @@ images:
   newTag: fe2bb54
 - name: ghcr.io/quentinrebergue/job-application-optimizer
   newName: ghcr.io/quentinrebergue/job-application-optimizer
-  newTag: e2722dd
+  newTag: b3a8d50
 - name: ghcr.io/quentinrebergue/password-hasher
   newName: ghcr.io/quentinrebergue/password-hasher
   newTag: cf5ea18
@@ -48,4 +48,4 @@ images:
   newTag: cf5ea18
 - name: ghcr.io/quentinrebergue/resume-renderer
   newName: ghcr.io/quentinrebergue/resume-renderer
-  newTag: fe2bb54
+  newTag: b3a8d50
