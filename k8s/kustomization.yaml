@@ -33,19 +33,19 @@ resources:
 images:
 - name: ghcr.io/quentinrebergue/ai-gateway
   newName: ghcr.io/quentinrebergue/ai-gateway
-  newTag: 16adea6
+  newTag: 681f2ae
 - name: ghcr.io/quentinrebergue/db-migrator
   newName: ghcr.io/quentinrebergue/db-migrator
-  newTag: "2006119"
+  newTag: 681f2ae
 - name: ghcr.io/quentinrebergue/job-application-optimizer
   newName: ghcr.io/quentinrebergue/job-application-optimizer
-  newTag: 5081bee
+  newTag: 681f2ae
 - name: ghcr.io/quentinrebergue/password-hasher
   newName: ghcr.io/quentinrebergue/password-hasher
   newTag: "2006119"
 - name: ghcr.io/quentinrebergue/pdf-text
   newName: ghcr.io/quentinrebergue/pdf-text
-  newTag: 625f352
+  newTag: 681f2ae
 - name: ghcr.io/quentinrebergue/resume-renderer
   newName: ghcr.io/quentinrebergue/resume-renderer
-  newTag: 7f57ed4
+  newTag: 681f2ae
