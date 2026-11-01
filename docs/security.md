@@ -20,16 +20,21 @@ repository was opened (#207). To report a problem: [`SECURITY.md`](../SECURITY.m
 
 ## The protection of `master`
 
-A ruleset, kept as a file so that it can be read and redone: nobody deletes `master` or rewrites its history, and every change comes
-through a pull request merged by squash, with the checks of `ci.yml` and `security.yml` passed. The delivery bot is the only one that
-may push to `master` (it commits the new image tags); the owner can merge a pull request but not push to `master`.
+A ruleset, kept as a file so that it can be read and redone: nobody deletes `master` or rewrites its history, not even the owner
+without first editing the ruleset. A push that adds commits on top (what the delivery job does with the image tags, and what a
+merge does) is still allowed.
 
 ```bash
 gh api repos/quentinrebergue/job-application-optimizer/rulesets -X POST --input .github/rulesets/master.json
 ```
 
-After applying it, run the CD by hand (Actions > CD > Run workflow) to check that the bot can still push the tags. If it is
-refused, the bot is not in the bypass list as expected: images are built but the tags are not committed, nothing else breaks.
+**Not yet: a pull request for every change.** Asking for one (and for the checks to pass) would also stop the delivery job, which
+commits the new image tags to `master` with the token of the workflow. GitHub does not accept the GitHub Actions application as a
+bypass actor on a repository of a personal account (the API answers `422: Actor GitHub Actions integration must be part of the
+ruleset source or owner organization`). The way is a GitHub App of its own, installed on the repository and put in the bypass list,
+that the delivery job uses to push: a ticket tracks it. Until then every change still goes through a pull request by habit
+(`CONTRIBUTING.md`), and the repository accepts no push from anyone but its owner.
+
 Also turn on, in the settings of the repository: only squash merges, branches deleted after the merge, private vulnerability
 reporting, and Dependabot alerts.
 
@@ -79,5 +84,5 @@ The sessions are random 256-bit identifiers stored in the database; there is no 
   `noreply` address and GitHub blocks a push that would expose the real one (see below).
 - **Session identifiers are stored as they are** in the table `sessions`, unlike the mail links, which are stored hashed. Someone who
   reads the database (or a backup) could use a session that has not expired. Hashing them is a small change worth doing.
-- **Branch protection of `master`** needs a public repository (or GitHub Pro): the ruleset is written (`.github/rulesets/master.json`) and applied once the repository is public, see below.
+- **`master` accepts a direct push by its owner.** The ruleset forbids deleting it and rewriting it; requiring a pull request needs an identity for the delivery job that can bypass it (see above).
 - **`govulncheck` for the Go services** and a scan of the container images are not in the CI yet.
