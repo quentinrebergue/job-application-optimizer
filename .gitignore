@@ -52,6 +52,8 @@ terraform/kubeconfig.yaml
 
 # ansible
 ansible/inventory.ini
+# The encrypted vault of the secrets: kept on the owner's computer, not in Git (docs/security.md)
+ansible/group_vars/app_servers/vault.yml
 
 # AI ranking evaluation: real offers and library (personal data) and the results
 /eval/private/

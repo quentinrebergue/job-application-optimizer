@@ -1,0 +1,3 @@
+# The template of vault.yml. Copy it to vault.yml, fill it in, encrypt it (`ansible-vault encrypt vault.yml`).
+# vault.yml itself is not in Git: not even encrypted (docs/security.md).
+vault_postgres_password: "change-me"

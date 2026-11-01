@@ -24,7 +24,7 @@ Also: import of an existing resume from a PDF (personal details are taken out by
 | **Capacity and reliability** | k6 load tests that look for the breaking point of each scenario, with the history of every run. A memory incident on the node is written up as a post-mortem, followed by a measured report on the memory margin and alerts by email (Alertmanager) on memory pressure, evictions and the app being down. | [`docs/reports/load-tests.md`](docs/reports/load-tests.md), [`docs/incidents/`](docs/incidents), [`docs/reports/2026-10-13-node-memory.md`](docs/reports/2026-10-13-node-memory.md), [`docs/monitoring.md`](docs/monitoring.md) |
 | **Backups** | A nightly dump kept 7 days, and a copy encrypted with `age` before it leaves the pod, in an object storage bucket on another site than the cluster. A Job restores the latest backup into a scratch database, counts the rows and times it; the procedure is a runbook. | [`docs/runbooks/restore-postgres.md`](docs/runbooks/restore-postgres.md), [`k8s/postgres/`](k8s/postgres) |
 | **Abuse and runaway cost** | Size limits on every input, rate limits, a queue in front of password hashing, per-user AI quotas (hour, day, week), a monthly cap in euros and a kill switch. | [`src/lib/README.md`](src/lib/README.md), [`src/lib/ai/`](src/lib/ai/README.md) |
-| **Security and privacy** | Content Security Policy with a nonce, a check of the origin of API requests, sessions kept in the database, no tracking, and a privacy page that states only what the code does. | [`src/proxy.ts`](src/proxy.ts), [`docs/charter.md`](docs/charter.md) |
+| **Security and privacy** | Content Security Policy with a nonce, a check of the origin of API requests, sessions kept in the database, no tracking, and a privacy page that states only what the code does. | [`docs/security.md`](docs/security.md), [`src/proxy.ts`](src/proxy.ts), [`docs/charter.md`](docs/charter.md) |
 | **Frontend** | Design tokens and a short list of component roles; a test fails when a screen bypasses them. | [`docs/design/`](docs/design) |
 
 ## Architecture
@@ -104,6 +104,6 @@ Every change starts as a GitHub issue with a goal and a "done when" list, goes t
 
 ## Status
 
-The product is live. This repository is private for now and is meant to be opened under the AGPL-3.0 (see the charter).
+The product is live. The code is under the [AGPL-3.0](LICENSE): anyone may read, run and improve it, and a hosted copy must stay open too. Security: [`SECURITY.md`](SECURITY.md) and [`docs/security.md`](docs/security.md).
 
 Author: Quentin Rebergue.

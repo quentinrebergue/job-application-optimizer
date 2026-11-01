@@ -216,3 +216,26 @@ describe('GET /api/jobs/[id]/rank (#220)', () => {
     expect((await get()).status).toBe(401)
   })
 })
+
+describe('the answer to an unexpected failure (#207)', () => {
+  const leaky = new Error('connect ECONNREFUSED 10.2.3.4:5432: password authentication failed for user "app"')
+
+  it('does not carry the text of the error: it goes to the log, the user gets a plain sentence', async () => {
+    const log = vi.spyOn(console, 'error').mockImplementation(() => {})
+    getSessionUserId.mockResolvedValue('u1')
+    getJob.mockRejectedValue(leaky)
+    for (const [name, call] of [
+      ['rank', () => POST(new Request('http://x', { method: 'POST' }), ctx)],
+      ['read', () => GET(new Request('http://x'), ctx)],
+      ['clear', () => DELETE(new Request('http://x'), ctx)],
+    ] as const) {
+      const res = await call()
+      const text = await res.text()
+      expect(res.status, name).toBe(500)
+      expect(text, name).not.toMatch(/ECONNREFUSED|10\.2\.3\.4|password|user "app"/)
+      expect(JSON.parse(text).error, name).toMatch(/Try again/)
+    }
+    expect(log).toHaveBeenCalledWith(expect.anything(), leaky)
+    log.mockRestore()
+  })
+})
