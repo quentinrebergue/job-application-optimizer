@@ -145,6 +145,18 @@ additionalPrometheusRulesMap:
             annotations:
               summary: "Pod {{ $labels.namespace }}/{{ $labels.pod }} was evicted"
               description: "Evicted pods stay listed until deleted: kubectl delete pod --field-selector=status.phase=Failed -n {{ $labels.namespace }}"
+      - name: fastresume.backup
+        rules:
+          # No successful backup (the dump, then its encrypted copy off the cluster) for 26 hours, or none ever: the job
+          # failed (a missing Secret, a refused upload), or it never ran. The chart's alert on failed jobs is switched off.
+          - alert: BackupTooOld
+            expr: (time() - kube_cronjob_status_last_successful_time{namespace="job-optimizer",cronjob="postgres-backup"} > 26 * 3600) or absent(kube_cronjob_status_last_successful_time{namespace="job-optimizer",cronjob="postgres-backup"})
+            for: 5m
+            labels:
+              severity: critical
+            annotations:
+              summary: "No successful database backup for over 26 hours"
+              description: "kubectl get jobs -n job-optimizer, then kubectl logs -n job-optimizer job/<the latest postgres-backup job>. A backup nobody can restore is not one: docs/runbooks/restore-postgres.md."
       - name: fastresume.app
         rules:
           # The app has no replica able to answer: the site is down (the external probe says the same, from outside).
