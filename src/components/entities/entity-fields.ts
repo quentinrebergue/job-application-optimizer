@@ -47,11 +47,11 @@ export const ENTITY_FIELDS: Record<EntityType, FieldDef[]> = {
     // One list for a project: printed in the resume and matched by the AI (saved as its tags too).
     {
       key: 'tech', label: 'Technologies', kind: 'list', mirrors: ['tags'],
-      placeholder: 'Spreadsheets, budgeting, teamwork', hint: 'Printed on the resume and used by the AI to match a job.',
+      placeholder: 'Spreadsheets, budgeting, teamwork',
     },
     {
       key: 'url', label: 'Link', kind: 'text', detail: false, placeholder: 'github.com/you/project',
-      hint: 'Optional. The title of the project links to it on the resume.', maxLength: LIMITS.projects.url,
+      maxLength: LIMITS.projects.url,
     },
     { key: 'description', label: 'Description', kind: 'textarea', wide: true, placeholder: 'What the project was and your part in it.', maxLength: LIMITS.projects.description },
   ],
