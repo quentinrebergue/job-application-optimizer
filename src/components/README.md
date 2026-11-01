@@ -11,5 +11,8 @@ Reusable React components. Organised by feature area and a shared `ui/` primitiv
 | `legal/` | The frame of the text pages: LegalPage, LegalSection |
 | `ui/` | Generic UI primitives — Badge, PageHeader |
 | `entities/` | The library: LibraryPanel, EntityCard, EntityForm, EntityEditor, entry fields |
+| `auth/` | The forms of sign-in, sign-up, password reset and the resend of the confirmation mail |
+| `catalogue/` | `UiCatalogue`: every UI component on one page, for development |
+| `jobs/` | The "Resume for this job" panel and the job list (`resume-config/` holds its logic and sections) |
 | `landing/` | The public landing page: HeroDemo (looping three clicks), HowItWorks with LibraryDemo and JobsDemo (play once on scroll), Promises (only what is true: `promise-list.ts`), Catch, ResumeExample. `demo/` holds the shared engine (`useDemo`, `DemoStage`) |
 | `resume/` | The profile editor and the template picker |

@@ -14,3 +14,6 @@ App-shell components, rendered by the route-group layouts in `src/app/(app)/layo
 | `nav.ts` | `isActiveModule(pathname, mod)`: matches the module's `href` and its `alsoActiveOn` prefixes. |
 | `StatusPage.tsx` | A short message in a sticker with a mark ("404", "Oops"), a title and the next step: the look of the not-found and error pages (#78). |
 | `ErrorPage.tsx` | What an error boundary shows: "Try again" (`retry()` of Next.js 16, which re-renders the page) and a way out. Used by `app/error.tsx` and `app/(app)/error.tsx`. |
+| `SiteFooter.tsx` | Footer of every page: who it is from, and the legal links. No navigation. |
+| `LegalLinks.tsx` | The links to the privacy page, the legal notice and the terms, and the contact address. |
+| `VerifyEmailBanner.tsx` | Under the top bar while the address is not confirmed: why it matters, and a way to get the mail again. |

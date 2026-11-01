@@ -72,7 +72,7 @@ What the application does around it:
 3. **Validate in code.** Unknown labels, labels of the wrong type and invalid levels are dropped and counted. The answer is treated as untrusted input.
 4. **The code chooses.** Which entries reach the resume (2 to 4 experiences, 3 to 5 projects, 2 to 4 skill sections) is decided by rules in code, not by the model.
 
-The gateway and the answer format were written step by step, each step merged on its own with tests: a skeleton with retries and strict JSON, then deployment (manifests, network policy, CI and CD), then the ranking switched onto it with the Claude and Gemini code removed, then the optional schema and text format.
+The gateway and the answer format were written step by step, each step merged on its own with tests: a skeleton with retries and strict JSON, then deployment (manifests, network policy, CI and CD), then the ranking switched onto it with the code of the two earlier providers removed, then the optional schema and text format.
 
 ## How we measure: a custom evaluation tool
 
@@ -258,5 +258,3 @@ Limits, stated plainly:
 - **Costs are upper bounds.** They apply the full price and ignore any caching discount the provider may give.
 - **Stress test on fictional entries.** The distractors are artificial and from a handful of fields, and no real library other than the author's has been measured.
 - **No cross-check with the invoice yet.** The cost of every call is added up from the tokens and a hand-written price table; the nightly comparison with the provider's figures is planned (#212).
-
-How it was built: the author led the design, the measurements and the decisions, working with an AI coding assistant (Claude Code) as a pair-programmer for code, tests and analysis. Each change was a separate ticket and pull request with its own tests.

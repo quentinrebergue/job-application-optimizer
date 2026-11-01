@@ -1,8 +1,0 @@
-{
-  "mcpServers": {
-    "job-optimizer": {
-      "command": "npx",
-      "args": ["tsx", "/Users/quentinrebergue/JobApplicationOptimizer/mcp/server.ts"]
-    }
-  }
-}

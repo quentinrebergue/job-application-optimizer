@@ -12,6 +12,9 @@ Next.js App Router root. Contains the document layout, two route groups (their n
 | `(app)/layout.tsx` | Shell of the signed-in app: one top bar (`AppHeader`) at every width. |
 | `(app)/page.tsx` | Home page: a card per section (Jobs, Resume) with real counts. |
 | `(public)/layout.tsx` | Shell of the pages before sign-in (`login/`, `signup/`): wordmark only, no app navigation. |
+| `icon.svg`, `favicon.ico`, `apple-icon.png` | Icons of the site |
+| `opengraph-image.tsx` | The preview card of a shared link |
+| `robots.ts`, `sitemap.ts` | What crawlers may read, and the public pages |
 | `globals.css` | Global styles — imports Tailwind CSS v4 with `@import "tailwindcss"`. |
 
 ## Subdirectories
@@ -24,4 +27,7 @@ Next.js App Router root. Contains the document layout, two route groups (their n
 | `(app)/account/` | The account page: password, email address, data export and account deletion (#104, #236) |
 | `(app)/ui/` | Catalogue of the UI components (for development) |
 | `(public)/login/`, `(public)/signup/` | Sign-in and sign-up pages |
+| `actions/` | Server Actions: sign-up, login, password reset, email confirmation and change |
+| `session-expired/` | Route that clears an expired session and sends the visitor to the login page |
+| `(app)/`, `(public)/` | The two route groups: pages behind the sign-in, and pages before it |
 | `api/` | Next.js API route handlers (server-side, JSON responses) |

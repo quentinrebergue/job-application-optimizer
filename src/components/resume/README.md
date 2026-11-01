@@ -9,3 +9,5 @@ The profile of the Resume page (`/resume`) and the template choice of the job pa
 | `ResumeDefaultsEditor.tsx` | The profile (contact details, default title and profile), each field saved by itself; every save sends the whole profile, as the API replaces it (the AI context, no longer edited, is sent back unchanged). |
 | `TemplatePicker.tsx` | Template select and the options its manifest declares (colour, Small / Medium / Large for numbers, select for enums); options fixed by the app (`FIXED_TEMPLATE_OPTIONS`) are not offered, nor is the font size while "fit to page" is on (`isOptionOffered`); `effectiveOptions()` adds them for rendering. |
 | `useTemplates.ts` | Loads the available templates from `/api/resume/templates`. |
+| `ProfileSection.tsx` | The Profile section of the Resume page: its title, the Import and Edit buttons, and the profile as text. |
+| `ProfileView.tsx` | The profile as text, or the editor when Edit is on; offers what an import found. |

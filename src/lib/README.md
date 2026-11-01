@@ -12,13 +12,14 @@ Server-side business logic. All functions are barrel-exported from `index.ts`. T
 | `concurrency.ts` | `limitConcurrency(maxActive, maxQueued)`: at most N jobs at once, the others wait in order, a `BusyError` past the queue. Around the hashing of passwords (`BCRYPT_CONCURRENCY` 2, `BCRYPT_QUEUE` 150): bcryptjs runs on the main thread, 40 checks at once froze the application for 4 s, two at a time for 0.4 s (#225). |
 | `account-notice.ts` | The mails that tell an owner their data was downloaded (at most one an hour), their account deleted, their password changed, their address asked or changed, or someone tried to use it for another account, sent after the response (#104, #236) |
 | `email/` | `sendEmail()` over SMTP through an ordered list of providers (primary, optional fallback); mails printed in the console in development |
-<<<<<<< HEAD
 | `description-variants.ts` | The other versions of a description (#297): which text a job prints (written for the job, else the version chosen, else the main one), and the checks and swaps of the library form. |
-=======
 | `resume/file-name.ts` | The name of a downloaded PDF (#293): `resume_firstname.lastname_company.pdf`, without accents or characters a file system refuses, with the first words of the job title when another job is at the same company; `resume.pdf` when nothing is known. The server announces it in `Content-Disposition`, the browser saves under that name. |
->>>>>>> e62c2ca (PDF download: named after the person and the company, not the job id (#293))
 | `resume/` | Builds the render payload from entities and the user profile, and calls the resume-renderer service (Go + Typst). `soft-breaks.ts` adds zero-width spaces inside the words of 61 characters or more with nothing to break at (a run of letters, an identifier), so a long word wraps instead of running off the page; ordinary text and the contact details are never touched. |
 | `ai/` | AI ranking of the library against a job offer |
+| `import/` | Import of a resume from a PDF: `clean.ts` (debris of the text), `personal.ts` (details of the person found by code and replaced by placeholders), `save.ts` (what is added to the library) |
+| `pdf/` | `text-client.ts`: client of the pdf-text service |
+| `security/` | `csp.ts` (the Content Security Policy and its nonce), `origin.ts` (the check of the origin of API requests) |
+| `validation/` | `auth-schemas.ts`: the rules for an email address and a password |
 
 ## Files
 
@@ -30,7 +31,6 @@ Server-side business logic. All functions are barrel-exported from `index.ts`. T
 | `http.ts` | `fetchJson(url, { json })` — client fetch that throws `HttpError` (with the server's message) when the response is not ok. |
 | `import-resume.ts` | The import of a resume, apart from its screen (#268): `checkFile` (PDF, not empty, 2 MB, before sending), `sendResume` (the PDF as the body of `POST /api/import/resume`, every outcome turned into something to show), `report` (what was added and what was not, and why), `errorMessage`. Tested in `import-resume.test.ts`. |
 | `entity-filter.ts` | `LIBRARY_TABS` (no "All"), `parseLibraryTab()` (defaults to experiences), `parseEntityType()`, `readLibraryState()` and `libraryHref()` — the `?tab=`, `?entry=` and `?new=` of the library in `/resume` (the kind shown, the entry open in its dialog, the entry being created). |
-| `use-held` (hooks) | `useHeld(value, ms)` keeps a value for `ms` after it goes away: a dialog stays drawn while it slides out. |
 | `pending-saves.ts` | `PendingSaves`: the autosaves waiting for their delay, one per field; `flush` runs them at once instead of dropping them when someone leaves (used by `useFieldAutosave`). |
 | `rate-limit.ts` | `consumeRateLimit(key, limit, windowMs)` and `refundRateLimit(key)` (gives a hit back) — fixed-window counters in the `rate_limits` table (Redis later, #141); `clientIp(headers)`, `isPublicIp(ip)` (private addresses are not limited: they are the load balancer, shared by everyone). |
 | `text-diff.ts` | `diffWords(before, after)`: `after` cut in parts, the words `before` does not hold marked (shows how a suggestion differs from a text, #294). |
@@ -41,3 +41,4 @@ Server-side business logic. All functions are barrel-exported from `index.ts`. T
 | `quotas.ts` | How much a user may create and how fast (#202): `quotas()` (the numbers, from the environment: `MAX_JOBS`, `JOBS_PER_HOUR`, `JOBS_PER_DAY`, `ENTITIES_PER_HOUR`, `ENTITIES_PER_DAY`, `PDFS_PER_HOUR`, `PDFS_PER_DAY`), `consumeCreation(userId, kind)` (the 429 to send, or null), `capReached()` (the 403 of a cap). A delete does not give a creation back. |
 | `validation/read-json.ts` | `readJson(request, schema, maxBytes)`: refuses the three types an HTML form can send (415), reads a JSON body without going over `maxBytes` (413 `body_too_large`), then checks it (400 naming the field and its limit). Used by every route that takes a body. |
 | `job-filter.ts` | `parseStatusFilter()` — the `?status=` filter of `/jobs`; `parseJobTab()` — the `?tab=` of a job page. |
+| `db.ts` | The PostgreSQL pool, from `DATABASE_URL`. |
