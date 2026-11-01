@@ -25,7 +25,7 @@ export async function exportAccount(userId: string): Promise<AccountExport | nul
 
   const [profile, entities, jobs, usage] = await Promise.all([
     pool.query(
-      `SELECT full_name, email, linkedin, phone, address, resume_title, profile_text, ai_context, updated_at
+      `SELECT full_name, email, linkedin, github, phone, address, resume_title, profile_text, ai_context, updated_at
        FROM user_resume_profile WHERE user_id = $1`,
       [userId],
     ),

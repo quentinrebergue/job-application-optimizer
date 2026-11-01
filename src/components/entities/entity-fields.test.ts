@@ -6,9 +6,20 @@ describe('entity fields', () => {
   it('turns an entry into form values and back, lists included', () => {
     const project = { id: 'p', type: 'projects', title: 'Queue', tech: ['Go', 'Redis'], description: 'A queue', tags: ['backend'] } as EntityMeta
     const values = toValues('projects', project)
-    expect(values).toEqual({ title: 'Queue', tech: 'Go, Redis', description: 'A queue' })
+    expect(values).toEqual({ title: 'Queue', tech: 'Go, Redis', url: '', description: 'A queue' })
     // A project's technologies are saved as its tags too: one list for the resume and the AI.
-    expect(toPayload('projects', { ...values, tech: ' Go ,Rust,, ' })).toEqual({ title: 'Queue', tech: ['Go', 'Rust'], tags: ['Go', 'Rust'], description: 'A queue' })
+    expect(toPayload('projects', { ...values, tech: ' Go ,Rust,, ' })).toEqual({ title: 'Queue', tech: ['Go', 'Rust'], tags: ['Go', 'Rust'], url: '', description: 'A queue' })
+  })
+
+  it('asks for the link of a project, without making it a detail line of its card (#322)', () => {
+    const link = ENTITY_FIELDS.projects.find((f) => f.key === 'url')!
+    expect(link.kind).toBe('text')
+    expect(link.required).toBeUndefined()
+    expect(link.detail).toBe(false)
+    expect(detailFields('projects')).toEqual([])
+    expect(missingDetails('projects')).toBeNull()
+    expect(fieldError(link, 'x'.repeat(301))).toBeDefined()
+    expect(toValues('projects', { id: 'p', type: 'projects', title: 'Q', tech: [], url: 'https://github.com/a/b', description: '', tags: [] } as EntityMeta).url).toBe('https://github.com/a/b')
   })
 
   it('does not ask for a skill level, and sends the neutral one on creation', () => {

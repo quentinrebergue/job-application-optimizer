@@ -5,7 +5,20 @@ describe('ResumeProfileSchema', () => {
   it('fills every missing field with an empty string', () => {
     const parsed = ResumeProfileSchema.parse({})
     expect(Object.values(parsed).every((v) => v === '')).toBe(true)
-    expect(Object.keys(parsed)).toHaveLength(8)
+    expect(Object.keys(parsed)).toHaveLength(9)
+  })
+
+  it('completes a bare GitHub user name, keeps the address of a profile, and leaves it empty when nothing is typed (#322)', () => {
+    expect(ResumeProfileSchema.parse({ github: 'ada-l' }).github).toBe('github.com/ada-l')
+    expect(ResumeProfileSchema.parse({ github: ' https://github.com/ada-l/ ' }).github).toBe('github.com/ada-l')
+    expect(ResumeProfileSchema.parse({ github: '' }).github).toBe('')
+    expect(ResumeProfileSchema.parse({}).github).toBe('')
+  })
+
+  it('refuses a GitHub field that is not a GitHub address', () => {
+    for (const bad of ['gitlab.com/ada', 'javascript:alert(1)', 'https://evil.example/github.com/ada', 'two words']) {
+      expect(ResumeProfileSchema.safeParse({ github: bad }).success, bad).toBe(false)
+    }
   })
 
   it('trims whitespace', () => {

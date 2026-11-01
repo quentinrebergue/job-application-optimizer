@@ -14,7 +14,7 @@ const richBody = `{
   "schema_version": 1,
   "template": {"id": "x"},
   "profile": {
-    "name": "Zoë Café", "title": "SRE", "email": "z@example.com", "linkedin": "linkedin.com/in/z",
+    "name": "Zoë Café", "title": "SRE", "email": "z@example.com", "linkedin": "linkedin.com/in/z", "github": "github.com/z",
     "phone": "+33 6 00 00 00 00", "address": "Paris",
     "summary": "Line one.\nLine two with 100% #hashtag $5 [x] *y* _z_ \\ backslash"
   },
@@ -24,7 +24,7 @@ const richBody = `{
       {"title": "Intern", "company": "", "location": "", "period": "", "description": ""}
     ],
     "projects": [
-      {"title": "App", "tech": ["Go", "K8s"], "description": "- d\n- e"},
+      {"title": "App", "url": "https://github.com/z/app", "tech": ["Go", "K8s"], "description": "- d\n- e"},
       {"title": "Mixed", "tech": [], "description": "intro\n- point"},
       {"title": "Bare", "tech": [], "description": ""}
     ],

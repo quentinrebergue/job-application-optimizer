@@ -23,6 +23,8 @@ export interface FieldDef {
   mirrors?: string[]
   /** The most characters it takes (config/limits.ts); a list has its own limits instead */
   maxLength?: number
+  /** false: a text field that is not a detail of the entry, so its card and the import review do not print it on the second line (a link) */
+  detail?: boolean
 }
 
 /** Keywords of an experience or a degree (tag taxonomy); not printed, not sent to the AI ranking. */
@@ -46,6 +48,10 @@ export const ENTITY_FIELDS: Record<EntityType, FieldDef[]> = {
     {
       key: 'tech', label: 'Technologies', kind: 'list', mirrors: ['tags'],
       placeholder: 'Spreadsheets, budgeting, teamwork', hint: 'Printed on the resume and used by the AI to match a job.',
+    },
+    {
+      key: 'url', label: 'Link', kind: 'text', detail: false, placeholder: 'github.com/you/project',
+      hint: 'Optional. The title of the project links to it on the resume.', maxLength: LIMITS.projects.url,
     },
     { key: 'description', label: 'Description', kind: 'textarea', wide: true, placeholder: 'What the project was and your part in it.', maxLength: LIMITS.projects.description },
   ],
@@ -139,7 +145,7 @@ export function fieldErrors(type: EntityType, values: FieldValues): Record<strin
  * (company, location, period; a degree's institution and period; a skill's group). A project has none.
  */
 export function detailFields(type: EntityType): FieldDef[] {
-  return ENTITY_FIELDS[type].slice(1).filter((f) => f.kind === 'text')
+  return ENTITY_FIELDS[type].slice(1).filter((f) => f.kind === 'text' && f.detail !== false)
 }
 
 /** "company, location or period": what a card names when its second line is empty; null for a kind with no such line. */

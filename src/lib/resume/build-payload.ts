@@ -20,13 +20,15 @@ export interface RenderPayload {
     title: string
     email: string
     linkedin: string
+    /** Absent when empty: a renderer older than the field refuses a key it does not know (#322). */
+    github?: string
     phone: string
     address: string
     summary: string
   }
   sections: {
     experiences: { title: string; company: string; location: string; period: string; description: string }[]
-    projects: { title: string; tech: string[]; description: string }[]
+    projects: { title: string; url?: string; tech: string[]; description: string }[]
     skills: { name: string; tags: string[] }[]
     education: { degree: string; institution: string; period: string }[]
   }
@@ -165,6 +167,7 @@ export function buildPayload(input: BuildPayloadInput): RenderPayload {
       title: softBreaks(config.resume_title?.trim() || profile.resume_title),
       email: profile.email,
       linkedin: profile.linkedin,
+      ...(profile.github ? { github: profile.github } : {}),
       phone: profile.phone,
       address: softBreaks(profile.address),
       summary: softBreaks(config.profile_text?.trim() || profile.profile_text),
@@ -179,6 +182,7 @@ export function buildPayload(input: BuildPayloadInput): RenderPayload {
       })),
       projects: applyOrder(projects, config.project_order).map((p) => ({
         title: softBreaks(p.title),
+        ...(p.url ? { url: p.url } : {}),
         tech: config.show_project_tech === false ? [] : p.tech.slice(0, MAX_PROJECT_TECH).map(softBreaks),
         description: softBreaks(printedDescription(p, config)),
       })),

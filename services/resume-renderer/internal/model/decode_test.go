@@ -96,6 +96,10 @@ func TestValidate(t *testing.T) {
 		{"empty template id", func(r *Request) { r.Template.ID = "" }, "template.id"},
 		{"blank name", func(r *Request) { r.Profile.Name = "   " }, "profile.name"},
 		{"summary too long", func(r *Request) { r.Profile.Summary = strings.Repeat("x", maxFieldLen+1) }, "profile.summary"},
+		{"github address too long", func(r *Request) { r.Profile.GitHub = strings.Repeat("x", maxFieldLen+1) }, "profile.github"},
+		{"project link too long", func(r *Request) {
+			r.Sections.Projects = []Project{{Title: "P", URL: strings.Repeat("x", maxFieldLen+1)}}
+		}, "sections.projects[0].url"},
 		{"too many skills", func(r *Request) { r.Sections.Skills = make([]Skill, maxItemsPerSection+1) }, "sections.skills"},
 		{"experience description too long", func(r *Request) {
 			r.Sections.Experiences[0].Description = strings.Repeat("é", maxFieldLen+1)

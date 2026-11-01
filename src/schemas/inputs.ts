@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { ApplicationStatusSchema } from './job'
 import { LIMITS } from '@/config/limits'
+import { normalizeWebLink } from '@/lib/web-link'
 
 // What the API accepts in a request body (#201): a shape and a size for every field.
 // Unknown keys are dropped, so nothing the app does not know is written to the database.
@@ -17,6 +18,15 @@ const descriptionVariants = (descriptionMax: number) =>
   z
     .array(z.object({ name: required(LIMITS.descriptionVariants.name), text: text(descriptionMax) }))
     .max(LIMITS.descriptionVariants.perEntry)
+
+/** A web address (the link of a project, #322): saved complete (`https://...`), refused when it is not a web address. */
+const webLink = (max: number) =>
+  z
+    .string()
+    .trim()
+    .max(max)
+    .refine((v) => normalizeWebLink(v) !== null, { error: 'Enter a web address, such as https://github.com/you/project' })
+    .transform((v) => normalizeWebLink(v) ?? '')
 
 const tagList = z.array(z.string().trim().min(1).max(LIMITS.tag)).max(LIMITS.tagsPerEntry)
 const latex = text(LIMITS.latexSnippet)
@@ -36,6 +46,7 @@ const entityShapes = {
   projects: {
     title: required(LIMITS.projects.title),
     tech: tagList.optional(),
+    url: webLink(LIMITS.projects.url).optional(),
     description: text(LIMITS.projects.description).optional(),
     descriptions: descriptionVariants(LIMITS.projects.description).optional(),
     tags: tagList.optional(),

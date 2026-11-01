@@ -17,6 +17,7 @@ type Profile struct {
 	Title    string `json:"title"`
 	Email    string `json:"email"`
 	LinkedIn string `json:"linkedin"`
+	GitHub   string `json:"github"`
 	Phone    string `json:"phone"`
 	Address  string `json:"address"`
 	Summary  string `json:"summary"`
@@ -32,6 +33,7 @@ type Experience struct {
 
 type Project struct {
 	Title       string   `json:"title"`
+	URL         string   `json:"url"`
 	Tech        []string `json:"tech"`
 	Description string   `json:"description"`
 }

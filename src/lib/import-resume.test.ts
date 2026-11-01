@@ -153,10 +153,10 @@ describe('the entries the import created', () => {
 describe('profileRows', () => {
   it('lists every field of the profile in the order of the form, null where it is empty', () => {
     const rows = profileRows({ full_name: 'Camille Moreau', email: '', phone: '  ', linkedin: 'in/camille', address: '', resume_title: 'Engineer', profile_text: '' } as never)
-    expect(rows.map((r) => r.key)).toHaveLength(7)
-    expect(rows.map((r) => r.label)).toEqual(['Name', 'Email', 'Phone', 'LinkedIn', 'Address', 'Resume title', 'Profile'])
+    expect(rows.map((r) => r.key)).toHaveLength(8)
+    expect(rows.map((r) => r.label)).toEqual(['Name', 'Email', 'Phone', 'LinkedIn', 'GitHub', 'Address', 'Resume title', 'Profile'])
     // A missing field says which one it is.
-    expect(rows.filter((r) => r.value === null).map((r) => r.missing)).toEqual(['No email found', 'No phone found', 'No address found', 'No profile text found'])
-    expect(rows.map((r) => r.value)).toEqual(['Camille Moreau', null, null, 'in/camille', null, 'Engineer', null])
+    expect(rows.filter((r) => r.value === null).map((r) => r.missing)).toEqual(['No email found', 'No phone found', 'No GitHub found', 'No address found', 'No profile text found'])
+    expect(rows.map((r) => r.value)).toEqual(['Camille Moreau', null, null, 'in/camille', null, null, 'Engineer', null])
   })
 })

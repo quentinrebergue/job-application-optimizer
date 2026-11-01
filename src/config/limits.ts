@@ -19,7 +19,7 @@
 const BLOCK_OF_TEXT = 1000
 
 const experiences = { title: 150, company: 100, location: 100, period: 50, description: BLOCK_OF_TEXT } as const
-const projects = { title: 150, description: BLOCK_OF_TEXT } as const
+const projects = { title: 150, description: BLOCK_OF_TEXT, url: 300 } as const
 
 export const LIMITS = {
   job: { title: 150, company: 100, location: 100, url: 2000, description: 12000 },
@@ -35,7 +35,7 @@ export const LIMITS = {
   /** Hand-written LaTeX kept with an entry. */
   latexSnippet: 5000,
   /** The profile of the user, also the defaults of every resume (src/schemas/resume-profile.ts). */
-  profile: { full_name: 200, email: 320, linkedin: 300, phone: 50, address: 300, resume_title: 200, profile_text: BLOCK_OF_TEXT, ai_context: 5000 },
+  profile: { full_name: 200, email: 320, linkedin: 300, github: 300, phone: 50, address: 300, resume_title: 200, profile_text: BLOCK_OF_TEXT, ai_context: 5000 },
   /**
    * The resume of one job: its title, profile text and AI context have the profile's limits. The description of an
    * entry written for this job only is held to the same limit as the entry itself, the larger of the two kinds

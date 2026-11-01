@@ -9,6 +9,7 @@ const profile: ResumeProfile = {
   full_name: 'Ada Lovelace',
   email: 'ada@example.com',
   linkedin: 'linkedin.com/in/ada',
+  github: 'github.com/ada',
   phone: '+33 6 00 00 00 00',
   address: 'Paris',
   resume_title: 'Site Reliability Engineer',
@@ -178,6 +179,7 @@ describe('buildPayload', () => {
       title: 'Site Reliability Engineer',
       email: 'ada@example.com',
       linkedin: 'linkedin.com/in/ada',
+      github: 'github.com/ada',
       phone: '+33 6 00 00 00 00',
       address: 'Paris',
       summary: 'Default summary',
@@ -227,6 +229,15 @@ describe('buildPayload', () => {
     expect(printed({}).experiences.map((e) => e.title)).toEqual(['Role now', 'Role teach', 'Role old'])
     expect(printed({}).education.map((e) => e.degree)).toEqual(['Degree msc', 'Degree bsc'])
     expect(printed({ experience_order: ['teach', 'now'] }).experiences.map((e) => e.title)).toEqual(['Role teach', 'Role now', 'Role old'])
+  })
+
+  it('carries the GitHub address and the link of a project only when there is one: an older renderer refuses a key it does not know (#322)', () => {
+    const withLinks = buildPayload({ templateId: 'classic', profile, entities: [project('p1', { url: 'https://github.com/ada/p1' }), project('p2')] })
+    expect(withLinks.profile.github).toBe('github.com/ada')
+    expect(withLinks.sections.projects.find((p) => p.title === 'Project p1')?.url).toBe('https://github.com/ada/p1')
+    const without = buildPayload({ templateId: 'classic', profile: { ...profile, github: '' }, entities: [project('p2', { url: '' })] })
+    expect('github' in without.profile).toBe(false)
+    expect('url' in without.sections.projects[0]).toBe(false)
   })
 
   it('applies description overrides, including to a blank override', () => {

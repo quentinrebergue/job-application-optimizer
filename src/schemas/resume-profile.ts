@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { LIMITS } from '@/config/limits'
+import { normalizeGithub } from '@/lib/web-link'
 
 // The renderer service accepts up to 5000 characters per field; the limits (config/limits.ts)
 // are tighter on the short ones so a typo cannot fill a CV header.
@@ -11,6 +12,14 @@ export const ResumeProfileSchema = z.object({
     error: 'Invalid email address',
   }),
   linkedin: text(LIMITS.profile.linkedin),
+  // `github.com/name`; a bare user name is completed (#322). Empty is fine: nothing is printed then.
+  github: z
+    .string()
+    .trim()
+    .max(LIMITS.profile.github)
+    .refine((v) => normalizeGithub(v) !== null, { error: 'Enter your GitHub address (github.com/name) or just your user name' })
+    .transform((v) => normalizeGithub(v) ?? '')
+    .default(''),
   phone: text(LIMITS.profile.phone),
   address: text(LIMITS.profile.address),
   resume_title: text(LIMITS.profile.resume_title),
