@@ -5,7 +5,8 @@ import { describe, it, expect } from 'vitest'
 
 // The README of a folder lists what is in it, one line each (docs/charter.md, "How the work is organised"). A list that is
 // not checked drifts: this test fails when a file or a folder is missing from the README of its folder, or when a README names
-// something that is not there any more. Naming a path inside a folder (`internal/api/`) counts as naming the folder. Folders opt in below; a README written as prose (docs/, eval/, load/) is not checked.
+// something that is not there any more. Naming a path inside a folder (`internal/api/`) counts as naming the folder.
+// There is no README in `.github/`: GitHub shows that one on the home page of the repository, before the one of the root. Folders opt in below; a README written as prose (docs/, eval/, load/) is not checked.
 
 const root = process.cwd()
 const tracked = execFileSync('git', ['ls-files'], { cwd: root, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 })
@@ -14,7 +15,7 @@ const tracked = execFileSync('git', ['ls-files'], { cwd: root, encoding: 'utf8',
 
 /** The folders whose README is a table of their entries. */
 const CHECKED = [
-  '.github', 'docs', 'docs/design', 'k8s', 'scripts', 'db', 'ansible', 'terraform',
+  'docs', 'docs/design', 'k8s', 'scripts', 'db', 'ansible', 'terraform',
   'services', 'services/ai-gateway', 'services/db-migrator', 'services/password-hasher', 'services/pdf-text', 'services/resume-renderer',
   'src', 'src/app', 'src/app/api', 'src/app/actions', 'src/components', 'src/components/account', 'src/components/auth',
   'src/components/entities', 'src/components/jobs', 'src/components/landing', 'src/components/layout', 'src/components/legal',
@@ -48,4 +49,8 @@ describe.each(CHECKED)('the README of %s', (folder) => {
     const gone = named.filter((name) => !/[\s*{}<>()]/.test(name) && !fs.existsSync(path.join(root, folder, name)))
     expect(gone, `in ${folder}/README.md but not on disk`).toEqual([])
   })
+})
+
+it('has no README in .github/: GitHub would show it on the home page of the repository instead of the README of the root', () => {
+  expect(fs.existsSync(path.join(root, '.github/README.md'))).toBe(false)
 })
