@@ -139,7 +139,7 @@
   #heading-line([*#e.degree*#if e.institution != "" [, #e.institution]], e.period)
 ], sp)
 
-#section("Technical Expertise", sections.skills, s => [
+#section("Skills", sections.skills, s => [
   *#s.name:* #s.tags.join(", ")
 ], sp)
   ]
