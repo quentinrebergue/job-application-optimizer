@@ -86,6 +86,19 @@ Do it **before** Argo CD syncs the CronJob: it reads a Secret, and without it th
 1. **The bucket and its user** are made in the OVH interface (Public Cloud > Object Storage): S3 API, 1-AZ, Roubaix, versioning
    and Object Lock off (they would keep deleted data past the 7 days), and a user of its own with the role "Object Storage
    operator". The secret key is shown once: keep it in your password manager, never in the repository or a message.
+   **Give that user a policy.** In OVH a new S3 user has no right at all: without a policy every request answers `403 Forbidden`
+   (the first test of the job did). In the user's page of the console, set this policy, which allows this bucket only:
+   ```json
+   {
+     "Version": "2012-10-17",
+     "Statement": [
+       { "Sid": "ListTheBackupBucket", "Effect": "Allow", "Action": ["s3:ListBucket", "s3:GetBucketLocation"], "Resource": ["arn:aws:s3:::fastresume-db-backups"] },
+       { "Sid": "ReadWriteDeleteBackups", "Effect": "Allow", "Action": ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"], "Resource": ["arn:aws:s3:::fastresume-db-backups/*"] }
+     ]
+   }
+   ```
+   Check from your computer (`rclone lsf :s3:fastresume-db-backups`, set up as in "Check that the copy can be read"): an empty
+   list without error means the keys and the policy work.
 2. **A pair of `age` keys.** The public key goes to the cluster, the private key stays with you and **nowhere in the cluster**: without
    it a backup of the bucket is unreadable, for anyone, you included. Keep the private key in the password manager and a copy
    on paper or a USB stick.
@@ -94,7 +107,11 @@ Do it **before** Argo CD syncs the CronJob: it reads a Secret, and without it th
    age-keygen -o ~/fastresume-backup-age-key.txt
    ```
    It prints `Public key: age1...`: that line is the public key, which is not secret.
-3. **The Secret**, with the two S3 keys and the public key (write the keys in the command only on your own terminal):
+3. **The Secret**, with the two S3 keys and the public key (write the keys in the command only on your own terminal).
+   Three different things, not to be mixed: the **S3 access key** and **S3 secret key** are made by OVH for the user (long
+   random strings); the **public** `age` key starts with `age1` and is the only part of the pair that goes into the cluster; the
+   **private** `age` key starts with `AGE-SECRET-KEY-` and is never typed into a terminal nor put in a Secret. If it ever was,
+   make a new pair: a private key that has been in the cluster is not private any more.
    ```bash
    kubectl create secret generic backup-offsite -n job-optimizer \
      --from-literal=S3_ACCESS_KEY_ID='<access key>' \

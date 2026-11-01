@@ -62,6 +62,9 @@ spec:
                 - -c
                 - |
                   set -euo pipefail
+                  # An encrypted copy left by a run that failed before it was sent (the upload, the network) would stay on
+                  # the volume for ever: the retention below only knows the .sql.gz files. The dump itself is not touched.
+                  rm -f /backup/*.sql.gz.age
                   TIMESTAMP=$(date +%Y%m%d-%H%M%S)
                   FILE=/backup/job_optimizer-$TIMESTAMP.sql.gz
                   pg_dump -h postgres -U app -d job_optimizer | gzip > "$FILE"
