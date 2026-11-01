@@ -59,6 +59,27 @@ describe('JobUpdateSchema', () => {
   })
 })
 
+describe('the link of a project (#322)', () => {
+  const create = (url: unknown) => EntityCreateSchema.safeParse({ type: 'projects', title: 'T', url })
+
+  it('is saved as a complete web address, and may be left empty', () => {
+    expect(create('github.com/you/project')).toMatchObject({ success: true, data: { url: 'https://github.com/you/project' } })
+    expect(create('')).toMatchObject({ success: true, data: { url: '' } })
+    expect(EntityCreateSchema.safeParse({ type: 'projects', title: 'T' })).toMatchObject({ success: true })
+  })
+
+  it('refuses what is not a web address, and an address that is too long', () => {
+    for (const bad of ['javascript:alert(1)', 'ftp://example.com/x', 'a b.com', 'localhost']) expect(create(bad).success, bad).toBe(false)
+    expect(create(`https://example.com/${'a'.repeat(LIMITS.projects.url)}`).success).toBe(false)
+  })
+
+  it('is checked on an update too, and only when it is sent', () => {
+    expect(EntityUpdateSchemas.projects.safeParse({ title: 'New' }).success).toBe(true)
+    expect(EntityUpdateSchemas.projects.safeParse({ url: 'javascript:alert(1)' }).success).toBe(false)
+    expect(EntityUpdateSchemas.projects.safeParse({ url: 'you.dev/demo' })).toMatchObject({ success: true, data: { url: 'https://you.dev/demo' } })
+  })
+})
+
 describe('EntityCreateSchema', () => {
   it('accepts each kind with its required fields', () => {
     expect(EntityCreateSchema.safeParse({ type: 'experiences', title: 'T', company: 'C' }).success).toBe(true)

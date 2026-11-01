@@ -1,12 +1,13 @@
 import { pool } from '@/lib/db'
 import type { ResumeProfile } from '@/schemas/resume-profile'
 
-const COLUMNS = 'full_name, email, linkedin, phone, address, resume_title, profile_text, ai_context'
+const COLUMNS = 'full_name, email, linkedin, github, phone, address, resume_title, profile_text, ai_context'
 
 const EMPTY_PROFILE: ResumeProfile = {
   full_name: '',
   email: '',
   linkedin: '',
+  github: '',
   phone: '',
   address: '',
   resume_title: '',
@@ -25,11 +26,12 @@ export async function getResumeProfile(userId: string): Promise<ResumeProfile> {
 export async function saveResumeProfile(userId: string, profile: ResumeProfile): Promise<ResumeProfile> {
   const { rows } = await pool.query<ResumeProfile>(
     `INSERT INTO user_resume_profile (user_id, ${COLUMNS})
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
      ON CONFLICT (user_id) DO UPDATE SET
        full_name = EXCLUDED.full_name,
        email = EXCLUDED.email,
        linkedin = EXCLUDED.linkedin,
+       github = EXCLUDED.github,
        phone = EXCLUDED.phone,
        address = EXCLUDED.address,
        resume_title = EXCLUDED.resume_title,
@@ -42,6 +44,7 @@ export async function saveResumeProfile(userId: string, profile: ResumeProfile):
       profile.full_name,
       profile.email,
       profile.linkedin,
+      profile.github,
       profile.phone,
       profile.address,
       profile.resume_title,

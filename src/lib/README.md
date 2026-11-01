@@ -42,3 +42,4 @@ Server-side business logic. All functions are barrel-exported from `index.ts`. T
 | `validation/read-json.ts` | `readJson(request, schema, maxBytes)`: refuses the three types an HTML form can send (415), reads a JSON body without going over `maxBytes` (413 `body_too_large`), then checks it (400 naming the field and its limit). Used by every route that takes a body. |
 | `job-filter.ts` | `parseStatusFilter()` — the `?status=` filter of `/jobs`; `parseJobTab()` — the `?tab=` of a job page. |
 | `db.ts` | The PostgreSQL pool, from `DATABASE_URL`. |
+| `web-link.ts` | `normalizeWebLink` and `normalizeGithub`: the address of a project and the GitHub address of the profile, saved complete and refused when they are not web addresses (#322). Client-safe. |

@@ -62,6 +62,7 @@ func (r *Request) Validate() error {
 		{"profile.title", p.Title},
 		{"profile.email", p.Email},
 		{"profile.linkedin", p.LinkedIn},
+		{"profile.github", p.GitHub},
 		{"profile.phone", p.Phone},
 		{"profile.address", p.Address},
 		{"profile.summary", p.Summary},
@@ -85,6 +86,7 @@ func (r *Request) Validate() error {
 	for i, e := range s.Projects {
 		prefix := fmt.Sprintf("sections.projects[%d]", i)
 		v.maxLen(prefix+".title", e.Title)
+		v.maxLen(prefix+".url", e.URL)
 		v.maxLen(prefix+".tech", strings.Join(e.Tech, ", "))
 		v.maxLen(prefix+".description", e.Description)
 	}

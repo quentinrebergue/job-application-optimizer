@@ -53,6 +53,9 @@
 
 #let href(url) = if url.starts-with("http") { url } else { "https://" + url }
 
+// The title of a project, a link to it when the project has one.
+#let project-title(p) = if p.url != "" { link(href(p.url))[*#p.title*] } else [*#p.title*]
+
 // Dates sit right after the title by default ("inline"): a date pushed to the
 // far right can be split from its job by ATS parsers that group text by position.
 #let heading-line(left, right) = if opts.datePlacement == "right" {
@@ -93,6 +96,7 @@
   let contact = ()
   if profile.email != "" { contact.push(link("mailto:" + profile.email)[#profile.email]) }
   if profile.linkedin != "" { contact.push(link(href(profile.linkedin))[#profile.linkedin]) }
+  if profile.github != "" { contact.push(link(href(profile.github))[#profile.github]) }
   if profile.phone != "" { contact.push([#profile.phone]) }
   if profile.address != "" { contact.push([#profile.address]) }
   if contact.len() > 0 {
@@ -118,7 +122,7 @@
 ], sp)
 
 #section("Projects", sections.projects, p => [
-  *#p.title*#if p.tech.len() > 0 [ #text(fill: muted)[(#p.tech.join(", "))]]
+  #project-title(p)#if p.tech.len() > 0 [ #text(fill: muted)[(#p.tech.join(", "))]]
   #if p.description != "" [#after-title(p.description)]
 ], sp)
 

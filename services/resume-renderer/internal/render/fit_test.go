@@ -31,6 +31,12 @@ func resumeOf(n, points int) string {
 
 func pagesOf(t *testing.T, templateID, body string, options map[string]any) int {
 	t.Helper()
+	return len(pageObject.FindAll(renderTemplate(t, templateID, body, options), -1))
+}
+
+// renderTemplate renders a request body with a built-in template and returns the PDF.
+func renderTemplate(t *testing.T, templateID, body string, options map[string]any) []byte {
+	t.Helper()
 	store, err := templates.NewBuiltin()
 	if err != nil {
 		t.Fatalf("NewBuiltin: %v", err)
@@ -51,7 +57,7 @@ func pagesOf(t *testing.T, templateID, body string, options map[string]any) int 
 	if err != nil {
 		t.Fatalf("Render: %v", err)
 	}
-	return len(pageObject.FindAll(pdf, -1))
+	return pdf
 }
 
 // With "fitToPage" on (the default), a resume that would run onto a second page is shrunk to fit one; without it, it

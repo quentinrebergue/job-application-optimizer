@@ -10,7 +10,7 @@ vi.mock('@/lib/auth/session', () => ({ getSessionUserId: vi.fn().mockResolvedVal
 
 const { GET, PUT } = await import('./route')
 
-const profile = { full_name: 'Ada Lovelace', email: 'ada@example.test', linkedin: '', phone: '', address: '', resume_title: '', profile_text: 'Hello', ai_context: '' }
+const profile = { full_name: 'Ada Lovelace', email: 'ada@example.test', linkedin: '', github: '', phone: '', address: '', resume_title: '', profile_text: 'Hello', ai_context: '' }
 const put = (body: unknown, headers: Record<string, string> = { 'content-type': 'application/json' }) =>
   PUT(new Request('http://x', { method: 'PUT', body: typeof body === 'string' ? body : JSON.stringify(body), headers }))
 

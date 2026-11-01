@@ -20,6 +20,7 @@ export const ProjectMetaSchema = z.object({
   type: z.literal('projects'),
   title: z.string(),
   tech: z.array(z.string()),
+  url: z.string().optional(),
   description: z.string(),
   descriptions: z.array(DescriptionVariantSchema).optional(),
   tags: z.array(z.string()),

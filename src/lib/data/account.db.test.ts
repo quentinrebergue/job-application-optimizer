@@ -10,7 +10,7 @@ import { deleteAccount, exportAccount } from './account'
 
 let pool: Pool
 
-const profile = { full_name: 'Ada Lovelace', email: 'ada@example.test', linkedin: '', phone: '', address: '', resume_title: 'Engineer', profile_text: 'Hello', ai_context: '' }
+const profile = { full_name: 'Ada Lovelace', email: 'ada@example.test', linkedin: '', github: 'github.com/ada', phone: '', address: '', resume_title: 'Engineer', profile_text: 'Hello', ai_context: '' }
 
 /** Gives a user a row in every table that holds something of theirs. */
 async function fill(userId: string, email: string) {
@@ -61,7 +61,7 @@ dbDescribe('account on Postgres', () => {
     it('gives everything the user holds: account, profile, library, jobs with their resume settings, AI calls', async () => {
       const data = await exportAccount(alice)
       expect(data?.account).toMatchObject({ email: 'alice@example.test', email_verified: false })
-      expect(data?.profile).toMatchObject({ full_name: 'Ada Lovelace', resume_title: 'Engineer' })
+      expect(data?.profile).toMatchObject({ full_name: 'Ada Lovelace', resume_title: 'Engineer', github: 'github.com/ada' })
       expect(data?.library.map((e) => e.type).sort()).toEqual(['projects', 'skills'])
       expect(data?.library.find((e) => e.type === 'projects')).toMatchObject({ title: 'Queue', tech: ['Go'], tags: ['Go'] })
       expect(data?.jobs).toHaveLength(1)

@@ -6,7 +6,7 @@ The library: experiences, projects, skills and education, the entries every resu
 
 | File | Description |
 |------|-------------|
-| `entity-fields.ts` | The fields of each kind of entry, defined once (`ENTITY_FIELDS`): a project has one "Technologies" list (also saved as its tags), a skill group its "Skills" (no level asked), experiences and degrees their "Skills & technologies" keywords. Plus `toValues`, `toPayload`, `fieldUpdate`, `missingFields`, `entityTitle`, `entitySubtitle`, `entityChips`. Pure, tested in `entity-fields.test.ts`. |
+| `entity-fields.ts` | The fields of each kind of entry, defined once (`ENTITY_FIELDS`): a project has one "Technologies" list (also saved as its tags) and an optional "Link" (the title links to it on the resume; not a detail line of its card, `detail: false`), a skill group its "Skills" (no level asked), experiences and degrees their "Skills & technologies" keywords. Plus `toValues`, `toPayload`, `fieldUpdate`, `missingFields`, `entityTitle`, `entitySubtitle`, `entityChips`. Pure, tested in `entity-fields.test.ts`. |
 | `EntityFields.tsx` | Renders the fields of one kind from `ENTITY_FIELDS` with `Field` / `Input` / `Textarea autoGrow` / `Select`. |
 | `EntityForm.tsx` | Creation form (the kind is chosen at the top of `NewEntryDialog` with `SegmentedTabs`): required fields checked, failure shown in an `Alert`. |
 | `EntityEditor.tsx` | An entry, always editable: each field saves itself (`useFieldAutosave`, which also saves what was typed in the last 0.8 s when the dialog is closed); a `DeleteButton` at the bottom (two presses; no dialog on top of a dialog, it would be hidden behind it), absent when the caller has its own. |

@@ -27,6 +27,8 @@ export interface ProjectMeta {
   type: 'projects'
   title: string
   tech: string[]
+  /** Where the project lives (its repository, a demo): the title links to it on the resume. Absent or empty = no link. */
+  url?: string
   description: string
   descriptions?: DescriptionVariant[]
   tags: string[]

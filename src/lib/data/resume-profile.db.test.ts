@@ -8,7 +8,7 @@ let pool: Pool
 let alice: string
 let bob: string
 
-const profile = { full_name: 'Ada Lovelace', email: 'ada@example.test', linkedin: 'linkedin.com/in/ada', phone: '+33 6 00 00 00 00', address: 'Paris', resume_title: 'Engineer', profile_text: 'Hello', ai_context: '' }
+const profile = { full_name: 'Ada Lovelace', email: 'ada@example.test', linkedin: 'linkedin.com/in/ada', github: 'github.com/ada', phone: '+33 6 00 00 00 00', address: 'Paris', resume_title: 'Engineer', profile_text: 'Hello', ai_context: '' }
 
 dbDescribe('the resume profile on Postgres', () => {
   beforeAll(async () => {
@@ -26,7 +26,7 @@ dbDescribe('the resume profile on Postgres', () => {
   const rowCount = async () => (await pool.query('SELECT count(*)::int AS n FROM user_resume_profile')).rows[0].n
 
   it('is empty until saved, without creating a row by being read', async () => {
-    expect(await getResumeProfile(alice)).toEqual({ full_name: '', email: '', linkedin: '', phone: '', address: '', resume_title: '', profile_text: '', ai_context: '' })
+    expect(await getResumeProfile(alice)).toEqual({ full_name: '', email: '', linkedin: '', github: '', phone: '', address: '', resume_title: '', profile_text: '', ai_context: '' })
     expect(await rowCount()).toBe(0)
   })
 

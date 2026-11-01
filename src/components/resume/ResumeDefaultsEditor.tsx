@@ -71,6 +71,7 @@ function ProfileForm({ initial, inline }: { initial: ResumeProfile; inline: bool
         {text('email', 'Email', { type: 'email', placeholder: 'alex.morgan@example.com' })}
         {text('phone', 'Phone', { placeholder: '+00 000 000 000' })}
         {text('linkedin', 'LinkedIn', { placeholder: 'linkedin.com/in/alex-morgan' })}
+        {text('github', 'GitHub', { placeholder: 'github.com/alex-morgan', hint: 'Printed under your name, as a link; left out when empty.' })}
         {text('address', 'Address', { placeholder: 'City, Country' })}
         {text('resume_title', 'Resume title', { placeholder: 'Project Coordinator', hint: 'Shown under your name; a job can use its own.', span: 'sm:col-span-2 lg:col-span-3' })}
         <Field
