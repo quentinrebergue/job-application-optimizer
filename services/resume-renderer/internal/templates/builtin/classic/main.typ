@@ -127,7 +127,8 @@
 ], sp)
 
 #section("Projects", sections.projects, p => [
-  #project-title(p)#if p.tech.len() > 0 [ #text(fill: muted)[(#p.tech.join(", "))]]
+  // The tools: the colour of the text and a regular weight, next to the bold title.
+  #project-title(p)#if p.tech.len() > 0 [ #text(weight: "regular")[(#p.tech.join(", "))]]
   // The text goes under the title and its tools, on its own lines, whatever it holds (a text or points), as for a job.
   #if p.description != "" [
     #v(0.2em)
