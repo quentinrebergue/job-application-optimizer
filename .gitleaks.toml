@@ -1,0 +1,12 @@
+# The configuration of the secret scan (.github/workflows/security.yml): the rules of gitleaks, and what is known not to be a secret.
+title = "FastResume"
+
+[extend]
+useDefault = true
+
+# `personal.ts` reads the LinkedIn address of a resume into a variable named `linkedin...`: the rule for a LinkedIn client id
+# takes the assignment for one. Found by the first scan of the whole history (2026-11-01); no other finding was left.
+[[allowlists]]
+description = "The variable that holds the LinkedIn address of an imported resume"
+targetRules = ["linkedin-client-id"]
+paths = ['''src/lib/import/personal\.ts''']

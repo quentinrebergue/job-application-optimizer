@@ -95,10 +95,8 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     if (error instanceof AiGatewayError) {
       return Response.json({ error: error.message }, { status: error.status })
     }
-    return Response.json(
-      { error: error instanceof Error ? error.message : 'Failed to rank job' },
-      { status: 500 },
-    )
+    // The text of an unexpected error (a database message, a path) is for the log, never for the answer (#207).
+    return Response.json({ error: 'The ranking failed. Try again.' }, { status: 500 })
   }
 }
 
@@ -116,10 +114,8 @@ export async function DELETE(_request: Request, { params }: { params: Promise<{ 
     await updateJob(userId, id, { ai_analysis: undefined, ats_tags: [] })
     return Response.json({ ok: true })
   } catch (error) {
-    return Response.json(
-      { error: error instanceof Error ? error.message : 'Failed to clear AI data' },
-      { status: 500 },
-    )
+    console.error('Error clearing ranking:', error)
+    return Response.json({ error: 'The ranking could not be cleared. Try again.' }, { status: 500 })
   }
 }
 
@@ -143,9 +139,6 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
     return Response.json(job.ai_analysis)
   } catch (error) {
     console.error('Error fetching ranking:', error)
-    return Response.json(
-      { error: error instanceof Error ? error.message : 'Failed to fetch ranking' },
-      { status: 500 },
-    )
+    return Response.json({ error: 'The ranking could not be read. Try again.' }, { status: 500 })
   }
 }
