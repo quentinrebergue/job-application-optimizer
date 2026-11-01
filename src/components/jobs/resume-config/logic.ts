@@ -11,7 +11,7 @@ export type EntityType = (typeof TYPE_ORDER)[number]
 export const TYPE_LABELS: Record<EntityType, string> = {
   experiences: 'Work experience',
   projects: 'Projects',
-  skills: 'Technical expertise',
+  skills: 'Skills',
   education: 'Education',
 }
 
