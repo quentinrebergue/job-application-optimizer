@@ -10,7 +10,7 @@
 # Base image pinned to an exact version and digest (#143): every build uses the same bytes.
 # ---- build: compile the Go service (static binary) ----
 # Runs on the machine doing the build and cross-compiles for the target.
-FROM --platform=$BUILDPLATFORM golang:1.27.2-alpine@sha256:f92b6ef800e499660581efdabdf25d9d817a9d124eaf900924f0504e7e27e12d AS build
+FROM --platform=$BUILDPLATFORM golang:1.27.3-alpine@sha256:d200d2dd76b03a99b52651fd1325aff7dcd35422c35c01bac56571b0507f3deb AS build
 ARG TARGETOS
 ARG TARGETARCH
 WORKDIR /src
