@@ -76,14 +76,19 @@ and the volumes behind, still billed. So the cluster goes last.
    terraform destroy -target=ovh_cloud_project_kube.cluster
    ```
 6. **The site's address.** The load balancer's IP (`51.68.80.189`, `terraform/dns.tf`) is released and OVH can give it to someone
-   else: leave no `A` record on it. Remove `apex_a` and `www_a` from `dns.tf` in a pull request, then `terraform apply`. The
-   mail records (MX, SPF, Brevo, DMARC) stay.
+   else: leave no `A` record on it. Destroy the two records, and only them (a plain `terraform apply` would build the cluster
+   again; the two lines stay in `dns.tf`, so that the way back recreates them). The plan must say 2 to destroy, both of type `A`:
+   ```bash
+   terraform destroy -target='ovh_domain_zone_record.this["apex_a"]' -target='ovh_domain_zone_record.this["www_a"]'
+   ```
+   The mail records (MX, SPF, Brevo, DMARC) stay. Pause the external probe (UptimeRobot): it reports the site as down.
 7. **The next day, in the OVH cost centre** (Public Cloud, then the project's consumption): only the bucket and the DNS must
    remain. Anything else is something forgotten in step 4.
 
 ## Putting it back
 
-1. **Cluster:** `terraform apply` (the variables are in `terraform.tfvars`), which also writes `kubeconfig.yaml`.
+1. **Cluster:** `terraform apply -target=ovh_cloud_project_kube.cluster` (the variables are in `terraform.tfvars`), which also
+   writes `kubeconfig.yaml`. The records of the DNS wait for the new IP (step 5).
 2. **Install again**, with the versions noted before the cut: ingress-nginx (`k8s/ingress-nginx/`, chart 4.15.1, then the two
    values files with `--reuse-values`), cert-manager and its `ClusterIssuer` (`k8s/cert-manager/`), Argo CD and its
    `Application` (`k8s/argocd/application.yaml`), the monitoring (`scripts/monitoring-profile.sh normal`).
@@ -91,18 +96,24 @@ and the volumes behind, still billed. So the cluster goes last.
    by hand (`ai-gateway-secrets`, `backup-offsite`, `ghcr-pull-secret`, SMTP).
 4. **The database:** sync the application in Argo CD with the app at 0 replicas, then restore from the bucket as in
    [`restore-postgres.md`](restore-postgres.md) ("Restoring from the copy"). Check the row counts against your computer.
-5. **The address:** the load balancer has a new IP. Put it in `dns.tf` (`ip`, and the two `A` records), `terraform apply`,
-   then wait for the certificate (cert-manager asks for it once the name points to the new IP).
+5. **The address:** the load balancer has a new IP. Put it in `dns.tf` (`ip`), `terraform apply` (it recreates the two `A`
+   records), resume the external probe, then wait for the certificate (cert-manager asks for it once the name points to the new IP).
 6. **Start the application** and check `https://fastresume.tech/api/healthz`. Run the restore drill once, as it is the first
    time the full way back is made.
 
+## The first pause
+
+Done on 2026-11-10: last backup `job_optimizer-20261110-183326.sql.gz.age` (5 accounts, restored on the owner's computer and kept
+off the bucket too), Kubernetes cleaned (no LoadBalancer Service, no PVC, no PV), then the cluster destroyed with Terraform
+(3 resources: cluster, node pool, kubeconfig file), then the two `A` records.
+
 ## Versions at the pause
 
-To fill in at step 1 of "Before the cut".
+Read on 2026-11-10 at step 1 of "Before the cut".
 
 | Component | Version |
 |---|---|
 | ingress-nginx | chart 4.15.1 |
-| cert-manager | |
-| Argo CD | |
+| cert-manager | Helm release `cert-manager`, chart v1.21.2 (namespace `cert-manager`) |
+| Argo CD | v3.5.3, in the namespace `argocd`; not a Helm release (`helm list -A` does not show it), so installed from the project's manifest: use the one of v3.5.3 |
 | monitoring | chart 91.8.2 |
