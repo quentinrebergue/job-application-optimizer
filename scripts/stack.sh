@@ -207,7 +207,7 @@ cmd_pull() {
     [ -n "$name" ] || die "no backup in the bucket $bucket"
   fi
   local tmp; tmp="$(mktemp -d)"
-  trap 'rm -rf "$tmp"' EXIT
+  trap "rm -rf '$tmp'" EXIT # expanded now: $tmp is local and gone when the script exits
   echo "stack: downloading $name"
   "${rc[@]}" copyto ":s3:$bucket/$name" "$tmp/$name" || die "download failed"
   cmd_restore "$tmp/$name"
