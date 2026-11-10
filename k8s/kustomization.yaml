@@ -39,7 +39,7 @@ images:
   newTag: e012589
 - name: ghcr.io/quentinrebergue/job-application-optimizer
   newName: ghcr.io/quentinrebergue/job-application-optimizer
-  newTag: e012589
+  newTag: c3d8b7d
 - name: ghcr.io/quentinrebergue/password-hasher
   newName: ghcr.io/quentinrebergue/password-hasher
   newTag: e012589
