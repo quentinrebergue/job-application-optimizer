@@ -106,6 +106,9 @@ describe('scripts/stack.sh', () => {
     expect(script.match(/Type yes to go on/g)?.length).toBe(2)
     // The restore says what a backup of production holds.
     expect(script).toContain('real people')
+    // pull goes through restore: the same question, and the keys are never written to disk.
+    expect(script).toMatch(/cmd_pull[\s\S]*cmd_restore "\$tmp\/\$name"/)
+    expect(script).toContain("trap 'rm -rf \"$tmp\"' EXIT")
   })
 
   it('has a demo seed that is fictional and bound to one address', () => {

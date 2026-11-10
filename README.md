@@ -87,17 +87,17 @@ The first time it builds the images (a few minutes) and makes `.env.local` from 
 | `npm run stack -- --docker` | The app too in a container (the production image): nothing but Docker is needed |
 | `npm run stack -- --services` | Only the database and the services, to run the app yourself |
 | `npm run stack:seed` | A demo account with a small library and a job: `demo@example.test` / `demo-password-1` (fictional) |
+| `scripts/stack.sh pull` | Downloads the latest encrypted backup of production from the bucket and loads it (asks for the S3 keys) |
 | `scripts/stack.sh restore FILE` | Loads a backup (`.sql.gz`, or `.sql.gz.age` with the private key) into the local database |
 | `scripts/stack.sh status` | What answers, and where |
 | `npm run stack:down` | Stops the services; the data stays. `scripts/stack.sh reset` also deletes the database |
 
 The AI ranking and the resume import need a key: put `AI_TOKEN` (and `AI_BASE_URL`, `AI_MODEL` if you do not use Mistral) in `.env.local` and the gateway starts with the rest. Without it the app works and those two features say the AI is unavailable. Mails are printed in the console in development.
 
-A backup of production holds the data of real people: restore one only to look into a problem, keep it on your machine, and delete it after. To read the latest one, with the keys of `docs/runbooks/restore-postgres.md`:
+A backup of production holds the data of real people: load one only to look into a problem, keep it on your machine, and delete the database after (`scripts/stack.sh reset`). One command does every step (it asks for the S3 keys, takes the latest encrypted backup of the bucket, decrypts it with `~/fastresume-backup-age-key.txt`, asks for a `yes`, loads it, and deletes its temporary copy); it needs `brew install age rclone` and the keys of [`docs/runbooks/restore-postgres.md`](docs/runbooks/restore-postgres.md):
 
 ```bash
-rclone copyto :s3:fastresume-db-backups/<the latest file> ./backup.sql.gz.age
-scripts/stack.sh restore ./backup.sql.gz.age && rm ./backup.sql.gz.age
+scripts/stack.sh pull
 ```
 
 ## Tests and checks
