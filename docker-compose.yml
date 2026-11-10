@@ -1,22 +1,43 @@
+# The whole stack on one machine: `npm run stack` (scripts/stack.sh) starts it. The services are the ones that run in
+# production (k8s/), with the same limits where it matters, bound to 127.0.0.1 only. Every port and secret has a default
+# for a laptop; change them in `.env.local` (docker compose reads it through scripts/stack.sh).
+#
+#   default      db, migrate (one shot), resume-renderer, pdf-text, password-hasher
+#   profile ai   ai-gateway: only when there is an AI_TOKEN (the ranking and the import need it)
+#   profile app  the app itself, as the production image (a few minutes to build); without it `npm run stack` runs
+#                the app with `next dev` on the host
 services:
-  app:
-    build: .
+  db:
+    image: postgres:17-alpine
     ports:
-      - "3000:3000"
-    env_file:
-      - .env.local
+      - "127.0.0.1:${DB_PORT:-5433}:5432"
     environment:
-      DATABASE_URL: postgres://app:${POSTGRES_PASSWORD}@db:5432/job_optimizer
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me}
+      POSTGRES_DB: job_optimizer
     volumes:
-      - ./data:/app/data
-    depends_on:
-      - db
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d job_optimizer"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
     restart: unless-stopped
+
+  # Applies the migrations compiled into its binary, then exits: the schema is the one of production.
+  migrate:
+    build: ./services/db-migrator
+    environment:
+      DATABASE_URL: postgres://app:${POSTGRES_PASSWORD:-change-me}@db:5432/job_optimizer
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
 
   resume-renderer:
     build: ./services/resume-renderer
     ports:
-      - "127.0.0.1:8090:8080"
+      - "127.0.0.1:${RENDERER_PORT:-8090}:8080"
     read_only: true
     tmpfs:
       - /tmp
@@ -31,16 +52,81 @@ services:
       retries: 3
     restart: unless-stopped
 
-  db:
-    image: postgres:17-alpine
+  # The image has nothing but the binary: no shell and no wget, so no healthcheck here; scripts/stack.sh asks /readyz.
+  pdf-text:
+    build: ./services/pdf-text
     ports:
-      - "127.0.0.1:5433:5432"
+      - "127.0.0.1:${PDF_TEXT_PORT:-8095}:8080"
     environment:
-      POSTGRES_USER: app
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: job_optimizer
-    volumes:
-      - pgdata:/var/lib/postgresql/data
+      MAX_BYTES: "2097152"
+      MAX_PAGES: "1"
+      TIMEOUT: 5s
+      MAX_QUEUE: "4"
+      CACHE_DIR: /cache
+    read_only: true
+    tmpfs:
+      - /cache:mode=1777,size=64m
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+
+  password-hasher:
+    build: ./services/password-hasher
+    ports:
+      - "127.0.0.1:${HASHER_PORT:-8098}:8080"
+    environment:
+      BCRYPT_COST: "12"
+      MAX_CONCURRENT: "1"
+      MAX_QUEUE: "8"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+
+  ai-gateway:
+    profiles: [ai]
+    build: ./services/ai-gateway
+    ports:
+      - "127.0.0.1:${GATEWAY_PORT:-8099}:8080"
+    environment:
+      AI_TOKEN: ${AI_TOKEN:-}
+      AI_BASE_URL: ${AI_BASE_URL:-https://api.mistral.ai/v1}
+      AI_MODEL: ${AI_MODEL:-mistral-small-2603}
+      REQUEST_TIMEOUT: 45s
+      MAX_OUTPUT_TOKENS: "2000"
+      MAX_OUTPUT_TOKENS_IMPORT: "4000"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+
+  # The production image of the app, for a run with nothing installed but Docker (`npm run stack -- --docker`).
+  app:
+    profiles: [app]
+    build: .
+    ports:
+      - "127.0.0.1:${APP_PORT:-3000}:3000"
+    # scripts/stack.sh makes `.env.local` from `.env.example` when there is none (compose before 2.24 cannot skip a missing file).
+    env_file:
+      - .env.local
+    environment:
+      DATABASE_URL: postgres://app:${POSTGRES_PASSWORD:-change-me}@db:5432/job_optimizer
+      RESUME_RENDERER_URL: http://resume-renderer:8080
+      PDF_TEXT_URL: http://pdf-text:8080
+      PASSWORD_HASHER_URL: http://password-hasher:8080
+      AI_GATEWAY_URL: http://ai-gateway:8080
+      APP_URL: http://localhost:${APP_PORT:-3000}
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
     restart: unless-stopped
 
 volumes:
