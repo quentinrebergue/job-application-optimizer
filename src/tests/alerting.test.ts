@@ -45,8 +45,8 @@ describe('Alertmanager', () => {
 })
 
 describe('the rules of the cluster', () => {
-  it('cover what the incident of 2026-10-02 showed: memory pressure, low memory, evictions, the app without a replica', () => {
-    expect(rules.map((r) => r.alert).sort()).toEqual(['AppNoReplicaAvailable', 'NodeMemoryLow', 'NodeMemoryPressure', 'PodEvicted'])
+  it('cover what the incident of 2026-10-02 showed (memory pressure, low memory, evictions, the app without a replica) and a backup that stopped', () => {
+    expect(rules.map((r) => r.alert).sort()).toEqual(['AppNoReplicaAvailable', 'BackupTooOld', 'NodeMemoryLow', 'NodeMemoryPressure', 'PodEvicted'])
   })
 
   it('each says how serious it is, what happened and what to do', () => {
@@ -61,6 +61,15 @@ describe('the rules of the cluster', () => {
   it('wait a little before firing, so a normal rollout stays silent', () => {
     for (const rule of rules) expect(rule.for, rule.alert).toMatch(/^\d+m$/)
     expect(Number(rules.find((r) => r.alert === 'AppNoReplicaAvailable')!.for.replace('m', ''))).toBeGreaterThanOrEqual(2)
+  })
+
+  it('watch the backup CronJob for more than a day, and for one that never succeeded', () => {
+    const rule = rules.find((r) => r.alert === 'BackupTooOld')!
+    expect(rule.expr).toContain('kube_cronjob_status_last_successful_time')
+    expect(rule.expr).toContain('cronjob="postgres-backup"')
+    expect(rule.expr).toMatch(/> 26 \* 3600/)
+    expect(rule.expr).toContain('absent(')
+    expect(rule.labels.severity).toBe('critical')
   })
 
   it('switch off the chart alerts that cannot hold on one node, so the emails stay worth reading', () => {

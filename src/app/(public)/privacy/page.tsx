@@ -65,7 +65,7 @@ export default function PrivacyPage() {
         <p>
           Everything is stored on {HOST.name} (OVHcloud) servers in France, under European law (GDPR). Only you see your content, and the AI provider named above when you use the AI ranking or import a resume. The
           maintainer can technically reach the database to run the service and does not read your content. A database backup is made
-          every day and kept for 7 days, on the same infrastructure.
+          every day and kept for 7 days, on the same infrastructure, with a copy encrypted before it leaves the server on another OVHcloud site in France (Roubaix).
         </p>
       </LegalSection>
 
@@ -76,7 +76,7 @@ export default function PrivacyPage() {
             Sessions: they expire after 7 days. Links sent by mail: 24 hours to confirm an address, 30 minutes to reset a password; they
             are deleted a day after they expire, with the address they carried.
           </li>
-          <li>Backups: 7 days, so deleted data disappears from them within a week.</li>
+          <li>Backups, and their encrypted copy: 7 days, so deleted data disappears from them within a week.</li>
           <li>
             The log of AI ranking calls (date, tokens, cost): kept without your identity after you delete your account. It only
             serves to keep the site&apos;s monthly AI budget.

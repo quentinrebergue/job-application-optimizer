@@ -51,6 +51,7 @@ firing, it proves the chain works) and the `info` alerts go nowhere.
 | `NodeMemoryLow` | under 400 MiB of memory available for 5 minutes (the kubelet evicts under 250) | warning |
 | `PodEvicted` | a pod was evicted (it stays listed until deleted) | warning |
 | `AppNoReplicaAvailable` | no replica of the app answers for 2 minutes | critical |
+| `BackupTooOld` | no successful run of the backup job (dump and encrypted copy) for 26 hours, or none at all | critical |
 | `KubePodNotReady`, `KubePodCrashLooping`, `KubeNodeNotReady`, `KubeDeploymentRolloutStuck`... | the chart's own, 15 minutes or more: a normal rollout does not trigger them | warning / critical |
 
 Our rules are in `k8s/monitoring/values.yaml` (`additionalPrometheusRulesMap`). The chart's alerts that cannot hold on one

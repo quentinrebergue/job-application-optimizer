@@ -79,3 +79,14 @@ describe('the runbook of the copy', () => {
     expect(runbook).toMatch(/No durable list of the accounts deleted/)
   })
 })
+
+describe('what the privacy page says of the backups', () => {
+  const page = fs.readFileSync(path.join(root, 'src/app/(public)/privacy/page.tsx'), 'utf8')
+
+  it('mentions the encrypted copy at Roubaix only because the job sends it there, in the same 7 days', () => {
+    expect(page).toContain('Roubaix')
+    expect(env.RCLONE_S3_ENDPOINT.value).toContain('.rbx.')
+    expect(script).toMatch(/--min-age 7d/)
+    expect(page).toMatch(/Backups, and their encrypted copy: 7 days/)
+  })
+})
