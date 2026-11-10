@@ -74,17 +74,31 @@ The Go services are small, each with its own image, and talk to the others over 
 
 ## Run it locally
 
-Needs Node 22 (`.nvmrc`), Docker and Go.
+Needs Docker, and Node 22 (`.nvmrc`) to run the app itself. One command starts the database, applies the migrations, starts the services of production (PDF renderer, PDF reader, password hasher, and the AI gateway when there is a key) and runs the app:
 
 ```bash
-cp .env.example .env.local        # then set POSTGRES_PASSWORD and DATABASE_URL
-docker compose up -d db           # PostgreSQL on 127.0.0.1:5433
-(cd services/db-migrator && DATABASE_URL=<the same URL> go run .)   # applies the migrations
-npm ci
-npm run dev                       # http://localhost:3000
+npm run stack                  # http://localhost:3000
 ```
 
-The AI ranking, the PDF and the resume import each need their service (`services/<name>`; the variables it reads are in its `internal/config`). Without them the rest of the app works and those three features report that they are unavailable. Mails are printed in the console in development.
+The first time it builds the images (a few minutes) and makes `.env.local` from `.env.example`. Everything has a default for a laptop and listens on `127.0.0.1` only.
+
+| Command | What it does |
+|---|---|
+| `npm run stack -- --docker` | The app too in a container (the production image): nothing but Docker is needed |
+| `npm run stack -- --services` | Only the database and the services, to run the app yourself |
+| `npm run stack:seed` | A demo account with a small library and a job: `demo@example.test` / `demo-password-1` (fictional) |
+| `scripts/stack.sh restore FILE` | Loads a backup (`.sql.gz`, or `.sql.gz.age` with the private key) into the local database |
+| `scripts/stack.sh status` | What answers, and where |
+| `npm run stack:down` | Stops the services; the data stays. `scripts/stack.sh reset` also deletes the database |
+
+The AI ranking and the resume import need a key: put `AI_TOKEN` (and `AI_BASE_URL`, `AI_MODEL` if you do not use Mistral) in `.env.local` and the gateway starts with the rest. Without it the app works and those two features say the AI is unavailable. Mails are printed in the console in development.
+
+A backup of production holds the data of real people: restore one only to look into a problem, keep it on your machine, and delete it after. To read the latest one, with the keys of `docs/runbooks/restore-postgres.md`:
+
+```bash
+rclone copyto :s3:fastresume-db-backups/<the latest file> ./backup.sql.gz.age
+scripts/stack.sh restore ./backup.sql.gz.age && rm ./backup.sql.gz.age
+```
 
 ## Tests and checks
 
