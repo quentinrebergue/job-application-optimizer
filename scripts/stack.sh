@@ -7,6 +7,7 @@
 #   scripts/stack.sh status       what answers, and where
 #   scripts/stack.sh seed         a demo account with a small library and a job (demo@example.test)
 #   scripts/stack.sh restore FILE a backup (.sql.gz, or .sql.gz.age with the private key) into the local database
+#   scripts/stack.sh pull [FILE]  the latest backup of production (the encrypted copy in the OVH bucket) into the local database
 #   scripts/stack.sh logs         follow the logs of the services
 #   scripts/stack.sh down         stop the services (the data stays)
 #   scripts/stack.sh reset        stop them and delete the local database
@@ -186,6 +187,33 @@ cmd_restore() {
   echo "stack: database restored"
 }
 
+# Downloads the latest encrypted backup from the OVH bucket, decrypts it and loads it: all the steps of the runbook.
+# The S3 keys come from RCLONE_S3_ACCESS_KEY_ID / RCLONE_S3_SECRET_ACCESS_KEY, or are asked for (the secret is not echoed);
+# they are never written to disk. The download goes to a private temporary folder that is deleted at the end, even on failure.
+cmd_pull() {
+  local name="${1:-}"
+  command -v rclone >/dev/null || die "rclone is not installed (brew install rclone)"
+  command -v age >/dev/null || die "age is not installed (brew install age)"
+  local bucket="${BACKUP_BUCKET:-fastresume-db-backups}"
+  local ak="${RCLONE_S3_ACCESS_KEY_ID:-}" sk="${RCLONE_S3_SECRET_ACCESS_KEY:-}"
+  if [ -z "$ak" ]; then read -r -p "S3 access key: " ak; fi
+  if [ -z "$sk" ]; then read -r -s -p "S3 secret key (hidden): " sk; echo; fi
+  [ -n "$ak" ] && [ -n "$sk" ] || die "both S3 keys are needed (in your password manager)"
+  local rc=(env RCLONE_S3_PROVIDER=Other RCLONE_S3_ENDPOINT="${BACKUP_ENDPOINT:-https://s3.rbx.io.cloud.ovh.net}"
+    RCLONE_S3_REGION=rbx RCLONE_S3_ACCESS_KEY_ID="$ak" RCLONE_S3_SECRET_ACCESS_KEY="$sk" rclone)
+  if [ -z "$name" ]; then
+    name="$("${rc[@]}" lsf ":s3:$bucket" | grep '\.sql\.gz\.age$' | sort | tail -n 1)" ||
+      die "could not list the bucket (wrong keys, or no policy on the user: 403)"
+    [ -n "$name" ] || die "no backup in the bucket $bucket"
+  fi
+  local tmp; tmp="$(mktemp -d)"
+  trap "rm -rf '$tmp'" EXIT # expanded now: $tmp is local and gone when the script exits
+  echo "stack: downloading $name"
+  "${rc[@]}" copyto ":s3:$bucket/$name" "$tmp/$name" || die "download failed"
+  cmd_restore "$tmp/$name"
+  echo "stack: the temporary copy is deleted; the data in the local database is real people's: keep it here"
+}
+
 cmd_logs() { need_docker; ensure_env; load_settings; dc --profile ai --profile app logs -f --tail 50; }
 cmd_down() { need_docker; ensure_env; load_settings; dc --profile ai --profile app down; }
 
@@ -204,10 +232,11 @@ case "${1:-up}" in
   status) cmd_status ;;
   seed) cmd_seed ;;
   restore) shift; cmd_restore "${1:-}" ;;
+  pull) shift; cmd_pull "${1:-}" ;;
   logs) cmd_logs ;;
   down) cmd_down ;;
   reset) cmd_reset ;;
   --docker | --services) cmd_up "$@" ;;
-  -h | --help | help) sed -n '2,17p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//' ;;
-  *) die "unknown command $1 (up, status, seed, restore, logs, down, reset)" ;;
+  -h | --help | help) sed -n '2,18p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//' ;;
+  *) die "unknown command $1 (up, status, seed, restore, pull, logs, down, reset)" ;;
 esac
