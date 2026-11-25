@@ -10,7 +10,7 @@ ARG TYPST_VERSION=0.15.1
 
 # ---- build: compile the Go service (static binary) ----
 # Runs on the machine doing the build and cross-compiles for the target.
-FROM --platform=$BUILDPLATFORM golang:1.27.3-alpine@sha256:d200d2dd76b03a99b52651fd1325aff7dcd35422c35c01bac56571b0507f3deb AS build
+FROM --platform=$BUILDPLATFORM golang:1.27.4-alpine@sha256:70bd7ddea8b6cbe5d6943cde279d6b67feb10cc924fb9100d1d8757c1575b280 AS build
 ARG TARGETOS
 ARG TARGETARCH
 WORKDIR /src
@@ -21,7 +21,7 @@ RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} \
     go build -trimpath -ldflags="-s -w" -o /out/resume-renderer .
 
 # ---- typst: download a pinned release and verify its checksum ----
-FROM alpine:3.24.3@sha256:be2656061b536c1883c4034790e21d0a09c5aaaf51968b89368a3c0371ea2c9a AS typst
+FROM alpine:3.24.4@sha256:f59abe656b692d901e184be3445e084786602108599d2a51d229c0f5a48c71bf AS typst
 ARG TYPST_VERSION
 ARG TARGETARCH
 ARG TYPST_SHA256_AMD64=a6d077d0a95eed5a2eba715b2dae06be954f624ccbf85758a03f389ded33118c
@@ -39,7 +39,7 @@ RUN apk add --no-cache xz \
     && install -m 0755 "/tmp/typst-${arch}-unknown-linux-musl/typst" /usr/local/bin/typst
 
 # ---- runtime: Alpine + Typst + fonts + the service, nothing else ----
-FROM alpine:3.24.3@sha256:be2656061b536c1883c4034790e21d0a09c5aaaf51968b89368a3c0371ea2c9a
+FROM alpine:3.24.4@sha256:f59abe656b692d901e184be3445e084786602108599d2a51d229c0f5a48c71bf
 RUN apk add --no-cache font-liberation \
     && addgroup -S -g 10001 app \
     && adduser -S -u 10001 -G app app
